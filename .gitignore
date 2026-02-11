@@ -1,0 +1,11 @@
+# IntelliJ / Spring Boot
+.idea
+*.iml
+target
+
+# Angular
+node_modules
+dist
+
+# OS
+.DS_Store
