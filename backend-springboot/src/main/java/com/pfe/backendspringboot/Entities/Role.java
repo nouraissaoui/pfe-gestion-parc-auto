@@ -1,0 +1,22 @@
+package com.pfe.backendspringboot.Entities;
+
+public enum Role {
+    ADMIN("ADMIN"),
+    CHEF_DU_PARC("Chef du parc"),
+    CHAUFFEUR("Chauffeur");
+
+    private final String label;
+
+    Role(String label) {
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    @Override
+    public String toString() {
+        return label;
+    }
+}
