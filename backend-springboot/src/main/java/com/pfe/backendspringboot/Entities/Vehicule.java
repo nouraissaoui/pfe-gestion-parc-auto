@@ -14,6 +14,10 @@ public class Vehicule {
     @Column(unique = true)
     private String matricule;
 
+    @ManyToOne
+    @JoinColumn(name = "id_admin")
+    private Admin admin;
+
     private String marque;
     private String modele;
     private int annee;

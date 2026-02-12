@@ -3,10 +3,16 @@ package com.pfe.backendspringboot.Entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import lombok.*;
+
 @Entity
 @Table(name = "carte_carburant")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CarteCarburant {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_carte")
@@ -33,8 +39,9 @@ public class CarteCarburant {
 
     // 🔹 Relation MANY TO ONE avec ChefDuParc
     @ManyToOne
-    @JoinColumn(name = "id_chef", nullable = false)
+    @JoinColumn(name = "id_chefparc")
     private ChefParc chefDuParc;
+
 
     // 🔹 Relation MANY TO ONE avec Vehicule
     @ManyToOne

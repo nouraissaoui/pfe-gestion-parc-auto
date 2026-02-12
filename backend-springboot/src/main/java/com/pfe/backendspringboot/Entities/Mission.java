@@ -28,6 +28,11 @@ public class Mission {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "bande_prelevement")
+    private String bandePrelevement;
+
+
+
     // Relations
 
     @ManyToOne
@@ -42,13 +47,15 @@ public class Mission {
     @JoinColumn(name = "id_local", referencedColumnName = "id_local")
     private Local local;
 
+
     @ManyToOne
-    @JoinColumn(name = "id_chefduparc", referencedColumnName = "id_chefduparc")
+    @JoinColumn(name = "id_chefparc", referencedColumnName = "id_chefparc")
     private ChefParc chefDuParc;
 
     @ManyToOne
-    @JoinColumn(name = "id_feuillederoute", referencedColumnName = "id_feuillederoute")
+    @JoinColumn(name = "id_feuille", referencedColumnName = "id_feuille")
     private FeuilleDeRoute feuilleDeRoute;
+
 
     // Constructeurs
     public Mission() {}
@@ -83,6 +90,15 @@ public class Mission {
 
     public ChefParc getChefDuParc() { return chefDuParc; }
     public void setChefDuParc(ChefParc chefDuParc) { this.chefDuParc = chefDuParc; }
+
+    // Getter et Setter
+    public String getBandePrelevement() {
+        return bandePrelevement;
+    }
+
+    public void setBandePrelevement(String bandePrelevement) {
+        this.bandePrelevement = bandePrelevement;
+    }
 
     public FeuilleDeRoute getFeuilleDeRoute() { return feuilleDeRoute; }
     public void setFeuilleDeRoute(FeuilleDeRoute feuilleDeRoute) { this.feuilleDeRoute = feuilleDeRoute; }

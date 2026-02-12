@@ -30,6 +30,11 @@ public class Chauffeur {
     @JoinColumn(name = "id_user", nullable = false, unique = true)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "id_admin")
+    private Admin admin;
+
+
     // Getters & Setters
 
     public Long getIdChauffeur() {

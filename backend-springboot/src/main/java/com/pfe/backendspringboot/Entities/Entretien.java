@@ -49,8 +49,9 @@ public class Entretien {
     private Vehicule vehicule;
 
     @ManyToOne
-    @JoinColumn(name = "id_chefduparc", referencedColumnName = "id_chefduparc")
+    @JoinColumn(name = "id_chefparc", referencedColumnName = "id_chefparc")
     private ChefParc chefDuParc;
+
 
     // Constructeur
     public Entretien() {}

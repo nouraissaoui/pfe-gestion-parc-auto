@@ -20,6 +20,10 @@ public class Local {
     @OneToOne(mappedBy = "local", cascade = CascadeType.ALL)
     private ChefParc chefParc;
 
+    @ManyToOne
+    @JoinColumn(name = "id_admin")
+    private Admin admin;
+
     // Getters et Setters
     public Long getIdLocal() { return idLocal; }
     public void setIdLocal(Long idLocal) { this.idLocal = idLocal; }

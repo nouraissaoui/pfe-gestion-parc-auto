@@ -22,6 +22,10 @@ public class ChefParc {
     @JoinColumn(name = "id_local", referencedColumnName = "id_local")
     private Local local;
 
+    @ManyToOne
+    @JoinColumn(name = "id_admin")
+    private Admin admin;
+
     private LocalDate dateNomination;
     private int ancienneteChef;
 
