@@ -1,0 +1,245 @@
+/* ================= GLOBAL ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(145deg, #f5f5f5, #e0e0e0);
+    color: #222;
+    overflow-x: hidden;
+}
+
+/* ================= HEADER ================= */
+header {
+    background: #1b1b1b;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 80px;
+    box-shadow: 0 8px 35px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 10;
+    border-bottom: 4px solid #FFD700;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo-img {
+    height: 70px;
+    width: auto;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(255,215,0,0.6);
+    transform: perspective(300px) rotateY(12deg);
+    transition: transform 0.8s ease, box-shadow 0.8s ease;
+}
+
+.logo-img:hover {
+    transform: perspective(300px) rotateY(0deg) scale(1.15);
+    box-shadow: 0 12px 45px rgba(255,215,0,0.9);
+}
+
+.logo span {
+    font-size: 24px;
+    font-weight: 900;
+    background: linear-gradient(90deg, #FFD700, #FFA500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 12px rgba(0,0,0,0.5);
+}
+
+/* ================= HERO ================= */
+.hero {
+    display: flex;
+    height: calc(100vh - 100px);
+    animation: fadeIn 1.2s ease;
+    background: linear-gradient(145deg, #f5f5f5, #e8e8e8);
+}
+
+/* ================= LEFT ================= */
+.hero-left {
+    width: 55%;
+    padding: 140px 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-left small {
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: #d12424;
+    text-transform: uppercase;
+}
+
+.hero-left h1 {
+    font-size: 56px;
+    margin: 25px 0;
+    line-height: 1.2;
+    color: #222;
+    text-shadow: 2px 2px 12px rgba(0,0,0,0.15);
+}
+
+.hero-left p {
+    font-size: 17px;
+    color: #555;
+    max-width: 550px;
+    margin-bottom: 50px;
+}
+
+/* ================= FORM (Glassmorphism) ================= */
+.login-form {
+    width: 450px;
+    padding: 40px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px) saturate(180%);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-form input {
+    padding: 18px 20px;
+    font-size: 16px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.2);
+    color: #1b1b1b;
+    outline: none;
+    transition: all 0.5s ease;
+    box-shadow: inset 2px 2px 12px rgba(0,0,0,0.05);
+}
+
+.login-form input::placeholder {
+    color: #333;
+}
+
+.login-form input:focus {
+    border-color: #FFD700;
+    box-shadow: 0 0 18px rgba(255,215,0,0.8);
+    background: rgba(255,255,255,0.25);
+}
+
+.login-form button {
+    padding: 18px;
+    font-size: 16px;
+    font-weight: 800;
+    background: linear-gradient(145deg,#FFD700,#FFA500);
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    color: #1b1b1b;
+    box-shadow: 0 10px 35px rgba(255,165,0,0.5);
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-form button::after {
+    content: "";
+    position: absolute;
+    left: -120%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+    transition: 0.7s;
+}
+
+.login-form button:hover::after {
+    left: 120%;
+}
+
+.login-form button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 45px rgba(255,165,0,0.7);
+}
+
+/* ================= RIGHT ================= */
+.hero-right {
+    width: 45%;
+    background: linear-gradient(135deg,#2c2c2c,#6e6e6e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0 0 0 60px;
+}
+
+.hero-right::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.05),
+        rgba(255,255,255,0.05) 1px,
+        transparent 1px,
+        transparent 15px
+    );
+}
+
+.hero-right img {
+    width: 85%;
+    border-radius: 25px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+    transform: perspective(350px) rotateY(-8deg);
+    transition: transform 0.8s ease, box-shadow 0.8s ease;
+}
+
+.hero-right img:hover {
+    transform: perspective(350px) rotateY(0deg) scale(1.15);
+}
+
+/* ================= ANIMATIONS ================= */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+@keyframes slideCar {
+    from { opacity: 0; transform: translateX(150px);}
+    to { opacity: 1; transform: translateX(0);}
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:1100px) {
+    .hero {
+        flex-direction: column-reverse;
+    }
+    .hero-left, .hero-right {
+        width: 100%;
+    }
+    .hero-left {
+        padding: 80px 40px;
+        text-align: center;
+    }
+    .login-form {
+        width: 90%;
+        margin: 0 auto;
+    }
+}
+
+@media(max-width:600px) {
+    .hero-left h1 {
+        font-size: 36px;
+    }
+    .hero-left p {
+        font-size: 14px;
+    }
+    .login-form input, .login-form button {
+        font-size: 14px;
+        padding: 14px;
+    }
+}

@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { EspaceChefDuParcComponent } from './espace-chef-du-parc/espace-chef-du-parc.component';
+import { AuthentificationComponent } from './authentification/authentification.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'espacechef', pathMatch: 'full' },
-    {path:'espacechef',component:EspaceChefDuParcComponent},
+  { path: '', component: AuthentificationComponent }, // page par défaut
+  // tu peux ajouter d'autres routes ici, par exemple :
+  // { path: 'dashboard', component: DashboardComponent }
 ];
