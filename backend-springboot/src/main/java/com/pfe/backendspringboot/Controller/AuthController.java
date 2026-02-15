@@ -30,7 +30,7 @@ public class AuthController {
     @PostMapping("/create")
     public String createUser(@RequestBody User u) {
         // u.getMotDePasse() contient le mot de passe brut depuis le JSON
-        userService.createUser(u.getNom(), u.getPrenom(), u.getMotDePasse(), u.getRole());
+        userService.createUser(u.getIdUser(),u.getNom(), u.getPrenom(), u.getMotDePasse(), u.getRole());
         return "USER CREATED";
     }
 }

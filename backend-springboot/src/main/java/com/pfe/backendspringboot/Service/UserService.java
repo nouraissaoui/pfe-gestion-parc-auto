@@ -32,8 +32,9 @@ public class UserService {
 
     // Crée un utilisateur et génère automatiquement le mail
     // Crée un utilisateur et génère automatiquement le mail
-    public User createUser(String nom, String prenom, String rawPassword, Role role){
+    public User createUser(long iduser,String nom, String prenom, String rawPassword, Role role){
         User user = new User();
+        user.setIdUser(iduser);
         user.setNom(nom);
         user.setPrenom(prenom);
 
