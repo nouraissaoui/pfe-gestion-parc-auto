@@ -2,8 +2,8 @@ package com.pfe.backendspringboot.Entities;
 
 public enum Role {
     ADMIN("ADMIN"),
-    CHEF_DU_PARC("Chef du parc"),
-    CHAUFFEUR("Chauffeur");
+    CHEF_DU_PARC("CHEF_DU_PARC"),
+    CHAUFFEUR("CHAUFFEUR");
 
     private final String label;
 

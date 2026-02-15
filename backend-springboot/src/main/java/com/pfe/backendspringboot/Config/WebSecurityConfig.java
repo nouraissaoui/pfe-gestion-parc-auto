@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.List;
 
 @Configuration
@@ -23,8 +24,10 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // 🔹 Tout le monde peut accéder aux endpoints d'authentification
                         .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                        // 🔹 Les autres endpoints sont accessibles à tous les rôles
+                        .anyRequest().hasAnyAuthority("ADMIN", "CHEF_DU_PARC", "CHAUFFEUR")
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
