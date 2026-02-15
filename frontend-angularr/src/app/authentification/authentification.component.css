@@ -298,4 +298,8 @@ header {
     color: #555; /* gris moyen, visible sur fond clair */
     opacity: 1;  /* parfois les navigateurs mettent une opacité faible par défaut */
     font-weight: 500;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feae2d71b6331f70d806ed9e383f7d09d548c475
