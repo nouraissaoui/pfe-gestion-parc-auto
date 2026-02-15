@@ -1,0 +1,74 @@
+<div class="main-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <div class="logo">
+      <h2>AGIL Parc</h2>
+      <p>Chef du Parc</p>
+    </div>
+
+    <ul class="menu">
+      <li routerLink="dashboard" routerLinkActive="active">
+        🏠 Dashboard
+      </li>
+
+      <li routerLink="vehicules" routerLinkActive="active">
+        🚗 Véhicules
+      </li>
+
+      <li routerLink="missions" routerLinkActive="active">
+        📋 Missions
+      </li>
+
+      <li routerLink="feuilles-route" routerLinkActive="active">
+        🧾 Feuilles de route
+      </li>
+
+      <li routerLink="entretiens" routerLinkActive="active">
+        🔧 Entretiens
+      </li>
+
+      <li routerLink="declarations" routerLinkActive="active">
+        ⚠️ Déclarations
+      </li>
+
+      <li routerLink="cartes-carburant" routerLinkActive="active">
+        ⛽ Cartes carburant
+      </li>
+
+      <li routerLink="statistiques" routerLinkActive="active">
+        📊 Statistiques
+      </li>
+
+      <li routerLink="rapports" routerLinkActive="active">
+        📄 Rapports
+      </li>
+    </ul>
+
+  </aside>
+
+  <!-- Content Area -->
+  <div class="content">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="welcome">
+        Bonjour, Chef du Parc 👋
+      </div>
+
+      <div class="right-section">
+        <span class="notification">🔔 3</span>
+        <button class="logout-btn" (click)="logout()">
+          🚪 Déconnexion
+        </button>
+      </div>
+    </nav>
+
+    <!-- Page dynamique -->
+    <div class="page-content">
+    </div>
+
+  </div>
+
+</div>
