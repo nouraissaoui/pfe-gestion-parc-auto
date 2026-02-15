@@ -17,9 +17,9 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public String login(@RequestBody User loginData){
+    public String login(@RequestBody User loginData) {
         Optional<User> userOpt = userService.authenticate(loginData.getMail(), loginData.getMotDePasse());
-        if(userOpt.isPresent()){
+        if (userOpt.isPresent()) {
             User user = userOpt.get();
             return "SUCCESS:" + user.getRole();
         }
@@ -28,8 +28,9 @@ public class AuthController {
 
     // 🔹 Endpoint pour créer un utilisateur de test
     @PostMapping("/create")
-    public String createUser(@RequestBody User u){
-        userService.createUser(u.getNom(), u.getPrenom(), u.getMail(), u.getMotDePasse(), u.getRole());
+    public String createUser(@RequestBody User u) {
+        // u.getMotDePasse() contient le mot de passe brut depuis le JSON
+        userService.createUser(u.getNom(), u.getPrenom(), u.getMotDePasse(), u.getRole());
         return "USER CREATED";
     }
 }
