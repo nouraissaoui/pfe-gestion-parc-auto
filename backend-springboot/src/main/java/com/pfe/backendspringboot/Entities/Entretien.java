@@ -34,6 +34,20 @@ public class Entretien {
     @Column(name = "observations", columnDefinition = "TEXT")
     private String observations;
 
+    public enum Status {
+        EN_ATTENTE,
+        TRAITE,
+        REJETE
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status;
+
+    // Getter et Setter
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
+
     // Relations
 
     @ManyToOne

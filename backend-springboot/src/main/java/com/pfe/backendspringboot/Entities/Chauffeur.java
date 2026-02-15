@@ -30,66 +30,42 @@ public class Chauffeur {
     @JoinColumn(name = "id_user", nullable = false, unique = true)
     private User user;
 
+    // 🔹 Relation Many-to-One avec Admin
     @ManyToOne
     @JoinColumn(name = "id_admin")
     private Admin admin;
 
+    // 🔹 Relation Many-to-One avec Local (optionnelle)
+    @ManyToOne(optional = true) // permet null
+    @JoinColumn(name = "id_local", nullable = true) // colonne SQL autorise null
+    private Local local;
 
-    // Getters & Setters
+    // ===== Getters & Setters =====
 
-    public Long getIdChauffeur() {
-        return idChauffeur;
-    }
+    public Long getIdChauffeur() { return idChauffeur; }
+    public void setIdChauffeur(Long idChauffeur) { this.idChauffeur = idChauffeur; }
 
-    public void setIdChauffeur(Long idChauffeur) {
-        this.idChauffeur = idChauffeur;
-    }
+    public LocalDate getDatePriseLicense() { return datePriseLicense; }
+    public void setDatePriseLicense(LocalDate datePriseLicense) { this.datePriseLicense = datePriseLicense; }
 
-    public LocalDate getDatePriseLicense() {
-        return datePriseLicense;
-    }
+    public int getAnciennete() { return anciennete; }
+    public void setAnciennete(int anciennete) { this.anciennete = anciennete; }
 
-    public void setDatePriseLicense(LocalDate datePriseLicense) {
-        this.datePriseLicense = datePriseLicense;
-    }
+    public String getTypeVehiculePermis() { return typeVehiculePermis; }
+    public void setTypeVehiculePermis(String typeVehiculePermis) { this.typeVehiculePermis = typeVehiculePermis; }
 
-    public int getAnciennete() {
-        return anciennete;
-    }
+    public LocalDate getDateExpirationPermis() { return dateExpirationPermis; }
+    public void setDateExpirationPermis(LocalDate dateExpirationPermis) { this.dateExpirationPermis = dateExpirationPermis; }
 
-    public void setAnciennete(int anciennete) {
-        this.anciennete = anciennete;
-    }
+    public String getRegion() { return region; }
+    public void setRegion(String region) { this.region = region; }
 
-    public String getTypeVehiculePermis() {
-        return typeVehiculePermis;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public void setTypeVehiculePermis(String typeVehiculePermis) {
-        this.typeVehiculePermis = typeVehiculePermis;
-    }
+    public Admin getAdmin() { return admin; }
+    public void setAdmin(Admin admin) { this.admin = admin; }
 
-    public LocalDate getDateExpirationPermis() {
-        return dateExpirationPermis;
-    }
-
-    public void setDateExpirationPermis(LocalDate dateExpirationPermis) {
-        this.dateExpirationPermis = dateExpirationPermis;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public Local getLocal() { return local; }
+    public void setLocal(Local local) { this.local = local; }
 }

@@ -34,9 +34,14 @@ public class FeuilleDeRoute {
     private LocalTime heureDepartReelle;
     private LocalTime heureArriveeReelle;
 
-    private double kmDepart;
-    private double kmArrivee;
-    private double consommationCarburant;
+    @Column(nullable = true)
+    private Double kmDepart;
+
+    @Column(nullable = true)
+    private Double kmArrivee;
+
+    @Column(nullable = true)
+    private Double consommationCarburant;
 
     private String observations;
     private LocalDate dateGeneration;
@@ -72,14 +77,14 @@ public class FeuilleDeRoute {
     public LocalTime getHeureArriveeReelle() { return heureArriveeReelle; }
     public void setHeureArriveeReelle(LocalTime heureArriveeReelle) { this.heureArriveeReelle = heureArriveeReelle; }
 
-    public double getKmDepart() { return kmDepart; }
-    public void setKmDepart(double kmDepart) { this.kmDepart = kmDepart; }
+    public Double getKmDepart() { return kmDepart; }
+    public void setKmDepart(Double kmDepart) { this.kmDepart = kmDepart; }
 
-    public double getKmArrivee() { return kmArrivee; }
-    public void setKmArrivee(double kmArrivee) { this.kmArrivee = kmArrivee; }
+    public Double getKmArrivee() { return kmArrivee; }
+    public void setKmArrivee(Double kmArrivee) { this.kmArrivee = kmArrivee; }
 
-    public double getConsommationCarburant() { return consommationCarburant; }
-    public void setConsommationCarburant(double consommationCarburant) { this.consommationCarburant = consommationCarburant; }
+    public Double getConsommationCarburant() { return consommationCarburant; }
+    public void setConsommationCarburant(Double consommationCarburant) { this.consommationCarburant = consommationCarburant; }
 
     public String getObservations() { return observations; }
     public void setObservations(String observations) { this.observations = observations; }
