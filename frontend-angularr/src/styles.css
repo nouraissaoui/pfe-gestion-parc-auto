@@ -1,1 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
+ /*:root {
+            --primary-yellow: #FFD000;
+            --primary-black: #1a1a1a;
+            --dark-bg: #2a2a2a;
+            --agil-red: #E31837;
+            --text-dark: #1a1a1a;
+            --text-muted: #666666;
+            --bg-light: #f5f5f5;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+            --border-radius: 16px;
+        }*/
+        /* RESET GLOBAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* VARIABLES GLOBALES */
+:root {
+  --primary-yellow: #FDB913;
+  --dark-bg: #1a1a1a;
+  --darker-bg: #0f0f0f;
+  --light-gray: #f5f5f5;
+  --gray: #666;
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --info: #17a2b8;
+  --white: #ffffff;
+}
+
+/* BODY GLOBAL */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--light-gray);
+  color: #333;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--light-gray);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary-yellow);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffcc00;
+}

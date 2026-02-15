@@ -243,3 +243,59 @@ header {
         padding: 14px;
     }
 }
+/* ================= LOGIN FORM - CLAIR STYLE PETROL ================= */
+.login-form {
+    background: linear-gradient(145deg, #93999f, #878d91); /* dégradé clair bleu-pétrole doux */
+    border: 2px solid #FFD700; /* bordure dorée */
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.login-form input {
+    background: #ffffff; /* blanc lumineux */
+    color: #1b1b1b;       /* texte noir */
+    border: 1px solid #023249; /* gris-bleu clair */
+    border-radius: 15px;
+}
+
+.login-form input::placeholder {
+    color: #5d7a8c; /* bleu pétrole clair pour placeholder */
+}
+
+.login-form input:focus {
+    border-color: #e1e50d; /* bleu pétrole foncé au focus */
+    box-shadow: 0 0 12px #e1e50d;
+    background: #f0f8fb;
+}
+
+.login-form button {
+    background: linear-gradient(45deg, #FFD700, #FFD700); /* bleu pétrole → doré */
+    color: #ffffff;
+    font-weight: 800;
+    border-radius: 20px;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.login-form button:hover {
+    background: linear-gradient(45deg, #FFD700, #FFD700); /* hover inversé doré → bleu pétrole */
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+.logo-img {
+    height: 85px;        /* agrandi de 70px → 120px */
+    width: auto;
+    border-radius: 25px;  /* un peu plus arrondi pour le grand logo */
+    box-shadow: 0 10px 40px rgba(255,215,0,0.6); /* ombre légèrement plus grande */
+    transform: perspective(400px) rotateY(12deg); /* ajusté perspective pour le plus grand logo */
+    transition: transform 0.8s ease, box-shadow 0.8s ease;
+}
+
+.logo-img:hover {
+    transform: perspective(400px) rotateY(0deg) scale(1.15);
+    box-shadow: 0 15px 50px rgba(255,215,0,0.9);
+}
+.login-form input::placeholder {
+    color: #555; /* gris moyen, visible sur fond clair */
+    opacity: 1;  /* parfois les navigateurs mettent une opacité faible par défaut */
+    font-weight: 500;
+}
