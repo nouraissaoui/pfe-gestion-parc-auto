@@ -22,10 +22,12 @@
 
     <div class="header-right">
         <div class="user-info">
-        <div class="user-avatar">CP</div>
+        <div class="user-avatar">
+            {{ chefNom.charAt(0) }}{{ chefPrenom.charAt(0) }}
+        </div>
         <div class="user-details">
-            <h3>Chef de Parc</h3>
-            <p>Local Principal - Tunis</p>
+            <h3>{{ chefNom }} {{ chefPrenom }}</h3>
+            <p>{{ localNom }}</p>
         </div>
         </div>
 

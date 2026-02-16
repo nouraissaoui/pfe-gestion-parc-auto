@@ -18,10 +18,12 @@ export class ChefParcDashboardComponent implements OnInit {
   vehiculesDisponibles = 0;
   declarationsEnAttente = 0;
   maintenanceEnAttente = 0;
+  chefNom: string = '';
+  chefPrenom: string = '';
+  localNom: string = '';
 
-  chefId = 2;   // à récupérer dynamiquement depuis login
-  localId = 1;  // à récupérer dynamiquement depuis login
-
+  chefId = 0;   // récupéré depuis la session
+  localId = 0;  // récupéré depuis la session
   stats: any[] = [];
 
   constructor(
@@ -29,8 +31,23 @@ export class ChefParcDashboardComponent implements OnInit {
     private service: GestionParcService
   ) {}
 
+ 
+
   ngOnInit(): void {
+    this.loadSession();
     this.loadStats();
+  }
+
+  loadSession() {
+    const userJson = localStorage.getItem('user');
+    if(userJson) {
+      const user = JSON.parse(userJson);
+      this.chefNom = user.nom;
+      this.chefPrenom = user.prenom;
+      this.chefId = user.idChefParc;
+      this.localId = user.idLocal;
+      this.localNom = 'Local Principal - Tunis'; // tu peux récupérer dynamiquement si besoin
+    }
   }
 
   loadStats() {
@@ -112,7 +129,7 @@ export class ChefParcDashboardComponent implements OnInit {
   logout() {
     if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
       localStorage.clear();
-      this.router.navigate(['/login']);
+      this.router.navigate(['/']);
     }
   }
 

@@ -12,6 +12,18 @@ export interface DashboardStats {
   declarationsEnAttente: number;
   maintenanceEnAttente: number;
 }
+export interface LoginResponse {
+  idUser: number;
+  nom: string;
+  prenom: string;
+  role: string;
+
+  idChefParc?: number;
+  idChauffeur?: number;
+  idAdmin?: number;
+
+  idLocal?: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -24,13 +36,12 @@ export class GestionParcService {
   constructor(private http: HttpClient) { }
 
   // Méthode pour login
-  login(email: string, password: string): Observable<string> {
-    return this.http.post<string>(
-      `${this.baseUrl}/login`,
-      { mail: email, motDePasse: password },
-      { responseType: 'text' as 'json' } // pour recevoir une simple chaîne
-    );
-  }
+login(email: string, password: string): Observable<LoginResponse> {
+  return this.http.post<LoginResponse>(
+    `${this.baseUrl}/login`,
+    { mail: email, motDePasse: password }
+  );
+}
   // Total véhicules
   getTotalVehicules(idLocal: number): Observable<number> {
     return this.http.get<number>(`${this.dashboardUrl}/${idLocal}/total-vehicules`);
