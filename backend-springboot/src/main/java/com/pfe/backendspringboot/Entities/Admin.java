@@ -33,5 +33,51 @@ public class Admin {
     @OneToMany(mappedBy = "admin")
     private List<Vehicule> vehicules;
 
-    // Getters & Setters
+    public Long getIdAdmin() {
+        return idAdmin;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Chauffeur> getChauffeurs() {
+        return chauffeurs;
+    }
+
+    public List<ChefParc> getChefsDuParc() {
+        return chefsDuParc;
+    }
+
+    public List<Local> getLocals() {
+        return locals;
+    }
+
+    public List<Vehicule> getVehicules() {
+        return vehicules;
+    }
+
+    public void setIdAdmin(Long idAdmin) {
+        this.idAdmin = idAdmin;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setChauffeurs(List<Chauffeur> chauffeurs) {
+        this.chauffeurs = chauffeurs;
+    }
+
+    public void setChefsDuParc(List<ChefParc> chefsDuParc) {
+        this.chefsDuParc = chefsDuParc;
+    }
+
+    public void setLocals(List<Local> locals) {
+        this.locals = locals;
+    }
+
+    public void setVehicules(List<Vehicule> vehicules) {
+        this.vehicules = vehicules;
+    }
 }
