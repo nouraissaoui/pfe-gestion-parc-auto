@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +25,7 @@ public class GestionParcService {
 
     @Autowired
     private AdminRepository adminRepository;
+
 
     private final VehiculeRepository vehiculeRepository;
     private final MissionRepository missionRepository;
@@ -109,4 +111,19 @@ public class GestionParcService {
     public Optional<Admin> getAdminByUser(User user){
         return adminRepository.findByUser(user);
     }
+    //======================gestion des vehicules de son local==========
+    // 1️⃣ Consulter véhicules
+    public List<Vehicule> getVehiculesByLocal(Long idLocal){
+        return vehiculeRepository.findByLocal_IdLocal(idLocal);
+    }
+
+    // 2️⃣ Mettre à jour état
+    public Vehicule updateEtat(Long idVehicule, EtatVehicule etat){
+        Vehicule v = vehiculeRepository.findById(idVehicule)
+                .orElseThrow(() -> new RuntimeException("Vehicule introuvable"));
+
+        v.setEtat(etat);
+        return vehiculeRepository.save(v);
+    }
+
 }

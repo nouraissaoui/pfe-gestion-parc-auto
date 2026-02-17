@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -142,4 +143,17 @@ public class GestionParcController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    // 🔹 Consulter véhicules
+    @GetMapping("/{idLocal}/vehicules")
+    public List<Vehicule> getVehicules(@PathVariable Long idLocal){
+        return GestionParcService.getVehiculesByLocal(idLocal);
+    }
+
+    // 🔹 Modifier état
+    @PutMapping("/vehicule/{idVehicule}/etat")
+    public Vehicule updateEtat(@PathVariable Long idVehicule,
+                               @RequestParam EtatVehicule etat){
+        return GestionParcService.updateEtat(idVehicule, etat);
+    }
+
 }

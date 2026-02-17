@@ -55,4 +55,5 @@ public class Vehicule {
 
     public EtatVehicule getEtat() { return etat; }
     public void setEtat(EtatVehicule etat) { this.etat = etat; }
+
 }
