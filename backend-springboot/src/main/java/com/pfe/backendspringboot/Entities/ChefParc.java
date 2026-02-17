@@ -1,5 +1,6 @@
 package com.pfe.backendspringboot.Entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -20,6 +21,7 @@ public class ChefParc {
     // Relation 1-1 avec Local
     @OneToOne
     @JoinColumn(name = "id_local", referencedColumnName = "id_local")
+    @JsonManagedReference
     private Local local;
 
     @ManyToOne

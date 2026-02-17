@@ -1,5 +1,6 @@
 package com.pfe.backendspringboot.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,6 +19,7 @@ public class Local {
 
     // Relation 1-1 avec ChefParc
     @OneToOne(mappedBy = "local", cascade = CascadeType.ALL)
+    @JsonBackReference
     private ChefParc chefParc;
 
     @ManyToOne
