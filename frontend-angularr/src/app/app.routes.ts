@@ -3,6 +3,8 @@ import { AuthentificationComponent } from './authentification/authentification.c
 import { ChefParcDashboardComponent } from './chef-parc-dashboard/chef-parc-dashboard.component';
 import { VehiculesChefComponent } from './vehicules-chef/vehicules-chef.component';
 import { ChefParcLayoutComponent } from './layouts/chef-parc-layout/chef-parc-layout.component';
+import { LocauxadminComponent } from './locauxadmin/locauxadmin.component';
+import { Adminlayoutcomponent} from './adminlayoutcomponent/adminlayoutcomponent.component';
 
 
 
@@ -16,6 +18,14 @@ import { ChefParcLayoutComponent } from './layouts/chef-parc-layout/chef-parc-la
 ];*/
 export const routes: Routes = [
 { path: '', component: AuthentificationComponent },
+ {
+  path: 'admin',
+  children: [
+
+    { path: 'locaux', component: LocauxadminComponent }  // ← Page locaux pour admin
+  ]
+}
+,
 {
   path: 'chef-parc',
   component: ChefParcLayoutComponent,
