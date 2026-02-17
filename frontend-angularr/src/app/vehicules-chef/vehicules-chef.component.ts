@@ -10,8 +10,10 @@ export class VehiculesChefComponent {
 
 }
 */
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
+
 
 interface Vehicule {
   matricule: string;
@@ -29,7 +31,6 @@ interface Vehicule {
   styleUrl: './vehicules-chef.component.css'
 })
 export class VehiculesChefComponent implements OnInit {
-
 totalVehicules = 0;
   missionsEnCours = 0;
   vehiculesDisponibles = 0;
@@ -101,4 +102,7 @@ totalVehicules = 0;
     const nextIndex = (nouveauxEtats.indexOf(v.etat) + 1) % nouveauxEtats.length;
     v.etat = nouveauxEtats[nextIndex] as Vehicule['etat'];
   }
+
+  
+
 }
