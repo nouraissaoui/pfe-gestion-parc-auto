@@ -536,3 +536,14 @@
     -webkit-text-fill-color: transparent;
     text-shadow: 2px 2px 12px rgba(0,0,0,0.5);
 }
+.menu-item.active {
+    background: rgba(253, 185, 19, 0.25); /* un peu plus marqué que hover */
+    border-left-color: var(--primary-yellow);
+    transform: translateX(5px);
+    color: var(--white);
+    font-weight: 700;
+}
+.menu-item.active:hover {
+    background: rgba(253, 185, 19, 0.3);
+    transform: translateX(7px);
+}

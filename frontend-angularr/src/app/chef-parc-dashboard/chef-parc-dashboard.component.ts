@@ -4,10 +4,12 @@ import { GestionParcService } from '../gestion-parc.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { ChefParcLayoutComponent } from "../layouts/chef-parc-layout/chef-parc-layout.component";
 
 @Component({
   selector: 'app-chef-parc-dashboard',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule, ChefParcLayoutComponent],
   templateUrl: './chef-parc-dashboard.component.html',
   styleUrls: ['./chef-parc-dashboard.component.css']
 })
@@ -122,8 +124,9 @@ export class ChefParcDashboardComponent implements OnInit {
       }
     ];
   }
-
+  activePage: string = 'dashboard';
   navigate(page: string) {
+    this.activePage = page;
     this.router.navigate([`/${page}`]);
   }
 

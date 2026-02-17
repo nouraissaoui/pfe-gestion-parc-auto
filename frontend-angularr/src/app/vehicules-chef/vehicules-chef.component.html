@@ -1,170 +1,415 @@
-    <div class="particles-bg">
-    <div class="bg-particle" *ngFor="let i of [1,2,3,4]"></div>
-    </div>
 
-    <!-- HEADER -->
-    <header class="header">
-    <div class="header-left">
-        <div class="logo">
-        <img 
-            src="https://tse4.mm.bing.net/th/id/OIP.DqzAYevLmA0BnSvWkDiMsQAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
-            alt="AGIL Logo"
-            class="logo-img"
-        />
+    <!-- ── HERO ── -->
+    <div class="hero">
+        <div class="hero-inner">
         <div>
-            <div class="company-title">AGIL Energy</div>
-            <div class="company-subtitle">
-            Société Nationale de Distribution des Pétroles
+            <h2>Gestion des <em>Véhicules</em></h2>
+            <p>Suivi en temps réel du parc automobile — 5 véhicules enregistrés</p>
+        </div>
+        <div class="hero-actions">
+            <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input class="search-input" type="text" placeholder="Rechercher…" id="srch" oninput="doSearch()">
             </div>
+            <button class="btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Ajouter un véhicule
+            </button>
         </div>
         </div>
     </div>
 
-    <div class="header-right">
-        <div class="user-info">
-        <div class="user-avatar">
-            {{ chefNom.charAt(0) }}{{ chefPrenom.charAt(0) }}
+    <!-- ── STAT PILLS ── -->
+    <div class="stats-row">
+        <div class="stat-pill sp-total">
+        <div class="stat-icon">🚘</div>
+        <div>
+            <div class="stat-num">05</div>
+            <div class="stat-lbl">Total Véhicules</div>
         </div>
-        <div class="user-details">
-            <h3>{{ chefNom }} {{ chefPrenom }}</h3>
-            <p>{{ localNom }}</p>
+        </div>
+        <div class="stat-pill sp-dispo">
+        <div class="stat-icon">✅</div>
+        <div>
+            <div class="stat-num">02</div>
+            <div class="stat-lbl">Disponibles</div>
+        </div>
+        </div>
+        <div class="stat-pill sp-mission">
+        <div class="stat-icon">📍</div>
+        <div>
+            <div class="stat-num">01</div>
+            <div class="stat-lbl">En Mission</div>
+        </div>
+        </div>
+        <div class="stat-pill sp-maint">
+        <div class="stat-icon">🔧</div>
+        <div>
+            <div class="stat-num">01</div>
+            <div class="stat-lbl">En Entretien</div>
+        </div>
+        </div>
+        <div class="stat-pill sp-indispo">
+        <div class="stat-icon">🚫</div>
+        <div>
+            <div class="stat-num">01</div>
+            <div class="stat-lbl">Indisponible</div>
+        </div>
+        </div>
+    </div>
+
+    <!-- ── TABLE CARD ── -->
+    <div class="table-card">
+        <!-- Card header -->
+        <div class="tc-header">
+        <div class="tc-title">
+            <div class="gold-dot"></div>
+            <h3>Inventaire du Parc</h3>
+            <span class="count-badge">5</span>
+        </div>
+        <div class="filter-pills">
+            <button class="fp on" onclick="setF('all',this)">Tous</button>
+            <button class="fp" onclick="setF('dispo',this)">Disponibles</button>
+            <button class="fp" onclick="setF('mission',this)">En Mission</button>
+            <button class="fp" onclick="setF('entretien',this)">Entretien</button>
+            <button class="fp" onclick="setF('indispo',this)">Indisponible</button>
         </div>
         </div>
 
-        <button class="logout-btn" (click)="logout()">
-        ⏻ Déconnexion
-        </button>
-    </div>
-    </header>
+        <!-- Table -->
+        <div style="overflow-x:auto;">
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Matricule</th>
+                <th>Véhicule</th>
+                <th>Année</th>
+                <th>Carburant</th>
+                <th>État</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="vtable">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-    <h2>⚙ Menu</h2>
+            <tr data-f="dispo" data-q="toyota corolla 123abc">
+                <td><div class="row-num">1</div></td>
+                <td>
+                <span class="matricule-tag">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    123ABC
+                </span>
+                </td>
+                <td>
+                <div class="vehicle-cell">
+                    <div class="veh-icon-wrap">🚗</div>
+                    <div class="veh-info">
+                    <strong>Toyota</strong>
+                    <span>Corolla</span>
+                    </div>
+                </div>
+                </td>
+                <td><span class="year-tag">2020</span></td>
+                <td><div class="fuel-cell f-essence"><div class="fuel-orb"></div>Essence</div></td>
+                <td><span class="badge b-dispo">Disponible</span></td>
+                <td class="actions">
+                <button class="btn-ac btn-consult">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    Consulter
+                </button>
+                <button class="btn-ac btn-affect">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    Affecter
+                </button>
+                <button class="btn-ac btn-maj">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Mettre à jour
+                </button>
+                <button class="btn-del" title="Supprimer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                </button>
+                </td>
+            </tr>
 
-    <div class="menu-item" (click)="navigate('vehicules')">
-        <span class="menu-icon">🚗</span>
-        <span>Gérer les Véhicules</span>
+            <tr data-f="mission" data-q="ford focus 456def">
+                <td><div class="row-num">2</div></td>
+                <td>
+                <span class="matricule-tag">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    456DEF
+                </span>
+                </td>
+                <td>
+                <div class="vehicle-cell">
+                    <div class="veh-icon-wrap">🚙</div>
+                    <div class="veh-info">
+                    <strong>Ford</strong>
+                    <span>Focus</span>
+                    </div>
+                </div>
+                </td>
+                <td><span class="year-tag">2019</span></td>
+                <td><div class="fuel-cell f-diesel"><div class="fuel-orb"></div>Diesel</div></td>
+                <td><span class="badge b-mission">En Mission</span></td>
+                <td class="actions">
+                <button class="btn-ac btn-consult"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Consulter</button>
+                <button class="btn-ac btn-affect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Affecter</button>
+                <button class="btn-ac btn-maj"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Mettre à jour</button>
+                <button class="btn-del" title="Supprimer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </td>
+            </tr>
+
+            <tr data-f="entretien" data-q="bmw x5 789ghi">
+                <td><div class="row-num">3</div></td>
+                <td>
+                <span class="matricule-tag">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    789GHI
+                </span>
+                </td>
+                <td>
+                <div class="vehicle-cell">
+                    <div class="veh-icon-wrap">🚕</div>
+                    <div class="veh-info">
+                    <strong>BMW</strong>
+                    <span>X5</span>
+                    </div>
+                </div>
+                </td>
+                <td><span class="year-tag">2021</span></td>
+                <td><div class="fuel-cell f-essence"><div class="fuel-orb"></div>Essence</div></td>
+                <td><span class="badge b-entretien">En Entretien</span></td>
+                <td class="actions">
+                <button class="btn-ac btn-consult"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Consulter</button>
+                <button class="btn-ac btn-affect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Affecter</button>
+                <button class="btn-ac btn-maj"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Mettre à jour</button>
+                <button class="btn-del" title="Supprimer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </td>
+            </tr>
+
+            <tr data-f="indispo" data-q="mercedes c200 321jkl">
+                <td><div class="row-num">4</div></td>
+                <td>
+                <span class="matricule-tag">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    321JKL
+                </span>
+                </td>
+                <td>
+                <div class="vehicle-cell">
+                    <div class="veh-icon-wrap">🏎️</div>
+                    <div class="veh-info">
+                    <strong>Mercedes</strong>
+                    <span>C200</span>
+                    </div>
+                </div>
+                </td>
+                <td><span class="year-tag">2022</span></td>
+                <td><div class="fuel-cell f-diesel"><div class="fuel-orb"></div>Diesel</div></td>
+                <td><span class="badge b-indispo">Indisponible</span></td>
+                <td class="actions">
+                <button class="btn-ac btn-consult"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Consulter</button>
+                <button class="btn-ac btn-affect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Affecter</button>
+                <button class="btn-ac btn-maj"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Mettre à jour</button>
+                <button class="btn-del" title="Supprimer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </td>
+            </tr>
+
+            <tr data-f="dispo" data-q="renault clio 654mno">
+                <td><div class="row-num">5</div></td>
+                <td>
+                <span class="matricule-tag">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    654MNO
+                </span>
+                </td>
+                <td>
+                <div class="vehicle-cell">
+                    <div class="veh-icon-wrap">🚐</div>
+                    <div class="veh-info">
+                    <strong>Renault</strong>
+                    <span>Clio</span>
+                    </div>
+                </div>
+                </td>
+                <td><span class="year-tag">2020</span></td>
+                <td><div class="fuel-cell f-essence"><div class="fuel-orb"></div>Essence</div></td>
+                <td><span class="badge b-dispo">Disponible</span></td>
+                <td class="actions">
+                <button class="btn-ac btn-consult"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Consulter</button>
+                <button class="btn-ac btn-affect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Affecter</button>
+                <button class="btn-ac btn-maj"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Mettre à jour</button>
+                <button class="btn-del" title="Supprimer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+        </div>
+
+        <!-- Card footer -->
+        <div class="tc-footer">
+        <p>Affichage <strong>1–5</strong> sur <strong>5</strong> véhicules</p>
+        <div class="pager">
+            <button class="pg-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="pg-btn on">1</button>
+            <button class="pg-btn">2</button>
+            <button class="pg-btn">3</button>
+            <button class="pg-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+        </div>
+        </div>
     </div>
 
-    <div class="menu-item" (click)="navigate('chauffeurs')">
-        <span class="menu-icon">👤</span>
-        <span>Consulter les Chauffeurs</span>
+    <!-- ── FOOTER ── -->
+    <div class="footer-bar">
+        <p>© 2026 <strong>AGIL ENERGY</strong> · Système de Gestion du Parc Automobile</p>
     </div>
 
-    <div class="menu-item" (click)="navigate('missions')">
-        <span class="menu-icon">📋</span>
-        <span>Affecter les Missions</span>
-    </div>
+    
+<script>
+/* ══════════════════════════════════════
+   PARTICLE SYSTEM
+══════════════════════════════════════ */
+const cvs = document.getElementById('cvs');
+const ctx = cvs.getContext('2d');
+let W, H;
 
-    <div class="menu-item" (click)="navigate('entretiens')">
-        <span class="menu-icon">🔧</span>
-        <span>Gérer les Entretiens</span>
-    </div>
+function resize() {
+  W = cvs.width = window.innerWidth;
+  H = cvs.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
 
-    <div class="menu-item" (click)="navigate('declarations')">
-        <span class="menu-icon">📄</span>
-        <span>Consulter Déclarations</span>
-    </div>
+class P {
+  constructor(init) {
+    this.reset(init);
+  }
+  reset(init) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : H + 20;
+    this.r = Math.random() * 2.5 + 0.5;
+    this.vy = -(Math.random() * 0.55 + 0.18);
+    this.vx = (Math.random() - 0.5) * 0.35;
+    this.alpha = Math.random() * 0.22 + 0.05;
+    this.phase = Math.random() * Math.PI * 2;
+    this.phaseSpeed = Math.random() * 0.008 + 0.003;
+    const isGold = Math.random() < 0.7;
+    this.r0 = isGold ? 245 : 20;
+    this.g0 = isGold ? 194 : 20;
+    this.b0 = isGold ? 0 : 20;
+  }
+  step() {
+    this.y += this.vy;
+    this.x += this.vx;
+    this.phase += this.phaseSpeed;
+    if (this.y < -8) this.reset(false);
+  }
+  draw() {
+    const a = this.alpha * (0.7 + 0.3 * Math.sin(this.phase));
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r * (1 + 0.2 * Math.sin(this.phase)), 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.r0},${this.g0},${this.b0},${a})`;
+    ctx.fill();
+  }
+}
 
-    <div class="menu-item" (click)="navigate('carburants')">
-        <span class="menu-icon">⛽</span>
-        <span>Gérer Cartes Carburants</span>
-    </div>
+// Hex / diamond shapes
+class Diamond {
+  constructor() { this.reset(true); }
+  reset(init) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : H + 20;
+    this.s = Math.random() * 5 + 2;
+    this.vy = -(Math.random() * 0.3 + 0.1);
+    this.vx = (Math.random() - 0.5) * 0.2;
+    this.rot = Math.random() * Math.PI;
+    this.rotV = (Math.random() - 0.5) * 0.015;
+    this.alpha = Math.random() * 0.12 + 0.03;
+  }
+  step() {
+    this.y += this.vy;
+    this.x += this.vx;
+    this.rot += this.rotV;
+    if (this.y < -10) this.reset(false);
+  }
+  draw() {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rot);
+    ctx.beginPath();
+    ctx.moveTo(0, -this.s);
+    ctx.lineTo(this.s * 0.6, 0);
+    ctx.lineTo(0, this.s);
+    ctx.lineTo(-this.s * 0.6, 0);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(245,194,0,${this.alpha})`;
+    ctx.fill();
+    ctx.restore();
+  }
+}
 
-    <div class="menu-item" (click)="navigate('statistiques')">
-        <span class="menu-icon">📊</span>
-        <span>Consulter Statistiques</span>
-    </div>
-    </aside>
-    <!-- MAIN CONTENT -->
-    <div class="vehicule-container container mt-4">
-    <h3>Gestion des Véhicules</h3>
+const dots = Array.from({length: 90}, () => new P(true));
+const diamonds = Array.from({length: 20}, () => new Diamond());
 
-    <!-- Tableau statique des véhicules -->
-    <table class="table table-hover table-striped mt-3">
-        <thead class="table-dark">
-        <tr>
-            <th>#</th>
-            <th>Matricule</th>
-            <th>Marque</th>
-            <th>Modèle</th>
-            <th>Année</th>
-            <th>Carburant</th>
-            <th>État</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>1</td>
-            <td>123ABC</td>
-            <td>Toyota</td>
-            <td>Corolla</td>
-            <td>2020</td>
-            <td>Essence</td>
-            <td><span class="badge badge-success">DISPONIBLE</span></td>
-            <td>
-            <button class="btn btn-info btn-sm">Consulter</button>
-            <button class="btn btn-success btn-sm">Affecter</button>
-            <button class="btn btn-warning btn-sm">Mettre à jour</button>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>456DEF</td>
-            <td>Ford</td>
-            <td>Focus</td>
-            <td>2019</td>
-            <td>Diesel</td>
-            <td><span class="badge badge-primary">EN_MISSION</span></td>
-            <td>
-            <button class="btn btn-info btn-sm">Consulter</button>
-            <button class="btn btn-success btn-sm">Affecter</button>
-            <button class="btn btn-warning btn-sm">Mettre à jour</button>
-            </td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>789GHI</td>
-            <td>BMW</td>
-            <td>X5</td>
-            <td>2021</td>
-            <td>Essence</td>
-            <td><span class="badge badge-warning">EN_ENTRETIEN</span></td>
-            <td>
-            <button class="btn btn-info btn-sm">Consulter</button>
-            <button class="btn btn-success btn-sm">Affecter</button>
-            <button class="btn btn-warning btn-sm">Mettre à jour</button>
-            </td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>321JKL</td>
-            <td>Mercedes</td>
-            <td>C200</td>
-            <td>2022</td>
-            <td>Diesel</td>
-            <td><span class="badge badge-danger">INDISPONIBLE</span></td>
-            <td>
-            <button class="btn btn-info btn-sm">Consulter</button>
-            <button class="btn btn-success btn-sm">Affecter</button>
-            <button class="btn btn-warning btn-sm">Mettre à jour</button>
-            </td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <td>654MNO</td>
-            <td>Renault</td>
-            <td>Clio</td>
-            <td>2020</td>
-            <td>Essence</td>
-            <td><span class="badge badge-success">DISPONIBLE</span></td>
-            <td>
-            <button class="btn btn-info btn-sm">Consulter</button>
-            <button class="btn btn-success btn-sm">Affecter</button>
-            <button class="btn btn-warning btn-sm">Mettre à jour</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    </div>
+// Soft background gradient blobs
+const blobs = [
+  { x: 0.85, y: 0.15, r: 280, c: 'rgba(245,194,0,0.05)' },
+  { x: 0.1, y: 0.75, r: 200, c: 'rgba(245,194,0,0.04)' },
+  { x: 0.5, y: 0.5, r: 320, c: 'rgba(245,194,0,0.025)' },
+];
+
+function drawBlobs() {
+  blobs.forEach(b => {
+    const grd = ctx.createRadialGradient(b.x*W, b.y*H, 0, b.x*W, b.y*H, b.r);
+    grd.addColorStop(0, b.c);
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(b.x*W, b.y*H, b.r, 0, Math.PI*2);
+    ctx.fill();
+  });
+}
+
+function raf() {
+  ctx.clearRect(0, 0, W, H);
+  drawBlobs();
+  dots.forEach(p => { p.step(); p.draw(); });
+  diamonds.forEach(d => { d.step(); d.draw(); });
+  requestAnimationFrame(raf);
+}
+raf();
+
+/* ══════════════════════════════════════
+   FILTER + SEARCH
+══════════════════════════════════════ */
+let curF = 'all';
+
+function setF(f, btn) {
+  curF = f;
+  document.querySelectorAll('.fp').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  applyFilters();
+}
+
+function doSearch() { applyFilters(); }
+
+function applyFilters() {
+  const q = document.getElementById('srch').value.toLowerCase().trim();
+  document.querySelectorAll('#vtable tr').forEach(row => {
+    const rowF = row.dataset.f || '';
+    const rowQ = row.dataset.q || '';
+    const matchF = curF === 'all' || rowF === curF;
+    const matchQ = !q || rowQ.includes(q);
+    row.style.display = matchF && matchQ ? '' : 'none';
+  });
+}
+</script>

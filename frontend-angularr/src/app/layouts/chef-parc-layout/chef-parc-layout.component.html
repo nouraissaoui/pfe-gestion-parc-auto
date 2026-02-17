@@ -1,0 +1,108 @@
+    <div class="particles-bg">
+    <div class="bg-particle" *ngFor="let i of [1,2,3,4]"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header">
+    <div class="header-left">
+        <div class="logo">
+        <img 
+            src="https://tse4.mm.bing.net/th/id/OIP.DqzAYevLmA0BnSvWkDiMsQAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+            alt="AGIL Logo"
+            class="logo-img"
+        />
+        <div>
+            <div class="company-title">AGIL Energy</div>
+            <div class="company-subtitle">
+            Société Nationale de Distribution des Pétroles
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="header-right">
+        <div class="user-info">
+        <div class="user-avatar">
+            {{ Nom.charAt(0) }}{{ Prenom.charAt(0) }}
+        </div>
+        <div class="user-details">
+            <h3>{{ Nom }} {{ Prenom }}</h3>
+            <p>{{ role }}</p>
+        </div>
+        </div>
+
+        <button class="logout-btn" (click)="logout()">
+        ⏻ Déconnexion
+        </button>
+    </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+    <h2>
+    <a [routerLink]="['/chef-parc/dashboard']" style="text-decoration: none; color: inherit;" >
+        ⚙ Menu
+    </a>
+    </h2>
+
+    <div class="menu-item"
+        [routerLink]="['/chef-parc/vehicules']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <span class="menu-icon">🚗</span>
+        <span>Gérer les Véhicules</span>
+    </div>
+
+    <div class="menu-item" 
+        [routerLink]="['/chef-parc/chauffeurs']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <span class="menu-icon">👤</span>
+        <span>Consulter les Chauffeurs</span>
+    </div>
+
+    <div class="menu-item" 
+        [routerLink]="['/chef-parc/missions']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <span class="menu-icon">📋</span>
+        <span>Affecter les Missions</span>
+    </div>
+
+    <div class="menu-item"        
+        [routerLink]="['/chef-parc/entretiens']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">>
+        <span class="menu-icon">🔧</span>
+        <span>Gérer les Entretiens</span>
+    </div>
+
+    <div class="menu-item" 
+        [routerLink]="['/chef-parc/declarations']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <span class="menu-icon">📄</span>
+        <span>Consulter Déclarations</span>
+    </div>
+
+    <div class="menu-item" 
+        [routerLink]="['/chef-parc/carburants']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <span class="menu-icon">⛽</span>
+        <span>Gérer Cartes Carburants</span>
+    </div>
+
+    <div class="menu-item"         
+        [routerLink]="['/chef-parc/stats']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">>
+        <span class="menu-icon">📊</span>
+        <span>Consulter Statistiques</span>
+    </div>
+    </aside>
+
+<!-- CONTENT AREA -->
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>

@@ -35,15 +35,15 @@ export class AuthentificationComponent {
         switch(response.role) {
 
           case 'ADMIN':
-            this.router.navigate(['/admin-dashboard']);
+            this.router.navigate(['/admin/dashboard']);
             break;
 
           case 'CHAUFFEUR':
-            this.router.navigate(['/chauffeur-dashboard']);
+            this.router.navigate(['/chauffeur/dashboard']);
             break;
 
           case 'CHEF_DU_PARC':
-            this.router.navigate(['/chef-parc']);
+            this.router.navigate(['/chef-parc/dashboard']);
             break;
 
           default:
