@@ -3,6 +3,7 @@ package com.pfe.backendspringboot.Entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "feuille_de_route")
@@ -48,6 +49,10 @@ public class FeuilleDeRoute {
 
     @Enumerated(EnumType.STRING)
     private StatutFeuilleDeRoute statut;
+
+    //====récupérer toutes les missions d’une feuille facilement
+    @OneToMany(mappedBy = "feuilleDeRoute")
+    private List<Mission> missions;
 
     // ===== Getters et Setters =====
     public Long getIdFeuille() { return idFeuille; }
