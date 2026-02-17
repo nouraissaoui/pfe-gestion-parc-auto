@@ -1,6 +1,6 @@
 package com.pfe.backendspringboot.DTO;
 
-public class LoginResponse {
+public class ProfileResponse {
 
     private Long idUser;
     private String nom;
@@ -13,12 +13,12 @@ public class LoginResponse {
 
     private Long idLocal;
 
-    public LoginResponse(Long idUser, String nom, String prenom,
-                         String role,
-                         Long idChefParc,
-                         Long idChauffeur,
-                         Long idAdmin,
-                         Long idLocal) {
+    public ProfileResponse(Long idUser, String nom, String prenom,
+                           String role,
+                           Long idChefParc,
+                           Long idChauffeur,
+                           Long idAdmin,
+                           Long idLocal) {
 
         this.idUser = idUser;
         this.nom = nom;
