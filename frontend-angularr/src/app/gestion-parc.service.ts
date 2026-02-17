@@ -30,8 +30,8 @@ export interface LoginResponse {
 })
 export class GestionParcService {
 
-  private baseUrl = 'http://localhost:8080/api/auth'; // URL de base
-  private dashboardUrl = 'http://localhost:8080/api/dashboard';
+  private baseUrl = 'http://localhost:8080/api/gestion-parc'; // URL de base
+
 
   constructor(private http: HttpClient) { }
 
@@ -44,27 +44,27 @@ login(email: string, password: string): Observable<LoginResponse> {
 }
   // Total véhicules
   getTotalVehicules(idLocal: number): Observable<number> {
-    return this.http.get<number>(`${this.dashboardUrl}/${idLocal}/total-vehicules`);
+    return this.http.get<number>(`${this.baseUrl}/${idLocal}/total-vehicules`);
   }
 
   // Missions en cours
   getMissionsEnCours(idLocal: number): Observable<number> {
-    return this.http.get<number>(`${this.dashboardUrl}/${idLocal}/missions-en-cours`);
+    return this.http.get<number>(`${this.baseUrl}/${idLocal}/missions-en-cours`);
   }
 
   // Véhicules disponibles
   getVehiculesDisponibles(idLocal: number): Observable<number> {
-    return this.http.get<number>(`${this.dashboardUrl}/${idLocal}/vehicules-disponibles`);
+    return this.http.get<number>(`${this.baseUrl}/${idLocal}/vehicules-disponibles`);
   }
 
   // Déclarations en attente
   getDeclarationsEnAttente(idChef: number): Observable<number> {
-    return this.http.get<number>(`${this.dashboardUrl}/declarations-en-attente/${idChef}`);
+    return this.http.get<number>(`${this.baseUrl}/declarations-en-attente/${idChef}`);
   }
 
   // Entretiens en attente
   getEntretiensEnAttente(idChef: number): Observable<number> {
-    return this.http.get<number>(`${this.dashboardUrl}/en-attente/${idChef}`);
+    return this.http.get<number>(`${this.baseUrl}/en-attente/${idChef}`);
   }
 
 }

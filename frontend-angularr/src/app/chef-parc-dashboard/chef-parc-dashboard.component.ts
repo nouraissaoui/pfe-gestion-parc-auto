@@ -21,6 +21,7 @@ export class ChefParcDashboardComponent implements OnInit {
   chefNom: string = '';
   chefPrenom: string = '';
   localNom: string = '';
+  niveau_responsabilite: string='';
 
   chefId = 0;   // récupéré depuis la session
   localId = 0;  // récupéré depuis la session
@@ -46,7 +47,7 @@ export class ChefParcDashboardComponent implements OnInit {
       this.chefPrenom = user.prenom;
       this.chefId = user.idChefParc;
       this.localId = user.idLocal;
-      this.localNom = 'Local Principal - Tunis'; // tu peux récupérer dynamiquement si besoin
+      this.localNom =user.idChefParc. niveau_responsabilite; // tu peux récupérer dynamiquement si besoin
     }
   }
 
@@ -131,6 +132,9 @@ export class ChefParcDashboardComponent implements OnInit {
       localStorage.clear();
       this.router.navigate(['/']);
     }
+  }
+    goToVehicules() {
+    this.router.navigate(['/vehicules']);
   }
 
   toggleMenu() {

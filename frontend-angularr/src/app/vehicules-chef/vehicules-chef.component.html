@@ -1,0 +1,170 @@
+    <div class="particles-bg">
+    <div class="bg-particle" *ngFor="let i of [1,2,3,4]"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header">
+    <div class="header-left">
+        <div class="logo">
+        <img 
+            src="https://tse4.mm.bing.net/th/id/OIP.DqzAYevLmA0BnSvWkDiMsQAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+            alt="AGIL Logo"
+            class="logo-img"
+        />
+        <div>
+            <div class="company-title">AGIL Energy</div>
+            <div class="company-subtitle">
+            Société Nationale de Distribution des Pétroles
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="header-right">
+        <div class="user-info">
+        <div class="user-avatar">
+            {{ chefNom.charAt(0) }}{{ chefPrenom.charAt(0) }}
+        </div>
+        <div class="user-details">
+            <h3>{{ chefNom }} {{ chefPrenom }}</h3>
+            <p>{{ localNom }}</p>
+        </div>
+        </div>
+
+        <button class="logout-btn" (click)="logout()">
+        ⏻ Déconnexion
+        </button>
+    </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+    <h2>⚙ Menu</h2>
+
+    <div class="menu-item" (click)="navigate('vehicules')">
+        <span class="menu-icon">🚗</span>
+        <span>Gérer les Véhicules</span>
+    </div>
+
+    <div class="menu-item" (click)="navigate('chauffeurs')">
+        <span class="menu-icon">👤</span>
+        <span>Consulter les Chauffeurs</span>
+    </div>
+
+    <div class="menu-item" (click)="navigate('missions')">
+        <span class="menu-icon">📋</span>
+        <span>Affecter les Missions</span>
+    </div>
+
+    <div class="menu-item" (click)="navigate('entretiens')">
+        <span class="menu-icon">🔧</span>
+        <span>Gérer les Entretiens</span>
+    </div>
+
+    <div class="menu-item" (click)="navigate('declarations')">
+        <span class="menu-icon">📄</span>
+        <span>Consulter Déclarations</span>
+    </div>
+
+    <div class="menu-item" (click)="navigate('carburants')">
+        <span class="menu-icon">⛽</span>
+        <span>Gérer Cartes Carburants</span>
+    </div>
+
+    <div class="menu-item" (click)="navigate('statistiques')">
+        <span class="menu-icon">📊</span>
+        <span>Consulter Statistiques</span>
+    </div>
+    </aside>
+    <!-- MAIN CONTENT -->
+    <div class="vehicule-container container mt-4">
+    <h3>Gestion des Véhicules</h3>
+
+    <!-- Tableau statique des véhicules -->
+    <table class="table table-hover table-striped mt-3">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Matricule</th>
+            <th>Marque</th>
+            <th>Modèle</th>
+            <th>Année</th>
+            <th>Carburant</th>
+            <th>État</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>123ABC</td>
+            <td>Toyota</td>
+            <td>Corolla</td>
+            <td>2020</td>
+            <td>Essence</td>
+            <td><span class="badge badge-success">DISPONIBLE</span></td>
+            <td>
+            <button class="btn btn-info btn-sm">Consulter</button>
+            <button class="btn btn-success btn-sm">Affecter</button>
+            <button class="btn btn-warning btn-sm">Mettre à jour</button>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>456DEF</td>
+            <td>Ford</td>
+            <td>Focus</td>
+            <td>2019</td>
+            <td>Diesel</td>
+            <td><span class="badge badge-primary">EN_MISSION</span></td>
+            <td>
+            <button class="btn btn-info btn-sm">Consulter</button>
+            <button class="btn btn-success btn-sm">Affecter</button>
+            <button class="btn btn-warning btn-sm">Mettre à jour</button>
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>789GHI</td>
+            <td>BMW</td>
+            <td>X5</td>
+            <td>2021</td>
+            <td>Essence</td>
+            <td><span class="badge badge-warning">EN_ENTRETIEN</span></td>
+            <td>
+            <button class="btn btn-info btn-sm">Consulter</button>
+            <button class="btn btn-success btn-sm">Affecter</button>
+            <button class="btn btn-warning btn-sm">Mettre à jour</button>
+            </td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>321JKL</td>
+            <td>Mercedes</td>
+            <td>C200</td>
+            <td>2022</td>
+            <td>Diesel</td>
+            <td><span class="badge badge-danger">INDISPONIBLE</span></td>
+            <td>
+            <button class="btn btn-info btn-sm">Consulter</button>
+            <button class="btn btn-success btn-sm">Affecter</button>
+            <button class="btn btn-warning btn-sm">Mettre à jour</button>
+            </td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>654MNO</td>
+            <td>Renault</td>
+            <td>Clio</td>
+            <td>2020</td>
+            <td>Essence</td>
+            <td><span class="badge badge-success">DISPONIBLE</span></td>
+            <td>
+            <button class="btn btn-info btn-sm">Consulter</button>
+            <button class="btn btn-success btn-sm">Affecter</button>
+            <button class="btn btn-warning btn-sm">Mettre à jour</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
