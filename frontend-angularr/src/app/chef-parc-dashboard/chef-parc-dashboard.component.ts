@@ -21,7 +21,7 @@ export class ChefParcDashboardComponent implements OnInit {
   chefNom: string = '';
   chefPrenom: string = '';
   localNom: string = '';
-  niveau_responsabilite: string='';
+  role: string='';
 
   chefId = 0;   // récupéré depuis la session
   localId = 0;  // récupéré depuis la session
@@ -47,7 +47,7 @@ export class ChefParcDashboardComponent implements OnInit {
       this.chefPrenom = user.prenom;
       this.chefId = user.idChefParc;
       this.localId = user.idLocal;
-      this.localNom =user.idChefParc. niveau_responsabilite; // tu peux récupérer dynamiquement si besoin
+      this.role=user.role;
     }
   }
 

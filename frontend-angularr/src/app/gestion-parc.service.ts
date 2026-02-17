@@ -66,5 +66,9 @@ login(email: string, password: string): Observable<LoginResponse> {
   getEntretiensEnAttente(idChef: number): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/en-attente/${idChef}`);
   }
+    // 🔹 Nouvelle méthode pour récupérer le chef-parc par ID
+  getChefParcById(idChef: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/chef-parc/${idChef}`);
+  }
 
 }
