@@ -24,6 +24,15 @@ export interface LoginResponse {
 
   idLocal?: number;
 }
+export interface Local {
+  idLocal?: number;
+  nomLocal: string;
+  adresse: string;
+  region?: string;
+  ville?: string;
+  images?: string; // <-- string au lieu de string[]
+  
+}
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +40,7 @@ export interface LoginResponse {
 export class GestionParcService {
 
   private baseUrl = 'http://localhost:8080/api/gestion-parc'; // URL de base
+  private apiUrl = 'http://localhost:8080/api/gestion-parc/local'; 
 
 
   constructor(private http: HttpClient) { }
@@ -70,5 +80,21 @@ login(email: string, password: string): Observable<LoginResponse> {
   getChefParcById(idChef: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/chef-parc/${idChef}`);
   }
+    getAll() {
+      return this.http.get<Local[]>(this.apiUrl );
+    }
+  
+    add(local: Local) {
+      return this.http.post(this.apiUrl , local);
+    }
+  
+    update(id: number, local: Local) {
+      return this.http.put(`${this.apiUrl }/${id}`, local);
+    }
+  
+    delete(id: number) {
+      return this.http.delete(`${this.apiUrl}/${id}`);
+    }
+  
 
 }

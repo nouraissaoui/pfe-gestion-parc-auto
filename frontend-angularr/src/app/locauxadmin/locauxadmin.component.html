@@ -1,128 +1,128 @@
-<app-adminlayoutcomponent></app-adminlayoutcomponent>
+    <app-adminlayoutcomponent></app-adminlayoutcomponent>
 
-<main>
-  <!-- HERO -->
-  <section class="hero container">
-    <h2 class="hero-title" >Gestion des locaux nouvelle génération</h2>
-    <p class="hero-subtitle">Ajoutez, modifiez et gérez vos locaux facilement avec une interface premium.</p>
-    <div class="hero-buttons">
-      <button class="btn" (click)="mode='add'"><i class="fas fa-plus"></i> Ajouter un local</button>
-      <button class="btn btn-outline" (click)="mode='list'"><i class="fas fa-eye"></i> Consulter</button>
-    </div>
-  </section>
-
-  <!-- STATS -->
-  <div class="stats-container container" *ngIf="mode==='list'" > 
-    <div class="stat-card">
-      <i class="fas fa-building" style="color: linear-gradient(135deg, #ffc8dd, #ffb4a2);;"></i>
-      <h3>{{ locals.length }}</h3>
-      <p>Locaux actifs</p>
-    </div>
-    <div class="stat-card">
-      <i class="fas fa-map"></i>
-      <h3>{{ getRegionCount() }}</h3>
-      <p>Régions</p>
-    </div>
-  </div>
-
-  <!-- LIST MODE -->
-  <section class="locals-section container" *ngIf="mode==='list'">
-    <div class="section-header">
-      <h2 style="color: rgb(223, 221, 221);"><i class="fas fa-city" style="color:darkgoldenrod"></i> Liste des locaux</h2>
-    </div>
-    <div class="local-grid">
-      <div class="local-card" *ngFor="let l of locals">
-        <div class="local-img">
-          <img [src]="l.currentImage" alt="image local">
-          <span class="local-badge">{{l.region}}</span>
+    <main>
+    <!-- HERO -->
+    <section class="hero container">
+        <h2 class="hero-title" >Gestion des locaux nouvelle génération</h2>
+        <p class="hero-subtitle">Ajoutez, modifiez et gérez vos locaux facilement avec une interface premium.</p>
+        <div class="hero-buttons">
+        <button class="btn" (click)="mode='add'"><i class="fas fa-plus"></i> Ajouter un local</button>
+        <button class="btn btn-outline" (click)="mode='list'"><i class="fas fa-eye"></i> Consulter</button>
         </div>
-        <div class="local-info">
-          <h3>{{l.nomLocal}}</h3>
-          <div class="local-detail"><i class="fas fa-map-marker-alt"></i> {{l.adresse}}</div>
-          <div class="local-detail"><i class="fas fa-city"></i> {{l.ville}}</div>
-          <div class="local-detail"><i class="fas fa-globe"></i> {{l.region}}</div>
-          
-          <div class="local-actions">
-            <button class="btn-edit" (click)="startEdit(l)"><i class="fas fa-edit"></i> Modifier</button>
-            <button class="btn-delete" (click)="delete(l.idLocal)"><i class="fas fa-trash"></i> Supprimer</button>
-          </div>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats-container container" *ngIf="mode==='list'" > 
+        <div class="stat-card">
+        <i class="fas fa-building" style="color: linear-gradient(135deg, #ffc8dd, #ffb4a2);;"></i>
+        <h3>{{ locals.length }}</h3>
+        <p>Locaux actifs</p>
         </div>
-      </div>
+        <div class="stat-card">
+        <i class="fas fa-map"></i>
+        <h3>{{ getRegionCount() }}</h3>
+        <p>Régions</p>
+        </div>
     </div>
-  </section>
 
-  <!-- ADD FORM -->
-  <section class="form-section container" *ngIf="mode==='add'">
-    <div class="form-card">
-      <h2><i class="fas fa-plus-circle"></i> Ajouter un local</h2>
-      <div class="form-group">
-        <label>Nom</label>
-        <input type="text" [(ngModel)]="newLocal.nomLocal">
-      </div>
-      <div class="form-group">
-        <label>Adresse</label>
-        <input type="text" [(ngModel)]="newLocal.adresse">
-      </div>
-      <div class="form-group">
-        <label>Ville</label>
-        <input type="text" [(ngModel)]="newLocal.ville">
-      </div>
-      <div class="form-group">
-        <label>Région</label>
-        <input type="text" [(ngModel)]="newLocal.region">
-      </div>
-      <div class="form-group">
-        <label>Images (séparées par espace)</label>
-        <input type="text" [(ngModel)]="newLocal.images">
-      </div>
-      <div class="form-actions">
-        <button class="btn" (click)="add()">Enregistrer</button>
-        <button class="btn" (click)="mode='list'">Annuler</button>
-      </div>
-    </div>
-  </section>
+    <!-- LIST MODE -->
+    <section class="locals-section container" *ngIf="mode==='list'">
+        <div class="section-header">
+        <h2 style="color: rgb(223, 221, 221);"><i class="fas fa-city" style="color:darkgoldenrod"></i> Liste des locaux</h2>
+        </div>
+        <div class="local-grid">
+        <div class="local-card" *ngFor="let l of locals">
+            <div class="local-img">
+            <img [src]="l.currentImage" alt="image local">
+            <span class="local-badge">{{l.region}}</span>
+            </div>
+            <div class="local-info">
+            <h3>{{l.nomLocal}}</h3>
+            <div class="local-detail"><i class="fas fa-map-marker-alt"></i> {{l.adresse}}</div>
+            <div class="local-detail"><i class="fas fa-city"></i> {{l.ville}}</div>
+            <div class="local-detail"><i class="fas fa-globe"></i> {{l.region}}</div>
+            
+            <div class="local-actions">
+                <button class="btn-edit" (click)="startEdit(l)"><i class="fas fa-edit"></i> Modifier</button>
+                <button class="btn-delete" (click)="delete(l.idLocal)"><i class="fas fa-trash"></i> Supprimer</button>
+            </div>
+            </div>
+        </div>
+        </div>
+    </section>
 
-  <!-- EDIT MODAL -->
-  <div class="modal" *ngIf="editLocal">
-    <div class="modal-content">
-      <h2><i class="fas fa-edit"></i> Modifier le local</h2>
-      <div class="form-group"><label>Nom</label><input [(ngModel)]="editLocal.nomLocal"></div>
-      <div class="form-group"><label>Adresse</label><input [(ngModel)]="editLocal.adresse"></div>
-      <div class="form-group"><label>Ville</label><input [(ngModel)]="editLocal.ville"></div>
-      <div class="form-group"><label>Région</label><input [(ngModel)]="editLocal.region"></div>
-      <div class="form-group"><label>Images</label><input [(ngModel)]="editLocal.images"></div>
-      <div class="modal-actions">
-        <button class="btn" (click)="saveEdit()">Sauvegarder</button>
-        <button class="btn" (click)="editLocal=null">Annuler</button>
-      </div>
-    </div>
-  </div>
-</main>
+    <!-- ADD FORM -->
+    <section class="form-section container" *ngIf="mode==='add'">
+        <div class="form-card">
+        <h2><i class="fas fa-plus-circle"></i> Ajouter un local</h2>
+        <div class="form-group">
+            <label>Nom</label>
+            <input type="text" [(ngModel)]="newLocal.nomLocal">
+        </div>
+        <div class="form-group">
+            <label>Adresse</label>
+            <input type="text" [(ngModel)]="newLocal.adresse">
+        </div>
+        <div class="form-group">
+            <label>Ville</label>
+            <input type="text" [(ngModel)]="newLocal.ville">
+        </div>
+        <div class="form-group">
+            <label>Région</label>
+            <input type="text" [(ngModel)]="newLocal.region">
+        </div>
+        <div class="form-group">
+            <label>Images (séparées par espace)</label>
+            <input type="text" [(ngModel)]="newLocal.images">
+        </div>
+        <div class="form-actions">
+            <button class="btn" (click)="add()">Enregistrer</button>
+            <button class="btn" (click)="mode='list'">Annuler</button>
+        </div>
+        </div>
+    </section>
 
-<footer id="contact">
-  <div class="footer-content container">
-    <div class="footer-col">
-      <h3>SNDP Agil Energy</h3>
-      <p>Leader dans la distribution de produits pétroliers et la gestion de sites énergétiques. Innovation, sécurité et performance.</p>
-      <div class="social-links">
-        <a href="#"><i class="fab fa-facebook"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="https://www.agilenergy.com.tn/fr/"><i class="fas fa-envelope"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-      </div>
+    <!-- EDIT MODAL -->
+    <div class="modal" *ngIf="editLocal">
+        <div class="modal-content">
+        <h2><i class="fas fa-edit"></i> Modifier le local</h2>
+        <div class="form-group"><label>Nom</label><input [(ngModel)]="editLocal.nomLocal"></div>
+        <div class="form-group"><label>Adresse</label><input [(ngModel)]="editLocal.adresse"></div>
+        <div class="form-group"><label>Ville</label><input [(ngModel)]="editLocal.ville"></div>
+        <div class="form-group"><label>Région</label><input [(ngModel)]="editLocal.region"></div>
+        <div class="form-group"><label>Images</label><input [(ngModel)]="editLocal.images"></div>
+        <div class="modal-actions">
+            <button class="btn" (click)="saveEdit()">Sauvegarder</button>
+            <button class="btn" (click)="editLocal=null">Annuler</button>
+        </div>
+        </div>
     </div>
-    <div class="footer-col">
-      <h3>Coordonnées</h3>
-      <ul>
-        <li><i class="fas fa-map-marker-alt"></i> Av. Mohamed Ali Akid, Cité Olympique, 1003 El Khadra-Tunis</li>
-        <li><i class="fas fa-phone-alt"></i> +216 70 284 500</li>
-<li><i class="fas fa-envelope"></i> {{ "boc@agil.com.tn" }}</li>
-        <li><i class="fas fa-globe"></i> www.agilenergy.com.tn</li>
-      </ul>
+    </main>
+
+    <footer id="contact">
+    <div class="footer-content container">
+        <div class="footer-col">
+        <h3>SNDP Agil Energy</h3>
+        <p>Leader dans la distribution de produits pétroliers et la gestion de sites énergétiques. Innovation, sécurité et performance.</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.agilenergy.com.tn/fr/"><i class="fas fa-envelope"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        </div>
+        <div class="footer-col">
+        <h3>Coordonnées</h3>
+        <ul>
+            <li><i class="fas fa-map-marker-alt"></i> Av. Mohamed Ali Akid, Cité Olympique, 1003 El Khadra-Tunis</li>
+            <li><i class="fas fa-phone-alt"></i> +216 70 284 500</li>
+    <li><i class="fas fa-envelope"></i> {{ "boc@agil.com.tn" }}</li>
+            <li><i class="fas fa-globe"></i> www.agilenergy.com.tn</li>
+        </ul>
+        </div>
+        
     </div>
-    
-  </div>
-  <div class="footer-bottom">
-    <p>&copy; 2026 SNDP Agil Energy. Tous droits réservés.</p>
-  </div>
-</footer>
+    <div class="footer-bottom">
+        <p>&copy; 2026 SNDP Agil Energy. Tous droits réservés.</p>
+    </div>
+    </footer>
