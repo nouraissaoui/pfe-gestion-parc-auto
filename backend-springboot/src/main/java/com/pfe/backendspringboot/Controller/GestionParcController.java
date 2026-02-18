@@ -6,7 +6,6 @@ import com.pfe.backendspringboot.Repository.AdminRepository;
 import com.pfe.backendspringboot.Repository.ChauffeurRepository;
 import com.pfe.backendspringboot.Repository.ChefParcRepository;
 import com.pfe.backendspringboot.Service.GestionParcService;
-import com.pfe.backendspringboot.Service.LocalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -157,25 +156,24 @@ public class GestionParcController {
         return GestionParcService.updateEtat(idVehicule, etat);
     }
     // ==================== CRUD LOCAL ====================
-    @Autowired
-    private LocalService localService;
+
 
     // 🔹 Ajouter un local
     @PostMapping("/local")
     public Local addLocal(@RequestBody Local l) {
-        return localService.save(l);
+        return GestionParcService.save(l);
     }
 
     // 🔹 Récupérer tous les locaux
     @GetMapping("/local")
     public List<Local> getAllLocaux() {
-        return localService.getAll();
+        return GestionParcService.getAll();
     }
 
     // 🔹 Récupérer un local par id
     @GetMapping("/local/{id}")
     public ResponseEntity<Local> getLocalById(@PathVariable Long id) {
-        Local l = localService.getById(id);
+        Local l = GestionParcService.getById(id);
         if (l == null) {
             return ResponseEntity.notFound().build();
         }
@@ -185,7 +183,7 @@ public class GestionParcController {
     // 🔹 Mettre à jour un local
     @PutMapping("/local/{id}")
     public ResponseEntity<Local> updateLocal(@PathVariable Long id, @RequestBody Local newLocal) {
-        Local updated = localService.update(id, newLocal);
+        Local updated = GestionParcService.update(id, newLocal);
         if (updated == null) {
             return ResponseEntity.notFound().build();
         }
@@ -196,7 +194,7 @@ public class GestionParcController {
     @DeleteMapping("/local/{id}")
     public ResponseEntity<?> deleteLocal(@PathVariable Long id) {
         try {
-            localService.delete(id);
+            GestionParcService.delete(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body("Local introuvable");

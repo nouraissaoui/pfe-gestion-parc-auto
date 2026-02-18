@@ -26,6 +26,9 @@ public class GestionParcService {
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    private LocalRepository localRepository;
+
 
     private final VehiculeRepository vehiculeRepository;
     private final MissionRepository missionRepository;
@@ -124,6 +127,41 @@ public class GestionParcService {
 
         v.setEtat(etat);
         return vehiculeRepository.save(v);
+    }
+
+    //==============gestion des locaux==============
+
+    public Local save(Local l) {
+        return localRepository.save(l);
+    }
+
+    public List<Local> getAll() {
+        return localRepository.findAll();
+    }
+
+    public Local getById(Long id) {
+        return localRepository.findById(id).orElse(null);
+    }
+
+    public void delete(Long id) {
+        if (!localRepository.existsById(id)) {
+            throw new RuntimeException("Local introuvable");
+        }
+        localRepository.deleteById(id);
+    }
+
+    public Local update(Long id, Local newLocal){
+
+        Local existing=localRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Local not found"));
+
+        existing.setNomLocal(newLocal.getNomLocal());
+        existing.setAdresse(newLocal.getAdresse());
+        existing.setRegion(newLocal.getRegion());
+        existing.setVille(newLocal.getVille());
+        existing.setImages(newLocal.getImages());
+
+        return localRepository.save(existing);
     }
 
 }
