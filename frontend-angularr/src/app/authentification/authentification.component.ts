@@ -28,7 +28,7 @@ export class AuthentificationComponent {
 
         // 🔐 Sauvegarde session
         localStorage.setItem('user', JSON.stringify(response));
-
+  
         console.log("User connecté :", response);
 
         // 🔹 Redirection selon rôle
@@ -50,10 +50,14 @@ export class AuthentificationComponent {
             alert("Rôle inconnu !");
         }
       },
+      
 
       error: () => {
         alert("Email ou mot de passe incorrect !");
       }
+      
     });
+
   }
+  
 }

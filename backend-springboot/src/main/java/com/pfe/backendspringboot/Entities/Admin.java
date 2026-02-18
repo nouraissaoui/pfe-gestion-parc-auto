@@ -25,9 +25,6 @@ public class Admin {
     @OneToMany(mappedBy = "admin")
     private List<ChefParc> chefsDuParc;
 
-    // 🔹 1 Admin -> plusieurs Locals
-    @OneToMany(mappedBy = "admin")
-    private List<Local> locals;
 
     // 🔹 1 Admin -> plusieurs Vehicules
     @OneToMany(mappedBy = "admin")
@@ -49,9 +46,6 @@ public class Admin {
         return chefsDuParc;
     }
 
-    public List<Local> getLocals() {
-        return locals;
-    }
 
     public List<Vehicule> getVehicules() {
         return vehicules;
@@ -73,9 +67,6 @@ public class Admin {
         this.chefsDuParc = chefsDuParc;
     }
 
-    public void setLocals(List<Local> locals) {
-        this.locals = locals;
-    }
 
     public void setVehicules(List<Vehicule> vehicules) {
         this.vehicules = vehicules;
