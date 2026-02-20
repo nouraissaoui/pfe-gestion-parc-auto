@@ -5,18 +5,7 @@ import { VehiculesChefComponent } from './vehicules-chef/vehicules-chef.componen
 import { ChefParcLayoutComponent } from './layouts/chef-parc-layout/chef-parc-layout.component';
 import { LocauxadminComponent } from './locauxadmin/locauxadmin.component';
 import { Adminlayoutcomponent} from './adminlayoutcomponent/adminlayoutcomponent.component';
-import { TestComponent } from './test/test.component';
 
-
-
-/*export const routes: Routes = [
-    {path:'',component:AuthentificationComponent},
-    {path:'chef-parc',component:ChefParcDashboardComponent},
-    {path:'vehicules',component:VehiculesChefComponent},
-    {path:'layout',component:ChefParcLayoutComponent},
-    
-
-];*/
 export const routes: Routes = [
 { path: '', component: AuthentificationComponent },
  {

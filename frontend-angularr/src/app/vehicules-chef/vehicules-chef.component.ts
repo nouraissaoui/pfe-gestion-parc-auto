@@ -3,13 +3,12 @@ import { Router, RouterModule } from '@angular/router';
 import { GestionParcService, Vehicule } from '../gestion-parc.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TestComponent } from "../test/test.component";
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-vehicules-chef',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, TestComponent],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './vehicules-chef.component.html',
   styleUrl: './vehicules-chef.component.css'
 })
@@ -147,29 +146,53 @@ export class VehiculesChefComponent implements OnInit, AfterViewInit {
 
 confirmerAffectation() {
   if (this.selectedChauffeurId && this.selectedVehicule) {
+    
+    // 1. Vérification locale avant l'appel API
+    const chauffeurSelectionne = this.chauffeursFiltres.find(c => c.idChauffeur === this.selectedChauffeurId);
+    
+    if (chauffeurSelectionne && chauffeurSelectionne.vehicule) {
+      this.playNotificationSound(); // Son d'alerte
+      Swal.fire({
+        title: 'ACTION IMPOSSIBLE',
+        text: `Le chauffeur ${chauffeurSelectionne.user?.nom} possède déjà un véhicule.`,
+        icon: 'warning',
+        background: '#141414',
+        color: '#fff',
+        confirmButtonColor: '#F5C200'
+      });
+      return; // On arrête l'exécution ici
+    }
+
+    // 2. Si le chauffeur est libre, on lance l'appel API
     this.service.affecterVehicule(this.selectedChauffeurId, this.selectedVehicule.idVehicule)
       .subscribe({
         next: (response) => {
           this.playSuccessSound();
           Swal.fire({
             title: 'AFFECTATION RÉUSSIE',
+            text: `Le véhicule est désormais assigné à ${chauffeurSelectionne?.user?.nom}`,
             icon: 'success',
             background: '#141414',
-            color: '#fff'
+            color: '#fff',
+            confirmButtonColor: '#F5C200'
           });
           this.showAffecterModal = false;
-          this.refreshData();
+          this.selectedChauffeurId = null; // Reset de la sélection
+          this.refreshData(); // Rafraîchir les compteurs et la liste
         },
         error: (err) => {
-          console.error("Erreur détaillée:", err);
-          // Si le backend renvoie un message d'erreur spécifique (ex: Chauffeur introuvable)
-          const errorMsg = err.error || "L'affectation a échoué côté serveur.";
+          console.error("Erreur Backend:", err);
+          
+          // Récupération du message d'erreur envoyé par le throw new RuntimeException du Java
+          const errorMsg = typeof err.error === 'string' ? err.error : "Erreur technique lors de l'affectation.";
+          
           Swal.fire({
-            title: 'ERREUR',
-            text: typeof errorMsg === 'string' ? errorMsg : "Vérifiez la console (F12)",
+            title: 'ÉCHEC DE L\'OPÉRATION',
+            text: errorMsg,
             icon: 'error',
             background: '#141414',
-            color: '#fff'
+            color: '#fff',
+            confirmButtonColor: '#ff4d4d'
           });
         }
       });

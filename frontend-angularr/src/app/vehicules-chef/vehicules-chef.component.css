@@ -1499,3 +1499,12 @@ h2 em::after {
 /* Scrollbar fine pour la liste */
 .afx-list::-webkit-scrollbar { width: 4px; }
 .afx-list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+.afx-item.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f8f8f8;
+    border-color: #ddd;
+}
+.afx-item.is-disabled:hover {
+    border-color: #ff4d4d; /* Rouge pour indiquer l'erreur au survol */
+}

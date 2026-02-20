@@ -297,8 +297,8 @@
     </div>
 </div>
 
-<!--modal affecter chaufeur-->
-    <div class="afx-overlay" *ngIf="showAffecterModal">
+    <!--modal affecter chaufeur-->
+        <div class="afx-overlay" *ngIf="showAffecterModal">
     <div class="afx-card">
         
         <div class="afx-header">
@@ -313,13 +313,14 @@
         </div>
 
         <div class="afx-body">
-        <p class="afx-hint">Sélectionnez un conducteur pour ce véhicule :</p>
+        <p class="afx-hint">Sélectionnez un conducteur disponible :</p>
         
         <div class="afx-list">
             <div *ngFor="let c of chauffeursFiltres" 
                 class="afx-item"
                 [class.is-selected]="selectedChauffeurId === c.idChauffeur"
-                (click)="selectedChauffeurId = c.idChauffeur">
+                [class.is-disabled]="c.vehicule"
+                (click)="!c.vehicule ? (selectedChauffeurId = c.idChauffeur) : null">
             
             <div class="afx-avatar">{{c.user?.prenom?.[0]}}{{c.user?.nom?.[0]}}</div>
             
@@ -330,7 +331,7 @@
 
             <div class="afx-status-box">
                 <span [class]="c.vehicule ? 'afx-badge is-busy' : 'afx-badge is-free'">
-                {{ c.vehicule ? 'Occupé' : 'Disponible' }}
+                {{ c.vehicule ? 'Déjà assigné' : 'Disponible' }}
                 </span>
             </div>
             </div>
