@@ -1,5 +1,6 @@
 package com.pfe.backendspringboot.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -23,14 +24,17 @@ public class Admin {
 
     // 🔹 1 Admin -> plusieurs ChefsDuParc
     @OneToMany(mappedBy = "admin")
+    @JsonIgnore
     private List<ChefParc> chefsDuParc;
 
     // 🔹 1 Admin -> plusieurs Locals
     @OneToMany(mappedBy = "admin")
+    @JsonIgnore
     private List<Local> locals;
 
     // 🔹 1 Admin -> plusieurs Vehicules
     @OneToMany(mappedBy = "admin")
+    @JsonIgnore
     private List<Vehicule> vehicules;
 
     public Long getIdAdmin() {

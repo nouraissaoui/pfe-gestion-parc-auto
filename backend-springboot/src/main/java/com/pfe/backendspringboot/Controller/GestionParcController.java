@@ -123,6 +123,20 @@ public class GestionParcController {
     public long getVehiculesDisponibles(@PathVariable Long idLocal) {
         return GestionParcService.getVehiculesDisponibles(idLocal);
     }
+    @GetMapping("/{idLocal}/vehicules-en-mission")
+    public long getVehiculesEnMission(@PathVariable Long idLocal) {
+        return GestionParcService.getVehiculesEnMission(idLocal);
+    }
+
+    @GetMapping("/{idLocal}/vehicules-en-entretien")
+    public long getVehiculesEnEntretien(@PathVariable Long idLocal) {
+        return GestionParcService.getVehiculesEnEntretien(idLocal);
+    }
+
+    @GetMapping("/{idLocal}/vehicules-indisponibles")
+    public long getVehiculesIndisponibles(@PathVariable Long idLocal) {
+        return GestionParcService.getVehiculesIndisponibles(idLocal);
+    }
 
     // Déclarations en attente
     @GetMapping("/declarations-en-attente/{idChef}")
@@ -201,6 +215,32 @@ public class GestionParcController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Erreur serveur lors de la suppression");
+        }
+    }
+    // ==================== AFFECTATION VEHICULES ====================
+
+    /**
+     * Récupère la liste des chauffeurs d'un local pour le modal d'affectation.
+     */
+// Récupérer les chauffeurs d'un local spécifique (pour le Chef de Parc connecté)
+    @GetMapping("/local/{idLocal}/chauffeurs")
+    public ResponseEntity<List<Chauffeur>> getChauffeursDuLocal(@PathVariable Long idLocal) {
+        List<Chauffeur> chauffeurs = GestionParcService.getChauffeursByLocal(idLocal);
+        return ResponseEntity.ok(chauffeurs);
+    }
+
+    /**
+     * Enregistre l'affectation en base de données.
+     */
+    @PutMapping("/affecter/{idChauffeur}/{idVehicule}")
+    public ResponseEntity<?> affecterVehicule(@PathVariable Long idChauffeur, @PathVariable Long idVehicule) {
+        try {
+            Chauffeur updatedChauffeur = GestionParcService.affecterVehiculeAChauffeur(idChauffeur, idVehicule);
+            return ResponseEntity.ok(updatedChauffeur);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'affectation");
         }
     }
 

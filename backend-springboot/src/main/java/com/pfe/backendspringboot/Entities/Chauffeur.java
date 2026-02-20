@@ -1,5 +1,7 @@
 package com.pfe.backendspringboot.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -30,13 +32,22 @@ public class Chauffeur {
     @JoinColumn(name = "id_user", nullable = false, unique = true)
     private User user;
 
+    // 🔹 Relation avec Vehicule (L'affectation)
+    @OneToOne
+    @JoinColumn(name = "id_vehicule", unique = true)
+    @JsonIgnoreProperties({"admin", "local"})
+    private Vehicule vehicule;
+
+
     // 🔹 Relation Many-to-One avec Admin
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_admin")
     private Admin admin;
 
     // 🔹 Relation Many-to-One avec Local (optionnelle)
     @ManyToOne(optional = true) // permet null
+    @JsonIgnoreProperties({"chauffeurs", "chefParcs", "admin"})
     @JoinColumn(name = "id_local", nullable = true) // colonne SQL autorise null
     private Local local;
 
@@ -62,6 +73,10 @@ public class Chauffeur {
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
+    // Getter & Setter
+    public Vehicule getVehicule() { return vehicule; }
+    public void setVehicule(Vehicule vehicule) { this.vehicule = vehicule; }
 
     public Admin getAdmin() { return admin; }
     public void setAdmin(Admin admin) { this.admin = admin; }

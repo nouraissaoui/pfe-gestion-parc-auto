@@ -37,7 +37,7 @@ public class Local {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="id_admin",nullable=true)
-    @JsonIgnore
+    @JsonIgnoreProperties({"locals", "chefsDuParc", "vehicules", "user"})
     private Admin admin;
 
 

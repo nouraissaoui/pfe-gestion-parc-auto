@@ -23,6 +23,10 @@ public class Vehicule {
     private int annee;
     private String carburant;
 
+    // --- NOUVEAU CHAMP IMAGE ---
+    @Column(name = "image", length = 5000)
+    private String image;
+
     // Relation Many-to-One avec Local
     @ManyToOne
     @JoinColumn(name = "id_local", referencedColumnName = "id_local")
@@ -55,5 +59,7 @@ public class Vehicule {
 
     public EtatVehicule getEtat() { return etat; }
     public void setEtat(EtatVehicule etat) { this.etat = etat; }
-
+    // ===== Getters et Setters mis à jour =====
+    public String getImage() { return image; }
+    public void setImage(String image) { this.image = image; }
 }
