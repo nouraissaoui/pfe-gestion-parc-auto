@@ -35,10 +35,6 @@ public class Local {
     @JsonIgnore
     private ChefParc chefParc;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="id_admin",nullable=true)
-    @JsonIgnoreProperties({"locals", "chefsDuParc", "vehicules", "user"})
-    private Admin admin;
 
 
     /******** GETTERS ********/
@@ -65,6 +61,5 @@ public class Local {
     public ChefParc getChefParc() { return chefParc; }
     public void setChefParc(ChefParc chefParc) { this.chefParc = chefParc; }
 
-    public Admin getAdmin() { return admin; }
-    public void setAdmin(Admin admin) { this.admin = admin; }
+
 }
