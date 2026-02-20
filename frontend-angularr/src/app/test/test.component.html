@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNDP - Consultation Véhicule</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ====== RESET ====== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ====== VARIABLES ====== */
+:root {
+    --yellow: #F5C800;
+    --black: #1a1a1a;
+    --red: #D0021B;
+    --white: #FFFFFF;
+    --gray: #f4f4f4;
+    --dark-gray: #555;
+    --glass: rgba(255,255,255,0.08);
+}
+
+/* ====== BODY ====== */
+body {
+    font-family: 'Nunito', sans-serif;
+    background: #0f0f0f;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ====== MODAL CONSULTATION ====== */
+.modal-consult {
+    width: 100%;
+    max-width: 860px;
+    background: #141414;
+    border: 1px solid rgba(245,200,0,0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(245,200,0,0.1);
+}
+
+/* HEADER */
+.modal-consult .modal-header {
+    background: linear-gradient(135deg, var(--black) 0%, #1e1e1e 100%);
+    border-bottom: 3px solid var(--yellow);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* LOGO */
+.logo-container {
+    width: 64px;
+    height: 64px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid var(--yellow);
+    background: var(--yellow);
+}
+
+.logo-svg { display: flex; flex-direction: column; height: 100%; }
+.logo-top { background: var(--yellow); flex: 1.2; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.logo-bottom { background: var(--black); padding: 4px 6px; display: flex; flex-direction: column; align-items: center; line-height: 1; }
+.logo-bottom .agil { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: white; font-size: 13px; letter-spacing: 1px; }
+.logo-bottom .agil span { color: var(--red); }
+.logo-bottom .energy { font-family: 'Nunito', sans-serif; font-weight: 300; color: #aaa; font-size: 7px; letter-spacing: 2px; text-transform: uppercase; }
+
+.header-title { display: flex; flex-direction: column; }
+.header-title .label { font-family: 'Rajdhani', sans-serif; color: var(--yellow); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
+.header-title h2 { font-family: 'Rajdhani', sans-serif; color: var(--white); font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+.header-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(245,200,0,0.1);
+    border: 1px solid rgba(245,200,0,0.3);
+    border-radius: 20px; padding: 6px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600; font-size: 0.85rem; letter-spacing: 1px;
+    color: var(--yellow); text-transform: uppercase;
+}
+.badge-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+/* BODY */
+.modal-consult .modal-body { display: grid; grid-template-columns: 1fr 1fr; min-height: 380px; }
+
+/* IMAGE SIDE */
+.image-side { position: relative; background: #0a0a0a; overflow: hidden; border-right: 1px solid rgba(255,255,255,0.06); }
+.vehicle-img { width: 100%; height: 100%; object-fit: cover; min-height: 280px; transition: transform 0.6s ease; }
+.image-side:hover .vehicle-img { transform: scale(1.03); }
+.img-overlay-label { position: absolute; bottom: 18px; left: 18px; z-index: 3; }
+.matricule-tag {
+    background: var(--yellow); color: var(--black); font-family: 'Rajdhani', sans-serif;
+    font-weight: 700; font-size: 1rem; padding: 5px 14px; letter-spacing: 2px;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+
+/* INFO SIDE */
+.info-side { padding: 28px; display: flex; flex-direction: column; gap: 0; background: #141414; }
+.section-label { font-family: 'Rajdhani', sans-serif; color: var(--yellow); font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, rgba(245,200,0,0.4), transparent); }
+
+.info-grid { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.info-row { display: flex; align-items: stretch; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; border-radius: 2px; overflow: hidden; }
+.info-row:hover { background: rgba(245,200,0,0.04); }
+.info-key { width: 110px; flex-shrink: 0; padding: 11px 12px; font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: #666; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.2); }
+.info-val { padding: 11px 14px; font-size: 0.92rem; font-weight: 600; color: var(--white); display: flex; align-items: center; flex: 1; }
+
+.state-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; text-transform: uppercase; }
+.state-bon { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+
+.fuel-pill { background: rgba(99,179,237,0.12); color: #63b3ed; border: 1px solid rgba(99,179,237,0.25); border-radius: 20px; padding: 2px 12px; font-size: 0.82rem; font-weight: 600; }
+
+/* FOOTER */
+.modal-consult .modal-footer { background: #0f0f0f; border-top: 1px solid rgba(255,255,255,0.06); padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
+.footer-info { font-size: 0.78rem; color: #444; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; text-transform: uppercase; }
+.footer-info span { color: #666; }
+.action-btns { display: flex; gap: 10px; }
+.btn { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 22px; border: none; cursor: pointer; border-radius: 2px; transition: all 0.2s; clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%); }
+.btn-secondary { background: rgba(255,255,255,0.06); color: #888; border: 1px solid rgba(255,255,255,0.1); clip-path: none; border-radius: 2px; }
+.btn-secondary:hover { background: rgba(255,255,255,0.1); color: #ccc; }
+.btn-primary { background: var(--yellow); color: var(--black); }
+.btn-primary:hover { box-shadow: 0 0 20px rgba(245,200,0,0.4); transform: translateY(-1px); }
+
+</style>
+</head>
+<body>
+
+<div class="modal-consult">
+
+    <!-- HEADER -->
+    <div class="modal-header">
+        <div class="header-left">
+            <div class="logo-container">
+                <div class="logo-svg">
+                    <div class="logo-top">🐎</div>
+                    <div class="logo-bottom">
+                        <div class="agil">Ag<span>i</span>l</div>
+                        <div class="energy">Energy</div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-title">
+                <span class="label">SNDP &mdash; Parc Automobile</span>
+                <h2>Fiche Véhicule</h2>
+            </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div class="header-badge">
+                <div class="badge-dot"></div>
+                En Service
+            </div>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="modal-body">
+
+        <!-- IMAGE -->
+        <div class="image-side">
+            <img class="vehicle-img" src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=600&q=80" 
+            alt="Véhicule" 
+            onerror="this.src='https://via.placeholder.com/400x320/1a1a1a/F5C800?text=VÉHICULE'" />
+            <div class="img-overlay-label">
+                <div class="matricule-tag">TN-247-AB</div>
+            </div>
+        </div>
+
+        <!-- INFOS -->
+        <div class="info-side">
+            <div class="section-label">Informations Détaillées</div>
+            <div class="info-grid">
+                <div class="info-row">
+                    <div class="info-key">🏷️ Marque</div>
+                    <div class="info-val">Toyota</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">🚗 Modèle</div>
+                    <div class="info-val">Land Cruiser 200</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">📋 Matricule</div>
+                    <div class="info-val" style="color:var(--yellow);">TN-247-AB</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">📅 Année</div>
+                    <div class="info-val">2021</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">⛽ Carburant</div>
+                    <div class="info-val"><span class="fuel-pill">🛢️ Diesel</span></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">📊 État</div>
+                    <div class="info-val"><span class="state-badge state-bon">● Bon</span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="modal-footer">
+        <div class="footer-info">
+            ID Véhicule &nbsp;<span>#VH-2021-0042</span> | Dernière mise à jour &nbsp;<span>20/02/2026</span>
+        </div>
+        <div class="action-btns">
+            <button class="btn btn-secondary">Fermer</button>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

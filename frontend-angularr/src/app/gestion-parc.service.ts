@@ -33,6 +33,16 @@ export interface Local {
   images?: string; // <-- string au lieu de string[]
   
 }
+export interface Vehicule {
+  idVehicule: number;
+  matricule: string;
+  marque: string;
+  modele: string;
+  annee: number;
+  carburant: string;
+  image: string;
+  etat: 'DISPONIBLE' | 'EN_MISSION' | 'EN_ENTRETIEN' | 'INDISPONIBLE';
+}
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +77,33 @@ login(email: string, password: string): Observable<LoginResponse> {
     return this.http.get<number>(`${this.baseUrl}/${idLocal}/vehicules-disponibles`);
   }
 
+  getVehiculesEnMission(idLocal: number): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/${idLocal}/vehicules-en-mission`);
+  }
+
+  getVehiculesEnEntretien(idLocal: number): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/${idLocal}/vehicules-en-entretien`);
+  }
+
+  getVehiculesIndisponibles(idLocal: number): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/${idLocal}/vehicules-indisponibles`);
+  }
+
+  // ================= VEHICULES =================
+
+  getVehiculesByLocal(idLocal: number): Observable<Vehicule[]> {
+    return this.http.get<Vehicule[]>(`${this.baseUrl}/${idLocal}/vehicules`);
+  }
+
+  updateEtatVehicule(idVehicule: number, etat: string): Observable<Vehicule> {
+    const params = new HttpParams().set('etat', etat);
+    return this.http.put<Vehicule>(
+      `${this.baseUrl}/vehicule/${idVehicule}/etat`,
+      null,
+      { params }
+    );
+  }
+
   // Déclarations en attente
   getDeclarationsEnAttente(idChef: number): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/declarations-en-attente/${idChef}`);
@@ -95,6 +132,21 @@ login(email: string, password: string): Observable<LoginResponse> {
     delete(id: number) {
       return this.http.delete(`${this.apiUrl}/${id}`);
     }
+      // Récupérer les chauffeurs du local
+  getChauffeursParLocal(idLocal: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/local/${idLocal}/chauffeurs`);
+  }
+
+  // Valider l'affectation
+affecterVehicule(idChauffeur: number, idVehicule: number): Observable<any> {
+  // On s'assure que les IDs sont envoyés proprement dans l'URL
+  const url = `${this.baseUrl}/affecter/${idChauffeur}/${idVehicule}`;
+  console.log("Appel API Affectation : ", url); 
+  
+  return this.http.put(url, {}, {
+    observe: 'response' // Permet de voir le code statut (200, 404, etc.)
+  });
+}
   
 
 }

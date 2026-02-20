@@ -5,6 +5,7 @@ import { VehiculesChefComponent } from './vehicules-chef/vehicules-chef.componen
 import { ChefParcLayoutComponent } from './layouts/chef-parc-layout/chef-parc-layout.component';
 import { LocauxadminComponent } from './locauxadmin/locauxadmin.component';
 import { Adminlayoutcomponent} from './adminlayoutcomponent/adminlayoutcomponent.component';
+import { TestComponent } from './test/test.component';
 
 
 
