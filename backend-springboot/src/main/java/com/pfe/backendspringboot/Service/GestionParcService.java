@@ -3,6 +3,7 @@ package com.pfe.backendspringboot.Service;
 
 import com.pfe.backendspringboot.Entities.*;
 import com.pfe.backendspringboot.Repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -120,11 +121,24 @@ public class GestionParcService {
     }
 
     // 2️⃣ Mettre à jour état
+    @Transactional // Ajouté pour sécuriser l'opération double (Vehicule + Chauffeur)
     public Vehicule updateEtat(Long idVehicule, EtatVehicule etat){
         Vehicule v = vehiculeRepository.findById(idVehicule)
                 .orElseThrow(() -> new RuntimeException("Vehicule introuvable"));
 
         v.setEtat(etat);
+
+        // --- NOUVELLE LOGIQUE : Libération du chauffeur ---
+        // Si le véhicule part en entretien ou devient indisponible
+        if (etat == EtatVehicule.EN_ENTRETIEN || etat == EtatVehicule.INDISPONIBLE) {
+            // On cherche si un chauffeur possède actuellement ce véhicule
+            chauffeurRepository.findByVehicule(v).ifPresent(chauffeur -> {
+                chauffeur.setVehicule(null); // On détache le véhicule du chauffeur
+                chauffeurRepository.save(chauffeur); // On enregistre le chauffeur libéré
+            });
+        }
+        // --------------------------------------------------
+
         return vehiculeRepository.save(v);
     }
     public long getVehiculesEnMission(Long idLocal) {
@@ -197,20 +211,59 @@ public class GestionParcService {
      * Réalise l'affectation d'un véhicule à un chauffeur.
      * Si le chauffeur avait déjà un véhicule, il est remplacé par le nouveau.
      */
-    public Chauffeur affecterVehiculeAChauffeur(Long idChauffeur, Long idVehicule) {
+    /*public Chauffeur affecterVehiculeAChauffeur(Long idChauffeur, Long idVehicule) {
+        // 1. Récupérer le chauffeur
         Chauffeur chauffeur = chauffeurRepository.findById(idChauffeur)
-                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
+                .orElseThrow(() -> new RuntimeException("Chauffeur non trouvé"));
 
+        // 2. VÉRIFICATION CRITIQUE : Le chauffeur a-t-il déjà un véhicule ?
+        if (chauffeur.getVehicule() != null) {
+            throw new RuntimeException("Ce chauffeur est déjà responsable du véhicule matricule : "
+                    + chauffeur.getVehicule().getMatricule());
+        }
+
+        // 3. Récupérer le véhicule
         Vehicule vehicule = vehiculeRepository.findById(idVehicule)
-                .orElseThrow(() -> new RuntimeException("Vehicule introuvable"));
+                .orElseThrow(() -> new RuntimeException("Véhicule non trouvé"));
 
-        // Liaison du véhicule au chauffeur
+        // 4. Effectuer l'affectation
         chauffeur.setVehicule(vehicule);
 
-        // On met à jour l'état du véhicule pour indiquer qu'il n'est plus "Libre" si nécessaire
-        // vehicule.setEtat(EtatVehicule.EN_MISSION); // Optionnel selon vos règles métier
+        // Optionnel : Mettre à jour l'état du véhicule
+        vehicule.setEtat(EtatVehicule.EN_MISSION);
 
         return chauffeurRepository.save(chauffeur);
+    }*/
+    @Transactional // Très important pour que les deux updates passent ou échouent ensemble
+    public Chauffeur affecterVehiculeAChauffeur(Long idChauffeur, Long idVehicule) {
+        // 1. Trouver le véhicule
+        Vehicule vehicule = vehiculeRepository.findById(idVehicule)
+                .orElseThrow(() -> new RuntimeException("Véhicule introuvable"));
+
+        // 2. Trouver le chauffeur actuel qui possède ce véhicule (s'il existe)
+        // Tu dois ajouter cette méthode dans ton ChauffeurRepository
+        Optional<Chauffeur> ancienProprietaire = chauffeurRepository.findByVehicule(vehicule);
+
+        // 3. Si quelqu'un d'autre l'a, on lui enlève d'abord
+        if (ancienProprietaire.isPresent()) {
+            Chauffeur ancien = ancienProprietaire.get();
+            if (!ancien.getIdChauffeur().equals(idChauffeur)) {
+                ancien.setVehicule(null);
+                chauffeurRepository.save(ancien);
+            }
+        }
+
+        // 4. Trouver le nouveau chauffeur
+        Chauffeur nouveauChauffeur = chauffeurRepository.findById(idChauffeur)
+                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
+
+        // 5. Lui affecter le véhicule
+        nouveauChauffeur.setVehicule(vehicule);
+
+        // 6. Mettre à jour l'état du véhicule
+        vehicule.setEtat(EtatVehicule.EN_MISSION);
+
+        return chauffeurRepository.save(nouveauChauffeur);
     }
 
 
