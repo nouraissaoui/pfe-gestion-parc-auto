@@ -1,0 +1,81 @@
+    <div class="chauffeur-page">
+    <div class="header-section">
+        <h1>Gestion des <span>Chauffeurs</span></h1>
+        <p>Suivi de la disponibilité et affectation du personnel</p>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-card" (click)="filterTable('TOUS')">
+        <div class="stat-icon">👤</div>
+        <div class="stat-content">
+            <span class="stat-value">{{ stats.total }}</span>
+            <span class="stat-label">Total</span>
+        </div>
+        </div>
+        <div class="stat-card dispo" (click)="filterTable('DISPONIBLE')">
+        <div class="stat-icon">✔️</div>
+        <div class="stat-content">
+            <span class="stat-value">{{ stats.dispo }}</span>
+            <span class="stat-label">Disponibles</span>
+        </div>
+        </div>
+        <div class="stat-card mission" (click)="filterTable('EN_MISSION')">
+        <div class="stat-icon">🚩</div>
+        <div class="stat-content">
+            <span class="stat-value">{{ stats.mission }}</span>
+            <span class="stat-label">En Mission</span>
+        </div>
+        </div>
+        <div class="stat-card conge" (click)="filterTable('EN_CONGE')">
+        <div class="stat-icon">🏖️</div>
+        <div class="stat-content">
+            <span class="stat-value">{{ stats.conge }}</span>
+            <span class="stat-label">En Congé</span>
+        </div>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="agil-table">
+        <thead>
+            <tr>
+            <th>NOM & PRÉNOM</th>
+            <th>PERMIS</th>
+            <th>ANCIENNETÉ</th>
+            <th>RÉGION</th>
+            <th>VÉHICULE ACTUEL</th>
+            <th>ÉTAT</th>
+            <th>ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let c of filteredChauffeurs">
+            <td class="user-cell">
+                <div class="avatar">{{ c.user.nom[0] }}{{ c.user.prenom[0] }}</div>
+                <div class="info">
+                <span class="name">{{ c.user.nom }} {{ c.user.prenom }}</span>
+                <span class="email">{{ c.user.mail }}</span>
+                </div>
+            </td>
+            <td><span class="badge-permis">{{ c.typeVehiculePermis }}</span></td>
+            <td>{{ c.anciennete }} ans</td>
+            <td>{{ c.region }}</td>
+            <td>{{ c.vehicule ? c.vehicule.matricule : '---' }}</td>
+            <td>
+                <span class="status-tag" [ngClass]="c.etatChauffeur.toLowerCase()">
+                {{ c.etatChauffeur }}
+                </span>
+            </td>
+            <td>
+                <select class="action-dropdown" (change)="changeEtat(c.idChauffeur, $event)">
+                <option value="" disabled selected>Modifier</option>
+                <option value="DISPONIBLE">Disponible</option>
+                <option value="EN_MISSION">En Mission</option>
+                <option value="EN_CONGE">En Congé</option>
+                </select>
+            </td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+    </div>

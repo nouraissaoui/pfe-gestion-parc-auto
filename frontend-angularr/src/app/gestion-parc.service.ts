@@ -147,6 +147,13 @@ affecterVehicule(idChauffeur: number, idVehicule: number): Observable<any> {
     observe: 'response' // Permet de voir le code statut (200, 404, etc.)
   });
 }
+getChauffeursByLocal(idLocal: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/local/${idLocal}/chauffeurs`);
+  }
+  updateEtatChauffeur(idChauffeur: number, etat: string): Observable<any> {
+    // On passe l'état en RequestParam comme défini dans ton Controller Java
+    return this.http.put(`${this.baseUrl}/chauffeur/${idChauffeur}/etat?etat=${etat}`, {});
+  }
   
 
 }
