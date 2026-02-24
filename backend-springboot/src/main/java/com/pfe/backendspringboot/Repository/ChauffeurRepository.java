@@ -16,4 +16,5 @@ public interface ChauffeurRepository extends JpaRepository<Chauffeur, Long> {
     List<Chauffeur> findByLocal_IdLocal(Long idLocal);
     @Query("SELECT c FROM Chauffeur c WHERE c.local.idLocal = :idLocal")
     List<Chauffeur> findChauffeursByLocal(@Param("idLocal") Long idLocal);
+
 }

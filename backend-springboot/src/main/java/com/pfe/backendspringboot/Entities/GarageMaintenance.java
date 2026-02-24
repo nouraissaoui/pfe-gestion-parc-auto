@@ -1,9 +1,15 @@
 package com.pfe.backendspringboot.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "garage_maintenance")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class GarageMaintenance {
 
     @Id
@@ -11,7 +17,9 @@ public class GarageMaintenance {
     @Column(name = "id_garage")
     private Long idGarage;
 
+    @Column(nullable = false)
     private String nomGarage;
+
     private String adresse;
 
     @Column(length = 20)
@@ -22,52 +30,6 @@ public class GarageMaintenance {
 
     private String responsable;
 
-    // ===== Getters et Setters =====
-    public Long getIdGarage() {
-        return idGarage;
-    }
-
-    public void setIdGarage(Long idGarage) {
-        this.idGarage = idGarage;
-    }
-
-    public String getNomGarage() {
-        return nomGarage;
-    }
-
-    public void setNomGarage(String nomGarage) {
-        this.nomGarage = nomGarage;
-    }
-
-    public String getAdresse() {
-        return adresse;
-    }
-
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getResponsable() {
-        return responsable;
-    }
-
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
-    }
+    // Note : Tu pourrais ajouter ici un champ "specialite"
+    // (Pneumatique, Vidange, Carrosserie) pour aider le Chef de Parc.
 }

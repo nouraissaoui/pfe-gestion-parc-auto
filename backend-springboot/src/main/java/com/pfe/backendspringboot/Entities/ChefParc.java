@@ -13,20 +13,18 @@ public class ChefParc {
     @Column(name = "id_chefparc")
     private Long idChefParc;
 
-    // Relation 1-1 avec User (table mère)
+    // 🔹 Relation 1-1 avec User (Le compte utilisateur)
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user", referencedColumnName = "id_user")
     private User user;
 
-    // Relation 1-1 avec Local
+    // 🔹 Relation 1-1 avec Local (Le local qu'il dirige)
     @OneToOne
     @JoinColumn(name = "id_local", referencedColumnName = "id_local")
     @JsonManagedReference
     private Local local;
 
-    @ManyToOne
-    @JoinColumn(name = "id_admin")
-    private Admin admin;
+    // ❌ Suppression de la relation Admin ici
 
     private LocalDate dateNomination;
     private int ancienneteChef;
@@ -34,7 +32,8 @@ public class ChefParc {
     @Enumerated(EnumType.STRING)
     private NiveauResponsabilite niveauResponsabilite;
 
-    // Getters et Setters
+    // ===== Getters et Setters =====
+
     public Long getIdChefParc() { return idChefParc; }
     public void setIdChefParc(Long idChefParc) { this.idChefParc = idChefParc; }
 

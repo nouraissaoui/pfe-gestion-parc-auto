@@ -1,6 +1,5 @@
 package com.pfe.backendspringboot.Entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -27,28 +26,32 @@ public class Chauffeur {
 
     private String region;
 
-    // 🔹 Relation 1-1 avec User (table mère)
+    public enum EtatChauffeur {
+        DISPONIBLE,
+        EN_MISSION,
+        EN_CONGE
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "etat_chauffeur", nullable = false)
+    private EtatChauffeur etatChauffeur = EtatChauffeur.DISPONIBLE; // Valeur par défaut
+
+    // 🔹 Relation 1-1 avec User (Le compte utilisateur du chauffeur)
     @OneToOne
     @JoinColumn(name = "id_user", nullable = false, unique = true)
     private User user;
 
-    // 🔹 Relation avec Vehicule (L'affectation)
+    // 🔹 Relation avec Vehicule (Le véhicule actuellement assigné)
     @OneToOne
     @JoinColumn(name = "id_vehicule", unique = true)
-    @JsonIgnoreProperties({"admin", "local"})
+    @JsonIgnoreProperties({"local"}) // Supprimé "admin" car il n'existe plus
     private Vehicule vehicule;
 
-
-    // 🔹 Relation Many-to-One avec Admin
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "id_admin")
-    private Admin admin;
-
-    // 🔹 Relation Many-to-One avec Local (optionnelle)
-    @ManyToOne(optional = true) // permet null
-    @JsonIgnoreProperties({"chauffeurs", "chefParcs", "admin"})
-    @JoinColumn(name = "id_local", nullable = true) // colonne SQL autorise null
+    // 🔹 Relation Many-to-One avec Local
+    // Un chauffeur appartient à un local géré par un Chef de Parc
+    @ManyToOne(optional = true)
+    @JsonIgnoreProperties({"chauffeurs", "chefParcs"}) // Nettoyage des propriétés inexistantes
+    @JoinColumn(name = "id_local", nullable = true)
     private Local local;
 
     // ===== Getters & Setters =====
@@ -74,13 +77,17 @@ public class Chauffeur {
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 
-    // Getter & Setter
     public Vehicule getVehicule() { return vehicule; }
     public void setVehicule(Vehicule vehicule) { this.vehicule = vehicule; }
 
-    public Admin getAdmin() { return admin; }
-    public void setAdmin(Admin admin) { this.admin = admin; }
-
     public Local getLocal() { return local; }
     public void setLocal(Local local) { this.local = local; }
+
+    public EtatChauffeur getEtatChauffeur() {
+        return etatChauffeur;
+    }
+
+    public void setEtatChauffeur(EtatChauffeur etatChauffeur) {
+        this.etatChauffeur = etatChauffeur;
+    }
 }

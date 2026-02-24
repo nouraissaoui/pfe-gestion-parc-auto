@@ -1,10 +1,10 @@
 package com.pfe.backendspringboot.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "declaration")
@@ -22,7 +22,7 @@ public class Declaration {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private DeclarationType type;
+    private DeclarationType type; // ex: ACCIDENT, PANNE, RECLAMATION
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -31,22 +31,22 @@ public class Declaration {
     private LocalDateTime dateCreation;
 
     @Enumerated(EnumType.STRING)
-    private DeclarationStatus status;
+    private DeclarationStatus status; // EN_ATTENTE, VALIDEE, REJETEE
 
     // ================= RELATIONS =================
-    // Chaque déclaration concerne 1 seul véhicule
+
     @ManyToOne
     @JoinColumn(name = "vehicule_id")
+    @JsonIgnoreProperties({"local", "image"})
     private Vehicule vehicule;
 
-    // Chaque déclaration est traitée par 1 seul chef du parc
     @ManyToOne
     @JoinColumn(name = "traite_par")
+    @JsonIgnoreProperties({"user", "local"})
     private ChefParc chefParc;
 
-    // Chaque déclaration est faite par 1 seul chauffeur
     @ManyToOne
     @JoinColumn(name = "chauffeur_id", nullable = false)
+    @JsonIgnoreProperties({"user", "local", "vehicule"})
     private Chauffeur chauffeur;
-
 }

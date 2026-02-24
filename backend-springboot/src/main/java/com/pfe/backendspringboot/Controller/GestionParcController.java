@@ -2,7 +2,6 @@ package com.pfe.backendspringboot.Controller;
 
 import com.pfe.backendspringboot.DTO.ProfileResponse;
 import com.pfe.backendspringboot.Entities.*;
-import com.pfe.backendspringboot.Repository.AdminRepository;
 import com.pfe.backendspringboot.Repository.ChauffeurRepository;
 import com.pfe.backendspringboot.Repository.ChefParcRepository;
 import com.pfe.backendspringboot.Service.GestionParcService;
@@ -20,7 +19,7 @@ import java.util.Optional;
 public class GestionParcController {
 
     @Autowired
-    private GestionParcService GestionParcService;
+    private GestionParcService gestionParcService;
 
     @Autowired
     private ChefParcRepository chefParcRepository;
@@ -28,20 +27,13 @@ public class GestionParcController {
     @Autowired
     private ChauffeurRepository chauffeurRepository;
 
-    @Autowired
-    private AdminRepository adminRepository;
-
-
-
-    public GestionParcController(GestionParcService GestionParcService) {
-        this.GestionParcService = GestionParcService;
-    }
+    // Suppression de l'AdminRepository car l'Admin est géré via User
 
     // ==================== AUTHENTIFICATION ====================
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User loginData) {
 
-        Optional<User> userOpt = GestionParcService.authenticate(
+        Optional<User> userOpt = gestionParcService.authenticate(
                 loginData.getMail(),
                 loginData.getMotDePasse()
         );
@@ -55,18 +47,18 @@ public class GestionParcController {
 
         Long idChefParc = null;
         Long idChauffeur = null;
-        Long idAdmin = null;
+        Long idAdmin = null; // Sera l'idUser si le rôle est ADMIN
         Long idLocal = null;
 
-        // 🔹 Chef Parc
+        // 🔹 Logique Chef Parc
         Optional<ChefParc> chefOpt = chefParcRepository.findByUser(user);
         if(chefOpt.isPresent()){
             ChefParc chef = chefOpt.get();
             idChefParc = chef.getIdChefParc();
-            idLocal = chef.getLocal() != null ? chef.getLocal().getIdLocal() : null;
+            idLocal = (chef.getLocal() != null) ? chef.getLocal().getIdLocal() : null;
         }
 
-        // 🔹 Chauffeur
+        // 🔹 Logique Chauffeur
         Optional<Chauffeur> chauffeurOpt = chauffeurRepository.findByUser(user);
         if(chauffeurOpt.isPresent()){
             Chauffeur chauffeur = chauffeurOpt.get();
@@ -76,11 +68,9 @@ public class GestionParcController {
             }
         }
 
-        // 🔹 Admin
-        Optional<Admin> adminOpt = adminRepository.findByUser(user);
-        if(adminOpt.isPresent()){
-            Admin admin = adminOpt.get();
-            idAdmin = admin.getIdAdmin();
+        // 🔹 Logique Admin (Simplifiée : pas de table Admin)
+        if (user.getRole() == Role.ADMIN) {
+            idAdmin = user.getIdUser(); // L'ID de l'admin est son ID utilisateur
         }
 
         ProfileResponse response = new ProfileResponse(
@@ -97,145 +87,119 @@ public class GestionParcController {
         return ResponseEntity.ok(response);
     }
 
-    // 🔹 Endpoint pour créer un utilisateur de test
     @PostMapping("/create")
     public String createUser(@RequestBody User u) {
-        GestionParcService.createUser(u.getIdUser(), u.getNom(), u.getPrenom(), u.getMotDePasse(), u.getRole());
+        gestionParcService.createUser(u.getIdUser(), u.getNom(), u.getPrenom(), u.getMotDePasse(), u.getRole());
         return "USER CREATED";
     }
 
-    // ==================== DASHBOARD ====================
+    // ==================== DASHBOARD & STATS ====================
 
-    // Total des véhicules
     @GetMapping("/{idLocal}/total-vehicules")
     public long getTotalVehicules(@PathVariable Long idLocal) {
-        return GestionParcService.getTotalVehicules(idLocal);
+        return gestionParcService.getTotalVehicules(idLocal);
     }
 
-    // Missions en cours
     @GetMapping("/{idLocal}/missions-en-cours")
     public long getMissionsEnCours(@PathVariable Long idLocal) {
-        return GestionParcService.getNbMissionsEnCours(idLocal);
+        return gestionParcService.getNbMissionsEnCours(idLocal);
     }
 
-    // Véhicules disponibles
     @GetMapping("/{idLocal}/vehicules-disponibles")
     public long getVehiculesDisponibles(@PathVariable Long idLocal) {
-        return GestionParcService.getVehiculesDisponibles(idLocal);
+        return gestionParcService.getVehiculesDisponibles(idLocal);
     }
+
     @GetMapping("/{idLocal}/vehicules-en-mission")
     public long getVehiculesEnMission(@PathVariable Long idLocal) {
-        return GestionParcService.getVehiculesEnMission(idLocal);
+        return gestionParcService.getVehiculesEnMission(idLocal);
     }
 
     @GetMapping("/{idLocal}/vehicules-en-entretien")
     public long getVehiculesEnEntretien(@PathVariable Long idLocal) {
-        return GestionParcService.getVehiculesEnEntretien(idLocal);
+        return gestionParcService.getVehiculesEnEntretien(idLocal);
     }
 
     @GetMapping("/{idLocal}/vehicules-indisponibles")
     public long getVehiculesIndisponibles(@PathVariable Long idLocal) {
-        return GestionParcService.getVehiculesIndisponibles(idLocal);
+        return gestionParcService.getVehiculesIndisponibles(idLocal);
     }
 
-    // Déclarations en attente
     @GetMapping("/declarations-en-attente/{idChef}")
     public long getDeclarationsEnAttente(@PathVariable Long idChef) {
-        return GestionParcService.getDeclarationsEnAttente(idChef);
+        return gestionParcService.getDeclarationsEnAttente(idChef);
     }
 
-    // Endpoint pour récupérer le nombre d'entretiens en attente d'un chef du parc
     @GetMapping("/entretiens-en-attente/{idChef}")
     public long getEntretiensEnAttente(@PathVariable Long idChef) {
-        return GestionParcService.getEntretiensEnAttente(idChef);
+        return gestionParcService.getEntretiensEnAttente(idChef);
     }
 
-    // Recuperer les informations d'un chef du parc a partir de son id
-    @GetMapping("/chef-parc/{id}")
-    public ResponseEntity<ChefParc> getChefParcById(@PathVariable Long id) {
-        return GestionParcService.getChefParcById(id)
+    // ==================== GESTION DES VÉHICULES ====================
+
+    @GetMapping("/{idLocal}/vehicules")
+    public List<Vehicule> getVehicules(@PathVariable Long idLocal){
+        return gestionParcService.getVehiculesByLocal(idLocal);
+    }
+
+    @PutMapping("/vehicule/{idVehicule}/etat")
+    public ResponseEntity<Vehicule> updateEtat(@PathVariable Long idVehicule, @RequestParam EtatVehicule etat){
+        try {
+            return ResponseEntity.ok(gestionParcService.updateEtatVehicule(idVehicule, etat));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // ==================== CRUD LOCAL (ADMIN) ====================
+
+    @PostMapping("/local")
+    public Local addLocal(@RequestBody Local l) {
+        return gestionParcService.saveLocal(l);
+    }
+
+    @GetMapping("/local")
+    public List<Local> getAllLocaux() {
+        return gestionParcService.getAllLocaux();
+    }
+
+    @GetMapping("/local/{id}")
+    public ResponseEntity<Local> getLocalById(@PathVariable Long id) {
+        return gestionParcService.getLocalById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    // 🔹 Consulter véhicules
-    @GetMapping("/{idLocal}/vehicules")
-    public List<Vehicule> getVehicules(@PathVariable Long idLocal){
-        return GestionParcService.getVehiculesByLocal(idLocal);
-    }
 
-    // 🔹 Modifier état
-    @PutMapping("/vehicule/{idVehicule}/etat")
-    public Vehicule updateEtat(@PathVariable Long idVehicule,
-                               @RequestParam EtatVehicule etat){
-        return GestionParcService.updateEtat(idVehicule, etat);
-    }
-    // ==================== CRUD LOCAL ====================
-
-
-    // 🔹 Ajouter un local
-    @PostMapping("/local")
-    public Local addLocal(@RequestBody Local l) {
-        return GestionParcService.save(l);
-    }
-
-    // 🔹 Récupérer tous les locaux
-    @GetMapping("/local")
-    public List<Local> getAllLocaux() {
-        return GestionParcService.getAll();
-    }
-
-    // 🔹 Récupérer un local par id
-    @GetMapping("/local/{id}")
-    public ResponseEntity<Local> getLocalById(@PathVariable Long id) {
-        Local l = GestionParcService.getById(id);
-        if (l == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(l);
-    }
-
-    // 🔹 Mettre à jour un local
     @PutMapping("/local/{id}")
     public ResponseEntity<Local> updateLocal(@PathVariable Long id, @RequestBody Local newLocal) {
-        Local updated = GestionParcService.update(id, newLocal);
-        if (updated == null) {
+        try {
+            return ResponseEntity.ok(gestionParcService.updateLocal(id, newLocal));
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(updated);
     }
 
-    // 🔹 Supprimer un local
     @DeleteMapping("/local/{id}")
     public ResponseEntity<?> deleteLocal(@PathVariable Long id) {
         try {
-            GestionParcService.delete(id);
+            gestionParcService.deleteLocal(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body("Local introuvable");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Erreur serveur lors de la suppression");
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
-    // ==================== AFFECTATION VEHICULES ====================
 
-    /**
-     * Récupère la liste des chauffeurs d'un local pour le modal d'affectation.
-     */
-// Récupérer les chauffeurs d'un local spécifique (pour le Chef de Parc connecté)
+    // ==================== AFFECTATION & CHAUFFEURS ====================
+
     @GetMapping("/local/{idLocal}/chauffeurs")
     public ResponseEntity<List<Chauffeur>> getChauffeursDuLocal(@PathVariable Long idLocal) {
-        List<Chauffeur> chauffeurs = GestionParcService.getChauffeursByLocal(idLocal);
-        return ResponseEntity.ok(chauffeurs);
+        return ResponseEntity.ok(gestionParcService.getChauffeursByLocal(idLocal));
     }
 
-    /**
-     * Enregistre l'affectation en base de données.
-     */
     @PutMapping("/affecter/{idChauffeur}/{idVehicule}")
     public ResponseEntity<?> affecterVehicule(@PathVariable Long idChauffeur, @PathVariable Long idVehicule) {
         try {
-            Chauffeur updatedChauffeur = GestionParcService.affecterVehiculeAChauffeur(idChauffeur, idVehicule);
+            Chauffeur updatedChauffeur = gestionParcService.affecterVehiculeAChauffeur(idChauffeur, idVehicule);
             return ResponseEntity.ok(updatedChauffeur);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -243,7 +207,16 @@ public class GestionParcController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'affectation");
         }
     }
-
-
+    // Mettre à jour l'état de disponibilité d'un chauffeur
+    @PutMapping("/chauffeur/{idChauffeur}/etat")
+    public ResponseEntity<Chauffeur> updateEtatChauffeur(
+            @PathVariable Long idChauffeur,
+            @RequestParam Chauffeur.EtatChauffeur etat) {
+        try {
+            Chauffeur updated = gestionParcService.updateEtatChauffeur(idChauffeur, etat);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
-
