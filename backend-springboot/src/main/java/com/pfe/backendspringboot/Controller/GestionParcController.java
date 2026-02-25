@@ -1,6 +1,8 @@
 package com.pfe.backendspringboot.Controller;
 
+import com.pfe.backendspringboot.DTO.LoginRequest;
 import com.pfe.backendspringboot.DTO.ProfileResponse;
+import com.pfe.backendspringboot.DTO.UserRegistrationDTO;
 import com.pfe.backendspringboot.Entities.*;
 import com.pfe.backendspringboot.Repository.ChauffeurRepository;
 import com.pfe.backendspringboot.Repository.ChefParcRepository;
@@ -27,72 +29,51 @@ public class GestionParcController {
     @Autowired
     private ChauffeurRepository chauffeurRepository;
 
-    // Suppression de l'AdminRepository car l'Admin est géré via User
-
-    // ==================== AUTHENTIFICATION ====================
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User loginData) {
-
-        Optional<User> userOpt = gestionParcService.authenticate(
-                loginData.getMail(),
-                loginData.getMotDePasse()
-        );
-
-        if (userOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Email ou mot de passe incorrect");
-        }
-
-        User user = userOpt.get();
-
-        Long idChefParc = null;
-        Long idChauffeur = null;
-        Long idAdmin = null; // Sera l'idUser si le rôle est ADMIN
-        Long idLocal = null;
-
-        // 🔹 Logique Chef Parc
-        Optional<ChefParc> chefOpt = chefParcRepository.findByUser(user);
-        if(chefOpt.isPresent()){
-            ChefParc chef = chefOpt.get();
-            idChefParc = chef.getIdChefParc();
-            idLocal = (chef.getLocal() != null) ? chef.getLocal().getIdLocal() : null;
-        }
-
-        // 🔹 Logique Chauffeur
-        Optional<Chauffeur> chauffeurOpt = chauffeurRepository.findByUser(user);
-        if(chauffeurOpt.isPresent()){
-            Chauffeur chauffeur = chauffeurOpt.get();
-            idChauffeur = chauffeur.getIdChauffeur();
-            if(chauffeur.getLocal() != null){
-                idLocal = chauffeur.getLocal().getIdLocal();
-            }
-        }
-
-        // 🔹 Logique Admin (Simplifiée : pas de table Admin)
-        if (user.getRole() == Role.ADMIN) {
-            idAdmin = user.getIdUser(); // L'ID de l'admin est son ID utilisateur
-        }
-
-        ProfileResponse response = new ProfileResponse(
-                user.getIdUser(),
-                user.getNom(),
-                user.getPrenom(),
-                user.getRole().name(),
-                idChefParc,
-                idChauffeur,
-                idAdmin,
-                idLocal
-        );
-
-        return ResponseEntity.ok(response);
-    }
-
     @PostMapping("/create")
-    public String createUser(@RequestBody User u) {
-        gestionParcService.createUser(u.getIdUser(), u.getNom(), u.getPrenom(), u.getMotDePasse(), u.getRole());
-        return "USER CREATED";
+    public ResponseEntity<?> createUser(@RequestBody UserRegistrationDTO dto) {
+        try {
+            gestionParcService.createUser(dto);
+            return ResponseEntity.ok().body("{\"message\": \"Utilisateur créé avec succès\"}");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginData) {
+        Object userAuth = gestionParcService.authenticate(loginData.getMail(), loginData.getMotDePasse());
+
+        if (userAuth == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect");
+        }
+
+        // Retourne un profil différent selon le type d'objet trouvé
+        if (userAuth instanceof ChefParc chef) {
+            ProfileResponse res = new ProfileResponse(
+                    chef.getIdChefParc(),
+                    chef.getNom(),
+                    chef.getPrenom(),
+                    chef.getMail(),
+                    "CHEF_PARC",
+                    (chef.getLocal() != null) ? chef.getLocal().getIdLocal() : null
+            );
+            return ResponseEntity.ok(res);
+        }
+
+        if (userAuth instanceof Chauffeur chauffeur) {
+            ProfileResponse res = new ProfileResponse(
+                    chauffeur.getIdChauffeur(),
+                    chauffeur.getNom(),
+                    chauffeur.getPrenom(),
+                    chauffeur.getMail(),
+                    "CHAUFFEUR",
+                    (chauffeur.getLocal() != null) ? chauffeur.getLocal().getIdLocal() : null
+            );
+            return ResponseEntity.ok(res);
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Type utilisateur inconnu");
+    }
     // ==================== DASHBOARD & STATS ====================
 
     @GetMapping("/{idLocal}/total-vehicules")

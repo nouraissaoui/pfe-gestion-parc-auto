@@ -1,5 +1,6 @@
 package com.pfe.backendspringboot.Service;
 
+import com.pfe.backendspringboot.DTO.UserRegistrationDTO;
 import com.pfe.backendspringboot.Entities.*;
 import com.pfe.backendspringboot.Repository.*;
 import jakarta.transaction.Transactional;
@@ -14,8 +15,6 @@ import java.util.Optional;
 public class GestionParcService {
 
     // ==================== REPOSITORIES ====================
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private ChefParcRepository chefParcRepository;
@@ -43,33 +42,71 @@ public class GestionParcService {
 
     // ==================== AUTHENTIFICATION & USERS ====================
 
-    public Optional<User> authenticate(String mail, String password) {
+   /* public Optional<User> authenticate(String mail, String password) {
         return userRepository.findByMail(mail)
                 .filter(user -> passwordEncoder.matches(password, user.getMotDePasse()));
+    }*/
+    // Dans GestionParcService.java
+
+    public Object authenticate(String mail, String password) {
+        // 1. Chercher dans ChefParc
+        Optional<ChefParc> chef = chefParcRepository.findByMail(mail);
+        if (chef.isPresent() && passwordEncoder.matches(password, chef.get().getMotDePasse())) {
+            return chef.get();
+        }
+
+        // 2. Si non trouvé, chercher dans Chauffeur
+        Optional<Chauffeur> chauffeur = chauffeurRepository.findByMail(mail);
+        if (chauffeur.isPresent() && passwordEncoder.matches(password, chauffeur.get().getMotDePasse())) {
+            return chauffeur.get();
+        }
+
+        return null; // Ou jeter une exception
     }
 
-    public User createUser(long iduser, String nom, String prenom, String rawPassword, Role role) {
-        User user = new User();
-        user.setIdUser(iduser);
-        user.setNom(nom);
-        user.setPrenom(prenom);
+    public void createUser(UserRegistrationDTO dto) {
+        String encodedPassword = passwordEncoder.encode(dto.getMotDePasse());
+        // Génération automatique de l'email si non fourni
+        String email = (dto.getMail() != null && !dto.getMail().isEmpty()) ? dto.getMail() :
+                (dto.getPrenom().toLowerCase() + "." + dto.getNom().toLowerCase() + "@agil.com.tn");
 
-        // Génération du mail professionnel
-        String email = prenom.toLowerCase() + "." + nom.toLowerCase() + "@agil.com.tn";
-        user.setMail(email);
+        if ("CHEF_PARC".equalsIgnoreCase(dto.getRole())) {
+            ChefParc chef = new ChefParc();
+            chef.setNom(dto.getNom());
+            chef.setPrenom(dto.getPrenom());
+            chef.setMail(email);
+            chef.setMotDePasse(encodedPassword);
+            chef.setDateNomination(dto.getDateNomination());
+            chef.setAncienneteChef(dto.getAncienneteChef());
 
-        user.setMotDePasse(passwordEncoder.encode(rawPassword));
-        user.setRole(role);
+            if (dto.getNiveauResponsabilite() != null) {
+                chef.setNiveauResponsabilite(NiveauResponsabilite.valueOf(dto.getNiveauResponsabilite().toUpperCase()));
+            }
 
-        return userRepository.save(user);
-    }
+            if (dto.getIdLocal() != null) {
+                localRepository.findById(dto.getIdLocal()).ifPresent(chef::setLocal);
+            }
+            chefParcRepository.save(chef);
 
-    public Optional<ChefParc> getChefParcByUser(User user) {
-        return chefParcRepository.findByUser(user);
-    }
+        } else if ("CHAUFFEUR".equalsIgnoreCase(dto.getRole())) {
+            Chauffeur chauffeur = new Chauffeur();
+            chauffeur.setNom(dto.getNom());
+            chauffeur.setPrenom(dto.getPrenom());
+            chauffeur.setMail(email);
+            chauffeur.setMotDePasse(encodedPassword);
+            chauffeur.setDatePriseLicense(dto.getDatePriseLicense());
+            chauffeur.setAnciennete(dto.getAnciennete());
+            chauffeur.setTypeVehiculePermis(dto.getTypeVehiculePermis());
+            chauffeur.setDateExpirationPermis(dto.getDateExpirationPermis());
+            chauffeur.setRegion(dto.getRegion());
 
-    public Optional<Chauffeur> getChauffeurByUser(User user) {
-        return chauffeurRepository.findByUser(user);
+            if (dto.getIdLocal() != null) {
+                localRepository.findById(dto.getIdLocal()).ifPresent(chauffeur::setLocal);
+            }
+            chauffeurRepository.save(chauffeur);
+        } else {
+            throw new RuntimeException("Rôle '" + dto.getRole() + "' non reconnu.");
+        }
     }
 
     // ==================== GESTION DES LOCAUX (Rôle ADMIN) ====================
