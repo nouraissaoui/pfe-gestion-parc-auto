@@ -1,81 +1,95 @@
-    <div class="chauffeur-page">
-    <div class="header-section">
-        <h1>Gestion des <span>Chauffeurs</span></h1>
-        <p>Suivi de la disponibilité et affectation du personnel</p>
+    <div class="chauffeur-dashboard">
+    <div class="page-title-container">
+        <h1 class="main-title">Intelligence <span>Chauffeurs</span></h1>
+        <div class="search-bar">
+        <input type="text" placeholder="Rechercher un opérateur..." (input)="onSearch($event)">
+        <i class="search-icon">🔍</i>
+        </div>
     </div>
 
-    <div class="stats-container">
+    <div class="stats-grid">
         <div class="stat-card" (click)="filterTable('TOUS')">
-        <div class="stat-icon">👤</div>
-        <div class="stat-content">
-            <span class="stat-value">{{ stats.total }}</span>
-            <span class="stat-label">Total</span>
+        <div class="stat-icon gray">👥</div>
+        <div class="stat-info">
+            <span class="stat-number">{{ stats.total }}</span>
+            <span class="stat-label">Effectif Total</span>
         </div>
         </div>
-        <div class="stat-card dispo" (click)="filterTable('DISPONIBLE')">
-        <div class="stat-icon">✔️</div>
-        <div class="stat-content">
-            <span class="stat-value">{{ stats.dispo }}</span>
+        <div class="stat-card" (click)="filterTable('DISPONIBLE')">
+        <div class="stat-icon green">✨</div>
+        <div class="stat-info">
+            <span class="stat-number">{{ stats.dispo }}</span>
             <span class="stat-label">Disponibles</span>
         </div>
         </div>
-        <div class="stat-card mission" (click)="filterTable('EN_MISSION')">
-        <div class="stat-icon">🚩</div>
-        <div class="stat-content">
-            <span class="stat-value">{{ stats.mission }}</span>
+        <div class="stat-card" (click)="filterTable('EN_MISSION')">
+        <div class="stat-icon blue">🚀</div>
+        <div class="stat-info">
+            <span class="stat-number">{{ stats.mission }}</span>
             <span class="stat-label">En Mission</span>
         </div>
         </div>
-        <div class="stat-card conge" (click)="filterTable('EN_CONGE')">
-        <div class="stat-icon">🏖️</div>
-        <div class="stat-content">
-            <span class="stat-value">{{ stats.conge }}</span>
+        <div class="stat-card" (click)="filterTable('EN_CONGE')">
+        <div class="stat-icon red">💤</div>
+        <div class="stat-info">
+            <span class="stat-number">{{ stats.conge }}</span>
             <span class="stat-label">En Congé</span>
         </div>
         </div>
     </div>
 
-    <div class="table-wrapper">
-        <table class="agil-table">
-        <thead>
+    <div class="content-panel">
+        <div class="panel-header">
+        <div class="panel-badge">Liste des Opérateurs <span class="badge-count">{{ filteredChauffeurs.length }}</span></div>
+        <div class="filter-tabs">
+            <button (click)="filterTable('TOUS')" class="tab-btn">Tous</button>
+            <button (click)="filterTable('DISPONIBLE')" class="tab-btn">Libres</button>
+            <button (click)="filterTable('EN_MISSION')" class="tab-btn">En Mission</button>
+        </div>
+        </div>
+
+        <div class="table-responsive">
+        <table class="agil-custom-table">
+            <thead>
             <tr>
-            <th>NOM & PRÉNOM</th>
-            <th>PERMIS</th>
-            <th>ANCIENNETÉ</th>
-            <th>RÉGION</th>
-            <th>VÉHICULE ACTUEL</th>
-            <th>ÉTAT</th>
-            <th>ACTION</th>
+                <th>OPÉRATEUR</th>
+                <th>PERMIS</th>
+                <th>EXPÉRIENCE</th>
+                <th>LOCALISATION</th>
+                <th>ÉTAT SYSTÈME</th>
+                <th>ACTIONS</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+                <tbody>
             <tr *ngFor="let c of filteredChauffeurs">
-            <td class="user-cell">
-                <div class="avatar">{{ c.user.nom[0] }}{{ c.user.prenom[0] }}</div>
-                <div class="info">
-                <span class="name">{{ c.user.nom }} {{ c.user.prenom }}</span>
-                <span class="email">{{ c.user.mail }}</span>
+                <td>
+                <div class="user-profile">
+                    <div class="user-avatar">{{ c.nom[0] }}{{ c.prenom[0] }}</div>
+                    <div class="user-meta">
+                    <span class="user-name">{{ c.nom }} {{ c.prenom }}</span>
+                    <span class="user-id">ID: #00{{ c.idChauffeur }}</span>
+                    </div>
                 </div>
-            </td>
-            <td><span class="badge-permis">{{ c.typeVehiculePermis }}</span></td>
-            <td>{{ c.anciennete }} ans</td>
-            <td>{{ c.region }}</td>
-            <td>{{ c.vehicule ? c.vehicule.matricule : '---' }}</td>
-            <td>
-                <span class="status-tag" [ngClass]="c.etatChauffeur.toLowerCase()">
-                {{ c.etatChauffeur }}
+                </td>
+                <td><span class="permis-tag">{{ c.typeVehiculePermis }}</span></td>
+                <td>{{ c.anciennete }} Ans Exp.</td>
+                <td>📍 {{ c.region }}</td>
+                <td>
+                <span class="status-indicator" [ngClass]="c.etatChauffeur.toLowerCase()">
+                    <span class="dot"></span> {{ c.etatChauffeur }}
                 </span>
-            </td>
-            <td>
-                <select class="action-dropdown" (change)="changeEtat(c.idChauffeur, $event)">
-                <option value="" disabled selected>Modifier</option>
-                <option value="DISPONIBLE">Disponible</option>
-                <option value="EN_MISSION">En Mission</option>
-                <option value="EN_CONGE">En Congé</option>
+                </td>
+                <td>
+                <select class="action-select" (change)="changeEtat(c.idChauffeur, $event)">
+                    <option value="" disabled selected>Modifier État</option>
+                    <option value="DISPONIBLE">DISPONIBLE</option>
+                    <option value="EN_MISSION">EN MISSION</option>
+                    <option value="EN_CONGE">EN CONGÉ</option>
                 </select>
-            </td>
+                </td>
             </tr>
-        </tbody>
+            </tbody>
         </table>
+        </div>
     </div>
     </div>

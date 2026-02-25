@@ -13,16 +13,12 @@ export interface DashboardStats {
   maintenanceEnAttente: number;
 }
 export interface LoginResponse {
-  idUser: number;
+  id: number;           // ID du Chauffeur ou du Chef de Parc
   nom: string;
   prenom: string;
-  role: string;
-
-  idChefParc?: number;
-  idChauffeur?: number;
-  idAdmin?: number;
-
-  idLocal?: number;
+  mail: string;
+  typeUtilisateur: string; // "CHEF_PARC" ou "CHAUFFEUR"
+  idLocal: number | null;
 }
 export interface Local {
   idLocal?: number;

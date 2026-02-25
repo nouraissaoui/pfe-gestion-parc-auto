@@ -22,42 +22,36 @@ export class AuthentificationComponent {
   ) {}
 
   login(): void {
+  this.service.login(this.email, this.password).subscribe({
+    next: (response: LoginResponse) => {
+      // 🔐 Sauvegarde session
+      localStorage.setItem('user', JSON.stringify(response));
+      console.log("User connecté :", response);
 
-    this.service.login(this.email, this.password).subscribe({
-      next: (response: LoginResponse) => {
+      // 🔹 Redirection selon typeUtilisateur (et non plus role)
+      switch(response.typeUtilisateur) {
+        case 'ADMIN': // Si tu comptes ajouter un Admin plus tard
+          this.router.navigate(['/admin/locaux']);
+          break;
 
-        // 🔐 Sauvegarde session
-        localStorage.setItem('user', JSON.stringify(response));
-  
-        console.log("User connecté :", response);
+        case 'CHAUFFEUR':
+          this.router.navigate(['/chauffeur/dashboard']);
+          break;
 
-        // 🔹 Redirection selon rôle
-        switch(response.role) {
+        case 'CHEF_PARC': // Doit correspondre exactement à la String Java
+          this.router.navigate(['/chef-parc/dashboard']);
+          break;
 
-          case 'ADMIN':
-            this.router.navigate(['/admin/locaux']);
-            break;
-
-          case 'CHAUFFEUR':
-            this.router.navigate(['/chauffeur/dashboard']);
-            break;
-
-          case 'CHEF_DU_PARC':
-            this.router.navigate(['/chef-parc/dashboard']);
-            break;
-
-          default:
-            alert("Rôle inconnu !");
-        }
-      },
-      
-
-      error: () => {
-        alert("Email ou mot de passe incorrect !");
+        default:
+          console.warn("Type utilisateur inconnu reçu :", response.typeUtilisateur);
+          alert("Rôle inconnu : " + response.typeUtilisateur);
       }
-      
-    });
-
-  }
+    },
+    error: (err) => {
+      console.error("Erreur login :", err);
+      alert("Email ou mot de passe incorrect !");
+    }
+  });
+}
   
 }
