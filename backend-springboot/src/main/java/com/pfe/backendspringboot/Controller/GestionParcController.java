@@ -8,6 +8,7 @@ import com.pfe.backendspringboot.Repository.ChauffeurRepository;
 import com.pfe.backendspringboot.Repository.ChefParcRepository;
 import com.pfe.backendspringboot.Service.GestionParcService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,16 +39,36 @@ public class GestionParcController {
             return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+    @Value("${admin.email}")
+    private String adminEmail;
+
+    @Value("${admin.password}")
+    private String adminPassword;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginData) {
+
+        // 1. Vérification de l'Admin unique (statique)
+        if (adminEmail.equals(loginData.getMail()) && adminPassword.equals(loginData.getMotDePasse())) {
+            ProfileResponse adminRes = new ProfileResponse(
+                    0L, // ID fictif pour l'admin
+                    "Admin",
+                    "System",
+                    adminEmail,
+                    "ADMIN",
+                    null
+            );
+            return ResponseEntity.ok(adminRes);
+        }
+
+        // 2. Si ce n'est pas l'admin, on vérifie les utilisateurs en base de données
         Object userAuth = gestionParcService.authenticate(loginData.getMail(), loginData.getMotDePasse());
 
         if (userAuth == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect");
         }
 
-        // Retourne un profil différent selon le type d'objet trouvé
+        // 3. Identification du type d'utilisateur (Chef ou Chauffeur)
         if (userAuth instanceof ChefParc chef) {
             ProfileResponse res = new ProfileResponse(
                     chef.getIdChefParc(),
