@@ -27,13 +27,12 @@ public class ChefParc {
     private String motDePasse;
 
     @OneToOne
-    @JoinColumn(name = "id_local", referencedColumnName = "id_local")
-    @JsonManagedReference
+    @JoinColumn(name = "id_local") // C'est cette colonne qui stocke l'ID dans la table chef_parc
     private Local local;
-
     private LocalDate dateNomination;
     private int ancienneteChef;
 
     @Enumerated(EnumType.STRING)
     private NiveauResponsabilite niveauResponsabilite;
+
 }

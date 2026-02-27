@@ -1,9 +1,14 @@
 package com.pfe.backendspringboot.Entities;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import com.pfe.backendspringboot.Entities.ChefParc;
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name="local")
@@ -19,27 +24,22 @@ public class Local {
     private String region;
     private String ville;
 
+    /******** IMAGE SIMPLE STRING ********/
+
     @Column(length=5000)
     private String images;
 
+
     /******** RELATIONS ********/
 
-    // Relation avec le Chef (1 seul par local)
-    @OneToOne(mappedBy="local", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToOne(mappedBy="local",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     @JsonIgnore
     private ChefParc chefParc;
 
-    // 🔹 NOUVEAU : Un local possède plusieurs véhicules
-    @OneToMany(mappedBy = "local", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("local")
-    private List<Vehicule> vehicules;
 
-    // 🔹 NOUVEAU : Un local possède plusieurs chauffeurs
-    @OneToMany(mappedBy = "local", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("local")
-    private List<Chauffeur> chauffeurs;
 
-    /******** GETTERS & SETTERS ********/
+
+    /******** GETTERS ********/
 
     public Long getIdLocal(){ return idLocal; }
     public void setIdLocal(Long idLocal){ this.idLocal=idLocal; }
@@ -59,12 +59,9 @@ public class Local {
     public String getImages(){ return images; }
     public void setImages(String images){ this.images=images; }
 
+
     public ChefParc getChefParc() { return chefParc; }
     public void setChefParc(ChefParc chefParc) { this.chefParc = chefParc; }
 
-    public List<Vehicule> getVehicules() { return vehicules; }
-    public void setVehicules(List<Vehicule> vehicules) { this.vehicules = vehicules; }
 
-    public List<Chauffeur> getChauffeurs() { return chauffeurs; }
-    public void setChauffeurs(List<Chauffeur> chauffeurs) { this.chauffeurs = chauffeurs; }
 }

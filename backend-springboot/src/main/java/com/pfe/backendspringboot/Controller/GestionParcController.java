@@ -13,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -221,4 +223,70 @@ public class GestionParcController {
             return ResponseEntity.notFound().build();
         }
     }
+    // ===== GET ALL CHEFS =====
+    @GetMapping("/chefparc")
+    public List<ChefParc> getAllChefs() {
+        return gestionParcService.getAllChefsParc();
+    }
+
+    // ===== GET CHEF BY ID =====
+    @GetMapping("/chefparc/{id}")
+    public ResponseEntity<ChefParc> getChefById(@PathVariable Long id) {
+        return gestionParcService.getChefParcById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+    @PostMapping("/chefparc")
+    public ResponseEntity<?> createChefParc(@RequestBody Map<String, Object> payload) {
+        try {
+            String nom = (String) payload.get("nom");
+            String prenom = (String) payload.get("prenom");
+            String mail = (String) payload.get("mail");
+            String motDePasse = (String) payload.get("motDePasse");
+            String niveau = (String) payload.get("niveauResponsabilite");
+            LocalDate dateNomination = payload.get("dateNomination") != null ?
+                    LocalDate.parse((String) payload.get("dateNomination")) : null;
+            int anciennete = payload.get("ancienneteChef") != null ? (Integer) payload.get("ancienneteChef") : 0;
+            Long idLocal = payload.get("idLocal") != null ? Long.valueOf(payload.get("idLocal").toString()) : null;
+
+            ChefParc chef = gestionParcService.createChefParc(
+                    nom, prenom, mail, motDePasse, dateNomination, anciennete, niveau, idLocal
+            );
+            return ResponseEntity.ok(chef);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PutMapping("/chefparc/{id}")
+    public ResponseEntity<?> updateChefParc(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
+        try {
+            String nom = (String) payload.get("nom");
+            String prenom = (String) payload.get("prenom");
+            String mail = (String) payload.get("mail");
+            String motDePasse = (String) payload.get("motDePasse");
+            String niveau = (String) payload.get("niveauResponsabilite");
+            LocalDate dateNomination = payload.get("dateNomination") != null ?
+                    LocalDate.parse((String) payload.get("dateNomination")) : null;
+            int anciennete = payload.get("ancienneteChef") != null ? (Integer) payload.get("ancienneteChef") : 0;
+            Long idLocal = payload.get("idLocal") != null ? Long.valueOf(payload.get("idLocal").toString()) : null;
+
+            ChefParc chef = gestionParcService.updateChefParc(
+                    id, nom, prenom, mail, motDePasse, dateNomination, anciennete, niveau, idLocal
+            );
+            return ResponseEntity.ok(chef);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/chefparc/{id}")
+    public ResponseEntity<?> deleteChefParc(@PathVariable Long id) {
+        try {
+            gestionParcService.deleteChefParc(id);
+            return ResponseEntity.ok("Chef Parc supprimé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }

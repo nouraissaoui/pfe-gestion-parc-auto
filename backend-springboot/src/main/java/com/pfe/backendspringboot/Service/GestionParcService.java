@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -256,4 +257,88 @@ public class GestionParcService {
 
         return chauffeurRepository.save(chauffeur);
     }
-}
+    public List<ChefParc> getAllChefsParc() {
+        return chefParcRepository.findAll();
+    }
+    public Optional<ChefParc> getChefParcById(Long id) {
+        return chefParcRepository.findById(id);
+    }
+
+    @Transactional
+    public ChefParc createChefParc(String nom, String prenom, String mail, String motDePasse,
+                                   LocalDate dateNomination, int ancienneteChef,
+                                   String niveauResponsabilite, Long idLocal) {
+
+        ChefParc chef = new ChefParc();
+        chef.setNom(nom);
+        chef.setPrenom(prenom);
+        chef.setMail(mail);
+        chef.setMotDePasse(passwordEncoder.encode(motDePasse));
+        chef.setDateNomination(dateNomination);
+        chef.setAncienneteChef(ancienneteChef);
+
+        if (niveauResponsabilite != null) {
+            chef.setNiveauResponsabilite(NiveauResponsabilite.valueOf(niveauResponsabilite.toUpperCase()));
+        }
+
+        if (idLocal != null) {
+            localRepository.findById(idLocal).ifPresent(chef::setLocal);
+        } else {
+            chef.setLocal(null);
+        }
+
+        return chefParcRepository.save(chef);
+    }
+    @Transactional
+    public ChefParc updateChefParc(Long id, String nom, String prenom, String mail, String motDePasse,
+                                   LocalDate dateNomination, int ancienneteChef,
+                                   String niveauResponsabilite, Long idLocal) {
+
+        ChefParc chef = chefParcRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chef Parc introuvable"));
+
+        chef.setNom(nom != null ? nom : chef.getNom());
+        chef.setPrenom(prenom != null ? prenom : chef.getPrenom());
+        chef.setMail(mail != null ? mail : chef.getMail());
+        if (motDePasse != null) {
+            chef.setMotDePasse(passwordEncoder.encode(motDePasse));
+        }
+        chef.setDateNomination(dateNomination != null ? dateNomination : chef.getDateNomination());
+        chef.setAncienneteChef(ancienneteChef != 0 ? ancienneteChef : chef.getAncienneteChef());
+
+        if (niveauResponsabilite != null) {
+            chef.setNiveauResponsabilite(NiveauResponsabilite.valueOf(niveauResponsabilite.toUpperCase()));
+        }
+
+        if (idLocal != null) {
+            localRepository.findById(idLocal).ifPresent(chef::setLocal);
+        } else {
+            chef.setLocal(null);
+        }
+
+        return chefParcRepository.save(chef);
+    }
+    @Transactional
+    public void deleteChefParc(Long id) {
+        // 1. Trouver le chef
+        ChefParc chef = chefParcRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chef non trouvé"));
+
+        // 2. Récupérer le local associé
+        Local local = chef.getLocal();
+
+        if (local != null) {
+            // IMPORTANT : On casse le lien des deux côtés pour que la contrainte d'unicité soit levée
+            local.setChefParc(null); // On libère le local
+            localRepository.save(local);
+
+            chef.setLocal(null); // On libère le chef
+            chefParcRepository.save(chef);
+        }
+
+        // 3. On force la synchronisation avec la base de données
+        chefParcRepository.flush();
+
+        // 4. On supprime l'entité ChefParc définitivement
+        chefParcRepository.delete(chef);
+    }}

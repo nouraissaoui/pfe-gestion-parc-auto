@@ -29,6 +29,17 @@ export interface Local {
   images?: string; // <-- string au lieu de string[]
   
 }
+export interface ChefParc {
+  idChefParc: number;
+  nom: string;
+  prenom: string;
+  mail: string;
+  motDePasse?: string;
+  dateNomination?: string;
+  ancienneteChef?: number;
+  niveauResponsabilite?: 'LOCAL_PRINCIPAL' | 'REGIONAL' ;
+  local?: Local | null;
+}
 export interface Vehicule {
   idVehicule: number;
   matricule: string;
@@ -151,5 +162,41 @@ getChauffeursByLocal(idLocal: number): Observable<any[]> {
     return this.http.put(`${this.baseUrl}/chauffeur/${idChauffeur}/etat?etat=${etat}`, {});
   }
   
+  getAllChefs(): Observable<ChefParc[]> {
+    return this.http.get<ChefParc[]>(`${this.baseUrl}/chefparc`);
+  }
+
+  createChef(chef: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/chefparc`, chef);
+  }
+  createChefParc(payload: any): Observable<ChefParc> {
+    return this.http.post<ChefParc>(`${this.baseUrl}/chefparc`, payload);
+  }
+
+  updateChef(id: number, chef: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/chefparc/${id}`, chef);
+  }
+updateChefParc(id: number, payload: any): Observable<ChefParc> {
+  // On utilise l'URL spécifique pour la mise à jour d'un chef
+  return this.http.put<ChefParc>(`${this.baseUrl}/chefparc/${id}`, payload);
+}
+  deleteChef(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/chefparc/${id}`);
+  }
+// Dans gestion-parc.service.ts
+deleteChefParc(id: number): Observable<string> {
+  return this.http.delete(`${this.baseUrl}/chefparc/${id}`, { responseType: 'text' });
+}
+
+  // ------------------ LOCAUX ------------------
+
+ // Ajoutez cette méthode dans votre ChefParcService
+getAllLocaux(): Observable<Local[]> {
+  return this.http.get<Local[]>('http://localhost:8080/api/gestion-parc/local'); 
+  // Remplacez /locaux par votre endpoint réel pour les locaux
+}
+  getLocalById(id: number): Observable<Local> {
+    return this.http.get<Local>(`${this.baseUrl}/local/${id}`);
+  }
 
 }
