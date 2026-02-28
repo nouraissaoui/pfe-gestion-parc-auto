@@ -2281,3 +2281,481 @@ tr:hover .emp-name-cell::after {
   0%, 100% { transform: scale(1); box-shadow: 0 25px 55px rgba(0,0,0,0.1); }
   50% { transform: scale(1.03); box-shadow: 0 30px 60px rgba(128, 0, 32, 0.1); }
 }
+/* --- STYLE DE PRESTIGE POUR LE RAPPORT AGIL --- */
+/* Pour un rendu extraordinaire, ajoutez ces polices dans votre index.html :
+   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+*/
+
+body { 
+  font-family: 'Inter', sans-serif; 
+  margin: 0; padding: 0; background: #fff;
+  color: #1a1a1a;
+  -webkit-print-color-adjust: exact; /* Force l'impression des couleurs */
+}
+
+/* --- LE CADRE ET LE FILIGRANE --- */
+.page-border {
+  border: 1px solid #d4af37; /* Ligne fine Or */
+  margin: 15mm;
+  padding: 10mm;
+  position: relative;
+  min-height: 250mm;
+}
+
+/* Le "Plus" magistral : un filigrane léger */
+.watermark {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 8rem; color: rgba(128, 0, 32, 0.03); /* Bordeaux très pâle */
+  font-weight: 900; z-index: -1; pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+}
+
+/* --- L'ENTÊTE DE PRESTIGE --- */
+.header { 
+  display: flex; justify-content: space-between; 
+  align-items: flex-start; border-bottom: 4px double #800020; /* Bordure Double Bordeaux */
+  padding-bottom: 20px; margin-bottom: 30px;
+}
+
+.logo-box img { 
+  height: 75px; 
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1)); 
+}
+
+.titre-doc { text-align: right; }
+
+h1 { 
+  font-family: 'Playfair Display', serif; /* Police Élégante */
+  color: #800020; margin: 0; font-size: 28px; 
+  letter-spacing: 1px;
+}
+
+.info-badge {
+  background: #800020; color: #fff;
+  display: inline-block; padding: 4px 12px;
+  border-radius: 50px; font-size: 11px; margin-top: 8px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* --- LE TABLEAU "AIR-GLASS" --- */
+table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+
+th { 
+  color: #800020; text-transform: uppercase; font-size: 12px;
+  letter-spacing: 1.5px; padding: 15px; border-bottom: 2px solid #d4af37;
+}
+
+td { 
+  padding: 15px; background: #fcfcfc; 
+  border-top: 1px solid #eee; border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+/* Bordure gauche épaisse bordeaux pour chaque ligne */
+td:first-child { 
+  border-left: 4px solid #800020; 
+  border-top-left-radius: 8px; border-bottom-left-radius: 8px; 
+}
+
+td:last-child { 
+  border-right: 1px solid #eee; 
+  border-top-right-radius: 8px; border-bottom-right-radius: 8px; 
+}
+
+/* Le petit "Plus" d'interaction si visible sur écran */
+tr:hover td { background: #f5f5f5; }
+
+.status-dot { 
+  height: 8px; width: 8px; background: #d4af37; 
+  border-radius: 50%; display: inline-block; margin-right: 8px; 
+}
+
+/* --- LES STATISTIQUES DE SYNTHÈSE --- */
+.footer-stats {
+  margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; text-align: center;
+}
+
+.stat-item { 
+  border: 1px solid #eee; padding: 15px; border-radius: 12px; 
+  background: #fdfdfd; 
+}
+
+.stat-item span { 
+  display: block; color: #800020; font-weight: 700; 
+  font-size: 20px; 
+}
+
+/* --- LA ZONE DE SIGNATURE OFFICIELLE --- */
+.signature-area { 
+  margin-top: 60px; display: flex; justify-content: space-between; 
+  padding: 0 40px;
+}
+
+.sig-box { text-align: center; font-size: 13px; color: #666; }
+
+.sig-line { 
+  border-top: 1px solid #333; width: 180px; margin-top: 60px; 
+}
+
+/* --- OPTIMISATION POUR L'IMPRESSION --- */
+@media print { 
+  .no-print { display: none; } 
+  body { margin: 0; padding: 0; }
+  .page-border { margin: 0; border: none; }
+}
+/* --- LE BOUTON PRESTIGE AGIL --- */
+.btn-prestige-print {
+  position: relative;
+  background: linear-gradient(135deg, #800020 0%, #5d0017 100%);
+  color: #d4af37; /* Texte Or */
+  border: 1px solid #d4af37;
+  padding: 12px 28px;
+  border-radius: 15px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  margin-bottom: 25px;
+}
+
+.btn-inner {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 2;
+  position: relative;
+}
+
+.btn-inner i {
+  font-size: 24px;
+  filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+}
+
+.btn-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.main-text {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sub-text {
+  font-size: 10px;
+  color: rgba(212, 175, 55, 0.8);
+  text-transform: none;
+  font-weight: 400;
+}
+
+/* Effet de brillance (Glare) */
+.btn-glare {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.6s;
+}
+
+/* --- ANIMATIONS AU SURVOL --- */
+.btn-prestige-print:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(128, 0, 32, 0.4);
+  border-color: #fff;
+  color: #fff;
+}
+
+.btn-prestige-print:hover .btn-glare {
+  left: 200%;
+}
+
+.btn-prestige-print:active {
+  transform: translateY(0);
+}
+/* --- CONTENEUR PRINCIPAL --- */
+.responsibility-selector {
+  display: flex;
+  gap: 12px;
+  margin: 15px 0;
+  padding: 5px;
+  background: #f8f9fa;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* --- STYLE DE BASE DES OPTIONS --- */
+.res-option {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  background: white;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+/* Icônes */
+.res-option i {
+  font-size: 22px;
+  color: #adb5bd;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+/* Texte */
+.res-option span {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+}
+
+/* --- EFFETS AU SURVOL --- */
+.res-option:hover {
+  transform: translateY(-5px);
+  background: #ffffff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.res-option:hover i {
+  transform: scale(1.2);
+}
+
+/* --- ÉTAT ACTIF (LE CÔTÉ EXTRAORDINAIRE) --- */
+
+/* 1. État Actif Global */
+.res-option.active {
+  background: #ffffff;
+  animation: pulse-border 2s infinite;
+}
+
+/* 2. Spécificité : CHEF LOCAL & RÉGIONAL (Or & Bordeaux) */
+.res-option:not(.res-null).active {
+  border-color: #d4af37; /* Or Agil */
+}
+
+.res-option:not(.res-null).active i {
+  color: #800020; /* Bordeaux Agil */
+}
+
+.res-option:not(.res-null).active span {
+  color: #800020;
+}
+
+/* 3. Spécificité : EN ATTENTE (Style Neutre/Argent) */
+.res-option.res-null {
+  border: 2px dashed #dee2e6;
+}
+
+.res-option.res-null.active {
+  border: 2px solid #6c757d;
+  background: #f1f3f5;
+}
+
+.res-option.res-null.active i, 
+.res-option.res-null.active span {
+  color: #495057;
+}
+
+/* --- PETIT PLUS : L'INDICATEUR DE SÉLECTION --- */
+.res-option.active::after {
+  content: '\f058'; /* Check-circle FontAwesome */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: white;
+  color: #d4af37;
+  font-size: 18px;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.res-option.res-null.active::after {
+  color: #6c757d;
+}
+
+/* --- ANIMATION --- */
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}/* Conteneur Prestige */
+.prestige-group {
+  margin-bottom: 25px;
+  animation: fadeIn 0.5s ease;
+}
+
+.gold-star {
+  color: #d4af37;
+  margin-right: 8px;
+  filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.5));
+}
+
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Le Select Royal */
+.prestige-select {
+  width: 100%;
+  height: 50px;
+  padding: 0 45px 0 15px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  background: #ffffff;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  appearance: none; /* Cache la flèche standard */
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* La Flèche en Or Agil */
+.select-wrapper::after {
+  content: '\f107'; /* Chevron FontAwesome */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 18px;
+  color: #d4af37;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+/* États Focus et Hover */
+.prestige-select:hover {
+  border-color: #d4af37;
+  background: #fffcf5;
+}
+
+.prestige-select:focus {
+  outline: none;
+  border-color: #800020; /* Bordeaux Agil */
+  box-shadow: 0 0 0 4px rgba(128, 0, 32, 0.1);
+  background: #fff;
+}
+
+/* Animation simple */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}/* --- CONTENEUR DE CENTRAGE --- */
+.report-center-container {
+  display: flex;
+  justify-content: center;  /* Centre horizontalement */
+  align-items: center;      /* Centre verticalement si besoin */
+  padding: 40px 0;
+  width: 100%;
+  position: relative;
+}
+
+/* --- LE BOUTON PRESTIGE (MISE À JOUR) --- */
+.btn-prestige-print {
+  position: relative;
+  background: linear-gradient(135deg, #800020 0%, #5d0017 100%);
+  color: #d4af37;
+  border: 1px solid #d4af37;
+  padding: 16px 35px; /* Un peu plus grand pour le centre */
+  border-radius: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 15px 35px rgba(128, 0, 32, 0.3); /* Ombre Bordeaux */
+  z-index: 1;
+}
+
+/* Effet de halo lumineux derrière le bouton */
+.report-center-container::before {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 50px;
+  background: rgba(212, 175, 55, 0.2);
+  filter: blur(40px);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.btn-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.main-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  display: block;
+}
+
+/* Animation au survol améliorée */
+.btn-prestige-print:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(128, 0, 32, 0.5);
+  color: #fff;
+  border-color: #fff;
+}
+
+.btn-glare {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: 0.7s;
+}
+
+.btn-prestige-print:hover .btn-glare {
+  left: 200%;
+}
+.prestige-select option[ngValue="null"], 
+.prestige-select option:first-child {
+    color: #888;
+    font-style: italic;
+}
+/* Style pour le badge quand il n'y a pas de responsabilité */
+.badge-empty {
+  background-color: #f8f9fa !important;
+  color: #a0a0a0 !important;
+  border: 1px dashed #d1d1d1 !important;
+  font-style: italic;
+  font-weight: 400 !important;
+}
+
+/* Votre badge existant peut être complété ainsi */
+.badge-stage {
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+}.badge-empty {
+  background: #f0f0f0 !important;
+  color: #888 !important;
+  border: 1px dashed #ccc !important;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 11px;
+}

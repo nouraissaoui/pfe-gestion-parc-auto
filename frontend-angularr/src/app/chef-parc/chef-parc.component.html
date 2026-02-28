@@ -53,6 +53,18 @@
     <p>Niveaux de Responsabilité</p>
   </div>
 </div>
+<div class="report-center-container">
+  <button class="btn-prestige-print" (click)="imprimerRapport()">
+    <div class="btn-inner">
+      <i class="fas fa-crown"></i>
+      <div class="btn-text">
+        <span class="main-text">Générer l'État de Synthèse</span>
+        <span class="sub-text">Rapport Officiel & Export PDF</span>
+      </div>
+    </div>
+    <div class="btn-glare"></div>
+  </button>
+</div>
 
     <div class="card-container">
   <div class="filters">
@@ -100,11 +112,19 @@
     
     
     <div class="click-hint">Modifier <i class="fas fa-chevron-down"></i></div>
-          <td>
-            <span class="badge badge-stage">
-              {{ chef.niveauResponsabilite === 'LOCAL_PRINCIPAL' ? 'Local Principal' : (chef.niveauResponsabilite === 'REGIONAL' ? 'Régional' : 'National') }}
-            </span>
-          </td>
+         <td>
+  <span class="badge" 
+        [class.badge-stage]="chef.niveauResponsabilite" 
+        [class.badge-empty]="!chef.niveauResponsabilite">
+    
+    <i [class]="chef.niveauResponsabilite ? 'fas fa-shield-alt' : 'fas fa-user-slash'"></i>
+    
+    {{ 
+      chef.niveauResponsabilite === 'LOCAL_PRINCIPAL' ? 'Local Principal' : 
+      (chef.niveauResponsabilite === 'REGIONAL' ? 'Régional' : 'Non assigné') 
+    }}
+  </span>
+</td>
           <td style="color: var(--text-muted);">
             {{ chef.dateNomination | date:'dd/MM/yyyy' }}
           </td>
@@ -185,14 +205,20 @@
   
 </div>
         </div>
-        <div class="form-group">
-          <label><i class="fas fa-star"></i> Responsabilité</label>
-          <select [(ngModel)]="chefForm.niveauResponsabilite" name="niveau">
-            <option value="LOCAL_PRINCIPAL">🏢 Local Principal</option>
-            <option value="REGIONAL">🗺️ Régional</option>
-          </select>
-        </div>
-      </div>
+        <div class="form-group prestige-group">
+  <label><i class="fas fa-star gold-star"></i> Responsabilité du Chef</label>
+  <div class="select-wrapper">
+    <select [(ngModel)]="chefForm.niveauResponsabilite" name="niveauResponsabilite" class="prestige-select">
+      <option [ngValue]="null">⚪ Non assigné (Libérer le poste)</option>
+      <option value="LOCAL_PRINCIPAL">🏢 Local Principal</option>
+      <option value="REGIONAL">🗺️ Régional</option>
+    </select>
+  </div>
+</div>
+  <small *ngIf="chefForm.niveauResponsabilite === null" style="color: #d4af37; font-size: 10px;">
+    L'agent apparaîtra comme "Non assigné" sur le rapport.
+  </small>
+</div>
 
       <!-- Ligne 4 : Date nomination & Ancienneté -->
       <div class="form-row">

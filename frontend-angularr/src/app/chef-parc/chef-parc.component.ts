@@ -55,20 +55,21 @@ stats: any;
     this.gestionService.getAllLocaux().subscribe(data => this.locaux = data);
   }
 preparerModification(chef: ChefParc) {
-  this.isEditMode = true; // Active le mode édition
+  this.isEditMode = true; 
   this.selectedChefId = chef.idChefParc ?? null;
-  this.isModalOpen = true; // On ouvre la modale ici directement
+  this.isModalOpen = true; 
   
-  // On remplit le formulaire avec les données actuelles
+  // On crée un nouvel objet propre
   this.chefForm = {
     nom: chef.nom,
     prenom: chef.prenom,
     mail: chef.mail,
-    niveauResponsabilite: chef.niveauResponsabilite,
+    // On convertit explicitement une valeur absente en null pour le select
+    niveauResponsabilite: chef.niveauResponsabilite === undefined ? null : chef.niveauResponsabilite,
     dateNomination: chef.dateNomination,
     ancienneteChef: chef.ancienneteChef,
     idLocal: chef.local?.idLocal || null,
-    motDePasse: '' // On ne touche pas au mot de passe en modification
+    motDePasse: '' 
   };
 }
 showSuccessState: boolean = false;
@@ -80,21 +81,27 @@ playSuccessSound() {
   audio.play();
 }
   
-  soumettreFormulaire() {
-  this.isSubmitting = true; // Active l'animation de chargement sur le bouton
+ soumettreFormulaire() {
+  if (this.isSubmitting) return;
+  this.isSubmitting = true;
 
   if (this.isEditMode && this.selectedChefId) {
+    // On envoie directement chefForm qui contient le niveauResponsabilite mis à jour
     this.gestionService.updateChefParc(this.selectedChefId, this.chefForm).subscribe({
       next: () => {
         this.terminerAvecSucces();
+        // Optionnel : Recharger immédiatement les données locales pour être sûr
+        this.chargerDonnees();
       },
-      error: () => { this.isSubmitting = false; alert("Erreur"); }
+      error: (err) => { 
+        this.isSubmitting = false; 
+        console.error("Erreur lors de la mise à jour:", err);
+      }
     });
   } else {
     this.ajouterChef();
   }
 }
-
 terminerAvecSucces() {
   this.isSubmitting = false;   // Arrête le spinner
   this.showSuccessState = true; // Devient VERT (C'est bon !)
@@ -270,5 +277,223 @@ updateMousePos(event: MouseEvent) {
   this.mouseY = event.clientY - 120;
 }
   showPreloader = true;
+ imprimerRapport() {
+  const dateExport = new Date().toLocaleDateString('fr-FR');
+  const heureExport = new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+  const fenetre = window.open('', '', 'height=900,width=1100');
+
+  fenetre?.document.write(`
+    <html>
+      <head>
+        <title>Rapport de Gestion SNDP AGIL</title>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <style>
+          @page {
+            size: A4;
+            margin: 0; /* On gère les marges via le CSS pour le design */
+          }
+          
+          @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none; }
+          }
+
+          body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 0; background: #fff;
+            color: #2c3e50;
+          }
+
+          .container {
+            padding: 15mm;
+            min-height: 297mm;
+            box-sizing: border-box;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+          }
+
+          /* Bordure décorative élégante */
+          .page-border {
+            position: absolute;
+            top: 10mm; left: 10mm; right: 10mm; bottom: 10mm;
+            border: 1px solid #d4af37;
+            pointer-events: none;
+            z-index: 0;
+          }
+
+          .watermark {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-35deg);
+            font-size: 7rem; color: rgba(128, 0, 32, 0.03);
+            font-weight: 900; z-index: -1; pointer-events: none;
+            white-space: nowrap;
+          }
+
+          .header { 
+            display: flex; justify-content: space-between; 
+            align-items: center; border-bottom: 3px solid #800020; 
+            padding-bottom: 25px; margin-bottom: 30px;
+            position: relative; z-index: 1;
+          }
+
+          .logo-box img { height: 85px; filter: contrast(1.1); }
+
+          .titre-section { text-align: right; }
+          h1 { 
+            font-family: 'Playfair Display', serif; 
+            color: #800020; margin: 0; font-size: 32px; 
+            text-transform: uppercase; letter-spacing: 1px;
+          }
+
+          .doc-type {
+            font-weight: 700; color: #d4af37;
+            font-size: 12px; letter-spacing: 3px;
+            margin-top: 5px;
+          }
+
+          .meta-info { font-size: 11px; color: #7f8c8d; margin-top: 8px; }
+
+          table { width: 100%; border-collapse: collapse; margin-bottom: 30px; position: relative; z-index: 1; }
+          
+          thead th { 
+            background: #800020; color: #ffffff; 
+            text-transform: uppercase; font-size: 11px;
+            letter-spacing: 1.2px; padding: 15px 10px;
+            text-align: left;
+          }
+
+          tbody tr { border-bottom: 1px solid #f1f1f1; transition: background 0.3s; }
+          tbody tr:nth-child(even) { background: #fafafa; }
+          
+          /* Empêche de couper un employé en deux sur deux pages */
+          tbody tr { page-break-inside: avoid; break-inside: avoid; }
+
+          td { padding: 14px 10px; font-size: 12px; vertical-align: middle; }
+          
+          .name-cell { color: #1a1a1a; font-weight: 700; }
+          .email-cell { color: #34495e; font-family: monospace; font-size: 11px; }
+          
+          .badge-level {
+            padding: 4px 10px; border-radius: 4px;
+            background: rgba(212, 175, 55, 0.15);
+            color: #996515; font-weight: 700; font-size: 10px;
+            text-transform: uppercase; border: 1px solid rgba(212, 175, 55, 0.3);
+          }
+
+          .location-tag {
+            display: flex; align-items: center; gap: 6px;
+            font-weight: 600; color: #800020;
+          }
+          .dot { width: 6px; height: 6px; background: #d4af37; border-radius: 50%; }
+
+          .footer-stats {
+            margin-top: auto; 
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 25px; padding: 25px 0;
+            border-top: 1px dashed #d4af37;
+            position: relative; z-index: 1;
+          }
+
+          .stat-card {
+            background: #fff; padding: 15px;
+            border-radius: 8px; border-left: 4px solid #800020;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+          }
+          .stat-val { display: block; font-size: 22px; font-weight: 900; color: #800020; }
+          .stat-label { font-size: 10px; color: #7f8c8d; text-transform: uppercase; font-weight: 600; }
+
+          .signature-section { 
+            display: flex; justify-content: space-between; 
+            padding: 40px 50px; position: relative; z-index: 1;
+          }
+          .sig-block { text-align: center; width: 200px; }
+          .sig-title { font-size: 11px; font-weight: 700; color: #2c3e50; margin-bottom: 50px; }
+          .sig-line { border-top: 1px solid #2c3e50; width: 100%; }
+        </style>
+      </head>
+      <body>
+        <div class="page-border"></div>
+        <div class="container">
+          <div class="watermark">AGIL ENERGY</div>
+          
+          <div class="header">
+            <div class="logo-box">
+              <img src="https://tse3.mm.bing.net/th/id/OIP.44CtPu7RzdMRUoTbyhlAqAAAAA?w=300&h=366&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo AGIL">
+            </div>
+            <div class="titre-section">
+              <h1>Rapport de Gestion</h1>
+              <div class="doc-type">CONSEIL D'ADMINISTRATION</div>
+              <div class="meta-info">Édité le ${dateExport} à ${heureExport}</div>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Identité du Chef de Parc</th>
+                <th>Gmail</th>
+                <th>Local Affecté</th>
+                <th>Niveau de Responsabilité</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.chefs.map(chef => `
+                <tr>
+                  <td class="name-cell">${chef.nom.toUpperCase()} ${chef.prenom}</td>
+                  <td class="email-cell">${chef.mail}</td>
+                  <td>
+                    <div class="location-tag">
+                      <span class="dot"></span>
+                      ${chef.local?.nomLocal || '---'}
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge-level">
+                      ${(chef.niveauResponsabilite || 'NON DÉFINI').replace('_', ' ')}
+                    </span>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="footer-stats">
+            <div class="stat-card">
+              <span class="stat-val">${this.chefs.length}</span>
+              <span class="stat-label">Collaborateurs</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-val">${this.getUniqueLocaux()}</span>
+              <span class="stat-label">Sites Actifs</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-val">${this.getLocauxLibres()}</span>
+              <span class="stat-label">Postes Vacants</span>
+            </div>
+          </div>
+
+          <div class="signature-section">
+            <div class="sig-block">
+              <div class="sig-title">RH & ADMINISTRATION</div>
+              <div class="sig-line"></div>
+            </div>
+            <div class="sig-block">
+              <div class="sig-title">DIRECTION GÉNÉRALE</div>
+              <div class="sig-line"></div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+  `);
+
+  fenetre?.document.close();
+  setTimeout(() => { 
+    fenetre?.focus(); // Important pour certains navigateurs
+    fenetre?.print(); 
+    fenetre?.close(); 
+  }, 1200);
+}
 
 }
