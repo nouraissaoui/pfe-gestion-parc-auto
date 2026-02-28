@@ -31,7 +31,7 @@ export class AuthentificationComponent {
       // 🔹 Redirection selon typeUtilisateur (et non plus role)
       switch(response.typeUtilisateur) {
         case 'ADMIN': // Si tu comptes ajouter un Admin plus tard
-          this.router.navigate(['/admin/locaux']);
+          this.router.navigate(['/admin/dashboard']);
           break;
 
         case 'CHAUFFEUR':

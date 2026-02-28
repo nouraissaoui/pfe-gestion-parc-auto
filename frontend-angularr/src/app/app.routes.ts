@@ -6,6 +6,8 @@ import { ChefParcLayoutComponent } from './layouts/chef-parc-layout/chef-parc-la
 import { LocauxadminComponent } from './locauxadmin/locauxadmin.component';
 import { Adminlayoutcomponent} from './adminlayoutcomponent/adminlayoutcomponent.component';
 import { ConsulterChauffeursComponent } from './consulter-chauffeurs/consulter-chauffeurs.component';
+import { ChefParcComponent } from './chef-parc/chef-parc.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
 { path: '', component: AuthentificationComponent },
@@ -13,8 +15,11 @@ export const routes: Routes = [
   path: 'admin',
   children: [
 
-    { path: 'locaux', component: LocauxadminComponent }  // ← Page locaux pour admin
-  ]
+    { path: 'dashboard', component: DashboardComponent },
+{
+  path:'locaux',component:LocauxadminComponent
+} 
+,{path:'chefsparc',component:ChefParcComponent} ]
 }
 ,
 {

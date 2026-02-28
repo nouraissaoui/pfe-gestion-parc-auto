@@ -1,0 +1,43 @@
+<app-adminlayoutcomponent></app-adminlayoutcomponent>
+<header>
+    
+
+    <div class="title-area">
+        <h1>Command Center</h1>
+        <div>ESPACE <span class="bordeaux">ADMIN</span></div>
+    </div>
+</header>
+
+<main>
+
+    <div *ngFor="let card of cards" 
+         class="luxury-card"
+         [routerLink]="card.route">
+
+        <div class="card-id">{{card.id}}</div>
+
+<br><br>
+<br><br>
+        <h3 class="card-title">{{card.title}}</h3>
+
+        <div class="tout-voir">
+            <i class="fa-solid fa-chevron-right"></i>
+            TOUT VOIR
+        </div>
+                <i class="card-icon" [class]="card.icon"></i>
+
+
+    </div>
+
+</main>
+
+<footer>
+
+    <div>© 2026 SNDP AGIL | SYSTÈME DE HAUTE PERFORMANCE</div>
+
+    <div class="line-indicators">
+        <div class="line bordeaux"></div>
+        <div class="line gold"></div>
+    </div>
+
+</footer>

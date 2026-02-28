@@ -1,6 +1,31 @@
-    <app-adminlayoutcomponent></app-adminlayoutcomponent>
 
-    <main>
+<div id="preloader-prestige" *ngIf="showPreloader">
+  <div class="main-stage">
+    <div class="orbit-container">
+      <div class="ring gold"><div class="comet"></div></div>
+      <div class="ring bordeaux"><div class="comet"></div></div>
+      <div class="ring white"><div class="comet"></div></div>
+      
+      <div class="glass-sphere big-sphere">
+        <img src="assets/agil.png" alt="SNDP Agil Logo" class="big-logo">
+      </div>
+    </div>
+
+    <div class="text-area">
+      <h2 class="welcome-msg" style="color: black;">Initialisation <span class="admin-name">Système AGIL</span></h2>
+      <div class="progress-section">
+        <div class="luxury-bar">
+          <div class="fill-permanent"></div>
+        </div>
+        <span class="loading-label">Chargement des infrastructures...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-adminlayoutcomponent></app-adminlayoutcomponent>
+
+<main *ngIf="!showPreloader" class="fade-in-content">
     <!-- HERO -->
     <section class="hero container">
         <h2 class="hero-title" >Gestion des locaux nouvelle génération</h2>
