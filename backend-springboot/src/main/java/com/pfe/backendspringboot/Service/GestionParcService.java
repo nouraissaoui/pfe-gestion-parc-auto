@@ -305,9 +305,12 @@ public class GestionParcService {
         }
         chef.setDateNomination(dateNomination != null ? dateNomination : chef.getDateNomination());
         chef.setAncienneteChef(ancienneteChef != 0 ? ancienneteChef : chef.getAncienneteChef());
-
-        if (niveauResponsabilite != null) {
+// Correction : Si niveauResponsabilite est null, on l'applique au chef
+        if (niveauResponsabilite != null && !niveauResponsabilite.isEmpty()) {
             chef.setNiveauResponsabilite(NiveauResponsabilite.valueOf(niveauResponsabilite.toUpperCase()));
+        } else {
+            // Cela permet de remettre le champ à NULL dans la base de données
+            chef.setNiveauResponsabilite(null);
         }
 
         if (idLocal != null) {
