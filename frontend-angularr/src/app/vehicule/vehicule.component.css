@@ -1,0 +1,2287 @@
+/* Palette de Couleurs : 
+   Bordeaux: #800020
+   Doré: #D4AF37
+   Noir: #1a1a1a
+   Blanc: #ffffff
+*/
+
+
+.container {
+    background-color: #f8f9fa;
+    padding-bottom: 50px;
+}
+
+h2, h3 {
+    color: #1a1a1a;
+    font-weight: 700;
+    border-left: 5px solid #D4AF37;
+    padding-left: 15px;
+    margin-bottom: 30px;
+}
+
+/* --- FORMULAIRE --- */
+.card {
+    border: none;
+    border-top: 4px solid #800020; /* Ligne Bordeaux en haut */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.form-control, .form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+/* --- BOUTONS --- */
+.btn-success {
+    background-color: #800020; /* Bordeaux */
+    border: 1px solid #D4AF37; /* Liseré Doré */
+    color: #D4AF37;
+    font-weight: 600;
+    padding: 10px 25px;
+    transition: all 0.4s;
+}
+
+.btn-success:hover {
+    background-color: #1a1a1a; /* Devient Noir au survol */
+    color: #fff;
+    border-color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-info {
+    background-color: #D4AF37; /* Doré */
+    border: none;
+    color: #fff;
+}
+
+.btn-outline-danger {
+    color: #800020;
+    border-color: #800020;
+}
+
+.btn-outline-danger:hover {
+    background-color: #800020;
+    color: #fff;
+}
+
+/* --- TABLEAU --- */
+.table-dark {
+    background-color: #1a1a1a !important; /* Noir profond */
+    border-bottom: 3px solid #D4AF37; /* Séparateur Doré */
+}
+
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.table thead th {
+    color: #D4AF37 !important; /* Texte Doré sur fond Noir */
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    padding: 15px;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+/* --- BADGES D'ÉTAT --- */
+.badge {
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+.bg-success { background-color: #27ae60 !important; } /* Dispo - Vert */
+.bg-warning { background-color: #f39c12 !important; color: #fff; } /* Mission - Orange */
+.bg-danger { background-color: #800020 !important; } /* Entretien - Bordeaux */
+
+/* Effet sur les lignes du tableau */
+tr:hover {
+    background-color: rgba(212, 175, 55, 0.05) !important;
+}
+/* Couleurs AGIL Energy & Prestige */
+:root {
+  --bordeaux: #800020;
+  --gold: #D4AF37;
+  --noir: #1a1a1a;
+  --blanc: #ffffff;
+}
+
+/* Logo */
+.agil-logo {
+  max-width: 250px;
+  filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+}
+
+.title-prestige {
+  color: var(--noir);
+  font-weight: 800;
+  border-left: 6px solid var(--gold);
+  padding-left: 15px;
+}
+
+/* Tableau */
+.thead-bordeaux {
+  background-color: var(--bordeaux);
+  color: var(--gold);
+}
+
+.thead-bordeaux th {
+  padding: 15px;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.img-miniature {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--gold);
+}
+
+/* Bouton Consulter */
+.btn-consulter {
+  background-color: var(--noir);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 8px 18px;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-consulter:hover {
+  background-color: var(--gold);
+  color: var(--blanc);
+}
+
+/* --- MODALE DE DÉTAILS --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.card-details {
+  background: var(--blanc);
+  width: 70%;
+  max-width: 800px;
+  border-radius: 15px;
+  overflow: hidden;
+  animation: slideUp 0.4s ease-out;
+  border: 2px solid var(--gold);
+}
+
+.card-details-header {
+  background: var(--noir);
+  color: var(--gold);
+  padding: 20px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.card-details-body {
+  padding: 30px;
+}
+
+.img-detail-large {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  border: 3px solid var(--gold);
+}
+
+.text-bordeaux { color: var(--bordeaux); font-weight: 700; }
+
+.matricule-detail {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #333;
+}
+
+.separator-gold {
+  border-top: 2px solid var(--gold);
+  width: 50px;
+  margin: 15px 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.info-item { font-size: 1.1rem; }
+
+/* Badges */
+.badge-etat {
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.DISPONIBLE { background: #27ae60; color: white; }
+.EN_MISSION { background: #f39c12; color: white; }
+.EN_ENTRETIEN { background: var(--bordeaux); color: white; }
+
+.btn-bordeaux {
+  background: var(--bordeaux);
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}/* PALETTE DE COULEURS */
+:root {
+  --agil-bordeaux: #800020;
+  --agil-gold: #D4AF37;
+  --agil-black: #1a1a1a;
+  --agil-grey: #f4f4f4;
+  --agil-white: #ffffff;
+}
+
+/* LOGO & TITRES */
+.main-logo { max-width: 280px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
+.title-gold { color: var(--agil-black); font-weight: 800; border-left: 5px solid var(--agil-gold); padding-left: 15px; }
+.badge-custom-gold { background: var(--agil-black); color: var(--agil-gold); padding: 8px 15px; border-radius: 50px; font-weight: bold; border: 1px solid var(--agil-gold); }
+
+/* TABLEAU PRESTIGE */
+.shadow-premium { box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
+.header-prestige { background: var(--agil-black); color: var(--agil-gold); }
+.header-prestige th { padding: 18px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+
+.img-container-mini img {
+  width: 60px; height: 60px; object-fit: cover; border-radius: 12px;
+  border: 2px solid var(--agil-gold); padding: 2px; background: white;
+}
+
+.matricule-badge { background: #e9ecef; color: var(--agil-black); padding: 5px 10px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; font-weight: bold; border: 1px solid #dee2e6; }
+
+/* BOUTONS ACTIONS */
+.btn-group-custom { display: flex; gap: 8px; justify-content: center; }
+.btn-action {
+  width: 38px; height: 38px; border-radius: 10px; border: none; 
+  display: flex; align-items: center; justify-content: center; transition: 0.3s; color: white;
+}
+.btn-view { background: var(--agil-black); border: 1px solid var(--agil-gold); color: var(--agil-gold); }
+.btn-view:hover { background: var(--agil-gold); color: white; }
+.btn-edit { background: #4a4a4a; }
+.btn-edit:hover { background: #000; }
+.btn-delete { background: #dc3545; }
+
+/* --- MODALE DE CONSULTATION (L'ÉLÉMENT PHARE) --- */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; z-index: 9999;
+}
+
+.card-consultation {
+  background: var(--agil-white); width: 85%; max-width: 900px;
+  border-radius: 25px; overflow: hidden; position: relative;
+  border: 1px solid var(--agil-gold); animation: zoomIn 0.3s ease-out;
+}
+
+.card-header-agil {
+  background: var(--agil-black); padding: 15px 30px; 
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 3px solid var(--agil-gold);
+}
+
+.logo-small { height: 40px; }
+.close-btn { background: none; border: none; color: var(--agil-gold); font-size: 35px; line-height: 1; }
+
+.card-body-consultation { padding: 40px; background: radial-gradient(circle at top right, #ffffff, #fcfcfc); }
+
+.image-frame {
+  padding: 10px; background: white; border: 1px solid #eee;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 20px;
+}
+
+.info-prestige-box { padding-left: 20px; }
+.category-label { color: var(--agil-gold); font-weight: bold; font-size: 0.8rem; letter-spacing: 2px; }
+.car-title { font-size: 2.5rem; font-weight: 900; color: var(--agil-black); margin-bottom: 5px; }
+.car-title span { color: var(--agil-gold); font-weight: 300; }
+.big-matricule { font-size: 1.8rem; font-weight: 700; color: #555; margin-bottom: 20px; }
+
+.gold-divider { border-top: 3px solid var(--agil-gold); width: 60px; opacity: 1; margin: 20px 0; }
+
+.detail-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; font-size: 1.1rem; }
+.detail-item i { color: var(--agil-gold); width: 25px; }
+
+.card-footer-agil {
+  padding: 20px 40px; background: var(--agil-grey); 
+  display: flex; justify-content: flex-end; gap: 15px;
+}
+
+.btn-close-agil { background: var(--agil-black); color: white; border: none; padding: 10px 30px; border-radius: 8px; }
+.btn-print { background: var(--agil-gold); color: white; border: none; padding: 10px 30px; border-radius: 8px; }
+
+/* STATUS COLORS */
+.status-pill { padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+.DISPONIBLE { background: #d4edda; color: #155724; }
+.EN_MISSION { background: #fff3cd; color: #856404; }
+.EN_ENTRETIEN { background: #f8d7da; color: #721c24; }
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}/* Style pour le badge quand le local est NULL */
+.badge-unassigned {
+  background-color: #f8f9fa; /* Gris très clair */
+  color: #6c757d;           /* Texte gris foncé */
+  border: 1px dashed #dee2e6; /* Bordure pointillée */
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.unassigned-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Animation subtile pour attirer l'attention sur les véhicules à assigner */
+.badge-unassigned i {
+  color: #adb5bd;
+}
+
+/* Effet au survol de la ligne */
+.row-hover:hover .badge-unassigned {
+  background-color: #e9ecef;
+  border-style: solid;
+}
+/* ==========================================================================
+   AGIL ENERGY PRESTIGE - GLOBAL THEME
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
+
+:root {
+  --agil-bordeaux: #800020;
+  --agil-gold: #D4AF37;
+  --agil-black: #1a1a1a;
+  --agil-white: #ffffff;
+  --agil-bg: #fcfcfc;
+  --agil-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+body {
+  background-color: var(--agil-bg);
+  font-family: 'Montserrat', sans-serif;
+  color: var(--agil-black);
+}
+
+/* --- TITRES ET ENTÊTE --- */
+.title-gold {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  color: var(--agil-black);
+  border-left: 8px solid var(--agil-gold);
+  padding-left: 20px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+}
+
+.italic {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--agil-bordeaux);
+  font-weight: 600;
+}
+
+/* --- FORMULAIRE : L'ÉCRIN LUXUEUX --- */
+.card-form {
+  border: none !important;
+  border-radius: 20px;
+  background: var(--agil-white);
+  box-shadow: var(--agil-shadow);
+  border-top: 6px solid var(--agil-bordeaux) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-form::before {
+  content: "";
+  position: absolute;
+  top: 0; right: 0;
+  width: 150px; height: 150px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.text-bordeaux {
+  color: var(--agil-bordeaux);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 800;
+}
+
+/* --- INPUTS & SELECTS --- */
+.form-control, .form-select {
+  border: 1.5px solid #eee;
+  border-radius: 12px;
+  padding: 14px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--agil-gold);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+  transform: translateY(-2px);
+}
+
+/* --- BOUTONS : PUISSANCE ET ÉLÉGANCE --- */
+.btn-agil-primary {
+  background: var(--agil-bordeaux);
+  color: var(--agil-gold);
+  border: 2px solid var(--agil-gold);
+  border-radius: 12px;
+  padding: 12px 35px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: 0.4s;
+}
+
+.btn-agil-primary:hover {
+  background: var(--agil-black);
+  color: var(--agil-white);
+  border-color: var(--agil-white);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.btn-outline-secondary {
+  border-radius: 12px;
+  border: 2px solid #eee;
+  font-weight: 600;
+}
+
+/* --- LISTE DES VÉHICULES --- */
+.table-responsive {
+  border-radius: 20px;
+  box-shadow: var(--agil-shadow);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.header-prestige {
+  background: var(--agil-black) !important;
+  color: var(--agil-gold) !important;
+}
+
+.header-prestige th {
+  padding: 20px !important;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  border: none !important;
+}
+
+.row-hover {
+  transition: 0.3s;
+}
+
+.row-hover:hover {
+  background-color: rgba(212, 175, 55, 0.03) !important;
+  transform: scale(1.002);
+}
+
+/* --- BADGES & STATUS --- */
+.matricule-badge {
+  background: var(--agil-black);
+  color: var(--agil-gold);
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-family: 'Courier New', serif;
+  font-weight: 800;
+  border: 1px solid var(--agil-gold);
+  box-shadow: 4px 4px 0px rgba(128, 0, 32, 0.2);
+}
+
+.status-pill {
+  padding: 6px 15px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.DISPONIBLE { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+.EN_MISSION { background: #fff8e1; color: #f57f17; border: 1px solid #ffecb3; }
+.EN_ENTRETIEN { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+
+/* --- ASSIGNATION (NULL CASE) --- */
+.badge-unassigned {
+  background: #ffffff;
+  color: var(--agil-bordeaux);
+  border: 1.5px dashed var(--agil-bordeaux);
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* --- MODALE DE CONSULTATION --- */
+.modal-overlay {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.card-consultation {
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+}
+
+.card-header-agil {
+  background: linear-gradient(90deg, var(--agil-black) 0%, var(--agil-bordeaux) 100%);
+  padding: 25px;
+  border-bottom: 4px solid var(--agil-gold);
+}
+
+.info-prestige-box {
+  background: var(--agil-white);
+  border-radius: 20px;
+  padding: 30px;
+  position: relative;
+}
+
+.car-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.car-title span {
+  color: var(--agil-gold);
+  font-weight: 400;
+}
+
+.gold-divider {
+  border-top: 3px solid var(--agil-gold);
+  width: 80px;
+  margin: 25px 0;
+  opacity: 1;
+}
+
+.detail-item i {
+  background: var(--agil-grey);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  color: var(--agil-bordeaux);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.image-frame {
+  border: 8px solid white;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  border-radius: 20px;
+  transform: rotate(-1deg);
+  transition: 0.5s;
+}
+
+.image-frame:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+/* --- ACTIONS --- */
+.btn-action {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  transition: 0.3s;
+}
+
+.btn-view { background: var(--agil-black); color: var(--agil-gold); border: 1px solid var(--agil-gold); }
+.btn-edit { background: var(--agil-gold); color: white; }
+.btn-delete { background: var(--agil-bordeaux); color: white; }
+
+.btn-action:hover {
+  filter: brightness(1.2);
+  transform: translateY(-4px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+/* STYLE MODERN CLEAN - Focus sur la clarté et la simplicité */
+:root {
+  --primary: #0056b3;       /* Un bleu pro plus moderne */
+  --accent: #e63946;        /* Un rouge vif pour les alertes */
+  --bg-light: #f8f9fa;
+  --text-main: #2d3436;
+}
+
+body {
+  background-color: #f4f7f6;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-main);
+}
+
+/* 1. SECTION TITRE (Simple & Frais) */
+.title-gold {
+  color: var(--text-main);
+  font-weight: 300;
+  font-size: 1.8rem;
+  border: none;
+  padding: 0;
+}
+
+.title-gold b {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* 2. FORMULAIRE (Style "Flottant" épuré) */
+.card-form {
+  background: white;
+  border: 1px solid #edf2f7;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  padding: 30px !important;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #636e72;
+}
+
+.form-control, .form-select {
+  border: 2px solid #f1f3f5;
+  border-radius: 8px;
+  background: #f8f9fa;
+  transition: 0.2s;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  background: white;
+  box-shadow: none;
+}
+
+/* 3. TABLEAU (Minimaliste) */
+.table-responsive {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.header-prestige {
+  background: #f8f9fa !important;
+  color: #636e72 !important;
+  border-bottom: 2px solid #eee;
+}
+
+.header-prestige th {
+  font-weight: 600;
+  text-transform: none;
+  font-size: 0.9rem;
+  padding: 15px !important;
+}
+
+.row-hover:hover {
+  background-color: #f1f3f5 !important;
+}
+
+/* 4. BADGES (Discrets) */
+.matricule-badge {
+  background: #e9ecef;
+  color: #495057;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status-pill {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.DISPONIBLE { background: #dcfce7; color: #15803d; }
+.EN_MISSION { background: #fef9c3; color: #854d0e; }
+
+/* 5. BOUTONS (Plats et Modernes) */
+.btn-agil-primary {
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  color: white;
+  font-weight: 600;
+}
+
+.btn-agil-primary:hover {
+  background: #004494;
+  transform: translateY(-1px);
+}
+
+.btn-action {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 3px;
+  border: none;
+}
+
+.btn-view { background: #e0e7ff; color: #4338ca; }
+.btn-edit { background: #fef3c7; color: #b45309; }
+.btn-delete { background: #fee2e2; color: #b91c1c; }
+
+/* 6. MODALE (Style Glassmorphism léger) */
+.modal-overlay {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.card-consultation {
+  border: none;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+  border-radius: 16px;
+}/* DESIGN : AGIL FUTURE 2026 */
+:root {
+  --agil-blue: #004a99;
+  --agil-red: #e30613;
+  --agil-gold: #d4af37;
+  --agil-dark: #1a1a1a;
+  --radius: 24px;
+}
+
+/* --- LOGO ANIMATION --- */
+.logo-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.main-logo {
+  height: 80px;
+  position: relative;
+  z-index: 2;
+}
+.logo-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(0, 74, 153, 0.2) 0%, transparent 70%);
+  z-index: 1;
+  animation: pulse-glow 3s infinite;
+}
+
+/* --- LE FORMULAIRE "GLASS" --- */
+.glass-form-container {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.input-group-fancy {
+  display: flex;
+  flex-direction: column;
+}
+.input-group-fancy label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.input-group-fancy input, .input-group-fancy select {
+  border: 1px solid #eee;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #fcfcfc;
+  transition: 0.3s;
+}
+.input-group-fancy input:focus {
+  border-color: var(--agil-blue);
+  background: white;
+  box-shadow: 0 10px 20px rgba(0,74,153,0.05);
+  outline: none;
+}
+
+/* --- APERÇU DYNAMIQUE (DROITE) --- */
+.preview-card-live {
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: 0.5s ease;
+}
+.preview-overlay {
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.2) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 40px;
+}
+.preview-content {
+  width: 100%;
+}
+.text-gold-agil { color: var(--agil-gold); }
+
+/* --- BOUTONS --- */
+.btn-agil-main {
+  background: var(--agil-blue);
+  color: white;
+  border: none;
+  padding: 15px 35px;
+  border-radius: 15px;
+  font-weight: 700;
+  transition: 0.3s;
+  box-shadow: 0 10px 25px rgba(0,74,153,0.3);
+}
+.btn-agil-main:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0,74,153,0.4);
+}
+.btn-agil-outline {
+  background: transparent;
+  color: #555;
+  border: 2px solid #eee;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+  50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.2; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+}
+
+.animate-fade-in {
+  animation: slideUp 0.6s ease-out;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* ==========================================================================
+   ANIMATIONS & EFFETS AGIL FLEET MANAGER
+   ========================================================================== */
+
+/* 1. Animation de pulsation pour le bouton "Ajouter" */
+.pulse-button {
+  position: relative;
+  animation: pulse-agil 2s infinite;
+  box-shadow: 0 0 0 0 rgba(0, 74, 153, 0.7);
+  border: none;
+}
+
+@keyframes pulse-agil {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 74, 153, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 15px rgba(0, 74, 153, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 74, 153, 0);
+  }
+}
+
+/* 2. Apparition fluide du formulaire (Slide Down) */
+.glass-form-container {
+  animation: slideInForm 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  border: 1px solid rgba(0, 74, 153, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+@keyframes slideInForm {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 3. Style des Badges d'état à l'intérieur du formulaire */
+.icon-box-status {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+/* 4. Effet de survol sur les lignes du tableau */
+.row-hover {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.row-hover:hover {
+  background-color: rgba(212, 175, 55, 0.04) !important;
+  transform: translateX(5px);
+  box-shadow: inset 4px 0 0 var(--agil-gold);
+}
+
+/* 5. Miniatures d'images circulaires et propres */
+.img-container-mini {
+  width: 55px;
+  height: 55px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 2px solid #fff;
+  outline: 1px solid #eee;
+}
+
+.img-container-mini img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.row-hover:hover .img-container-mini img {
+  transform: scale(1.15);
+}
+
+/* 6. L'aperçu dynamique (Preview) */
+.preview-card-live {
+  height: 100%;
+  min-height: 400px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  transition: background-image 0.5s ease-in-out;
+}
+
+.badge-status-live {
+  background: var(--agil-gold);
+  color: black;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+/* 7. Bouton Agil Main (Standardisation) */
+.btn-agil-main {
+  background: linear-gradient(135deg, #004a99 0%, #003366 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 25px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-agil-main:hover {
+  filter: brightness(1.2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 74, 153, 0.3);
+}/* L'ARRIÈRE-PLAN EXTRAORDINAIRE (SANS MOUVEMENT) */
+:root {
+  --bg-color: #f0f4f8;
+  --glass-white: rgba(255, 255, 255, 0.85);
+  --agil-blue-soft: rgba(0, 74, 153, 0.05);
+  --agil-red-soft: rgba(227, 6, 19, 0.03);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* Dégradé de fond statique et élégant */
+  background: 
+    linear-gradient(135deg, var(--bg-color) 0%, #e2e8f0 100%),
+    radial-gradient(at 0% 0%, var(--agil-blue-soft) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, var(--agil-red-soft) 0px, transparent 50%);
+  background-attachment: fixed;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+/* LA STRUCTURE QUI REÇOIT LE FOND */
+.dashboard-wrapper {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+}
+
+/* EFFET DE VERRE POUR LE FORMULAIRE ET LE TABLEAU */
+.glass-panel, .table-responsive {
+  background: var(--glass-white) !important;
+  backdrop-filter: blur(20px); /* L'effet extraordinaire est ici */
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04) !important;
+  border-radius: 16px !important;
+}
+
+/* LIGNES DE SÉPARATION ÉPURÉES */
+hr.gold-divider {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #D4AF37, transparent);
+  margin: 25px 0;
+  opacity: 0.5;
+}/* Couleurs automatiques pour les badges d'état */
+.status-pill.DISPONIBLE, .status-text.DISPONIBLE { 
+    background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; 
+}
+.status-pill.EN_MISSION, .status-text.EN_MISSION { 
+    background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; 
+}
+.status-pill.MAINTENANCE, .status-text.MAINTENANCE { 
+    background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; 
+}
+.status-pill.HORS_SERVICE, .status-text.HORS_SERVICE { 
+    background: #a13939; color: #991b1b; border: 1px solid #fecaca; 
+}
+.input-group-fancy input:focus, 
+.input-group-fancy select:focus {
+    border-color: #004a99;
+    box-shadow: 0 0 0 4px rgba(0, 74, 153, 0.15);
+    outline: none;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+.row-hover {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.row-hover:hover {
+    background-color: #f8fafc !important;
+    transform: scale(1.005);
+    box-shadow: inset 4px 0 0 #004a99; /* Barre bleue Agil à gauche */
+}
+@media print {
+    .dashboard-wrapper > *:not(.modal-overlay),
+    .card-footer-agil,
+    .close-btn {
+        display: none !important;
+    }
+    .modal-overlay { position: absolute; background: white; }
+    .card-consultation { box-shadow: none; border: none; width: 100%; }
+}
+.dashboard-wrapper {
+    background-color: #f8fafc;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 74, 153, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.05) 0px, transparent 50%);
+    min-height: 100vh;
+    padding-bottom: 50px;
+}.status-pill {
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-pill::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.DISPONIBLE { background: #ecfdf5; color: #065f46; }
+.DISPONIBLE::before { background: #10b981; box-shadow: 0 0 8px #10b981; }
+
+.EN_MISSION { background: #fffbeb; color: #92400e; }
+.EN_MISSION::before { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+
+.MAINTENANCE { background: #eff6ff; color: #1e40af; }
+.MAINTENANCE::before { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+/* MODULES MINI-STATISTIQUES */
+.mini-stat-card {
+  background: white;
+  padding: 12px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.02);
+  transition: transform 0.3s ease;
+}
+
+.mini-stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.stat-icon.blue { background: #eef2ff; color: #004a99; }
+.stat-icon.green { background: #ecfdf5; color: #10b981; }
+.stat-icon.gold { background: #fffbeb; color: #D4AF37; }
+
+.stat-content h4 {
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.stat-content p {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}/* Container de la table */
+.table-container-prestige {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+/* En-tête de la table */
+.header-prestige th {
+  background: #fcfdfe;
+  padding: 20px 15px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8392a5;
+  font-weight: 700;
+  border-bottom: 2px solid #f1f4f8;
+}
+
+/* Plaque d'immatriculation */
+.matricule-tag-modern {
+  display: inline-flex;
+  align-items: center;
+  background: #1e293b;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: 1px solid #334155;
+}
+.country-blue { width: 6px; height: 24px; background: #004a99; }
+.number-plate { 
+  color: #ffffff; 
+  padding: 0 12px; 
+  font-family: 'Courier New', monospace; 
+  font-weight: bold; 
+  letter-spacing: 1px;
+}
+
+/* Image du véhicule */
+.img-wrapper-premium {
+  width: 70px; height: 50px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+.img-wrapper-premium img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Statuts Modernes */
+.status-pill-modern {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  gap: 8px;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+.DISPONIBLE { background: #ecfdf5; color: #059669; }
+.DISPONIBLE .status-dot { background: #10b981; box-shadow: 0 0 8px #10b981; }
+
+.EN_MISSION { background: #fffbeb; color: #d97706; }
+.EN_MISSION .status-dot { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+
+.MAINTENANCE { background: #eff6ff; color: #2563eb; }
+.MAINTENANCE .status-dot { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+
+/* Boutons Action Modernes */
+.btn-action-modern {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  margin: 0 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #f8fafc;
+  color: #64748b;
+}
+.btn-action-modern:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.view:hover { background: #004a99; color: white; }
+.edit:hover { background: #f59e0b; color: white; }
+.delete:hover { background: #dc2626; color: white; }
+/* BOUTON ROUGE BORDEAUX PRESTIGE */
+.btn-agil-bordeaux {
+    background: linear-gradient(135deg, #800020 0%, #5a0016 100%);
+    color: #ffffff;
+    border: 1px solid rgba(212, 175, 55, 0.3); /* Rappel doré très subtil */
+    padding: 15px 35px;
+    border-radius: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(128, 0, 32, 0.3);
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.btn-agil-bordeaux:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #a00028 0%, #800020 100%);
+    box-shadow: 0 15px 30px rgba(128, 0, 32, 0.4);
+    color: #ffffff;
+}
+
+/* ANIMATION DE PULSATION BORDEAUX */
+.pulse-button-bordeaux {
+    animation: pulse-bordeaux 2s infinite;
+}
+
+@keyframes pulse-bordeaux {
+    0% {
+        box-shadow: 0 0 0 0 rgba(128, 0, 32, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(128, 0, 32, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(128, 0, 32, 0);
+    }
+}/* WRAPPER MAGNÉTIQUE */
+.magnetic-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    perspective: 1000px;
+}
+
+/* LE BOUTON CRYSTAL */
+.btn-agil-crystal {
+    position: relative;
+    background: #800020; /* Bordeaux de base */
+    border: none;
+    padding: 16px 45px;
+    border-radius: 18px; /* Forme un peu carrée-arrondie moderne */
+    color: white;
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    box-shadow: 0 15px 35px rgba(128, 0, 32, 0.4);
+}
+
+/* L'EFFET DE TEXTE ET ICÔNE */
+.btn-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 2;
+    position: relative;
+}
+
+.plus-icon {
+    background: rgba(255, 255, 255, 0.2);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.5s;
+}
+
+/* L'INNOVATION : LE GLOW INTERNE */
+.crystal-blur {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(212, 175, 55, 0.4); /* Lueur dorée */
+    filter: blur(20px);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* ÉTAT HOVER (MORPHING) */
+.btn-agil-crystal:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: #5a0016; /* Plus sombre au survol */
+    border-radius: 50px; /* Devient une pilule au survol */
+    box-shadow: 0 20px 40px rgba(128, 0, 32, 0.6);
+}
+
+.btn-agil-crystal:hover .plus-icon {
+    transform: rotate(90deg);
+    background: #D4AF37; /* L'icône devient dorée */
+    color: #1a1a1a;
+}
+
+.btn-agil-crystal:hover .crystal-blur {
+    width: 150px;
+    height: 150px;
+}
+
+/* PETITE ANIMATION DE FLOTTEMENT INFINIE */
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
+.magnetic-wrapper {
+    animation: floating 4s ease-in-out infinite;
+}
+/* CONTAINER PRINCIPAL */
+.fleet-hologram-container {
+    display: flex;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.hologram-card {
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 30px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
+                inset 0 0 20px rgba(128, 0, 32, 0.2);
+    width: 100%;
+    max-width: 500px;
+}
+
+.hologram-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+/* L'ORBITE (CERCLE SVG) */
+.stats-orbit {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.stats-orbit svg {
+    transform: rotate(-90deg);
+}
+
+.orbit-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.05);
+    stroke-width: 8;
+}
+
+.orbit-progress {
+    fill: none;
+    stroke: #800020; /* Bordeaux */
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 283; /* 2 * PI * R (45) */
+    transition: stroke-dashoffset 1s ease-out;
+    filter: drop-shadow(0 0 5px #800020);
+}
+
+.orbit-label {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.main-number {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+}
+
+.sub-label {
+    font-size: 0.5rem;
+    color: #D4AF37;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+/* ITEMS DE STATS LATÉRALES */
+.stat-glass-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px 20px;
+    border-radius: 15px;
+    border-left: 3px solid transparent;
+    transition: 0.3s;
+}
+
+.stat-glass-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-left-color: #D4AF37;
+}
+
+.stat-icon-mini {
+    width: 35px; height: 35px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+}
+
+.bordeaux-glow { background: #800020; color: white; box-shadow: 0 0 10px #800020; }
+.gold-glow { background: #D4AF37; color: black; box-shadow: 0 0 10px #D4AF37; }
+
+.stat-text .val { display: block; color: white; font-weight: 800; font-size: 1.1rem; line-height: 1; }
+.stat-text .lab { color: #888; font-size: 0.65rem; text-transform: uppercase; }
+
+/* EFFET DE SCAN */
+.scan-line {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(to right, transparent, #D4AF37, transparent);
+    opacity: 0.5;
+    animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+    0% { top: -10%; }
+    100% { top: 110%; }
+}
+
+.pulse-mission {
+    animation: pulse-gold 2s infinite;
+}
+
+@keyframes pulse-gold {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 0 20px #D4AF37; }
+    100% { transform: scale(1); }
+}.fleet-status-master {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  border: 1px solid #eee;
+  margin-bottom: 30px;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.status-label { color: #888; }
+.fleet-total strong { color: #800020; }
+
+/* LA BARRE DE PROGRESSION STACKÉE */
+.prestige-progress-stack {
+  display: flex;
+  height: 45px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+  margin-bottom: 15px;
+}
+
+.segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.segment.dispo { background: #1a1a1a; } /* Noir Agil */
+.segment.mission { background: #D4AF37; color: #000; } /* Or */
+.segment.maintenance { background: #800020; } /* Bordeaux */
+
+/* EFFET DE BRILLANCE SUR LES SEGMENTS */
+.segment::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+}
+
+.legend-container {
+  display: flex;
+  gap: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.dispo { background: #1a1a1a; }
+.dot.mission { background: #D4AF37; }
+.dot.maintenance { background: #800020; }
+/* STYLE GLOBAL DES PODS */
+.stat-pod {
+  background: white;
+  border-radius: 25px;
+  padding: 2px; /* Pour l'effet de bordure lumineuse */
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  height: 100%;
+}
+
+.pod-inner {
+  background: white;
+  border-radius: 23px;
+  padding: 25px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* POD DISPONIBILITÉ (BORDEAUX) */
+.pod-bordeaux {
+  background: linear-gradient(135deg, #800020, #500014);
+}
+.pod-bordeaux .pod-inner { background: #fff; }
+
+.orbit-container {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin-bottom: 15px;
+}
+
+.orbit-bg { fill: none; stroke: #f0f0f0; stroke-width: 6; }
+.orbit-progress {
+  fill: none;
+  stroke: #800020;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 264;
+  transition: stroke-dashoffset 1.5s ease;
+}
+
+.orbit-center .num {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+}
+
+/* POD TOTAL (DARK LUXE) */
+.pod-dark .pod-inner {
+  background: #1a1a1a;
+  color: white;
+}
+
+.pod-icon-circle {
+  width: 50px; height: 50px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; color: #D4AF37;
+  margin-bottom: 15px;
+}
+
+/* POD MISSION (GOLD PULSE) */
+.pod-gold {
+  background: linear-gradient(135deg, #D4AF37, #b8962d);
+}
+
+.live-indicator {
+  position: relative;
+  font-size: 1.8rem;
+  color: #800020;
+  margin-bottom: 10px;
+}
+
+.ping {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #800020;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: ping-anim 1.5s infinite;
+}
+
+@keyframes ping-anim {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* TYPOGRAPHIE */
+.big-val {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.pod-label, .pod-title {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+.pod-subtitle {
+  font-size: 0.65rem;
+  color: #888;
+}
+
+/* HOVER EFFECTS */
+.stat-pod:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=Playfair+Display:ital,wght@1,700&display=swap');
+
+.header-agil-prestige {
+    padding: 60px 0 40px 0;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+}
+
+/* Barre verticale Bordeaux AGIL */
+.decoration-side {
+    width: 8px;
+    height: 100px;
+    background: #800020;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(128, 0, 32, 0.3);
+}
+
+.top-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.main-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 3.8rem;
+    font-weight: 900;
+    color: #1a1a1a;
+    line-height: 1;
+    margin: 0;
+    letter-spacing: -3px;
+}
+
+.highlight-gold {
+    color: #D4AF37;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.bottom-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.brand {
+    font-weight: 900;
+    color: #800020;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.divider {
+    width: 40px;
+    height: 1px;
+    background: #ddd;
+}
+
+.module {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 400;
+}
+
+/* Animation discrète d'entrée */
+.main-title {
+    animation: slideUp 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* =========================================================
+   1. CONTENEUR PRINCIPAL DU PRELOADER
+   ========================================================= */
+#preloader-prestige {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #ffffff 0%, #f8f9fa 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+#preloader-prestige .main-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+/* =========================================================
+   2. L'ANIMATION DES ANNEAUX (ORBIT)
+   ========================================================= */
+#preloader-prestige .orbit-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sphère centrale avec Logo */
+#preloader-prestige .glass-sphere.big-sphere {
+  width: 220px;
+  height: 220px;
+  background: white;
+  border-radius: 50%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1), inset 0 0 25px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.03);
+  animation: breathe 3s infinite ease-in-out;
+}
+
+#preloader-prestige .big-logo {
+  width: 150px;
+  height: auto;
+  filter: drop-shadow(0 5px 15px rgba(0,0,0,0.08));
+}
+
+/* Anneaux tournants */
+#preloader-prestige .ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+#preloader-prestige .ring.gold { width: 280px; height: 280px; animation: rotateRing 5s linear infinite; }
+#preloader-prestige .ring.bordeaux { width: 330px; height: 330px; animation: rotateRing 7s linear infinite reverse; }
+#preloader-prestige .ring.white { width: 380px; height: 380px; animation: rotateRing 10s linear infinite; }
+
+/* Comètes (points lumineux) */
+#preloader-prestige .comet {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+#preloader-prestige .gold .comet { background: #d4af37; box-shadow: 0 0 15px #d4af37; }
+#preloader-prestige .bordeaux .comet { background: #800020; box-shadow: 0 0 15px #800020; }
+#preloader-prestige .white .comet { background: #000; opacity: 0.1; }
+
+/* =========================================================
+   3. TEXTE ET BARRE DE PROGRESSION
+   ========================================================= */
+#preloader-prestige .welcome-msg {
+  font-size: 1.8rem;
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+
+#preloader-prestige .admin-name {
+  font-weight: 700;
+  color: #800020;
+  border-bottom: 2px solid #d4af37;
+}
+
+#preloader-prestige .progress-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#preloader-prestige .luxury-bar {
+  width: 300px;
+  height: 4px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#preloader-prestige .fill-permanent {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #d4af37, #800020);
+  animation: load30s 30s linear forwards;
+}
+
+#preloader-prestige .loading-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #9ca3af;
+}
+
+/* =========================================================
+   4. KEYFRAMES ANIMATIONS
+   ========================================================= */
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes load30s {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+  50% { transform: scale(1.05); box-shadow: 0 25px 60px rgba(128, 0, 32, 0.15); }
+}
+/* =========================================================
+   MODAL DE CONSULTATION - LOGO ET HEADER
+   ========================================================= */
+
+/* On agrandit le logo dans le header de la fiche */
+.card-header-agil .logo-small {
+  height: 60px; /* Augmenté (était probablement autour de 30px) */
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* Optionnel : Effet au survol du logo */
+.card-header-agil .logo-small:hover {
+  transform: scale(1.05);
+}
+
+/* Ajustement du header pour accueillir un logo plus grand */
+.card-header-agil {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px; /* Plus d'espace interne */
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2); /* Ligne dorée subtile */
+  background: #ffffff;
+}
+
+/* On s'assure que le bouton fermer reste bien aligné */
+.card-header-agil .close-btn {
+  font-size: 2rem;
+  color: #800020;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* --- OPTIMISATION DE L'IMAGE DU VÉHICULE --- */
+.card-body-consultation .image-frame img {
+  width: 100%;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 15px;
+  /* Ombre portée pour détacher l'image du fond */
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}/* =========================================================
+   LE MATRICULE "PRESTIGE" (STYLE PLAQUE ALUMINIUM)
+   ========================================================= */
+
+.matricule-tag-modern {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #1a1a1a, #2c2c2c); /* Effet métal noir brossé */
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: 1px solid #000000;
+  box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.2), 
+    inset 0 1px 1px rgba(255, 255, 255, 0.1); /* Petit reflet intérieur */
+  position: relative;
+  min-width: 110px; /* Plus long pour plus de prestance */
+  transition: all 0.3s ease;
+}
+
+/* Texte du matricule */
+.number-plate {
+  color: #ffffff;
+  font-family: 'Inter', 'Monaco', 'Consolas', monospace;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 2px; /* Espacement noble entre les caractères */
+  text-transform: uppercase;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Effet gravé */
+}
+
+/* Petit détail : Les rivets de fixation (optionnel mais très joli) */
+.matricule-tag-modern::before,
+.matricule-tag-modern::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2); /* Aspect vis d'argent */
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.matricule-tag-modern::before { left: 6px; }  /* Rivet gauche */
+.matricule-tag-modern::after { right: 6px; } /* Rivet droit */
+
+/* Effet au survol du tableau pour le matricule */
+.row-hover:hover .matricule-tag-modern {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  border-color: #d4af37; /* Le contour devient Or au survol */
+}/* Effet de ligne active premium */
+.row-hover {
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+.row-hover:hover {
+  background-color: #fbfbfc !important;
+  box-shadow: inset 4px 0 0 #800020; /* La petite touche Bordeaux Agil */
+  transform: translateX(4px); /* Léger décalage vers la droite */
+}/* =========================================================
+   FICHE DE CONSULTATION "100% VISIBLE & LOGO" (ULTRA-PRESTIGE)
+   ========================================================= */
+
+/* 1. L'Overlay : Fond flouté pour faire ressortir la carte */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px); /* Flou d'arrière-plan haute qualité */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20000;
+  padding: 30px; /* Espace de sécurité pour ne jamais toucher les bords de l'écran */
+  transition: all 0.4s ease;
+}
+
+/* 2. La Carte de Consultation (Card) */
+.card-consultation {
+  background: #ffffff;
+  width: 100%;
+  max-width: 1100px; /* Largeur optimale pour la lecture */
+  max-height: 90vh; /* La carte ne dépassera jamais 90% de la hauteur de l'écran */
+  border-radius: 24px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3); /* Ombre portée profonde et douce */
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  overflow: hidden; /* Pour que le header reste propre */
+  display: flex;
+  flex-direction: column; /* Structure verticale */
+  animation: modalFadeIn 0.5s ease;
+}
+
+/* 3. Le Header de la Carte (Avec le Grand Logo) */
+.card-header-agil {
+  background: #ffffff;
+  padding: 25px 40px; /* Plus d'espace interne */
+  border-bottom: 2px solid #f3f4f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Le Logo AGIL (Agrandi et Sublimé) */
+.card-header-agil .logo-small {
+  height: 65px; /* Augmenté pour être dominant (était ~30px) */
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08)); /* Met le logo en valeur */
+}
+
+/* Bouton Fermer (Discret mais accessible) */
+.card-header-agil .close-btn {
+  font-size: 2.2rem;
+  color: #800020; /* Bordeaux */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.card-header-agil .close-btn:hover {
+  transform: rotate(90deg) scale(1.1);
+  color: #d4af37; /* Or au survol */
+}
+
+/* 4. Le Corps de la Carte (Scrollable si contenu trop long) */
+.card-body-consultation {
+  padding: 40px;
+  overflow-y: auto; /* Permet de scroller à l'intérieur de la carte si l'écran est petit */
+  scrollbar-width: thin; /* Barre de défilement discrète */
+  scrollbar-color: #e5e7eb transparent;
+}
+
+/* --- DÉTAILS DE FINITION POUR ÊTRE "PLUS JOLIE" --- */
+
+/* L'Image du Véhicule (Présentation Musée) */
+.card-body-consultation .image-frame {
+  border-radius: 20px;
+  padding: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* Ombre douce autour de l'image */
+  border: 1px solid #f0f0f0;
+  transition: transform 0.3s ease;
+}
+
+.card-body-consultation .image-frame:hover {
+  transform: scale(1.02); /* Léger effet de zoom au survol */
+}
+
+.card-body-consultation .image-frame img {
+  border-radius: 16px;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+/* Typographie Noble */
+.car-title {
+  font-weight: 800;
+  letter-spacing: -1px;
+  font-size: 2.5rem;
+  color: #1a1a1a;
+}
+
+.car-title span {
+  color: #9ca3af; /* Gris doux pour le modèle */
+  font-weight: 400;
+}
+
+.category-label {
+  color: #800020; /* Bordeaux */
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+/* Le Matricule (Look Officiel Noir) */
+.big-matricule {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', 'Monaco', monospace; /* Police technique */
+  font-weight: 800;
+  font-size: 1.6rem;
+  display: inline-block;
+  margin: 20px 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Séparateur Doré */
+.gold-divider {
+  border-color: #d4af37; /* Or Agil */
+  opacity: 0.3;
+  margin: 25px 0;
+}
+
+/* La Grille de Détails */
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Deux colonnes */
+  gap: 20px;
+}
+
+.detail-item {
+  border: 1px solid #f3f4f6;
+  background: #fbfbfc;
+  padding: 15px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.detail-item:hover {
+  background: #f8fafc;
+  border-color: #e5e7eb;
+}
+
+.detail-item i {
+  color: #800020; /* Bordeaux pour les icônes */
+  font-size: 1.2rem;
+  margin-right: 15px;
+  width: 25px;
+  text-align: center;
+}
+
+.detail-item strong {
+  color: #6b7280; /* Gris pour le label */
+}
+
+/* Animation d'Entrée */
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive : Adaptation pour les mobiles */
+@media (max-width: 992px) {
+  .modal-overlay { padding: 15px; }
+  .card-consultation { max-height: 95vh; }
+  .card-header-agil { padding: 20px; }
+  .card-header-agil .logo-small { height: 50px; }
+  .card-body-consultation { padding: 25px; }
+  .details-grid { grid-template-columns: 1fr; } /* Une seule colonne sur mobile */
+  .car-title { font-size: 2rem; }
+}
+/* =========================================================
+   HEADER DE LA FICHE : LOGO AGRANDI & ESPACEMENT
+   ========================================================= */
+
+/* 1. Le Header (La zone blanche en haut) */
+.card-header-agil {
+  height: 120px; /* On augmente la hauteur du bandeau blanc */
+  padding: 0 40px;
+  display: flex;
+  align-items: center; /* Centre le logo verticalement */
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+/* 2. Le Logo (Le "plus grand") */
+.card-header-agil .logo-small {
+  height: 85px; /* Taille XL pour une visibilité maximale */
+  width: auto;
+  object-fit: contain;
+  /* Petite ombre pour donner du relief au logo */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); 
+}
+
+/* 3. Le Corps de la fiche (Pour descendre l'image) */
+.card-body-consultation {
+  padding-top: 60px !important; /* Crée un grand vide sous le logo */
+  background-color: #fdfdfd;
+}
+
+/* 4. L'image du véhicule (Plus bas et plus nette) */
+.image-frame {
+  margin-top: 30px; /* Pousse l'image vers le bas */
+  border: 1px solid #eee;
+  padding: 10px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+.image-frame img {
+  border-radius: 15px;
+  max-height: 380px; /* Taille optimale pour tout voir d'un coup */
+  width: 100%;
+  object-fit: cover;
+}

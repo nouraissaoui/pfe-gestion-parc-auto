@@ -107,7 +107,7 @@
           
     <span class="badge" [class.badge-bordeaux]="chef.local" [class.badge-empty]="!chef.local">
       <i [class]="chef.local ? 'fas fa-map-marker-alt' : 'fas fa-plus-circle'"></i>
-      {{ chef.local ? chef.local.nomLocal : 'Assigner' }}
+      {{ chef.local ? chef.local.nomLocal : 'Non assigné' }}
     </span>
     
     
@@ -215,9 +215,7 @@
     </select>
   </div>
 </div>
-  <small *ngIf="chefForm.niveauResponsabilite === null" style="color: #d4af37; font-size: 10px;">
-    L'agent apparaîtra comme "Non assigné" sur le rapport.
-  </small>
+ 
 </div>
 
       <!-- Ligne 4 : Date nomination & Ancienneté -->

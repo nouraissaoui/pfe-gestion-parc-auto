@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { GestionParcService, LoginResponse } from '../gestion-parc.service';
+import { Adminlayoutcomponent } from '../adminlayoutcomponent/adminlayoutcomponent.component';
 
 @Component({
   selector: 'app-authentification',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule,Adminlayoutcomponent],
   templateUrl: './authentification.component.html',
   styleUrls: ['./authentification.component.css']
 })

@@ -226,7 +226,13 @@ getLocauxLibres() {
   return this.locaux.length - this.getUniqueLocaux();
 }
 getUniqueRoles() {
-  return new Set(this.chefs.map(c => c.niveauResponsabilite)).size;
+  // On filtre pour ne garder que les chefs qui ont une responsabilité définie
+  const rolesActifs = this.chefs
+    .map(c => c.niveauResponsabilite)
+    .filter(role => role !== null && role !== undefined && role !== null);
+    
+  // New Set calculera le nombre de rôles uniques parmi ceux qui restent
+  return new Set(rolesActifs).size;
 }
 
   // Variables pour le sélecteur rapide
@@ -461,15 +467,18 @@ updateMousePos(event: MouseEvent) {
           <div class="footer-stats">
             <div class="stat-card">
               <span class="stat-val">${this.chefs.length}</span>
-              <span class="stat-label">Collaborateurs</span>
+              <span class="stat-label">Total Chefs</span>
             </div>
             <div class="stat-card">
               <span class="stat-val">${this.getUniqueLocaux()}</span>
-              <span class="stat-label">Sites Actifs</span>
+              <span class="stat-label">Niveaux de Responsabilité
+
+
+</span>
             </div>
             <div class="stat-card">
               <span class="stat-val">${this.getLocauxLibres()}</span>
-              <span class="stat-label">Postes Vacants</span>
+              <span class="stat-label">Locaux Libres</span>
             </div>
           </div>
 

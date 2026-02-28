@@ -49,7 +49,10 @@ export interface Vehicule {
   carburant: string;
   image: string;
   etat: 'DISPONIBLE' | 'EN_MISSION' | 'EN_ENTRETIEN' | 'INDISPONIBLE';
+    local?: any; // On peut typer plus précisément si on a l'interface Local
+
 }
+
 
 @Injectable({
   providedIn: 'root'
@@ -191,6 +194,32 @@ getAllLocaux(): Observable<Local[]> {
 }
   getLocalById(id: number): Observable<Local> {
     return this.http.get<Local>(`${this.baseUrl}/local/${id}`);
+  }
+  // ==================== CRUD VÉHICULES SIMPLE ====================
+
+  // 1. Récupérer tous les véhicules
+  getAllVehicules(): Observable<Vehicule[]> {
+    return this.http.get<Vehicule[]>(`${this.baseUrl}/vehicules`);
+  }
+
+  // 2. Récupérer un véhicule par son ID
+  getVehiculeById(id: number): Observable<Vehicule> {
+    return this.http.get<Vehicule>(`${this.baseUrl}/vehicule/${id}`);
+  }
+
+  // 3. Ajouter un véhicule (avec l'ID du local en option)
+  addVehicule(vehicule: Vehicule, idLocal: number): Observable<Vehicule> {
+    return this.http.post<Vehicule>(`${this.baseUrl}/vehicule?idLocal=${idLocal}`, vehicule);
+  }
+
+  // 4. Modifier un véhicule
+  updateVehicule(id: number, vehicule: Vehicule, idLocal: number): Observable<Vehicule> {
+    return this.http.put<Vehicule>(`${this.baseUrl}/vehicule/${id}?idLocal=${idLocal}`, vehicule);
+  }
+
+  // 5. Supprimer un véhicule
+  deleteVehicule(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/vehicule/${id}`, { responseType: 'text' });
   }
 
 }

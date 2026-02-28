@@ -8,6 +8,7 @@ import { Adminlayoutcomponent} from './adminlayoutcomponent/adminlayoutcomponent
 import { ConsulterChauffeursComponent } from './consulter-chauffeurs/consulter-chauffeurs.component';
 import { ChefParcComponent } from './chef-parc/chef-parc.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { VehiculeComponent } from './vehicule/vehicule.component';
 
 export const routes: Routes = [
 { path: '', component: AuthentificationComponent },
@@ -19,7 +20,8 @@ export const routes: Routes = [
 {
   path:'locaux',component:LocauxadminComponent
 } 
-,{path:'chefsparc',component:ChefParcComponent} ]
+,{path:'chefsparc',component:ChefParcComponent} 
+,{path:'vehicules',component:VehiculeComponent}]
 }
 ,
 {
