@@ -344,4 +344,59 @@ public class GestionParcService {
 
         // 4. On supprime l'entité ChefParc définitivement
         chefParcRepository.delete(chef);
+    }
+// ==================== CRUD VÉHICULES COMPLET ====================
+
+    public List<Vehicule> getAllVehicules() {
+        return vehiculeRepository.findAll();
+    }
+
+    public Optional<Vehicule> getVehiculeById(Long id) {
+        return vehiculeRepository.findById(id);
+    }
+
+    @Transactional
+    public Vehicule createVehicule(Vehicule v, Long idLocal) {
+        if (idLocal != null) {
+            Local local = localRepository.findById(idLocal)
+                    .orElseThrow(() -> new RuntimeException("Local non trouvé"));
+            v.setLocal(local);
+        }
+        // Par défaut, un nouveau véhicule est disponible
+        if (v.getEtat() == null) {
+            v.setEtat(EtatVehicule.DISPONIBLE);
+        }
+        return vehiculeRepository.save(v);
+    }
+
+    @Transactional
+    public Vehicule updateVehicule(Long id, Vehicule newVehicule, Long idLocal) {
+        Vehicule existing = vehiculeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Véhicule introuvable"));
+
+        existing.setMatricule(newVehicule.getMatricule());
+        existing.setMarque(newVehicule.getMarque());
+        existing.setModele(newVehicule.getModele());
+        existing.setAnnee(newVehicule.getAnnee());
+        existing.setCarburant(newVehicule.getCarburant());
+        existing.setImage(newVehicule.getImage());
+        existing.setEtat(newVehicule.getEtat());
+
+        if (idLocal != null) {
+            Local local = localRepository.findById(idLocal)
+                    .orElseThrow(() -> new RuntimeException("Local non trouvé"));
+            existing.setLocal(local);
+        }
+        else{
+            existing.setLocal(null);
+        }
+
+        return vehiculeRepository.save(existing);
+    }
+
+    public void deleteVehicule(Long id) {
+        if (!vehiculeRepository.existsById(id)) {
+            throw new RuntimeException("Véhicule introuvable");
+        }
+        vehiculeRepository.deleteById(id);
     }}

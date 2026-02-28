@@ -288,5 +288,53 @@ public class GestionParcController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    // ==================== CRUD VÉHICULE (API) ====================
+
+    // 1. Obtenir tous les véhicules du système
+    @GetMapping("/vehicules")
+    public List<Vehicule> getAllVehicules() {
+        return gestionParcService.getAllVehicules();
+    }
+
+    // 2. Obtenir un véhicule par son ID
+    @GetMapping("/vehicule/{id}")
+    public ResponseEntity<Vehicule> getVehiculeById(@PathVariable Long id) {
+        return gestionParcService.getVehiculeById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 3. Ajouter un véhicule et l'affecter à un local
+    @PostMapping("/vehicule")
+    public ResponseEntity<?> addVehicule(@RequestBody Vehicule v, @RequestParam(required = false) Long idLocal) {
+        try {
+            Vehicule saved = gestionParcService.createVehicule(v, idLocal);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur : " + e.getMessage());
+        }
+    }
+
+    // 4. Modifier un véhicule
+    @PutMapping("/vehicule/{id}")
+    public ResponseEntity<?> updateVehicule(@PathVariable Long id, @RequestBody Vehicule v, @RequestParam(required = false) Long idLocal) {
+        try {
+            Vehicule updated = gestionParcService.updateVehicule(id, v, idLocal);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // 5. Supprimer un véhicule
+    @DeleteMapping("/vehicule/{id}")
+    public ResponseEntity<?> deleteVehicule(@PathVariable Long id) {
+        try {
+            gestionParcService.deleteVehicule(id);
+            return ResponseEntity.ok().body("{\"message\": \"Véhicule supprimé avec succès\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
 }
