@@ -21,7 +21,7 @@ export class AuthentificationComponent {
     private router: Router
   ) {}
 
-  login(): void {
+  /*login(): void {
   this.service.login(this.email, this.password).subscribe({
     next: (response: LoginResponse) => {
       // 🔐 Sauvegarde session
@@ -51,6 +51,32 @@ export class AuthentificationComponent {
       console.error("Erreur login :", err);
       alert("Email ou mot de passe incorrect !");
     }
+  });
+}*/
+login(): void {
+  this.service.login(this.email, this.password).subscribe({
+    next: (response: LoginResponse) => {
+      // 🔐 Sauvegarde l'objet complet
+      localStorage.setItem('user', JSON.stringify(response));
+      
+      // 📍 SAUVEGARDE INDIVIDUELLE (Crucial pour votre composant Affectation)
+      if (response.idLocal) {
+        localStorage.setItem('idLocal', response.idLocal.toString());
+      }
+      localStorage.setItem('id', response.id.toString()); // Utile pour idChef
+
+      console.log("User connecté et idLocal stocké :", response.idLocal);
+
+      // Redirection...
+      switch(response.typeUtilisateur) {
+        case 'ADMIN': this.router.navigate(['/admin/locaux']); break;
+        case 'CHAUFFEUR': this.router.navigate(['/chauffeur/dashboard']); break;
+        case 'CHEF_PARC': this.router.navigate(['/chef-parc/dashboard']); break;
+      }
+    },
+    error: (err) => {       
+      console.error("Erreur login :", err);
+      alert("Email ou mot de passe incorrect !"); }
   });
 }
   

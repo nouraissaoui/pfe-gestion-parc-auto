@@ -66,11 +66,15 @@ header {
 /* ================= LEFT ================= */
 .hero-left {
     width: 55%;
-    padding: 140px 100px;
+    /* On passe de 140px à 180px pour donner de l'air sous le header */
+    padding: 9px 100px 100px 100px; 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* On retire justify-content: center car il remonte le texte si l'écran est petit */
+    justify-content: flex-start; 
 }
+
+
 
 .hero-left small {
     font-size: 14px;
@@ -99,6 +103,7 @@ header {
 .login-form {
     width: 450px;
     padding: 40px;
+    margin-top: -30px; 
     border-radius: 25px;
     background: rgba(255,255,255,0.1);
     backdrop-filter: blur(15px) saturate(180%);
@@ -238,6 +243,7 @@ header {
     }
     .hero-left p {
         font-size: 14px;
+        
     }
     .login-form input, .login-form button {
         font-size: 14px;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; // Ajuste le chemin
+import { Component, OnInit } from '@angular/core';
 import { GestionParcService } from '../gestion-parc.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -13,8 +13,10 @@ export class ConsulterChauffeursComponent implements OnInit {
   chauffeurs: any[] = [];
   filteredChauffeurs: any[] = [];
   idLocal: number | null = null;
-  
   stats = { total: 0, dispo: 0, mission: 0, conge: 0 };
+
+  // ── MODAL ──
+  selectedChauffeur: any = null;
 
   constructor(private chauffeurService: GestionParcService) {}
 
@@ -41,30 +43,41 @@ export class ConsulterChauffeursComponent implements OnInit {
     });
   }
 
- /* onSearch(event: any) {
+  onSearch(event: any) {
     const val = event.target.value.toLowerCase();
-    this.filteredChauffeurs = this.chauffeurs.filter(c => 
-      c.user.nom.toLowerCase().includes(val) || c.user.prenom.toLowerCase().includes(val)
+    this.filteredChauffeurs = this.chauffeurs.filter(c =>
+      c.nom.toLowerCase().includes(val) || c.prenom.toLowerCase().includes(val)
     );
-  }*/
- onSearch(event: any) {
-  const val = event.target.value.toLowerCase();
-  this.filteredChauffeurs = this.chauffeurs.filter(c => 
-    // Correction ici : on retire ".user"
-    c.nom.toLowerCase().includes(val) || c.prenom.toLowerCase().includes(val)
-  );
-}
+  }
 
   filterTable(etat: string) {
-    this.filteredChauffeurs = etat === 'TOUS' 
-      ? this.chauffeurs 
+    this.filteredChauffeurs = etat === 'TOUS'
+      ? this.chauffeurs
       : this.chauffeurs.filter(c => c.etatChauffeur === etat);
   }
 
   updateStats() {
-    this.stats.total = this.chauffeurs.length;
-    this.stats.dispo = this.chauffeurs.filter(c => c.etatChauffeur === 'DISPONIBLE').length;
+    this.stats.total   = this.chauffeurs.length;
+    this.stats.dispo   = this.chauffeurs.filter(c => c.etatChauffeur === 'DISPONIBLE').length;
     this.stats.mission = this.chauffeurs.filter(c => c.etatChauffeur === 'EN_MISSION').length;
-    this.stats.conge = this.chauffeurs.filter(c => c.etatChauffeur === 'EN_CONGE').length;
+    this.stats.conge   = this.chauffeurs.filter(c => c.etatChauffeur === 'EN_CONGE').length;
   }
+
+  // ── MODAL METHODS ──
+  openModal(chauffeur: any) {
+    this.selectedChauffeur = chauffeur;
+  }
+
+  closeModal() {
+    this.selectedChauffeur = null;
+  }
+
+  isExpiringSoon(dateStr: string): boolean {
+    if (!dateStr) return false;
+    const expDate = new Date(dateStr);
+    const today   = new Date();
+    const diffDays = (expDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+    return diffDays < 60;
+  }
+  
 }

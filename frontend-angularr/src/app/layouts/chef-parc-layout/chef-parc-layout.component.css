@@ -1,8 +1,7 @@
-
-
-
-
-
+/* Dans app-layout ou router-outlet wrapper */
+.content-area {
+  padding: 0;
+}
 
         /* Header */
         .header {

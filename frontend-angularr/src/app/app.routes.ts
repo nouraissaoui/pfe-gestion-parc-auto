@@ -6,6 +6,7 @@ import { ChefParcLayoutComponent } from './layouts/chef-parc-layout/chef-parc-la
 import { LocauxadminComponent } from './locauxadmin/locauxadmin.component';
 import { Adminlayoutcomponent} from './adminlayoutcomponent/adminlayoutcomponent.component';
 import { ConsulterChauffeursComponent } from './consulter-chauffeurs/consulter-chauffeurs.component';
+import { AffectationMissionComponent } from './affectation-mission/affectation-mission.component';
 
 export const routes: Routes = [
 { path: '', component: AuthentificationComponent },
@@ -26,7 +27,7 @@ export const routes: Routes = [
     { path: 'dashboard', component: ChefParcDashboardComponent },
     { path: 'vehicules', component: VehiculesChefComponent },
     { path: 'chauffeurs', component: ConsulterChauffeursComponent },
-    
+    { path: 'missions', component: AffectationMissionComponent },
 
   ]
 },

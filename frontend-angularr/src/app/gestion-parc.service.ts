@@ -150,6 +150,35 @@ getChauffeursByLocal(idLocal: number): Observable<any[]> {
     // On passe l'état en RequestParam comme défini dans ton Controller Java
     return this.http.put(`${this.baseUrl}/chauffeur/${idChauffeur}/etat?etat=${etat}`, {});
   }
-  
+  // Affecter une mission manuellement
+  affecterMission(mission: any, idChauffeur: number, idVehicule: number, idChef: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/mission/affecter/${idChauffeur}/${idVehicule}/${idChef}`, mission);
+  }
+
+  // Récupérer les missions d'une feuille spécifique (le carnet)
+  getMissionsFeuille(idFeuille: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/feuille-de-route/${idFeuille}/missions`);
+  }
+
+  // Récupérer les feuilles de route du local
+getFeuillesDeRoute(idLocal: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/local/${idLocal}/feuilles-actives`);
+}
+// --- Missions ---
+
+// Modifier une mission (Remplace l'ancienne version)
+modifierMission(idMission: number, missionDetails: any): Observable<any> {
+  return this.http.put(`${this.baseUrl}/mission/modifier/${idMission}`, missionDetails);
+}
+
+// Supprimer une mission (Vérifiez que l'URL correspond au DeleteMapping du Controller)
+deleteMission(idMission: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/mission/supprimer/${idMission}`);
+}
+
+// Supprimer une feuille de route complète et libérer les ressources
+deleteFeuilleDeRoute(idFeuille: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/feuille-de-route/supprimer/${idFeuille}`);
+}
 
 }

@@ -1,95 +1,262 @@
-    <div class="chauffeur-dashboard">
-    <div class="page-title-container">
-        <h1 class="main-title">Intelligence <span>Chauffeurs</span></h1>
-        <div class="search-bar">
-        <input type="text" placeholder="Rechercher un opérateur..." (input)="onSearch($event)">
-        <i class="search-icon">🔍</i>
+<div class="ia-dashboard">
+
+    <!-- HERO HEADER -->
+    <div class="hero-header ia-mode">
+
+        <div class="hero-ornament">✦ IA ✦</div>
+
+        <div class="hero-content-left">
+
+            <div class="hero-badge">
+                <i class="bi bi-cpu"></i>
+                Artificial Intelligence Center
+            </div>
+
+            <div class="hero-title">
+                Gestion des <span>chauffeurs</span>
+            </div>
+
+            <div class="hero-subtitle">
+                Analyse prédictive & optimisation intelligente des opérations chauffeurs
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-pill">
+                    <div class="stat-icon"><i class="bi bi-people"></i></div>
+                    <div>
+                        <div class="stat-val">{{ stats.total }}</div>
+                        <div class="stat-lbl">Chauffeurs analysés</div>
+                    </div>
+                </div>
+                <div class="stat-pill">
+                    <div class="stat-icon"><i class="bi bi-graph-up"></i></div>
+                    <div>
+                        <div class="stat-val">{{ stats.mission }}</div>
+                        <div class="stat-lbl">Optimisations actives</div>
+                    </div>
+                </div>
+                <div class="stat-pill">
+                    <div class="stat-icon"><i class="bi bi-shield-check"></i></div>
+                    <div>
+                        <div class="stat-val">{{ stats.dispo }}</div>
+                        <div class="stat-lbl">Disponibilités IA</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        <!-- ══════ PUBLICITÉ VIDÉO ══════ -->
+        <div class="promo-video-box">
+            <div class="promo-label">
+                <i class="bi bi-broadcast"></i> AGIL LIVE
+            </div>
+            <video class="promo-video" autoplay muted loop playsinline>
+                <source src="assets/pub2.mp4" type="video/mp4">
+            </video>
+            <div class="promo-overlay">
+                <div class="promo-text">
+                    <span class="promo-title">AGIL</span>
+                    <span class="promo-sub">Énergie · Mobilité · Excellence</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="stats-grid">
-        <div class="stat-card" (click)="filterTable('TOUS')">
-        <div class="stat-icon gray">👥</div>
-        <div class="stat-info">
-            <span class="stat-number">{{ stats.total }}</span>
-            <span class="stat-label">Effectif Total</span>
-        </div>
-        </div>
-        <div class="stat-card" (click)="filterTable('DISPONIBLE')">
-        <div class="stat-icon green">✨</div>
-        <div class="stat-info">
-            <span class="stat-number">{{ stats.dispo }}</span>
-            <span class="stat-label">Disponibles</span>
-        </div>
-        </div>
-        <div class="stat-card" (click)="filterTable('EN_MISSION')">
-        <div class="stat-icon blue">🚀</div>
-        <div class="stat-info">
-            <span class="stat-number">{{ stats.mission }}</span>
-            <span class="stat-label">En Mission</span>
-        </div>
-        </div>
-        <div class="stat-card" (click)="filterTable('EN_CONGE')">
-        <div class="stat-icon red">💤</div>
-        <div class="stat-info">
-            <span class="stat-number">{{ stats.conge }}</span>
-            <span class="stat-label">En Congé</span>
-        </div>
-        </div>
-    </div>
+    <!-- CONTENU TABLEAU -->
+    <div class="content-panel" style="animation: slideInLeft 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;">
 
-    <div class="content-panel">
         <div class="panel-header">
-        <div class="panel-badge">Liste des Opérateurs <span class="badge-count">{{ filteredChauffeurs.length }}</span></div>
-        <div class="filter-tabs">
-            <button (click)="filterTable('TOUS')" class="tab-btn">Tous</button>
-            <button (click)="filterTable('DISPONIBLE')" class="tab-btn">Libres</button>
-            <button (click)="filterTable('EN_MISSION')" class="tab-btn">En Mission</button>
-        </div>
+            <div class="panel-badge">
+                Analyse des Opérateurs
+                <span class="badge-count">{{ filteredChauffeurs.length }}</span>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Recherche intelligente..."
+                       (input)="onSearch($event)">
+                <i class="search-icon">🔍</i>
+            </div>
         </div>
 
         <div class="table-responsive">
-        <table class="agil-custom-table">
-            <thead>
-            <tr>
-                <th>OPÉRATEUR</th>
-                <th>PERMIS</th>
-                <th>EXPÉRIENCE</th>
-                <th>LOCALISATION</th>
-                <th>ÉTAT SYSTÈME</th>
-                <th>ACTIONS</th>
-            </tr>
-            </thead>
+            <table class="agil-custom-table">
+                <thead>
+                    <tr>
+                        <th>OPÉRATEUR</th>
+                        <th>PERMIS</th>
+                        <th>EXPÉRIENCE</th>
+                        <th>LOCALISATION</th>
+                        <th>ÉTAT IA</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
                 <tbody>
-            <tr *ngFor="let c of filteredChauffeurs">
-                <td>
-                <div class="user-profile">
-                    <div class="user-avatar">{{ c.nom[0] }}{{ c.prenom[0] }}</div>
-                    <div class="user-meta">
-                    <span class="user-name">{{ c.nom }} {{ c.prenom }}</span>
-                    <span class="user-id">ID: #00{{ c.idChauffeur }}</span>
-                    </div>
-                </div>
-                </td>
-                <td><span class="permis-tag">{{ c.typeVehiculePermis }}</span></td>
-                <td>{{ c.anciennete }} Ans Exp.</td>
-                <td>📍 {{ c.region }}</td>
-                <td>
-                <span class="status-indicator" [ngClass]="c.etatChauffeur.toLowerCase()">
-                    <span class="dot"></span> {{ c.etatChauffeur }}
-                </span>
-                </td>
-                <td>
-                <select class="action-select" (change)="changeEtat(c.idChauffeur, $event)">
-                    <option value="" disabled selected>Modifier État</option>
-                    <option value="DISPONIBLE">DISPONIBLE</option>
-                    <option value="EN_MISSION">EN MISSION</option>
-                    <option value="EN_CONGE">EN CONGÉ</option>
-                </select>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    <tr *ngFor="let c of filteredChauffeurs">
+                        <td>
+                            <div class="user-profile">
+                                <div class="user-avatar">
+                                    {{ c.nom[0] }}{{ c.prenom[0] }}
+                                </div>
+                                <div class="user-meta">
+                                    <span class="user-name">{{ c.nom }} {{ c.prenom }}</span>
+                                    <span class="user-id">ID: #00{{ c.idChauffeur }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="permis-tag">{{ c.typeVehiculePermis }}</span>
+                        </td>
+                        <td>{{ c.anciennete }} Ans Exp.</td>
+                        <td>📍 {{ c.region }}</td>
+                        <td>
+                            <span class="status-indicator" [ngClass]="c.etatChauffeur.toLowerCase()">
+                                <span class="dot"></span>
+                                {{ c.etatChauffeur }}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display:flex; gap:8px; align-items:center;">
+                                <button class="btn-consult-ia" (click)="openModal(c)">
+                                    <i class="bi bi-eye"></i>
+                                    <span>Consulter</span>
+                                </button>
+                                <select class="action-select" (change)="changeEtat(c.idChauffeur, $event)">
+                                    <option value="" disabled selected>État</option>
+                                    <option value="DISPONIBLE">DISPONIBLE</option>
+                                    <option value="EN_MISSION">EN MISSION</option>
+                                    <option value="EN_CONGE">EN CONGÉ</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+
+    <!-- ══════ MODAL CONSULTATION CHAUFFEUR ══════ -->
+    <div class="modal-overlay" *ngIf="selectedChauffeur" (click)="closeModal()">
+        <div class="modal-gold" (click)="$event.stopPropagation()"
+             style="animation: slideInUp 0.5s cubic-bezier(0.34,1.56,0.64,1) both;">
+
+            <!-- HEADER MODAL -->
+            <div class="modal-gold-header">
+                <div class="modal-title-wrap">
+                    <div class="modal-icon">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <div>
+                        <h4>Fiche Opérateur</h4>
+                        <small>Détail complet du chauffeur · ID #00{{ selectedChauffeur.idChauffeur }}</small>
+                    </div>
+                </div>
+                <button class="btn-modal-close" (click)="closeModal()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <!-- IDENTITY BAND -->
+            <div class="modal-identity">
+                <div class="modal-avatar">
+                    {{ selectedChauffeur.nom[0] }}{{ selectedChauffeur.prenom[0] }}
+                </div>
+                <div class="modal-identity-info">
+                    <div class="modal-fullname">
+                        {{ selectedChauffeur.nom }} {{ selectedChauffeur.prenom }}
+                    </div>
+                    <div class="modal-sub">
+                        <span class="status-indicator" [ngClass]="selectedChauffeur.etatChauffeur.toLowerCase()">
+                            <span class="dot"></span>
+                            {{ selectedChauffeur.etatChauffeur }}
+                        </span>
+                        <span class="modal-region">📍 {{ selectedChauffeur.region }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BODY : GRILLE D'INFOS -->
+            <div class="modal-body-grid">
+
+                <!-- Colonne 1 -->
+                <div class="info-section">
+                    <div class="info-section-title">
+                        <i class="bi bi-person-lines-fill"></i> Informations Personnelles
+                    </div>
+                    <div class="info-row">
+                        <span class="info-lbl">Nom complet</span>
+                        <span class="info-val">{{ selectedChauffeur.nom }} {{ selectedChauffeur.prenom }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-lbl">Email</span>
+                        <span class="info-val">
+                            <i class="bi bi-envelope" style="color:var(--gold-deep)"></i>
+                            {{ selectedChauffeur.mail }}
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-lbl">Région</span>
+                        <span class="info-val">📍 {{ selectedChauffeur.region }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-lbl">Ancienneté</span>
+                        <span class="info-val info-gold">
+                            <i class="bi bi-clock-history"></i>
+                            {{ selectedChauffeur.anciennete }} ans d'expérience
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Colonne 2 -->
+                <div class="info-section">
+                    <div class="info-section-title">
+                        <i class="bi bi-card-checklist"></i> Informations Permis
+                    </div>
+                    <div class="info-row">
+                        <span class="info-lbl">Type de permis</span>
+                        <span class="info-val">
+                            <span class="permis-tag-modal">{{ selectedChauffeur.typeVehiculePermis }}</span>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-lbl">Date de prise</span>
+                        <span class="info-val">
+                            <i class="bi bi-calendar-check" style="color:var(--gold-deep)"></i>
+                            {{ selectedChauffeur.datePriseLicense | date:'dd/MM/yyyy' }}
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-lbl">Expiration permis</span>
+                        <span class="info-val"
+                              [style.color]="isExpiringSoon(selectedChauffeur.dateExpirationPermis) ? '#dc2626' : 'inherit'">
+                            <i class="bi bi-calendar-x"
+                               [style.color]="isExpiringSoon(selectedChauffeur.dateExpirationPermis) ? '#dc2626' : 'var(--gold-deep)'"></i>
+                            {{ selectedChauffeur.dateExpirationPermis | date:'dd/MM/yyyy' }}
+                            <span *ngIf="isExpiringSoon(selectedChauffeur.dateExpirationPermis)"
+                                  style="font-size:0.7rem; color:#dc2626; margin-left:6px;">
+                                ⚠ Bientôt expiré
+                            </span>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-lbl">État actuel</span>
+                        <span class="status-indicator" [ngClass]="selectedChauffeur.etatChauffeur.toLowerCase()">
+                            <span class="dot"></span>
+                            {{ selectedChauffeur.etatChauffeur }}
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-gold-footer-ia">
+                <button class="btn-close-modal" (click)="closeModal()">
+                    <i class="bi bi-x-circle"></i> Fermer
+                </button>
+            </div>
+
+        </div>
     </div>
+
+</div>
