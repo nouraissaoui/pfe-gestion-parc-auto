@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Service
 public class GestionParcService {
@@ -39,15 +41,10 @@ public class GestionParcService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private FeuilleDeRouteRepository feuilleDeRouteRepository;
 
     // ==================== AUTHENTIFICATION & USERS ====================
-
-   /* public Optional<User> authenticate(String mail, String password) {
-        return userRepository.findByMail(mail)
-                .filter(user -> passwordEncoder.matches(password, user.getMotDePasse()));
-    }*/
-    // Dans GestionParcService.java
-
     public Object authenticate(String mail, String password) {
         // 1. Chercher dans ChefParc
         Optional<ChefParc> chef = chefParcRepository.findByMail(mail);
@@ -240,6 +237,7 @@ public class GestionParcService {
     public long getEntretiensEnAttente(Long idChefParc) {
         return entretienRepository.countEntretiensEnAttenteByChef(idChefParc);
     }
+
     // ==================== GESTION DES CHAUFFEURS ====================
 
     @Transactional
@@ -256,4 +254,121 @@ public class GestionParcService {
 
         return chauffeurRepository.save(chauffeur);
     }
+    @Transactional
+    public Mission affecterMissionManuelle(Mission mission, Long idChauffeur, Long idVehicule, Long idChefParc) {
+        Chauffeur chauffeur = chauffeurRepository.findById(idChauffeur)
+                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
+        ChefParc chef = chefParcRepository.findById(idChefParc)
+                .orElseThrow(() -> new RuntimeException("Chef de parc introuvable"));
+
+        // 1. Récupérer ou créer la feuille de route
+        FeuilleDeRoute feuille = feuilleDeRouteRepository
+                .findByChauffeurAndStatut(chauffeur, StatutFeuilleDeRoute.OUVERTE)
+                .orElseGet(() -> {
+                    // Si nouvelle feuille, on initialise avec le véhicule passé en paramètre
+                    Vehicule vInitial = vehiculeRepository.findById(idVehicule)
+                            .orElseThrow(() -> new RuntimeException("Véhicule introuvable"));
+
+                    vInitial.setEtat(EtatVehicule.EN_MISSION);
+                    chauffeur.setEtatChauffeur(Chauffeur.EtatChauffeur.EN_MISSION);
+                    chauffeur.setVehicule(vInitial);
+
+                    FeuilleDeRoute nf = new FeuilleDeRoute();
+                    nf.setChauffeur(chauffeur);
+                    nf.setVehicule(vInitial);
+                    nf.setChefParc(chef);
+                    nf.setDateGeneration(LocalDate.now());
+                    nf.setStatut(StatutFeuilleDeRoute.OUVERTE);
+                    return feuilleDeRouteRepository.save(nf);
+                });
+
+        // 2. LOGIQUE DE CHANGEMENT DE VÉHICULE
+        // Si l'ID envoyé est différent de celui de la feuille de route actuelle
+        if (!feuille.getVehicule().getIdVehicule().equals(idVehicule)) {
+            Vehicule nouveauVehicule = vehiculeRepository.findById(idVehicule)
+                    .orElseThrow(() -> new RuntimeException("Nouveau véhicule introuvable"));
+
+            // Libérer l'ancien véhicule
+            Vehicule ancienVehicule = feuille.getVehicule();
+            ancienVehicule.setEtat(EtatVehicule.DISPONIBLE);
+
+            // Configurer le nouveau
+            nouveauVehicule.setEtat(EtatVehicule.EN_MISSION);
+            feuille.setVehicule(nouveauVehicule); // On met à jour la feuille de route
+            chauffeur.setVehicule(nouveauVehicule); // On met à jour le chauffeur
+
+            vehiculeRepository.save(ancienVehicule);
+            feuilleDeRouteRepository.save(feuille);
+        }
+
+        // 3. Finaliser la mission
+        mission.setChauffeur(chauffeur);
+        mission.setVehicule(feuille.getVehicule());
+        mission.setChefDuParc(chef);
+        mission.setLocal(chef.getLocal());
+        mission.setFeuilleDeRoute(feuille);
+
+        return missionRepository.save(mission);
+    }
+    // ==================== SUPPRESSION & MODIFICATION MISSIONS/FEUILLES ====================
+
+    @Transactional
+    public Mission updateMission(Long idMission, Mission details) {
+        Mission m = missionRepository.findById(idMission)
+                .orElseThrow(() -> new RuntimeException("Mission introuvable"));
+
+        // ⛔ LOGIQUE DE SÉCURITÉ : Vérifier si la mission est terminée
+        if (m.getHeureArriveeReelle() != null || m.getKmArrivee() != null) {
+            throw new RuntimeException("Impossible de modifier une mission déjà terminée par le chauffeur.");
+        }
+
+        // Mise à jour des informations autorisées
+        m.setPointDepart(details.getPointDepart());
+        m.setDestination(details.getDestination());
+        m.setHeureDepartPrevue(details.getHeureDepartPrevue());
+        m.setDescription(details.getDescription());
+        m.setDateMission(details.getDateMission());
+        m.setBandePrelevement(details.getBandePrelevement());
+
+        return missionRepository.save(m);
+    }
+
+    @Transactional
+    public void deleteMission(Long idMission) {
+        if (!missionRepository.existsById(idMission)) {
+            throw new RuntimeException("Mission introuvable");
+        }
+        missionRepository.deleteById(idMission);
+    }
+
+    @Transactional
+    public void deleteFeuilleDeRoute(Long idFeuille) {
+        FeuilleDeRoute feuille = feuilleDeRouteRepository.findById(idFeuille)
+                .orElseThrow(() -> new RuntimeException("Feuille de route introuvable"));
+
+        // 1. Libérer le chauffeur associé
+        Chauffeur chauffeur = feuille.getChauffeur();
+        if (chauffeur != null) {
+            chauffeur.setEtatChauffeur(Chauffeur.EtatChauffeur.DISPONIBLE);
+            chauffeur.setVehicule(null);
+            chauffeurRepository.save(chauffeur);
+        }
+
+        // 2. Libérer le véhicule associé
+        Vehicule vehicule = feuille.getVehicule();
+        if (vehicule != null) {
+            vehicule.setEtat(EtatVehicule.DISPONIBLE);
+            vehiculeRepository.save(vehicule);
+        }
+
+        // 3. Supprimer les missions liées (si non géré par cascade en DB)
+        if (feuille.getMissions() != null) {
+            missionRepository.deleteAll(feuille.getMissions());
+        }
+
+        // 4. Supprimer la feuille
+        feuilleDeRouteRepository.delete(feuille);
+    }
+
+
 }

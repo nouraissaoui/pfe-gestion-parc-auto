@@ -1,6 +1,7 @@
 package com.pfe.backendspringboot.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -28,7 +29,7 @@ public class ChefParc {
 
     @OneToOne
     @JoinColumn(name = "id_local", referencedColumnName = "id_local")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"chefParc", "vehicules", "chauffeurs"})
     private Local local;
 
     private LocalDate dateNomination;

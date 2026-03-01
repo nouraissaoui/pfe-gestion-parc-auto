@@ -6,6 +6,8 @@ import com.pfe.backendspringboot.DTO.UserRegistrationDTO;
 import com.pfe.backendspringboot.Entities.*;
 import com.pfe.backendspringboot.Repository.ChauffeurRepository;
 import com.pfe.backendspringboot.Repository.ChefParcRepository;
+import com.pfe.backendspringboot.Repository.FeuilleDeRouteRepository;
+import com.pfe.backendspringboot.Repository.MissionRepository;
 import com.pfe.backendspringboot.Service.GestionParcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,12 +25,10 @@ public class GestionParcController {
 
     @Autowired
     private GestionParcService gestionParcService;
-
     @Autowired
-    private ChefParcRepository chefParcRepository;
-
+    private MissionRepository missionRepository;
     @Autowired
-    private ChauffeurRepository chauffeurRepository;
+    private FeuilleDeRouteRepository feuilleDeRouteRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationDTO dto) {
@@ -219,6 +219,78 @@ public class GestionParcController {
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+    @PostMapping("/mission/affecter/{idChauffeur}/{idVehicule}/{idChef}")
+    public ResponseEntity<?> creerMissionManuelle(
+            @RequestBody Mission mission,
+            @PathVariable Long idChauffeur,
+            @PathVariable Long idVehicule,
+            @PathVariable Long idChef) {
+        try {
+            Mission nouvelleMission = gestionParcService.affecterMissionManuelle(mission, idChauffeur, idVehicule, idChef);
+            return ResponseEntity.ok(nouvelleMission);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+    // Récupérer toutes les missions d'une feuille de route spécifique
+    @GetMapping("/feuille-de-route/{idFeuille}/missions")
+    public ResponseEntity<List<Mission>> getMissionsDeLaFeuille(@PathVariable Long idFeuille) {
+        return feuilleDeRouteRepository.findById(idFeuille)
+                .map(f -> ResponseEntity.ok(f.getMissions()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Modifier une mission existante dans le carnet
+    /*@PutMapping("/mission/modifier/{idMission}")
+    public ResponseEntity<Mission> modifierMission(@PathVariable Long idMission, @RequestBody Mission missionDetails) {
+        return missionRepository.findById(idMission).map(m -> {
+            m.setPointDepart(missionDetails.getPointDepart());
+            m.setDestination(missionDetails.getDestination());
+            m.setHeureDepartPrevue(missionDetails.getHeureDepartPrevue());
+            m.setDescription(missionDetails.getDescription());
+            return ResponseEntity.ok(missionRepository.save(m));
+        }).orElse(ResponseEntity.notFound().build());
+    }*/
+    // Dans GestionParcController.java
+
+    @GetMapping("/local/{idLocal}/feuilles-actives")
+    public ResponseEntity<List<FeuilleDeRoute>> getFeuillesActives(@PathVariable Long idLocal) {
+        // On appelle la méthode que vous avez ajoutée dans le repository
+        List<FeuilleDeRoute> feuilles = feuilleDeRouteRepository.findByLocalId(idLocal);
+        return ResponseEntity.ok(feuilles);
+    }
+    // Modifier une mission existante
+    @PutMapping("/mission/modifier/{idMission}")
+    public ResponseEntity<?> modifierMission(@PathVariable Long idMission, @RequestBody Mission missionDetails) {
+        try {
+            Mission updated = gestionParcService.updateMission(idMission, missionDetails);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    // Supprimer une mission
+    @DeleteMapping("/mission/supprimer/{idMission}")
+    public ResponseEntity<?> supprimerMission(@PathVariable Long idMission) {
+        try {
+            gestionParcService.deleteMission(idMission);
+            return ResponseEntity.ok().body("{\"message\": \"Mission supprimée avec succès\"}");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    // Supprimer une feuille de route complète
+    @DeleteMapping("/feuille-de-route/supprimer/{idFeuille}")
+    public ResponseEntity<?> supprimerFeuille(@PathVariable Long idFeuille) {
+        try {
+            gestionParcService.deleteFeuilleDeRoute(idFeuille);
+            return ResponseEntity.ok().body("{\"message\": \"Feuille de route et missions supprimées, ressources libérées\"}");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
 }
