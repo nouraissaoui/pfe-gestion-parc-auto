@@ -1,7 +1,13 @@
 package com.pfe.backendspringboot.Entities;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import com.pfe.backendspringboot.Entities.ChefParc;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,20 +28,18 @@ public class Local {
     private String region;
     private String ville;
 
+    /******** IMAGE SIMPLE STRING ********/
+
     @Column(length=5000)
     private String images;
 
+
     /******** RELATIONS ********/
 
-    // Relation avec le Chef (1 seul par local)
-    @OneToOne(mappedBy="local", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToOne(mappedBy="local",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     @JsonIgnore
     private ChefParc chefParc;
 
-    // 🔹 NOUVEAU : Un local possède plusieurs véhicules
-    @OneToMany(mappedBy = "local", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("local")
-    private List<Vehicule> vehicules;
 
     // 🔹 NOUVEAU : Un local possède plusieurs chauffeurs
     @OneToMany(mappedBy = "local", fetch = FetchType.LAZY)

@@ -29,6 +29,17 @@ export interface Local {
   images?: string; // <-- string au lieu de string[]
   
 }
+export interface ChefParc {
+  idChefParc: number;
+  nom: string;
+  prenom: string;
+  mail: string;
+  motDePasse?: string;
+  dateNomination?: string;
+  ancienneteChef?: number;
+  niveauResponsabilite?: 'LOCAL_PRINCIPAL' | 'REGIONAL'|null ;
+  local?: Local | null;
+}
 export interface Vehicule {
   idVehicule: number;
   matricule: string;
@@ -38,7 +49,10 @@ export interface Vehicule {
   carburant: string;
   image: string;
   etat: 'DISPONIBLE' | 'EN_MISSION' | 'EN_ENTRETIEN' | 'INDISPONIBLE';
+    local?: any; // On peut typer plus précisément si on a l'interface Local
+
 }
+
 
 @Injectable({
   providedIn: 'root'
@@ -180,5 +194,62 @@ deleteMission(idMission: number): Observable<any> {
 deleteFeuilleDeRoute(idFeuille: number): Observable<any> {
   return this.http.delete(`${this.baseUrl}/feuille-de-route/supprimer/${idFeuille}`);
 }
+  
+  getAllChefs(): Observable<ChefParc[]> {
+    return this.http.get<ChefParc[]>(`${this.baseUrl}/chefparc`);
+  }
+
+ 
+  createChefParc(payload: any): Observable<ChefParc> {
+    return this.http.post<ChefParc>(`${this.baseUrl}/chefparc`, payload);
+  }
+
+  
+updateChefParc(id: number, payload: any): Observable<ChefParc> {
+  console.log("Données envoyées au serveur :", payload); // Vérifiez dans la console F12 si niveauResponsabilite est bien à null
+  return this.http.put<ChefParc>(`${this.baseUrl}/chefparc/${id}`, payload);
+}
+ 
+// Dans gestion-parc.service.ts
+deleteChefParc(id: number): Observable<string> {
+  return this.http.delete(`${this.baseUrl}/chefparc/${id}`, { responseType: 'text' });
+}
+
+  // ------------------ LOCAUX ------------------
+
+ // Ajoutez cette méthode dans votre ChefParcService
+getAllLocaux(): Observable<Local[]> {
+  return this.http.get<Local[]>('http://localhost:8080/api/gestion-parc/local'); 
+  // Remplacez /locaux par votre endpoint réel pour les locaux
+}
+  getLocalById(id: number): Observable<Local> {
+    return this.http.get<Local>(`${this.baseUrl}/local/${id}`);
+  }
+  // ==================== CRUD VÉHICULES SIMPLE ====================
+
+  // 1. Récupérer tous les véhicules
+  getAllVehicules(): Observable<Vehicule[]> {
+    return this.http.get<Vehicule[]>(`${this.baseUrl}/vehicules`);
+  }
+
+  // 2. Récupérer un véhicule par son ID
+  getVehiculeById(id: number): Observable<Vehicule> {
+    return this.http.get<Vehicule>(`${this.baseUrl}/vehicule/${id}`);
+  }
+
+  // 3. Ajouter un véhicule (avec l'ID du local en option)
+  addVehicule(vehicule: Vehicule, idLocal: number): Observable<Vehicule> {
+    return this.http.post<Vehicule>(`${this.baseUrl}/vehicule?idLocal=${idLocal}`, vehicule);
+  }
+
+  // 4. Modifier un véhicule
+  updateVehicule(id: number, vehicule: Vehicule, idLocal: number): Observable<Vehicule> {
+    return this.http.put<Vehicule>(`${this.baseUrl}/vehicule/${id}?idLocal=${idLocal}`, vehicule);
+  }
+
+  // 5. Supprimer un véhicule
+  deleteVehicule(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/vehicule/${id}`, { responseType: 'text' });
+  }
 
 }

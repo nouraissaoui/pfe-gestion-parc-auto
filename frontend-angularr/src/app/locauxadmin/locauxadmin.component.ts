@@ -29,11 +29,14 @@ import { GestionParcService } from '../gestion-parc.service';
 
     // index pour le slider
     imageIndexes: number[] = [];
+showPreloader= true;
 
     constructor(private service: GestionParcService) {}
 
     ngOnInit() {
       this.load();
+            setTimeout(() => this.showPreloader = false, 2500);
+
     }
 
     load() {

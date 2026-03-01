@@ -7,6 +7,9 @@ import { LocauxadminComponent } from './locauxadmin/locauxadmin.component';
 import { Adminlayoutcomponent} from './adminlayoutcomponent/adminlayoutcomponent.component';
 import { ConsulterChauffeursComponent } from './consulter-chauffeurs/consulter-chauffeurs.component';
 import { AffectationMissionComponent } from './affectation-mission/affectation-mission.component';
+import { ChefParcComponent } from './chef-parc/chef-parc.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { VehiculeComponent } from './vehicule/vehicule.component';
 
 export const routes: Routes = [
 { path: '', component: AuthentificationComponent },
@@ -14,8 +17,12 @@ export const routes: Routes = [
   path: 'admin',
   children: [
 
-    { path: 'locaux', component: LocauxadminComponent }  // ← Page locaux pour admin
-  ]
+    { path: 'dashboard', component: DashboardComponent },
+{
+  path:'locaux',component:LocauxadminComponent
+} 
+,{path:'chefsparc',component:ChefParcComponent} 
+,{path:'vehicules',component:VehiculeComponent}]
 }
 ,
 {

@@ -15,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -293,4 +295,118 @@ public class GestionParcController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+    // ===== GET ALL CHEFS =====
+    @GetMapping("/chefparc")
+    public List<ChefParc> getAllChefs() {
+        return gestionParcService.getAllChefsParc();
+    }
+
+    // ===== GET CHEF BY ID =====
+    @GetMapping("/chefparc/{id}")
+    public ResponseEntity<ChefParc> getChefById(@PathVariable Long id) {
+        return gestionParcService.getChefParcById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+    @PostMapping("/chefparc")
+    public ResponseEntity<?> createChefParc(@RequestBody Map<String, Object> payload) {
+        try {
+            String nom = (String) payload.get("nom");
+            String prenom = (String) payload.get("prenom");
+            String mail = (String) payload.get("mail");
+            String motDePasse = (String) payload.get("motDePasse");
+            String niveau = (String) payload.get("niveauResponsabilite");
+            LocalDate dateNomination = payload.get("dateNomination") != null ?
+                    LocalDate.parse((String) payload.get("dateNomination")) : null;
+            int anciennete = payload.get("ancienneteChef") != null ? (Integer) payload.get("ancienneteChef") : 0;
+            Long idLocal = payload.get("idLocal") != null ? Long.valueOf(payload.get("idLocal").toString()) : null;
+
+            ChefParc chef = gestionParcService.createChefParc(
+                    nom, prenom, mail, motDePasse, dateNomination, anciennete, niveau, idLocal
+            );
+            return ResponseEntity.ok(chef);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PutMapping("/chefparc/{id}")
+    public ResponseEntity<?> updateChefParc(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
+        try {
+            String nom = (String) payload.get("nom");
+            String prenom = (String) payload.get("prenom");
+            String mail = (String) payload.get("mail");
+            String motDePasse = (String) payload.get("motDePasse");
+            String niveau = (String) payload.get("niveauResponsabilite");
+            LocalDate dateNomination = payload.get("dateNomination") != null ?
+                    LocalDate.parse((String) payload.get("dateNomination")) : null;
+            int anciennete = payload.get("ancienneteChef") != null ? (Integer) payload.get("ancienneteChef") : 0;
+            Long idLocal = payload.get("idLocal") != null ? Long.valueOf(payload.get("idLocal").toString()) : null;
+
+            ChefParc chef = gestionParcService.updateChefParc(
+                    id, nom, prenom, mail, motDePasse, dateNomination, anciennete, niveau, idLocal
+            );
+            return ResponseEntity.ok(chef);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/chefparc/{id}")
+    public ResponseEntity<?> deleteChefParc(@PathVariable Long id) {
+        try {
+            gestionParcService.deleteChefParc(id);
+            return ResponseEntity.ok("Chef Parc supprimé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+    // ==================== CRUD VÉHICULE (API) ====================
+
+    // 1. Obtenir tous les véhicules du système
+    @GetMapping("/vehicules")
+    public List<Vehicule> getAllVehicules() {
+        return gestionParcService.getAllVehicules();
+    }
+
+    // 2. Obtenir un véhicule par son ID
+    @GetMapping("/vehicule/{id}")
+    public ResponseEntity<Vehicule> getVehiculeById(@PathVariable Long id) {
+        return gestionParcService.getVehiculeById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 3. Ajouter un véhicule et l'affecter à un local
+    @PostMapping("/vehicule")
+    public ResponseEntity<?> addVehicule(@RequestBody Vehicule v, @RequestParam(required = false) Long idLocal) {
+        try {
+            Vehicule saved = gestionParcService.createVehicule(v, idLocal);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur : " + e.getMessage());
+        }
+    }
+
+    // 4. Modifier un véhicule
+    @PutMapping("/vehicule/{id}")
+    public ResponseEntity<?> updateVehicule(@PathVariable Long id, @RequestBody Vehicule v, @RequestParam(required = false) Long idLocal) {
+        try {
+            Vehicule updated = gestionParcService.updateVehicule(id, v, idLocal);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // 5. Supprimer un véhicule
+    @DeleteMapping("/vehicule/{id}")
+    public ResponseEntity<?> deleteVehicule(@PathVariable Long id) {
+        try {
+            gestionParcService.deleteVehicule(id);
+            return ResponseEntity.ok().body("{\"message\": \"Véhicule supprimé avec succès\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }

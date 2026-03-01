@@ -3257,3 +3257,336 @@
         justify-content: center;
     }
     }
+    #preloader-prestige {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #ffffff 0%, #f8f9fa 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.orbit-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* La Sphère avec un effet de respiration */
+.glass-sphere {
+  width: 130px;
+  height: 130px;
+  background: white;
+  border-radius: 50%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1), inset 0 0 20px rgba(0,0,0,0.02);
+  animation: breathe 3s infinite ease-in-out;
+}
+
+.glass-sphere img {
+  width: 85px;
+  transition: 0.5s;
+}
+
+/* Anneaux style Néon avec comètes */
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.ring.gold { width: 190px; height: 190px; animation: rotateRing 4s linear infinite; }
+.ring.bordeaux { width: 240px; height: 240px; animation: rotateRing 6s linear infinite reverse; }
+.ring.white { width: 290px; height: 290px; animation: rotateRing 9s linear infinite; }
+
+/* La petite boule lumineuse qui tourne sur l'anneau */
+.comet {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.gold .comet { background: #d4af37; box-shadow: 0 0 15px #d4af37; }
+.bordeaux .comet { background: #800020; box-shadow: 0 0 15px #800020; }
+.white .comet { background: #000; opacity: 0.2; }
+
+/* Barre de progression réelle sur 30s */
+.luxury-bar {
+  width: 300px;
+  height: 4px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.fill-permanent {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #d4af37, #800020);
+  /* L'animation dure exactement 30 secondes */
+  animation: load30s 30s linear forwards;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes load30s {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+  50% { transform: scale(1.05); box-shadow: 0 20px 45px rgba(128, 0, 32, 0.15); }
+}/* --- CSS MIS À JOUR POUR GRAND LOGO --- */
+
+.orbit-container {
+  position: relative;
+  /* On agrandit le conteneur pour accueillir la grande sphère */
+  width: 400px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px; /* Espace avec le texte */
+}
+
+/* LA GRANDE SPHÈRE (Anciennement 130px) */
+.glass-sphere.big-sphere {
+  width: 220px;
+  height: 220px;
+  background: white;
+  border-radius: 50%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Ombre plus douce pour une plus grande surface */
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1), inset 0 0 25px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.03);
+  animation: breathe 3s infinite ease-in-out;
+}
+
+/* LE GRAND LOGO (Anciennement 85px) */
+.glass-sphere .big-logo {
+  width: 150px; /* Taille principale de l'image */
+  height: auto;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); /* Met le logo en valeur */
+  transition: 0.5s;
+}
+
+/* Ajustement des anneaux pour qu'ils ne touchent pas la grande sphère */
+.ring.gold { width: 280px; height: 280px; animation: rotateRing 5s linear infinite; }
+.ring.bordeaux { width: 330px; height: 330px; animation: rotateRing 7s linear infinite reverse; }
+.ring.white { width: 380px; height: 380px; animation: rotateRing 10s linear infinite; }
+
+/* Ajustement des comètes pour qu'elles restent proportionnelles */
+.comet {
+  position: absolute;
+  top: -6px; /* Ajusté pour la nouvelle épaisseur imaginaire de l'anneau */
+  left: 50%;
+  width: 12px; /* Un peu plus grandes */
+  height: 12px;
+  border-radius: 50%;
+}
+/* --- LE FOND : PROFONDEUR IMMERSIVE --- */
+#preloader-prestige {
+  position: fixed;
+  inset: 0;
+  /* On passe sur un blanc nacré avec une légère vignette pour focaliser l'œil au centre */
+  background: radial-gradient(circle at center, #ffffff 0%, #f0f0f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+/* --- LE HALO DE PRESTIGE (L'Innovation) --- */
+/* Ajoute une aura lumineuse douce derrière les anneaux */
+.orbit-container::before {
+  content: '';
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+  z-index: 1;
+  animation: pulseHalo 4s infinite ease-in-out;
+}
+
+/* --- LA SPHÈRE DE CRISTAL --- */
+.glass-sphere.big-sphere {
+  width: 220px;
+  height: 220px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(15px); /* Effet verre givré */
+  border-radius: 50%;
+  z-index: 10;
+  /* Double ombre : externe pour le volume, interne pour l'éclat du verre */
+  box-shadow: 
+    0 30px 60px rgba(0,0,0,0.1), 
+    inset 0 0 40px rgba(255,255,255,1),
+    inset 0 0 20px rgba(128, 0, 32, 0.05);
+  border: 1px solid rgba(255,255,255,0.8);
+  animation: breathe 3s infinite ease-in-out;
+}
+
+/* --- LES ANNEAUX ÉNERGÉTIQUES --- */
+.ring {
+  border-width: 1.5px !important;
+  filter: drop-shadow(0 0 5px rgba(0,0,0,0.05));
+}
+
+/* Ajout d'une ombre portée sur les comètes pour l'effet néon */
+.gold .comet { background: #d4af37; box-shadow: 0 0 20px 4px rgba(212, 175, 55, 0.8); }
+.bordeaux .comet { background: #800020; box-shadow: 0 0 20px 4px rgba(128, 0, 32, 0.6); }
+
+/* --- LA BARRE LUXE : EFFET SCANNER --- */
+.luxury-bar {
+  width: 300px;
+  height: 4px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.fill-permanent {
+  background: linear-gradient(90deg, #d4af37, #800020, #d4af37);
+  background-size: 200% 100%;
+  position: relative;
+  animation: load30s 30s linear forwards, shimmerBar 2s infinite linear;
+}
+
+/* Le "Plus" : Un reflet laser qui balaie la barre */
+.fill-permanent::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: laserSweep 2s infinite ease-in-out;
+}
+
+/* --- TYPOGRAPHIE --- */
+.admin-name {
+  color: #800020;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+}
+
+.loading-label {
+  letter-spacing: 4px !important;
+  font-weight: 600;
+  color: #b1b5bc !important;
+}
+
+/* --- NOUVELLES ANIMATIONS --- */
+
+@keyframes pulseHalo {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.6; }
+}
+
+@keyframes laserSweep {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+@keyframes shimmerBar {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Amélioration de la respiration pour inclure un léger flou dynamique */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); filter: blur(0px); }
+  50% { transform: scale(1.05); filter: blur(0.5px); }
+}/* --- LE PLUS JOLIE : STYLE MAGISTRAL DU LOGO --- */
+
+.orbit-container {
+  /* ... (votre code existant) ... */
+  position: relative;
+  width: 400px; height: 400px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px;
+}
+
+/* LA GRANDE SPHÈRE : Amélioration de l'effet Cristal */
+.glass-sphere.big-sphere {
+  /* ... (votre code existant) ... */
+  width: 220px; height: 220px;
+  background: rgba(255, 255, 255, 0.95); /* Plus opaque pour le reflet */
+  backdrop-filter: blur(15px); /* Verre givré */
+  border-radius: 50%; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  /* Double ombre : externe pour le volume, interne pour l'éclat du verre */
+  box-shadow: 
+    0 25px 55px rgba(0,0,0,0.1), 
+    inset 0 0 35px rgba(255,255,255,1),
+    inset 0 0 20px rgba(128, 0, 32, 0.03); /* Rappel bordeaux léger */
+  border: 1px solid rgba(255,255,255,0.7);
+  animation: breathe 3s infinite ease-in-out;
+  overflow: hidden; /* Obligatoire pour le balayage lumineux */
+}
+
+/* LE GRAND LOGO : Effet Prestige et Profondeur */
+.glass-sphere .big-logo {
+  /* ... (votre code existant) ... */
+  width: 150px; height: auto;
+  transition: 0.5s;
+  /* Le "Plus" : Ombre dorée douce pour le détacher du fond */
+  filter: drop-shadow(0 10px 15px rgba(212, 175, 55, 0.2)); 
+  animation: logoFloat 3s infinite ease-in-out; /* Légère lévitation */
+}
+
+/* L'INNOVATION : Le balayage lumineux (Sweep) qui traverse le logo */
+.glass-sphere.big-sphere::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  /* Un trait de lumière blanche pure inclinée */
+  background: linear-gradient(110deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: logoSweep 3s infinite ease-in-out;
+  z-index: 3; /* Juste au-dessus du logo */
+}
+
+/* --- NOUVELLES ANIMATIONS --- */
+
+/* Balayage de lumière pure sur le logo */
+@keyframes logoSweep {
+  0% { left: -110%; }
+  30% { left: 110%; } /* Vitesse rapide du passage */
+  100% { left: 110%; } /* Pause avant le prochain passage */
+}
+
+/* Lévitation douce du logo à l'intérieur de la sphère */
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); filter: drop-shadow(0 10px 15px rgba(212, 175, 55, 0.2)); }
+  50% { transform: translateY(-5px); filter: drop-shadow(0 15px 25px rgba(212, 175, 55, 0.1)); }
+}
+
+/* Amélioration de la respiration (inclut un léger flou dynamique) */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 25px 55px rgba(0,0,0,0.1); }
+  50% { transform: scale(1.03); box-shadow: 0 30px 60px rgba(128, 0, 32, 0.1); }
+}

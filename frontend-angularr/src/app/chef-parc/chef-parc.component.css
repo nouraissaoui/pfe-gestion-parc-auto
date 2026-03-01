@@ -1,0 +1,2761 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@600;800&display=swap');
+
+:root {
+  --primary-navy: #0F172A;
+  --accent-gold: #B48C36;
+  --bordeaux-pro: #641122;
+  --bg-light: #F8FAFC;
+  --text-dark: #1E293B;
+  --text-muted: #64748B;
+  --white: #FFFFFF;
+  --border: #E2E8F0;
+  --shadow-premium: 0 20px 35px -8px rgba(0,0,0,0.15), 0 0 0 1px rgba(180,140,54,0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* BARRE LATÉRALE */
+aside {
+  width: 280px;
+  background: linear-gradient(180deg, var(--primary-navy) 0%, #1e293b 100%);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  box-shadow: 5px 0 25px rgba(0,0,0,0.2);
+  z-index: 100;
+}
+
+.brand {
+  padding: 40px 30px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  font-family: 'Cinzel', serif;
+}
+
+.nav-list { list-style: none; padding: 20px 0; flex: 1; }
+
+.nav-item {
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item i { width: 20px; text-align: center; }
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 0;
+  left: 0;
+  top: 0;
+  background: rgba(180, 140, 54, 0.15);
+  transition: 0.4s;
+  z-index: 0;
+}
+.nav-item:hover::after { width: 100%; }
+.nav-item span { position: relative; z-index: 1; }
+
+.nav-item:hover, .nav-item.active {
+  background-color: rgba(255,255,255,0.05);
+  color: var(--white);
+  border-left: 4px solid var(--accent-gold);
+}
+
+/* CONTENU PRINCIPAL */
+main {
+  margin-left: 280px;
+  flex: 1;
+  padding: 40px 50px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecf2 100%);
+  min-height: 100vh;
+}
+
+.header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+  animation: fadeInDown 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); filter: blur(10px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.title-group h1.glitch-text {
+  font-family: 'Cinzel', serif;
+  font-size: 38px;
+  background: linear-gradient(135deg, var(--primary-navy) 30%, var(--accent-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.title-group p {
+  color: var(--text-muted);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+/* BOUTON PRINCIPAL (OR LIQUIDE) */
+.btn-primary {
+  background: linear-gradient(135deg, var(--bordeaux-pro) 0%, #8b1a30 100%);
+  border: 1px solid var(--accent-gold);
+  padding: 15px 35px;
+  border-radius: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(100, 17, 34, 0.3);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #7c1b33 0%, var(--bordeaux-pro) 100%);
+  box-shadow: 0 15px 35px rgba(100, 17, 34, 0.45);
+  transform: translateY(-2px);
+}
+
+.btn-primary i { transition: transform 0.3s; }
+.btn-primary:hover i { transform: rotate(20deg); }
+
+/* STATISTIQUES "FLOATING" */
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.stat-box {
+  background: var(--white);
+  padding: 35px;
+  border-radius: 24px;
+  border: 1px solid rgba(180, 140, 54, 0.2);
+  box-shadow: var(--shadow-premium);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.stat-box::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--bordeaux-pro), var(--accent-gold));
+}
+
+.stat-box:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 40px 60px -15px rgba(180, 140, 54, 0.25);
+}
+
+.stat-box h3 {
+  font-size: 36px;
+  color: var(--bordeaux-pro);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.stat-box p {
+  color: var(--text-muted);
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* TABLEAU STYLE "GLASS-CLARITY" */
+.card-container {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  border: 1px solid var(--white);
+  box-shadow: var(--shadow-premium);
+  overflow: hidden;
+}
+
+.filters {
+  padding: 25px 40px;
+  background: linear-gradient(to bottom, #FAFBFC, #FFFFFF);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 400px;
+}
+
+.search-wrapper i {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent-gold);
+  font-size: 1.1rem;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 14px 20px 14px 50px;
+  border-radius: 40px;
+  border: 1px solid var(--border);
+  outline: none;
+  font-size: 14px;
+  transition: all 0.3s;
+  background: white;
+}
+
+.search-wrapper input:focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px rgba(180, 140, 54, 0.2);
+}
+
+.results-count {
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.6);
+  padding: 8px 18px;
+  border-radius: 40px;
+  backdrop-filter: blur(5px);
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  padding: 22px 30px;
+  font-family: 'Cinzel', serif;
+  color: var(--accent-gold);
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  background: rgba(248, 250, 252, 0.8);
+  border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+}
+
+td {
+  padding: 20px 30px;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+tr:last-child td { border-bottom: none; }
+tr { transition: 0.3s; }
+tr:hover { background: rgba(180, 140, 54, 0.04); }
+
+.emp-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  border: 2px solid var(--accent-gold);
+  padding: 2px;
+  background-clip: content-box;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.avatar:hover {
+  transform: scale(1.15);
+  box-shadow: 0 8px 20px rgba(180,140,54,0.4);
+}
+
+/* COULEURS DES AVATARS */
+.avatar[data-color="1"] { background: #FF6B6B; color: white; }
+.avatar[data-color="2"] { background: #FFD93D; color: #1E293B; }
+.avatar[data-color="3"] { background: #6BCB77; color: white; }
+.avatar[data-color="4"] { background: #4D96FF; color: white; }
+.avatar[data-color="5"] { background: #FF85FF; color: #1E293B; }
+.avatar[data-color="6"] { background: #FF9F1C; color: #1E293B; }
+.avatar[data-color="7"] { background: #9D4EDD; color: white; }
+.avatar[data-color="8"] { background: #00B4D8; color: white; }
+
+.full-name {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #E2E8F0;
+  color: var(--text-dark);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.badge-bordeaux {
+  background: #FEF2F2;
+  color: var(--bordeaux-pro);
+}
+
+.role-text {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ACTIONS */
+.actions-cell {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: white;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.btn-icon:hover {
+  background: linear-gradient(135deg, var(--accent-gold), #FFD580);
+  color: #0F172A;
+  transform: scale(1.1);
+  border-color: var(--accent-gold);
+}
+
+/* MODALE */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+.modal.show { display: flex; }
+
+.modal-content {
+  background: white;
+  width: 550px;
+  border-radius: 30px;
+  padding: 40px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+  transform: scale(0.95);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+.modal.show .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-header { margin-bottom: 30px; }
+.modal-header h2 {
+  font-family: 'Cinzel', serif;
+  color: var(--bordeaux-pro);
+  font-size: 28px;
+}
+
+.form-group { margin-bottom: 20px; }
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 12px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  outline: none;
+  transition: 0.3s;
+  font-size: 14px;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px rgba(180,140,54,0.15);
+}
+
+.form-group.error input, .form-group.error select {
+  border-color: #c41e3a;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .stats-summary { grid-template-columns: 1fr; }
+  .search-wrapper { width: 100%; }
+  .filters { flex-direction: column; align-items: stretch; }
+}
+.title-group h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    background: linear-gradient(to right, #B48C36 20%, #F1D592 40%, #F1D592 60%, #B48C36 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: goldShine 4s linear infinite;
+}
+
+@keyframes goldShine {
+    to { background-position: 200% center; }
+}
+/* --- BOUTONS ROUGE BORDEAUX IMPÉRIAL --- */
+
+/* 1. Le Bouton Principal (Ajouter / Valider) */
+.btn-primary {
+    background: linear-gradient(135deg, #641122 0%, #4a0c19 100%); /* Bordeaux Profond */
+    color: #FFFFFF;
+    padding: 14px 30px;
+    border-radius: 12px;
+    border: 1px solid var(--accent-gold); /* Bordure Or pour le luxe */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 20px rgba(100, 17, 34, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #7c1b33 0%, #641122 100%); /* Éclaircissement subtil */
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(100, 17, 34, 0.5);
+    border-color: var(--gold-light);
+}
+
+/* Effet de reflet brillant au survol du bouton bordeaux */
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transition: 0.6s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+/* 2. Les Boutons d'Icônes (Actions dans le tableau) */
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(100, 17, 34, 0.2);
+    background: #FFFFFF;
+    color: #641122; /* Icône en bordeaux */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background: #641122; /* Devient bordeaux au survol */
+    color: var(--gold-light); /* Icône devient or au survol */
+    border-color: var(--accent-gold);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 5px 15px rgba(100, 17, 34, 0.2);
+}
+
+/* 3. Boutons de la Modale (Annuler / Fermer) */
+.btn-secondary {
+    background: transparent;
+    color: #641122;
+    border: 1px solid #641122;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-secondary:hover {
+    background: rgba(100, 17, 34, 0.05);
+    color: #4a0c19;
+}
+.agil-luxury-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* centre les enfants horizontalement */
+  width: 100%;
+  min-height: 100vh;
+}
+
+main {
+  max-width: 1200px;    /* ou 1400px selon préférence */
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+.agil-luxury-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* Centre horizontalement les enfants directs */
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-light); /* ou la couleur de fond souhaitée */
+}
+
+main {
+  max-width: 1200px;         /* Largeur maximale du contenu (ajustez selon vos goûts) */
+  width: 100%;
+  margin: 0 auto;            /* Centrage horizontal automatique */
+  padding: 30px 20px;        /* Espacement intérieur pour les petits écrans */
+}
+
+/* Optionnel : si vous voulez que les éléments internes aient une largeur fluide */
+.header-main,
+.stats-summary,
+.card-container {
+  width: 100%;
+}
+.title-group {
+    position: relative;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.title-group::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+}
+
+.title-group::before {
+    content: '♦';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--bordeaux-pro);
+    font-size: 10px;
+    z-index: 2;
+}.card-container {
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    outline: 1px solid rgba(180, 140, 54, 0.1); /* Deuxième bordure très fine */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    transition: transform 0.4s ease;
+}
+
+.card-container:hover {
+    transform: scale(1.005); /* Zoom imperceptible mais luxueux */
+}
+@keyframes letterSpacing {
+    from { letter-spacing: 10px; opacity: 0; filter: blur(5px); }
+    to { letter-spacing: -2px; opacity: 1; filter: blur(0); }
+}
+
+.stat-box h3 {
+    animation: letterSpacing 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    color: #000000;
+}
+/* ===== AMÉLIORATIONS SUPPLÉMENTAIRES ===== */
+
+/* 1. ARRIÈRE-PLAN DYNAMIQUE (particules ou dégradé animé) */
+.agil-luxury-root {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.agil-luxury-root::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 50%, rgba(180, 140, 54, 0.03) 0%, transparent 30%),
+              radial-gradient(circle at 70% 80%, rgba(100, 17, 34, 0.03) 0%, transparent 35%);
+  animation: rotateBg 60s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes rotateBg {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 2. CARTES DE STATISTIQUES AVEC ICÔNES BRILLANTES */
+.stat-box {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.stat-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 215, 0, 0.1) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.8s;
+  z-index: -1;
+}
+
+.stat-box:hover::before {
+  transform: translateX(100%);
+}
+
+.stat-box h3 {
+  position: relative;
+  display: inline-block;
+}
+
+.stat-box h3::after {
+  content: '✦';
+  font-size: 1.2rem;
+  color: var(--accent-gold);
+  position: absolute;
+  right: -25px;
+  top: 0;
+  opacity: 0;
+  transform: rotate(0deg) scale(0.5);
+  transition: opacity 0.3s, transform 0.5s;
+}
+
+.stat-box:hover h3::after {
+  opacity: 1;
+  transform: rotate(180deg) scale(1);
+}
+
+/* 3. TABLEAU AVEC LIGNES ALTERNÉES ET SURBRILLANCE */
+.luxury-table tbody tr:nth-child(even) {
+  background-color: rgba(248, 250, 252, 0.6);
+}
+
+.luxury-table tbody tr:hover {
+  background: linear-gradient(90deg, rgba(180, 140, 54, 0.05), rgba(255, 255, 255, 0.8));
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transform: scale(1.002);
+}
+
+/* 4. BOUTONS D'ACTION AVEC TOOLTIPS */
+.btn-icon {
+  position: relative;
+  overflow: visible;
+}
+
+.btn-icon::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: var(--primary-navy);
+  color: var(--white);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  border: 1px solid var(--accent-gold);
+}
+
+.btn-icon:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* 5. MODALE AVEC BORDURE LUMINEUSE */
+.modal-content {
+  position: relative;
+  border: 1px solid rgba(180, 140, 54, 0.3);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+
+.modal-content::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 32px;
+  padding: 2px;
+  background: linear-gradient(45deg, var(--accent-gold), transparent, var(--bordeaux-pro));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.modal.show .modal-content::after {
+  opacity: 1;
+}
+
+/* 6. ANIMATION D'ENTRÉE POUR LES LIGNES DU TABLEAU */
+@keyframes slideInRow {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+tbody tr {
+  animation: slideInRow 0.3s ease-out forwards;
+  animation-delay: calc(var(--row-index, 0) * 0.05s);
+}
+
+/* Ajouter une variable d'index dans le template (si possible) */
+/* Dans le HTML, sur chaque ligne : [style.--row-index]="i" */
+
+/* 7. INDICATEUR DE RECHERCHE AVEC POULSATION */
+.search-wrapper input:not(:placeholder-shown) + .search-icon {
+  color: var(--accent-gold);
+  animation: pulseSearch 1.5s infinite;
+}
+
+@keyframes pulseSearch {
+  0% { text-shadow: 0 0 0 rgba(180,140,54,0); }
+  50% { text-shadow: 0 0 10px rgba(180,140,54,0.5); }
+  100% { text-shadow: 0 0 0 rgba(180,140,54,0); }
+}
+
+/* 8. SCROLLBAR PERSONNALISÉE PLUS ÉLÉGANTE */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--off-white);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, var(--accent-gold), var(--bordeaux-pro));
+  border-radius: 10px;
+  border: 2px solid var(--white);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, var(--bordeaux-pro), var(--accent-gold));
+}
+/* === BOUTONS DE LA MODALE === */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.modal-footer .btn-primary,
+.modal-footer .btn-cancel {
+  padding: 14px 40px;          /* Même padding → même hauteur/largeur */
+  border-radius: 60px;          /* Boutons très arrondis */
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Bouton "Enregistrer" (dégradé bordeaux/or) */
+.modal-footer .btn-primary {
+  background: linear-gradient(145deg, var(--bordeaux-pro), #8b1a30);
+  color: white;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 10px 20px rgba(100, 17, 34, 0.3);
+}
+
+.modal-footer .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s;
+}
+
+.modal-footer .btn-primary:hover {
+  background: linear-gradient(145deg, #7c1b33, var(--bordeaux-pro));
+  transform: translateY(-3px);
+  box-shadow: 0 18px 30px rgba(100, 17, 34, 0.5);
+  border-color: var(--accent-gold);
+}
+
+.modal-footer .btn-primary:hover::before {
+  left: 100%;
+}
+
+.modal-footer .btn-primary i {
+  font-size: 1.1rem;
+  transition: transform 0.3s;
+}
+
+.modal-footer .btn-primary:hover i {
+  transform: rotate(360deg);
+}
+
+/* Bouton "Annuler" (gris anthracite profond avec bordure dorée) */
+.modal-footer .btn-cancel {
+  background: #2C3E50;         /* Gris anthracite profond */
+  color: #FFD700;              /* Texte or */
+  border: 1px solid #FFD700;
+  box-shadow: 0 10px 20px rgba(44, 62, 80, 0.3);
+}
+
+.modal-footer .btn-cancel::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s;
+}
+
+.modal-footer .btn-cancel:hover {
+  background: #1A252F;         /* Plus foncé au survol */
+  color: #FFD700;
+  transform: translateY(-3px);
+  box-shadow: 0 18px 30px rgba(44, 62, 80, 0.5);
+  border-color: #FFD700;
+}
+
+.modal-footer .btn-cancel:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+.modal-footer .btn-cancel i {
+  font-size: 1.1rem;
+  transition: transform 0.3s;
+}
+
+.modal-footer .btn-cancel:hover i {
+  transform: scale(1.2) rotate(90deg);
+}
+
+/* Désactivé */
+.modal-footer .btn-primary:disabled,
+.modal-footer .btn-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.2);
+}
+/* === BOUTONS MODALE (MÊME TAILLE, COULEURS EXCLUSIVES) === */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.modal-footer .btn-modal-primary,
+.modal-footer .btn-modal-cancel {
+  padding: 14px 32px;          /* Même padding → même hauteur/largeur */
+  border-radius: 60px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  border: 1px solid transparent;
+}
+
+/* Bouton principal : bordeaux/or */
+.modal-footer .btn-modal-primary {
+  background: linear-gradient(145deg, var(--bordeaux-pro), #8b1a30);
+  color: #FFD700;               /* Texte or */
+  border-color: rgba(255, 215, 0, 0.4);
+  box-shadow: 0 10px 20px rgba(100, 17, 34, 0.3);
+}
+
+.modal-footer .btn-modal-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.modal-footer .btn-modal-primary:hover {
+  background: linear-gradient(145deg, #7c1b33, var(--bordeaux-pro));
+  transform: translateY(-3px);
+  box-shadow: 0 18px 30px rgba(100, 17, 34, 0.5);
+  border-color: #FFD700;
+}
+
+.modal-footer .btn-modal-primary:hover::before {
+  left: 100%;
+}
+
+.modal-footer .btn-modal-primary i {
+  font-size: 1rem;
+  transition: transform 0.3s;
+}
+
+.modal-footer .btn-modal-primary:hover i {
+  transform: rotate(360deg);
+}
+
+/* Bouton annuler : gris anthracite profond/or */
+.modal-footer .btn-modal-cancel {
+  background: #2C3E50;           /* Gris anthracite */
+  color: #FFD700;                /* Texte or */
+  border-color: #FFD700;
+  box-shadow: 0 10px 20px rgba(44, 62, 80, 0.3);
+}
+
+.modal-footer .btn-modal-cancel::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s;
+}
+
+.modal-footer .btn-modal-cancel:hover {
+  background: #1A252F;           /* Plus foncé */
+  color: #FFD700;
+  transform: translateY(-3px);
+  box-shadow: 0 18px 30px rgba(44, 62, 80, 0.5);
+}
+
+.modal-footer .btn-modal-cancel:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+.modal-footer .btn-modal-cancel i {
+  font-size: 1rem;
+  transition: transform 0.3s;
+}
+
+.modal-footer .btn-modal-cancel:hover i {
+  transform: scale(1.2) rotate(90deg);
+}
+
+/* État désactivé (si besoin) */
+.modal-footer .btn-modal-primary:disabled,
+.modal-footer .btn-modal-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.2);
+}
+/* === BOUTONS MODALE (MÊME TAILLE, COULEURS EXCLUSIVES) === */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.modal-footer .btn-modal-primary,
+.modal-footer .btn-modal-cancel {
+  padding: 14px 32px;          /* Même padding → même hauteur/largeur */
+  border-radius: 60px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  border: 1px solid transparent;
+}
+
+/* Bouton principal : bordeaux/or */
+.modal-footer .btn-modal-primary {
+  background: linear-gradient(145deg, var(--bordeaux-pro), #8b1a30);
+  color: #FFD700;
+  border-color: rgba(255, 215, 0, 0.4);
+  box-shadow: 0 10px 20px rgba(100, 17, 34, 0.3);
+}
+
+.modal-footer .btn-modal-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.modal-footer .btn-modal-primary:hover {
+  background: linear-gradient(145deg, #7c1b33, var(--bordeaux-pro));
+  transform: translateY(-3px);
+  box-shadow: 0 18px 30px rgba(100, 17, 34, 0.5);
+  border-color: #FFD700;
+}
+
+.modal-footer .btn-modal-primary:hover::before {
+  left: 100%;
+}
+
+.modal-footer .btn-modal-primary i {
+  font-size: 1rem;
+  transition: transform 0.3s;
+}
+
+.modal-footer .btn-modal-primary:hover i {
+  transform: rotate(360deg);
+}
+
+/* Bouton annuler : gris anthracite profond/or */
+.modal-footer .btn-modal-cancel {
+  background: #2C3E50;
+  color: #FFD700;
+  border-color: #FFD700;
+  box-shadow: 0 10px 20px rgba(44, 62, 80, 0.3);
+}
+
+.modal-footer .btn-modal-cancel::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s;
+}
+
+.modal-footer .btn-modal-cancel:hover {
+  background: #1A252F;
+  color: #FFD700;
+  transform: translateY(-3px);
+  box-shadow: 0 18px 30px rgba(44, 62, 80, 0.5);
+}
+
+.modal-footer .btn-modal-cancel:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+.modal-footer .btn-modal-cancel i {
+  font-size: 1rem;
+  transition: transform 0.3s;
+}
+
+.modal-footer .btn-modal-cancel:hover i {
+  transform: scale(1.2) rotate(90deg);
+}
+
+/* Désactivé */
+.modal-footer .btn-modal-primary:disabled,
+.modal-footer .btn-modal-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.2);
+}.table-container {
+  max-height: 500px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-gold) var(--border);
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: var(--border);
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 10px;
+}.table-container {
+  max-height: 500px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-gold) var(--border);
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: var(--border);
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 10px;
+}
+/* --- MODALE LUXE CONFIGURATION --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.85); /* Bleu nuit profond translucide */
+  backdrop-filter: blur(12px); /* Effet de flou de fond */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- CONTENU DE LA MODALE --- */
+.modal-content {
+  background: var(--white);
+  width: 100%;
+  max-width: 650px;
+  border-radius: 32px;
+  padding: 45px;
+  position: relative;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(180, 140, 54, 0.3); /* Bordure Or subtile */
+  transform: translateY(30px);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal.show .modal-content {
+  transform: translateY(0);
+}
+
+/* --- EN-TÊTE --- */
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 25px;
+}
+
+.small-logo {
+  height: 60px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.header-title h2 {
+  font-family: 'Cinzel', serif;
+  color: var(--primary-navy);
+  font-size: 26px;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* --- FORMULAIRE ELEGANT --- */
+.elegant-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--primary-navy);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group label i {
+  color: var(--accent-gold); /* Icônes en Or */
+}
+
+/* --- INPUTS STYLE "CHAMPAGNE" --- */
+.form-group input, 
+.form-group select {
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #F8FAFC;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus, 
+.form-group select:focus {
+  background: white;
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 4px rgba(180, 140, 54, 0.15);
+  outline: none;
+}
+
+/* --- BOUTONS DE LA MODALE --- */
+.modal-footer {
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.btn-modal-cancel {
+  background: #F1F5F9;
+  color: var(--text-muted);
+  border: none;
+  padding: 14px 25px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-modal-cancel:hover {
+  background: #E2E8F0;
+  color: var(--primary-navy);
+}
+
+.btn-modal-primary {
+  background: linear-gradient(135deg, var(--bordeaux-pro) 0%, #4a0c19 100%);
+  color: white;
+  border: 1px solid var(--accent-gold);
+  padding: 14px 35px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(100, 17, 34, 0.3);
+  transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-modal-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(100, 17, 34, 0.4);
+}
+
+/* --- LE PETIT PLUS : INDICATEUR DE FOCUS OR --- */
+.form-group:focus-within label {
+  color: var(--accent-gold);
+  transform: translateX(5px);
+  transition: 0.3s;
+}
+/* --- MODALE COMPACTE LUXE --- */
+.modal-content {
+  max-width: 850px; /* Plus large pour mettre les éléments côte à côte */
+  padding: 30px 40px; /* Réduction des paddings internes */
+  border-radius: 24px;
+}
+
+.modal-header {
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  gap: 15px;
+}
+
+.small-logo {
+  height: 45px; /* Logo plus discret */
+}
+
+/* --- GRILLE DE FORMULAIRE OPTIMISÉE --- */
+.elegant-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Force 2 colonnes partout */
+  column-gap: 30px;
+  row-gap: 15px; /* Espace vertical réduit */
+}
+
+/* Champs qui doivent rester sur toute la largeur (Email, Password) */
+.full-width {
+  grid-column: span 2;
+}
+
+/* --- RÉDUCTION DE LA TAILLE DES ÉLÉMENTS --- */
+.form-group label {
+  font-size: 11px; /* Plus petit et élégant */
+  margin-bottom: 4px;
+}
+
+.form-group input, 
+.form-group select {
+  padding: 10px 15px; /* Moins haut */
+  font-size: 13px;
+  border-radius: 10px;
+}
+
+/* --- FOOTER PLUS DISCRET --- */
+.modal-footer {
+  grid-column: span 2; /* Les boutons s'alignent en bas sur toute la largeur */
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.btn-modal-primary, .btn-modal-cancel {
+  padding: 10px 25px; /* Boutons plus fins */
+  font-size: 13px;
+}
+/* --- L'EFFET EXTRAORDINAIRE : ARRIÈRE-PLAN DYNAMIQUE --- */
+.modal-content {
+  background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 100%);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 50px 100px rgba(100, 17, 34, 0.15), 0 10px 20px rgba(0,0,0,0.05);
+}
+
+/* Bordure lumineuse en dégradé Or/Bordeaux */
+.modal-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 32px; 
+  padding: 2px; /* Largeur de la bordure */
+  background: linear-gradient(135deg, var(--accent-gold), var(--bordeaux-pro), var(--accent-gold));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* --- LES CHAMPS "NEUMORPHISM LUXE" --- */
+.form-group input, 
+.form-group select {
+  background: #ffffff;
+  border: 1px solid rgba(180, 140, 54, 0.15);
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.03), 0 5px 15px rgba(180, 140, 54, 0.02);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  color: var(--primary-navy);
+  font-weight: 500;
+}
+
+/* L'effet extraordinaire au focus : Le champ s'illumine en Or */
+.form-group input:focus, 
+.form-group select:focus {
+  transform: scale(1.02);
+  border-color: var(--accent-gold);
+  background: #fff;
+  box-shadow: 0 15px 30px rgba(180, 140, 54, 0.1), 0 0 0 4px rgba(180, 140, 54, 0.05);
+}
+
+/* --- LES LABELS VIBRANTS --- */
+.form-group label {
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 2px;
+  transition: 0.3s;
+}
+
+.form-group:focus-within label {
+  color: var(--bordeaux-pro);
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+
+/* --- LES BOUTONS "JOAILLERIE" --- */
+.btn-modal-primary {
+  background: linear-gradient(135deg, #641122 0%, #a8243a 100%);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(100, 17, 34, 0.3);
+}
+
+/* Reflet de diamant qui traverse le bouton */
+.btn-modal-primary::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -100%; width: 50%; height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: rotate(25deg);
+  transition: 0.8s;
+}
+
+.btn-modal-primary:hover::after {
+  left: 150%;
+}
+/* --- L'EFFET EXTRAORDINAIRE : FOCUS MAGNÉTIQUE --- */
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(180, 140, 54, 0.3);
+    overflow: hidden;
+    position: relative;
+}
+
+/* L'élément extraordinaire : Le halo qui suit le focus */
+.form-group {
+    position: relative;
+    padding: 10px;
+    border-radius: 18px;
+    transition: all 0.4s ease;
+}
+
+/* Quand on clique dans un champ, toute la zone s'illumine doucement */
+.form-group:focus-within {
+    background: radial-gradient(circle at center, rgba(100, 17, 34, 0.04) 0%, transparent 70%);
+    transform: scale(1.02);
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    color: var(--text-muted);
+    transition: 0.3s;
+}
+
+/* --- LES INPUTS "CRISTAL" --- */
+.form-group input, 
+.form-group select {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 15px;
+    font-size: 14px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* L'EFFET D'AURA : Bordure qui s'anime comme du métal liquide */
+.form-group input:focus, 
+.form-group select:focus {
+    outline: none;
+    border-bottom-color: var(--accent-gold);
+    box-shadow: 0 10px 20px -10px rgba(180, 140, 54, 0.3);
+    background: white;
+}
+
+/* --- L'ICÔNE QUI S'ALLUME --- */
+.form-group:focus-within i {
+    color: var(--bordeaux-pro);
+    text-shadow: 0 0 10px rgba(100, 17, 34, 0.3);
+    transform: scale(1.2) rotate(-5deg);
+}
+
+/* --- LE BOUTON "BORDEAUX VIBRANT" --- */
+.btn-modal-primary {
+    background: linear-gradient(135deg, #641122 0%, #8b1a30 50%, #641122 100%);
+    background-size: 200% auto;
+    border: 1px solid var(--accent-gold);
+    transition: 0.5s;
+}
+
+.btn-modal-primary:hover {
+    background-position: right center; /* Fait circuler le rouge comme du sang */
+    box-shadow: 0 20px 40px rgba(100, 17, 34, 0.4);
+    letter-spacing: 2px;
+}/* --- LE BOUTON MAGIQUE --- */
+.btn-modal-primary {
+  position: relative;
+  min-width: 140px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* État de chargement / succès */
+.btn-success-active {
+  min-width: 50px !important;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  background: #2ecc71 !important; /* Vert émeraude */
+  color: white !important;
+  padding: 0 !important;
+  border-color: #27ae60 !important;
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.5) !important;
+}
+
+/* L'icône qui tourne pendant le succès */
+.btn-success-active i {
+  animation: rotateCheck 0.6s ease-out forwards;
+  font-size: 20px;
+}
+
+@keyframes rotateCheck {
+  0% { transform: rotate(-180deg) scale(0); }
+  70% { transform: rotate(20deg) scale(1.2); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+/* Effet de pulsation lumineuse verte */
+.btn-success-active::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border: 2px solid #2ecc71;
+  border-radius: 50%;
+  animation: pulseGreen 1.5s infinite;
+}
+
+@keyframes pulseGreen {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+/* Animation de "Flash de réussite" sur le bouton principal */
+.btn-primary.success-flash {
+  animation: success-glow 1.5s ease;
+}
+
+@keyframes success-glow {
+  0% { box-shadow: 0 0 0 0px rgba(46, 204, 113, 0.6); }
+  70% { box-shadow: 0 0 0 20px rgba(46, 204, 113, 0); }
+  100% { box-shadow: 0 0 0 0px rgba(46, 204, 113, 0); }
+}
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.stat-box {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 25px;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: 0.4s ease;
+}
+
+.stat-box i {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--bordeaux-pro);
+    background: rgba(100, 17, 34, 0.1);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+}
+
+.stat-box h3 {
+    font-size: 32px;
+    color: var(--primary-navy);
+    font-family: 'Cinzel', serif;
+}
+/* --- LE PLUS : QUICK ASSIGN STYLE --- */
+.quick-assign-wrapper {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+}
+
+.quick-assign-wrapper:hover {
+    background: rgba(100, 17, 34, 0.05);
+    transform: translateY(-2px);
+}
+
+.click-hint {
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: var(--bordeaux-pro);
+    font-weight: 800;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.quick-assign-wrapper:hover .click-hint {
+    opacity: 1;
+    bottom: -18px;
+}
+
+/* L'effet de "Glow" quand c'est vide */
+.badge-empty {
+    background: white;
+    border: 2px dashed #d1d5db;
+    color: #9ca3af;
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0% { border-color: #d1d5db; }
+    50% { border-color: var(--accent-gold); }
+    100% { border-color: #d1d5db; }
+}.emp-name-cell {
+    position: relative;
+    overflow: hidden;
+}
+
+.emp-name-cell::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(180, 140, 54, 0.2), transparent);
+    transform: skewX(-25deg);
+    transition: 0.5s;
+}
+
+tr:hover .emp-name-cell::after {
+    left: 150%;
+    transition: 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.detach-btn {
+  color: #e74c3c !important; /* Rouge alerte */
+  background: rgba(231, 76, 60, 0.05) !important;
+  margin-bottom: 5px;
+  border: 1px solid rgba(231, 76, 60, 0.1) !important;
+}
+
+.detach-btn:hover {
+  background: #e74c3c !important;
+  color: white !important;
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+}
+
+.separator {
+  height: 1px;
+  background: rgba(0,0,0,0.05);
+  margin: 8px 5px;
+}
+.hologram-card {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none; /* La carte ne bloque pas les clics */
+  width: 280px;
+  animation: cardFloating 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card-glass-effect {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+}
+
+.mini-avatar {
+  width: 45px; height: 45px;
+  background: var(--bordeaux-pro);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center; justify-content: center;
+  font-weight: 800; font-size: 20px;
+  box-shadow: 0 8px 15px rgba(100, 17, 34, 0.2);
+}
+
+.info-item {
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 12px; font-size: 13px; color: var(--primary-navy);
+}
+
+.mini-progress {
+  height: 6px; background: rgba(0,0,0,0.05);
+  border-radius: 10px; margin-top: 5px; overflow: hidden;
+}
+
+.mini-progress .fill {
+  height: 100%; background: linear-gradient(90deg, var(--accent-gold), var(--bordeaux-pro));
+  transition: width 1s ease-out;
+}
+
+@keyframes cardFloating {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+#preloader-prestige {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.main-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+/* L'Orbit et la Sphère */
+.orbit-container {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-sphere {
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  z-index: 5;
+}
+
+.glass-sphere img {
+  width: 70px;
+  filter: grayscale(0.2);
+}
+
+/* Les Anneaux de couleur */
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  animation: rotateOrbit 4s linear infinite;
+}
+
+.ring.gold {
+  width: 180px;
+  height: 180px;
+  border-top-color: #d4af37; /* Or */
+  animation-duration: 3s;
+}
+
+.ring.bordeaux {
+  width: 210px;
+  height: 210px;
+  border-right-color: #800020; /* Bordeaux */
+  animation-duration: 5s;
+  animation-direction: reverse;
+}
+
+.ring.white {
+  width: 240px;
+  height: 240px;
+  border-bottom-color: #e5e7eb;
+  animation-duration: 7s;
+}
+
+/* Texte */
+.welcome-msg {
+  color: #000000;
+  font-size: 1.8rem;
+  font-weight: 300;
+  margin: 0;
+}
+.admin-name {
+  font-weight: 700;
+  color: #800020; /* Rappel du bordeaux */
+  border-bottom: 2px solid #d4af37; /* Rappel de l'or */
+}
+
+/* Barre de progression */
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.luxury-bar {
+  width: 250px;
+  height: 3px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.fill {
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, #d4af37, #800020);
+  animation: progressFill 2s infinite ease-in-out;
+}
+
+.loading-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #9ca3af;
+}
+
+/* Animations */
+@keyframes rotateOrbit {
+  from { transform: rotate(0deg) rotateX(60deg); }
+  to { transform: rotate(360deg) rotateX(60deg); }
+}
+
+@keyframes progressFill {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+#preloader-prestige {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #ffffff 0%, #f8f9fa 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.orbit-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* La Sphère avec un effet de respiration */
+.glass-sphere {
+  width: 130px;
+  height: 130px;
+  background: white;
+  border-radius: 50%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1), inset 0 0 20px rgba(0,0,0,0.02);
+  animation: breathe 3s infinite ease-in-out;
+}
+
+.glass-sphere img {
+  width: 85px;
+  transition: 0.5s;
+}
+
+/* Anneaux style Néon avec comètes */
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.ring.gold { width: 190px; height: 190px; animation: rotateRing 4s linear infinite; }
+.ring.bordeaux { width: 240px; height: 240px; animation: rotateRing 6s linear infinite reverse; }
+.ring.white { width: 290px; height: 290px; animation: rotateRing 9s linear infinite; }
+
+/* La petite boule lumineuse qui tourne sur l'anneau */
+.comet {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.gold .comet { background: #d4af37; box-shadow: 0 0 15px #d4af37; }
+.bordeaux .comet { background: #800020; box-shadow: 0 0 15px #800020; }
+.white .comet { background: #000; opacity: 0.2; }
+
+/* Barre de progression réelle sur 30s */
+.luxury-bar {
+  width: 300px;
+  height: 4px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.fill-permanent {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #d4af37, #800020);
+  /* L'animation dure exactement 30 secondes */
+  animation: load30s 30s linear forwards;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes load30s {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+  50% { transform: scale(1.05); box-shadow: 0 20px 45px rgba(128, 0, 32, 0.15); }
+}/* --- CSS MIS À JOUR POUR GRAND LOGO --- */
+
+.orbit-container {
+  position: relative;
+  /* On agrandit le conteneur pour accueillir la grande sphère */
+  width: 400px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px; /* Espace avec le texte */
+}
+
+/* LA GRANDE SPHÈRE (Anciennement 130px) */
+.glass-sphere.big-sphere {
+  width: 220px;
+  height: 220px;
+  background: white;
+  border-radius: 50%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Ombre plus douce pour une plus grande surface */
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1), inset 0 0 25px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.03);
+  animation: breathe 3s infinite ease-in-out;
+}
+
+/* LE GRAND LOGO (Anciennement 85px) */
+.glass-sphere .big-logo {
+  width: 150px; /* Taille principale de l'image */
+  height: auto;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); /* Met le logo en valeur */
+  transition: 0.5s;
+}
+
+/* Ajustement des anneaux pour qu'ils ne touchent pas la grande sphère */
+.ring.gold { width: 280px; height: 280px; animation: rotateRing 5s linear infinite; }
+.ring.bordeaux { width: 330px; height: 330px; animation: rotateRing 7s linear infinite reverse; }
+.ring.white { width: 380px; height: 380px; animation: rotateRing 10s linear infinite; }
+
+/* Ajustement des comètes pour qu'elles restent proportionnelles */
+.comet {
+  position: absolute;
+  top: -6px; /* Ajusté pour la nouvelle épaisseur imaginaire de l'anneau */
+  left: 50%;
+  width: 12px; /* Un peu plus grandes */
+  height: 12px;
+  border-radius: 50%;
+}
+/* --- LE FOND : PROFONDEUR IMMERSIVE --- */
+#preloader-prestige {
+  position: fixed;
+  inset: 0;
+  /* On passe sur un blanc nacré avec une légère vignette pour focaliser l'œil au centre */
+  background: radial-gradient(circle at center, #ffffff 0%, #f0f0f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+/* --- LE HALO DE PRESTIGE (L'Innovation) --- */
+/* Ajoute une aura lumineuse douce derrière les anneaux */
+.orbit-container::before {
+  content: '';
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+  z-index: 1;
+  animation: pulseHalo 4s infinite ease-in-out;
+}
+
+/* --- LA SPHÈRE DE CRISTAL --- */
+.glass-sphere.big-sphere {
+  width: 220px;
+  height: 220px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(15px); /* Effet verre givré */
+  border-radius: 50%;
+  z-index: 10;
+  /* Double ombre : externe pour le volume, interne pour l'éclat du verre */
+  box-shadow: 
+    0 30px 60px rgba(0,0,0,0.1), 
+    inset 0 0 40px rgba(255,255,255,1),
+    inset 0 0 20px rgba(128, 0, 32, 0.05);
+  border: 1px solid rgba(255,255,255,0.8);
+  animation: breathe 3s infinite ease-in-out;
+}
+
+/* --- LES ANNEAUX ÉNERGÉTIQUES --- */
+.ring {
+  border-width: 1.5px !important;
+  filter: drop-shadow(0 0 5px rgba(0,0,0,0.05));
+}
+
+/* Ajout d'une ombre portée sur les comètes pour l'effet néon */
+.gold .comet { background: #d4af37; box-shadow: 0 0 20px 4px rgba(212, 175, 55, 0.8); }
+.bordeaux .comet { background: #800020; box-shadow: 0 0 20px 4px rgba(128, 0, 32, 0.6); }
+
+/* --- LA BARRE LUXE : EFFET SCANNER --- */
+.luxury-bar {
+  width: 300px;
+  height: 4px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.fill-permanent {
+  background: linear-gradient(90deg, #d4af37, #800020, #d4af37);
+  background-size: 200% 100%;
+  position: relative;
+  animation: load30s 30s linear forwards, shimmerBar 2s infinite linear;
+}
+
+/* Le "Plus" : Un reflet laser qui balaie la barre */
+.fill-permanent::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: laserSweep 2s infinite ease-in-out;
+}
+
+/* --- TYPOGRAPHIE --- */
+.admin-name {
+  color: #800020;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+}
+
+.loading-label {
+  letter-spacing: 4px !important;
+  font-weight: 600;
+  color: #b1b5bc !important;
+}
+
+/* --- NOUVELLES ANIMATIONS --- */
+
+@keyframes pulseHalo {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.6; }
+}
+
+@keyframes laserSweep {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+@keyframes shimmerBar {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Amélioration de la respiration pour inclure un léger flou dynamique */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); filter: blur(0px); }
+  50% { transform: scale(1.05); filter: blur(0.5px); }
+}/* --- LE PLUS JOLIE : STYLE MAGISTRAL DU LOGO --- */
+
+.orbit-container {
+  /* ... (votre code existant) ... */
+  position: relative;
+  width: 400px; height: 400px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 40px;
+}
+
+/* LA GRANDE SPHÈRE : Amélioration de l'effet Cristal */
+.glass-sphere.big-sphere {
+  /* ... (votre code existant) ... */
+  width: 220px; height: 220px;
+  background: rgba(255, 255, 255, 0.95); /* Plus opaque pour le reflet */
+  backdrop-filter: blur(15px); /* Verre givré */
+  border-radius: 50%; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  /* Double ombre : externe pour le volume, interne pour l'éclat du verre */
+  box-shadow: 
+    0 25px 55px rgba(0,0,0,0.1), 
+    inset 0 0 35px rgba(255,255,255,1),
+    inset 0 0 20px rgba(128, 0, 32, 0.03); /* Rappel bordeaux léger */
+  border: 1px solid rgba(255,255,255,0.7);
+  animation: breathe 3s infinite ease-in-out;
+  overflow: hidden; /* Obligatoire pour le balayage lumineux */
+}
+
+/* LE GRAND LOGO : Effet Prestige et Profondeur */
+.glass-sphere .big-logo {
+  /* ... (votre code existant) ... */
+  width: 150px; height: auto;
+  transition: 0.5s;
+  /* Le "Plus" : Ombre dorée douce pour le détacher du fond */
+  filter: drop-shadow(0 10px 15px rgba(212, 175, 55, 0.2)); 
+  animation: logoFloat 3s infinite ease-in-out; /* Légère lévitation */
+}
+
+/* L'INNOVATION : Le balayage lumineux (Sweep) qui traverse le logo */
+.glass-sphere.big-sphere::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  /* Un trait de lumière blanche pure inclinée */
+  background: linear-gradient(110deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: logoSweep 3s infinite ease-in-out;
+  z-index: 3; /* Juste au-dessus du logo */
+}
+
+/* --- NOUVELLES ANIMATIONS --- */
+
+/* Balayage de lumière pure sur le logo */
+@keyframes logoSweep {
+  0% { left: -110%; }
+  30% { left: 110%; } /* Vitesse rapide du passage */
+  100% { left: 110%; } /* Pause avant le prochain passage */
+}
+
+/* Lévitation douce du logo à l'intérieur de la sphère */
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); filter: drop-shadow(0 10px 15px rgba(212, 175, 55, 0.2)); }
+  50% { transform: translateY(-5px); filter: drop-shadow(0 15px 25px rgba(212, 175, 55, 0.1)); }
+}
+
+/* Amélioration de la respiration (inclut un léger flou dynamique) */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 25px 55px rgba(0,0,0,0.1); }
+  50% { transform: scale(1.03); box-shadow: 0 30px 60px rgba(128, 0, 32, 0.1); }
+}
+/* --- STYLE DE PRESTIGE POUR LE RAPPORT AGIL --- */
+/* Pour un rendu extraordinaire, ajoutez ces polices dans votre index.html :
+   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+*/
+
+body { 
+  font-family: 'Inter', sans-serif; 
+  margin: 0; padding: 0; background: #fff;
+  color: #1a1a1a;
+  -webkit-print-color-adjust: exact; /* Force l'impression des couleurs */
+}
+
+/* --- LE CADRE ET LE FILIGRANE --- */
+.page-border {
+  border: 1px solid #d4af37; /* Ligne fine Or */
+  margin: 15mm;
+  padding: 10mm;
+  position: relative;
+  min-height: 250mm;
+}
+
+/* Le "Plus" magistral : un filigrane léger */
+.watermark {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 8rem; color: rgba(128, 0, 32, 0.03); /* Bordeaux très pâle */
+  font-weight: 900; z-index: -1; pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+}
+
+/* --- L'ENTÊTE DE PRESTIGE --- */
+.header { 
+  display: flex; justify-content: space-between; 
+  align-items: flex-start; border-bottom: 4px double #800020; /* Bordure Double Bordeaux */
+  padding-bottom: 20px; margin-bottom: 30px;
+}
+
+.logo-box img { 
+  height: 75px; 
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1)); 
+}
+
+.titre-doc { text-align: right; }
+
+h1 { 
+  font-family: 'Playfair Display', serif; /* Police Élégante */
+  color: #800020; margin: 0; font-size: 28px; 
+  letter-spacing: 1px;
+}
+
+.info-badge {
+  background: #800020; color: #fff;
+  display: inline-block; padding: 4px 12px;
+  border-radius: 50px; font-size: 11px; margin-top: 8px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* --- LE TABLEAU "AIR-GLASS" --- */
+table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+
+th { 
+  color: #800020; text-transform: uppercase; font-size: 12px;
+  letter-spacing: 1.5px; padding: 15px; border-bottom: 2px solid #d4af37;
+}
+
+td { 
+  padding: 15px; background: #fcfcfc; 
+  border-top: 1px solid #eee; border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+/* Bordure gauche épaisse bordeaux pour chaque ligne */
+td:first-child { 
+  border-left: 4px solid #800020; 
+  border-top-left-radius: 8px; border-bottom-left-radius: 8px; 
+}
+
+td:last-child { 
+  border-right: 1px solid #eee; 
+  border-top-right-radius: 8px; border-bottom-right-radius: 8px; 
+}
+
+/* Le petit "Plus" d'interaction si visible sur écran */
+tr:hover td { background: #f5f5f5; }
+
+.status-dot { 
+  height: 8px; width: 8px; background: #d4af37; 
+  border-radius: 50%; display: inline-block; margin-right: 8px; 
+}
+
+/* --- LES STATISTIQUES DE SYNTHÈSE --- */
+.footer-stats {
+  margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; text-align: center;
+}
+
+.stat-item { 
+  border: 1px solid #eee; padding: 15px; border-radius: 12px; 
+  background: #fdfdfd; 
+}
+
+.stat-item span { 
+  display: block; color: #800020; font-weight: 700; 
+  font-size: 20px; 
+}
+
+/* --- LA ZONE DE SIGNATURE OFFICIELLE --- */
+.signature-area { 
+  margin-top: 60px; display: flex; justify-content: space-between; 
+  padding: 0 40px;
+}
+
+.sig-box { text-align: center; font-size: 13px; color: #666; }
+
+.sig-line { 
+  border-top: 1px solid #333; width: 180px; margin-top: 60px; 
+}
+
+/* --- OPTIMISATION POUR L'IMPRESSION --- */
+@media print { 
+  .no-print { display: none; } 
+  body { margin: 0; padding: 0; }
+  .page-border { margin: 0; border: none; }
+}
+/* --- LE BOUTON PRESTIGE AGIL --- */
+.btn-prestige-print {
+  position: relative;
+  background: linear-gradient(135deg, #800020 0%, #5d0017 100%);
+  color: #d4af37; /* Texte Or */
+  border: 1px solid #d4af37;
+  padding: 12px 28px;
+  border-radius: 15px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  margin-bottom: 25px;
+}
+
+.btn-inner {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 2;
+  position: relative;
+}
+
+.btn-inner i {
+  font-size: 24px;
+  filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+}
+
+.btn-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.main-text {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sub-text {
+  font-size: 10px;
+  color: rgba(212, 175, 55, 0.8);
+  text-transform: none;
+  font-weight: 400;
+}
+
+/* Effet de brillance (Glare) */
+.btn-glare {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.6s;
+}
+
+/* --- ANIMATIONS AU SURVOL --- */
+.btn-prestige-print:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(128, 0, 32, 0.4);
+  border-color: #fff;
+  color: #fff;
+}
+
+.btn-prestige-print:hover .btn-glare {
+  left: 200%;
+}
+
+.btn-prestige-print:active {
+  transform: translateY(0);
+}
+/* --- CONTENEUR PRINCIPAL --- */
+.responsibility-selector {
+  display: flex;
+  gap: 12px;
+  margin: 15px 0;
+  padding: 5px;
+  background: #f8f9fa;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* --- STYLE DE BASE DES OPTIONS --- */
+.res-option {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  background: white;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+/* Icônes */
+.res-option i {
+  font-size: 22px;
+  color: #adb5bd;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+/* Texte */
+.res-option span {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+}
+
+/* --- EFFETS AU SURVOL --- */
+.res-option:hover {
+  transform: translateY(-5px);
+  background: #ffffff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.res-option:hover i {
+  transform: scale(1.2);
+}
+
+/* --- ÉTAT ACTIF (LE CÔTÉ EXTRAORDINAIRE) --- */
+
+/* 1. État Actif Global */
+.res-option.active {
+  background: #ffffff;
+  animation: pulse-border 2s infinite;
+}
+
+/* 2. Spécificité : CHEF LOCAL & RÉGIONAL (Or & Bordeaux) */
+.res-option:not(.res-null).active {
+  border-color: #d4af37; /* Or Agil */
+}
+
+.res-option:not(.res-null).active i {
+  color: #800020; /* Bordeaux Agil */
+}
+
+.res-option:not(.res-null).active span {
+  color: #800020;
+}
+
+/* 3. Spécificité : EN ATTENTE (Style Neutre/Argent) */
+.res-option.res-null {
+  border: 2px dashed #dee2e6;
+}
+
+.res-option.res-null.active {
+  border: 2px solid #6c757d;
+  background: #f1f3f5;
+}
+
+.res-option.res-null.active i, 
+.res-option.res-null.active span {
+  color: #495057;
+}
+
+/* --- PETIT PLUS : L'INDICATEUR DE SÉLECTION --- */
+.res-option.active::after {
+  content: '\f058'; /* Check-circle FontAwesome */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: white;
+  color: #d4af37;
+  font-size: 18px;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.res-option.res-null.active::after {
+  color: #6c757d;
+}
+
+/* --- ANIMATION --- */
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}/* Conteneur Prestige */
+.prestige-group {
+  margin-bottom: 25px;
+  animation: fadeIn 0.5s ease;
+}
+
+.gold-star {
+  color: #d4af37;
+  margin-right: 8px;
+  filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.5));
+}
+
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Le Select Royal */
+.prestige-select {
+  width: 100%;
+  height: 50px;
+  padding: 0 45px 0 15px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  background: #ffffff;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  appearance: none; /* Cache la flèche standard */
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* La Flèche en Or Agil */
+.select-wrapper::after {
+  content: '\f107'; /* Chevron FontAwesome */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 18px;
+  color: #d4af37;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+/* États Focus et Hover */
+.prestige-select:hover {
+  border-color: #d4af37;
+  background: #fffcf5;
+}
+
+.prestige-select:focus {
+  outline: none;
+  border-color: #800020; /* Bordeaux Agil */
+  box-shadow: 0 0 0 4px rgba(128, 0, 32, 0.1);
+  background: #fff;
+}
+
+/* Animation simple */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}/* --- CONTENEUR DE CENTRAGE --- */
+.report-center-container {
+  display: flex;
+  justify-content: center;  /* Centre horizontalement */
+  align-items: center;      /* Centre verticalement si besoin */
+  padding: 40px 0;
+  width: 100%;
+  position: relative;
+}
+
+/* --- LE BOUTON PRESTIGE (MISE À JOUR) --- */
+.btn-prestige-print {
+  position: relative;
+  background: linear-gradient(135deg, #800020 0%, #5d0017 100%);
+  color: #d4af37;
+  border: 1px solid #d4af37;
+  padding: 16px 35px; /* Un peu plus grand pour le centre */
+  border-radius: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 15px 35px rgba(128, 0, 32, 0.3); /* Ombre Bordeaux */
+  z-index: 1;
+}
+
+/* Effet de halo lumineux derrière le bouton */
+.report-center-container::before {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 50px;
+  background: rgba(212, 175, 55, 0.2);
+  filter: blur(40px);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.btn-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.main-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  display: block;
+}
+
+/* Animation au survol améliorée */
+.btn-prestige-print:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(128, 0, 32, 0.5);
+  color: #fff;
+  border-color: #fff;
+}
+
+.btn-glare {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: 0.7s;
+}
+
+.btn-prestige-print:hover .btn-glare {
+  left: 200%;
+}
+.prestige-select option[ngValue="null"], 
+.prestige-select option:first-child {
+    color: #888;
+    font-style: italic;
+}
+/* Style pour le badge quand il n'y a pas de responsabilité */
+.badge-empty {
+  background-color: #f8f9fa !important;
+  color: #a0a0a0 !important;
+  border: 1px dashed #d1d1d1 !important;
+  font-style: italic;
+  font-weight: 400 !important;
+}
+
+/* Votre badge existant peut être complété ainsi */
+.badge-stage {
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+}.badge-empty {
+  background: #f0f0f0 !important;
+  color: #888 !important;
+  border: 1px dashed #ccc !important;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 11px;
+}

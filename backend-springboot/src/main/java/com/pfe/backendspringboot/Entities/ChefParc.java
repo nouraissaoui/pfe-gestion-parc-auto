@@ -31,10 +31,10 @@ public class ChefParc {
     @JoinColumn(name = "id_local", referencedColumnName = "id_local")
     @JsonIgnoreProperties({"chefParc", "vehicules", "chauffeurs"})
     private Local local;
-
     private LocalDate dateNomination;
     private int ancienneteChef;
 
     @Enumerated(EnumType.STRING)
     private NiveauResponsabilite niveauResponsabilite;
+
 }
