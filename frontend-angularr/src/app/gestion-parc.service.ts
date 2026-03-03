@@ -41,6 +41,7 @@ export interface ChefParc {
   local?: Local | null;
 }
 export interface Vehicule {
+type: any;
   idVehicule: number;
   matricule: string;
   marque: string;
@@ -52,7 +53,21 @@ export interface Vehicule {
     local?: any; // On peut typer plus précisément si on a l'interface Local
 
 }
-
+export interface Chauffeur {
+  idChauffeur?: number;
+  nom: string;
+  prenom: string;
+  mail: string;
+  motDePasse?: string; // Optionnel car WRITE_ONLY côté backend
+  datePriseLicense?: string;
+  anciennete?: number;
+  typeVehiculePermis?: string;
+  dateExpirationPermis?: string;
+  region?: string;
+  etatChauffeur: 'DISPONIBLE' | 'EN_MISSION' | 'EN_CONGE';
+  vehicule?: Vehicule | null;
+  local?: Local | null; // Le local est envoyé en tant qu'objet imbriqué
+}
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +76,7 @@ export class GestionParcService {
 
   private baseUrl = 'http://localhost:8080/api/gestion-parc'; // URL de base
   private apiUrl = 'http://localhost:8080/api/gestion-parc/local'; 
-
+private apiUrl1 = 'http://localhost:8080/api/gestion-parc/carte';
 
   constructor(private http: HttpClient) { }
 
@@ -221,5 +236,37 @@ getAllLocaux(): Observable<Local[]> {
   deleteVehicule(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/vehicule/${id}`, { responseType: 'text' });
   }
+getCarte(numero: string): Observable<any> {
+    return this.http.get(`${this.apiUrl1}/${numero}`);
+  }
 
+  recharger(numero: string, montant: number): Observable<any> {
+    return this.http.put(`${this.apiUrl1}/recharger/${numero}`, { montant });
+  }
+  // ==================== CRUD CHAUFFEURS COMPLET ====================
+
+  // 1. Récupérer tous les chauffeurs
+  getAllChauffeurs(): Observable<Chauffeur[]> {
+    return this.http.get<Chauffeur[]>(`${this.baseUrl}/chauffeurs`);
+  }
+
+  // 2. Récupérer un chauffeur par ID
+  getChauffeurById(id: number): Observable<Chauffeur> {
+    return this.http.get<Chauffeur>(`${this.baseUrl}/chauffeur/${id}`);
+  }
+
+  // 3. Ajouter un chauffeur (Le Local est déjà dans l'objet Chauffeur)
+  addChauffeur(chauffeur: Chauffeur): Observable<Chauffeur> {
+    return this.http.post<Chauffeur>(`${this.baseUrl}/chauffeur`, chauffeur);
+  }
+
+  // 4. Modifier un chauffeur
+  updateChauffeur(id: number, chauffeur: Chauffeur): Observable<Chauffeur> {
+    return this.http.put<Chauffeur>(`${this.baseUrl}/chauffeur/${id}`, chauffeur);
+  }
+
+  // 5. Supprimer un chauffeur
+  deleteChauffeur(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/chauffeur/${id}`);
+  }
 }

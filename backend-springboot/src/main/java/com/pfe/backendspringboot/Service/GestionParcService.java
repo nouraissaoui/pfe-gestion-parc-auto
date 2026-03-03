@@ -40,6 +40,8 @@ public class GestionParcService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private CarteCarburantRepository carteCarburantRepository;
 
     // ==================== AUTHENTIFICATION & USERS ====================
 
@@ -399,4 +401,87 @@ public class GestionParcService {
             throw new RuntimeException("Véhicule introuvable");
         }
         vehiculeRepository.deleteById(id);
-    }}
+    }
+    public CarteCarburant getCarteByNumero(String numero) {
+        return carteCarburantRepository.findByNumeroCarte(numero)
+                .orElseThrow(() -> new RuntimeException("Carte introuvable"));
+    }
+
+    public CarteCarburant rechargerCarte(String numero, Double montant) {
+        CarteCarburant carte = getCarteByNumero(numero);
+
+        // Mise à jour selon votre entité
+        carte.setMontantCharge(montant); // Dernier montant chargé
+        carte.setMontantReel(carte.getMontantReel() + montant); // Cumul du solde
+        carte.setDateChargement(LocalDate.now());
+
+        return carteCarburantRepository.save(carte);
+    }
+// ==================== GESTION DES CHAUFFEURS (CRUD COMPLET) ====================
+
+    public List<Chauffeur> getAllChauffeurs() {
+        return chauffeurRepository.findAll();
+    }
+
+    public Optional<Chauffeur> getChauffeurById(Long id) {
+        return chauffeurRepository.findById(id);
+    }
+
+    @Transactional
+    public Chauffeur createChauffeur(Chauffeur chauffeur) {
+        // 1. Validation du mot de passe (obligatoire à la création)
+        if (chauffeur.getMotDePasse() == null || chauffeur.getMotDePasse().isEmpty()) {
+            throw new RuntimeException("Le mot de passe est obligatoire pour la création.");
+        }
+        chauffeur.setMotDePasse(passwordEncoder.encode(chauffeur.getMotDePasse()));
+
+        // 2. Gestion du Local (depuis le body)
+        if (chauffeur.getLocal() != null && chauffeur.getLocal().getIdLocal() != null) {
+            Local local = localRepository.findById(chauffeur.getLocal().getIdLocal())
+                    .orElseThrow(() -> new RuntimeException("Local non trouvé"));
+            chauffeur.setLocal(local);
+        }
+
+        return chauffeurRepository.save(chauffeur);
+    }
+
+    @Transactional
+    public Chauffeur updateChauffeur(Long id, Chauffeur data) {
+        Chauffeur existing = chauffeurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
+
+        // Mise à jour des champs simples
+        existing.setNom(data.getNom());
+        existing.setPrenom(data.getPrenom());
+        existing.setMail(data.getMail());
+        existing.setRegion(data.getRegion());
+        existing.setAnciennete(data.getAnciennete());
+        existing.setEtatChauffeur(data.getEtatChauffeur());
+        existing.setTypeVehiculePermis(data.getTypeVehiculePermis());
+        existing.setDateExpirationPermis(data.getDateExpirationPermis());
+        existing.setDatePriseLicense(data.getDatePriseLicense());
+
+        // 3. Protection du mot de passe (si vide dans le body, on garde l'ancien)
+        if (data.getMotDePasse() != null && !data.getMotDePasse().isEmpty()) {
+            existing.setMotDePasse(passwordEncoder.encode(data.getMotDePasse()));
+        }
+
+        // 4. Mise à jour du Local (depuis le body)
+        if (data.getLocal() != null && data.getLocal().getIdLocal() != null) {
+            Local local = localRepository.findById(data.getLocal().getIdLocal())
+                    .orElseThrow(() -> new RuntimeException("Local non trouvé"));
+            existing.setLocal(local);
+        } else {
+            existing.setLocal(null); // Permet de retirer l'affectation
+        }
+
+        return chauffeurRepository.save(existing);
+    }
+
+    public void deleteChauffeur(Long id) {
+        if (!chauffeurRepository.existsById(id)) {
+            throw new RuntimeException("Chauffeur introuvable");
+        }
+        chauffeurRepository.deleteById(id);
+    }
+}

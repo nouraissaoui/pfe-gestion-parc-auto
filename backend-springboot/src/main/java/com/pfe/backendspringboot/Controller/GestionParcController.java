@@ -336,5 +336,67 @@ public class GestionParcController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+// ==================== GESTION DES CARTES CARBURANT ====================
 
+    @GetMapping("/carte/{numero}")
+    public ResponseEntity<CarteCarburant> getCarte(@PathVariable String numero) {
+        try {
+            return ResponseEntity.ok(gestionParcService.getCarteByNumero(numero));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/carte/recharger/{numero}")
+    public ResponseEntity<?> recharger(@PathVariable String numero, @RequestBody Map<String, Double> payload) {
+        try {
+            Double montant = payload.get("montant");
+            CarteCarburant updated = gestionParcService.rechargerCarte(numero, montant);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    // ==================== CRUD CHAUFFEUR (API) ====================
+
+    @GetMapping("/chauffeurs")
+    public List<Chauffeur> getAllChauffeurs() {
+        return gestionParcService.getAllChauffeurs();
+    }
+
+    @GetMapping("/chauffeur/{id}")
+    public ResponseEntity<Chauffeur> getChauffeurById(@PathVariable Long id) {
+        return gestionParcService.getChauffeurById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/chauffeur")
+    public ResponseEntity<?> addChauffeur(@RequestBody Chauffeur c) {
+        try {
+            Chauffeur saved = gestionParcService.createChauffeur(c);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @PutMapping("/chauffeur/{id}")
+    public ResponseEntity<?> updateChauffeur(@PathVariable Long id, @RequestBody Chauffeur c) {
+        try {
+            Chauffeur updated = gestionParcService.updateChauffeur(id, c);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+    @DeleteMapping("/chauffeur/{id}")
+    public ResponseEntity<?> deleteChauffeur(@PathVariable Long id) {
+        try {
+            gestionParcService.deleteChauffeur(id);
+            return ResponseEntity.ok().body("{\"message\": \"Chauffeur supprimé avec succès\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

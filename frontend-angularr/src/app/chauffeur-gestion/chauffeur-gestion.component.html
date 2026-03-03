@@ -1,0 +1,290 @@
+<app-adminlayoutcomponent></app-adminlayoutcomponent>
+<div class="dashboard-wrapper">
+  <div class="container pt-5">
+    
+    <div class="header-section mb-5">
+      <div class="d-flex align-items-center mb-2">
+        <span class="agil-line"></span>
+        <h6 class="agil-text ms-2 mb-0 text-uppercase">Interface de contrôle</h6>
+      </div>
+      <h1 class="main-title text-uppercase">Gérer les <span class="gold-text">Chauffeurs</span></h1>
+      <div class="d-flex align-items-center mt-2">
+        <span class="agil-brand">AGIL</span>
+        <span class="separator-dot mx-3"></span>
+        <span class="sub-text">Gestion du Parc Automobile</span>
+      </div>
+    </div>
+
+    <div class="row mb-5 g-4">
+      <div class="col-md-4">
+        <div class="stat-card card-dark-filled shadow-lg">
+          <div class="icon-box-gold"><i class="fas fa-users"></i></div>
+          <div class="stat-number">{{ chauffeurs.length }}</div>
+          <div class="stat-label">Chauffeurs Enregistrés</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card card-outline-green shadow-sm">
+          <div class="icon-box-green"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-number">{{ totalDisponible }}</div>
+          <div class="stat-label text-success fw-bold">Disponibles</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card card-outline-orange shadow-sm">
+          <div class="icon-box-orange pulse"><i class="fas fa-truck-moving"></i></div>
+          <div class="stat-number">{{ totalEnMission }}</div>
+          <div class="stat-label text-warning fw-bold">En Mission</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-trigger-wrapper mb-4 text-center">
+      <button class="btn-prestige-toggle" (click)="toggleForm()" [class.active]="showForm">
+        <div class="icon-container">
+          <i class="fas" [ngClass]="showForm ? 'fa-times' : 'fa-plus'"></i>
+        </div>
+        <span class="btn-text">{{ showForm ? 'Fermer le Registre' : 'Nouvelle Enrôlement Chauffeur' }}</span>
+        <div class="gold-glow"></div>
+      </button>
+    </div>
+
+    <div class="crystal-form-container" *ngIf="showForm">
+      <div class="glass-panel shadow-2xl mb-5">
+        <div class="form-premium-header">
+          <div class="logo-circle">
+            <img src="https://somacom.com.tn/wp-content/uploads/2022/03/logo-agil.jpg" alt="Agil">
+          </div>
+          <div class="header-content">
+            <h2 class="m-0">{{ isEditMode ? 'MODIFICATION DU PROFIL' : 'ACQUISITION NOUVEAU CHAUFFEUR' }}</h2>
+            <p class="m-0 gold-sub">Saisie des données certifiées AGIL</p>
+          </div>
+        </div>
+
+        <div class="p-5">
+          <form (ngSubmit)="enregistrer()" class="row g-4">
+            <div class="col-md-4">
+              <div class="fancy-input-wrapper">
+                <input type="text" required [(ngModel)]="chauffeurForm.nom" name="nom">
+                <label>Nom</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="fancy-input-wrapper">
+                <input type="text" required [(ngModel)]="chauffeurForm.prenom" name="prenom">
+                <label>Prénom</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="fancy-input-wrapper">
+                <input type="email" required [(ngModel)]="chauffeurForm.mail" name="mail">
+                <label>Email Officiel</label>
+              </div>
+            </div>
+
+            <div class="col-md-4" *ngIf="!isEditMode">
+              <div class="fancy-input-wrapper">
+                <input type="password" required [(ngModel)]="chauffeurForm.motDePasse" name="mdp">
+                <label>Mot de passe</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="fancy-input-wrapper">
+                <input type="text" required [(ngModel)]="chauffeurForm.region" name="region">
+                <label>Région</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="fancy-input-wrapper">
+                <input type="number" required [(ngModel)]="chauffeurForm.anciennete" name="anc">
+                <label>Ancienneté (ans)</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="fancy-input-wrapper">
+                <input type="date" required [(ngModel)]="chauffeurForm.datePriseLicense" name="dpl">
+                <label class="active">Obtention Permis</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="fancy-input-wrapper">
+                <input type="date" required [(ngModel)]="chauffeurForm.dateExpirationPermis" name="dep">
+                <label class="active">Expiration Permis</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="select-prestige-wrapper">
+                <label class="select-label">Type de Permis</label>
+                <select [(ngModel)]="chauffeurForm.typeVehiculePermis" name="tvp">
+                  <option value="B">Catégorie B</option>
+                  <option value="C">Catégorie C</option>
+                  <option value="D">Catégorie D</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="select-prestige-wrapper">
+                <label class="select-label">Localisation</label>
+                <select [(ngModel)]="chauffeurForm.local" name="loc">
+                  <option [ngValue]="null">Non assigné</option>
+                  <option *ngFor="let l of locaux" [ngValue]="l">{{ l.nomLocal }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="select-prestige-wrapper">
+                <label class="select-label">Statut</label>
+                <select [(ngModel)]="chauffeurForm.etatChauffeur" name="et">
+                  <option value="DISPONIBLE">🟢 DISPONIBLE</option>
+                  <option value="EN_MISSION">🟠 EN MISSION</option>
+                  <option value="EN_CONGE">⚪ EN CONGÉ</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn-ultra-luxe w-100">
+                <span class="shimmer"></span>
+                <span class="content"><i class="fas fa-check-circle me-2"></i> VALIDER LES DONNÉES</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="registry-panel shadow-lg p-0 overflow-hidden">
+      <div class="p-4 bg-light border-bottom">
+        <h5 class="registry-title m-0"><i class="fas fa-table me-2"></i> les Chauffeurs</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table custom-agil-table mb-0">
+          <thead>
+            <tr>
+              <th>CHAUFFEUR</th>
+              <th>RÉGION</th>
+              <th>ANCIENNÉTÉ</th>
+              <th>PERMIS (CAT)</th>
+              <th>OBTENTION</th>
+              <th>EXPIRATION</th>
+              <th>STATUT</th>
+              <th class="text-center">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of chauffeurs" class="row-hover">
+             <td>
+  <div class="d-flex align-items-center">
+    <div class="avatar-mini me-3">
+      <img src="https://ui-avatars.com/api/?name={{c.nom}}+{{c.prenom}}&background=800020&color=D4AF37&font-size=0.4">
+    </div>
+    
+    <div class="d-flex flex-column">
+      <span class="chauffeur-name">{{ c.nom | uppercase }} {{ c.prenom }}</span>
+      <span class="chauffeur-mail-sub">{{ c.mail }}</span>
+    </div>
+  </div>
+</td>
+              <td><i class="fas fa-map-marker-alt text-muted me-1"></i> {{ c.region }}</td>
+              <td class="text-center">{{ c.anciennete }} ans</td>
+              <td class="text-center"><span class="badge bg-dark">{{ c.typeVehiculePermis }}</span></td>
+              <td>{{ c.datePriseLicense }}</td>
+<td class="fw-bold">
+  <div [class.permis-alerte]="isPermisEnDanger(c.dateExpirationPermis)">
+    <i *ngIf="isPermisEnDanger(c.dateExpirationPermis)" 
+       class="fas fa-exclamation-triangle me-1 pulse-red"></i>
+    {{ c.dateExpirationPermis | date:'dd/MM/yyyy' }}
+  </div>
+</td>              <td>
+                <span class="status-pill-modern" [ngClass]="c.etatChauffeur">
+                  {{ c.etatChauffeur }}
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="d-flex justify-content-center gap-2">
+                  <button class="btn-action-modern view" (click)="consulter(c.idChauffeur)"><i class="fas fa-eye"></i></button>
+                  <button class="btn-action-modern edit" (click)="editer(c)"><i class="fas fa-pen"></i></button>
+                  <button class="btn-action-modern delete" (click)="supprimer(c.idChauffeur)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showConsultModal">
+    </div>
+    <div class="modal-overlay" *ngIf="showConsultModal">
+  <div class="card-consultation shadow-2xl animate-zoom">
+    
+    <div class="card-header-agil">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <img src="https://somacom.com.tn/wp-content/uploads/2022/03/logo-agil.jpg" class="modal-logo-mini me-2">
+          <span class="letter-spacing-2">DOSSIER CHAUFFEUR OFFICIEL</span>
+        </div>
+        <button class="btn-close-custom" (click)="showConsultModal = false">&times;</button>
+      </div>
+    </div>
+
+    <div class="p-5">
+      <div class="text-center mb-4">
+        <div class="avatar-large mb-3">
+          <img src="https://ui-avatars.com/api/?name={{selectedChauffeur?.nom}}+{{selectedChauffeur?.prenom}}&background=800020&color=D4AF37&size=128">
+        </div>
+        <h2 class="fw-900 text-bordeaux m-0">{{ selectedChauffeur?.nom | uppercase }} {{ selectedChauffeur?.prenom }}</h2>
+        <span class="badge-status-large" [ngClass]="selectedChauffeur?.etatChauffeur">
+          {{ selectedChauffeur?.etatChauffeur }}
+        </span>
+      </div>
+
+      <div class="gold-divider-glow"></div>
+
+      <div class="row g-4 mt-2">
+        <div class="col-6">
+          <label class="info-label">Référence Interne</label>
+          <div class="info-value">#AGIL-{{ selectedChauffeur?.idChauffeur }}</div>
+        </div>
+        <div class="col-6">
+          <label class="info-label">Région d'Attache</label>
+          <div class="info-value">{{ selectedChauffeur?.region }}</div>
+        </div>
+        <div class="col-6">
+          <label class="info-label">Ancienneté</label>
+          <div class="info-value">{{ selectedChauffeur?.anciennete }} ans d'expertise</div>
+        </div>
+        <div class="col-6">
+          <label class="info-label">Email Professionnel</label>
+          <div class="info-value small">{{ selectedChauffeur?.mail }}</div>
+        </div>
+      </div>
+
+      <div class="permis-box mt-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <label class="info-label text-white-50">Permis de Conduire</label>
+            <div class="info-value text-white">Catégorie {{ selectedChauffeur?.typeVehiculePermis }}</div>
+          </div>
+          <div class="text-end">
+            <div class="small text-white-50">Expire le :</div>
+            <div class="fw-bold text-gold">{{ selectedChauffeur?.dateExpirationPermis }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 d-flex gap-2">
+        <button class="btn-print-luxe w-50" onclick="window.print()">
+          <i class="fas fa-print me-2"></i>IMPRIMER
+        </button>
+        <button class="btn-ultra-luxe w-50" (click)="showConsultModal = false">
+          RETOURNER
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
