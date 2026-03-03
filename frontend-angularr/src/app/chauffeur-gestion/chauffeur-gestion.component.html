@@ -1,3 +1,26 @@
+<div id="preloader-prestige" *ngIf="showPreloader">
+  <div class="main-stage">
+    <div class="orbit-container">
+      <div class="ring gold"><div class="comet"></div></div>
+      <div class="ring bordeaux"><div class="comet"></div></div>
+      <div class="ring white"><div class="comet"></div></div>
+      
+      <div class="glass-sphere big-sphere">
+        <img src="assets/agil.png" alt="SNDP Agil Logo" class="big-logo">
+      </div>
+    </div>
+
+    <div class="text-area">
+      <h2 class="welcome-msg">Initialisation <span class="admin-name">Système AGIL</span></h2>
+      <div class="progress-section">
+        <div class="luxury-bar">
+          <div class="fill-permanent"></div>
+        </div>
+        <span class="loading-label">Sécurisation des accès en cours...</span>
+      </div>
+    </div>
+  </div>
+</div> 
 <app-adminlayoutcomponent></app-adminlayoutcomponent>
 <div class="dashboard-wrapper">
   <div class="container pt-5">
@@ -245,45 +268,85 @@
 
       <div class="gold-divider-glow"></div>
 
-      <div class="row g-4 mt-2">
-        <div class="col-6">
-          <label class="info-label">Référence Interne</label>
-          <div class="info-value">#AGIL-{{ selectedChauffeur?.idChauffeur }}</div>
-        </div>
-        <div class="col-6">
-          <label class="info-label">Région d'Attache</label>
-          <div class="info-value">{{ selectedChauffeur?.region }}</div>
-        </div>
-        <div class="col-6">
-          <label class="info-label">Ancienneté</label>
-          <div class="info-value">{{ selectedChauffeur?.anciennete }} ans d'expertise</div>
-        </div>
-        <div class="col-6">
-          <label class="info-label">Email Professionnel</label>
-          <div class="info-value small">{{ selectedChauffeur?.mail }}</div>
-        </div>
-      </div>
+      <div class="modal-overlay" *ngIf="showConsultModal">
+  <div class="fiche-technique-card animate-zoom">
+    
+    <div class="fiche-header d-flex justify-content-between align-items-start mb-4">
+      <img src="https://somacom.com.tn/wp-content/uploads/2022/03/logo-agil.jpg" class="agil-logo-fiche">
+      <button class="btn-close-fiche" (click)="showConsultModal = false">&times;</button>
+    </div>
 
-      <div class="permis-box mt-4">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <label class="info-label text-white-50">Permis de Conduire</label>
-            <div class="info-value text-white">Catégorie {{ selectedChauffeur?.typeVehiculePermis }}</div>
-          </div>
-          <div class="text-end">
-            <div class="small text-white-50">Expire le :</div>
-            <div class="fw-bold text-gold">{{ selectedChauffeur?.dateExpirationPermis }}</div>
+    <div class="fiche-body">
+      <div class="row g-0">
+        <div class="col-md-5">
+          <div class="photo-container-premium">
+            <img src="https://ui-avatars.com/api/?name={{selectedChauffeur?.nom}}+{{selectedChauffeur?.prenom}}&background=1a1a1a&color=D4AF37&size=512" class="chauffeur-photo-main">
           </div>
         </div>
-      </div>
 
-      <div class="mt-5 d-flex gap-2">
-        <button class="btn-print-luxe w-50" onclick="window.print()">
-          <i class="fas fa-print me-2"></i>IMPRIMER
-        </button>
-        <button class="btn-ultra-luxe w-50" (click)="showConsultModal = false">
-          RETOURNER
-        </button>
+        <div class="col-md-7 ps-md-5">
+          <div class="fiche-info-wrapper">
+            <span class="label-tech">FICHE TECHNIQUE OFFICIELLE</span>
+            <h1 class="chauffeur-title text-uppercase">
+              {{ selectedChauffeur?.nom }} <span class="prenom-light text-muted">{{ selectedChauffeur?.prenom }}</span>
+            </h1>
+            
+            <div class="matricule-badge-black mb-4">
+              CH-{{ selectedChauffeur?.idChauffeur }}
+            </div>
+
+            <div class="info-grid">
+              <div class="row g-3 mb-3">
+                <div class="col-6">
+                  <div class="info-box-premium">
+                    <i class="fas fa-history icon-fiche"></i>
+                    <div>
+                      <span class="box-label">Ancienneté</span>
+                      <span class="box-value">{{ selectedChauffeur?.anciennete }} ans</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="info-box-premium">
+                    <i class="fas fa-id-card icon-fiche"></i>
+                    <div>
+                      <span class="box-label">Permis</span>
+                      <span class="box-value">Catégorie {{ selectedChauffeur?.typeVehiculePermis }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-6">
+                  <div class="info-box-premium">
+                    <i class="fas fa-map-marked-alt icon-fiche"></i>
+                    <div>
+                      <span class="box-label">Site / Local</span>
+                      <span class="box-value">{{ selectedChauffeur?.local?.nomLocal || 'Non assigné' }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="info-box-premium">
+                    <i class="fas fa-user-check icon-fiche"></i>
+                    <div>
+                      <span class="box-label">Statut</span>
+                      <span class="box-value text-uppercase" [ngClass]="selectedChauffeur?.etatChauffeur">
+                        {{ selectedChauffeur?.etatChauffeur }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="email-footer-fiche mt-4 d-flex justify-content-between">
+               <span><i class="fas fa-envelope me-2 text-bordeaux"></i> {{ selectedChauffeur?.mail }}</span>
+               <span class="text-muted small fw-bold text-uppercase">{{ selectedChauffeur?.region }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

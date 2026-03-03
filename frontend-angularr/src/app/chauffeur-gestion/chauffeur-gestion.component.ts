@@ -14,11 +14,12 @@ import { Adminlayoutcomponent } from "../adminlayoutcomponent/adminlayoutcompone
 export class ChauffeurGestionComponent implements OnInit {
   chauffeurs: Chauffeur[] = [];
   locaux: Local[] = [];
-  
+  showPreloader = true; 
   isEditMode = false;
   showConsultModal = false;
   showForm = false;
   selectedChauffeur: any = null;
+  searchTerm: string = ''; // Pour la recherche
 
   chauffeurForm: any = this.resetModel();
 
@@ -26,6 +27,11 @@ export class ChauffeurGestionComponent implements OnInit {
 
   ngOnInit(): void {
     this.chargerDonnees();
+
+    // Simulation du temps de chargement pour le preloader prestige
+    setTimeout(() => {
+      this.showPreloader = false;
+    }, 3000); 
   }
 
   chargerDonnees() {
@@ -40,6 +46,25 @@ export class ChauffeurGestionComponent implements OnInit {
 
   get totalEnMission(): number {
     return this.chauffeurs.filter(c => c.etatChauffeur === 'EN_MISSION').length;
+  }
+
+  get pourcentageDispo(): number {
+    if (this.chauffeurs.length === 0) return 0;
+    return Math.round((this.totalDisponible / this.chauffeurs.length) * 100);
+  }
+
+  // Getter pour filtrer la table sans accents pour éviter les erreurs Lexer
+  get chauffeursFiltres() {
+    const search = this.searchTerm.toLowerCase().trim();
+    return this.chauffeurs.filter(c => {
+      if (!search) return true;
+      return (
+        (c.nom?.toLowerCase() || '').includes(search) || 
+        (c.prenom?.toLowerCase() || '').includes(search) || 
+        (c.region?.toLowerCase() || '').includes(search) || 
+        (c.typeVehiculePermis?.toLowerCase() || '').includes(search)
+      );
+    });
   }
 
   resetModel() {
@@ -94,28 +119,28 @@ export class ChauffeurGestionComponent implements OnInit {
     this.chauffeurForm = this.resetModel();
     this.chargerDonnees();
   }
-  // Vérifie si la date d'expiration est proche (moins de 30 jours)
-isPermisEnDanger(dateExpiration: string | undefined | null): boolean {
-  // 1. Sécurité : Si la date n'existe pas, on ne déclenche pas d'alerte
-  if (!dateExpiration) {
-    return false;
+
+  isPermisEnDanger(dateExpiration: string | undefined | null): boolean {
+    if (!dateExpiration) return false;
+    const exp = new Date(dateExpiration);
+    if (isNaN(exp.getTime())) return false;
+    const aujourdhui = new Date();
+    const diffTime = exp.getTime() - aujourdhui.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 30;
   }
 
-  // 2. À ce stade, TS sait que dateExpiration est forcément une string
-  const exp = new Date(dateExpiration);
-  
-  // Vérification si la date est valide (au cas où la string soit mal formatée)
-  if (isNaN(exp.getTime())) {
-    return false;
+  exporterDonnees() {
+    const entetes = ["Nom", "Prenom", "Region", "Permis", "Expiration", "Statut"];
+    const lignes = this.chauffeursFiltres.map(c => [
+      c.nom, c.prenom, c.region, c.typeVehiculePermis, c.dateExpirationPermis, c.etatChauffeur
+    ]);
+    let csvContent = "data:text/csv;charset=utf-8," 
+      + entetes.join(",") + "\n" 
+      + lignes.map(e => e.join(",")).join("\n");
+    const link = document.createElement("a");
+    link.setAttribute("href", encodeURI(csvContent));
+    link.setAttribute("download", `flotte_agil.csv`);
+    link.click();
   }
-
-  const aujourdhui = new Date();
-  const diffTime = exp.getTime() - aujourdhui.getTime();
-  
-  // Conversion en jours
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  // Retourne vrai si l'expiration est dans 30 jours ou déjà passée (<= 30)
-  return diffDays <= 30;
-}
 }

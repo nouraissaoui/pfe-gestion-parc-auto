@@ -1192,4 +1192,214 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}/* --- CONTAINER PRINCIPAL --- */
+#preloader-prestige {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #ffffff 0%, #f8f9fa 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.main-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* --- ORBITES ET LOGO --- */
+.orbit-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-sphere.big-sphere {
+  width: 200px;
+  height: 200px;
+  background: white;
+  border-radius: 50%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1), inset 0 0 25px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.03);
+  animation: breathe 3s infinite ease-in-out;
+}
+
+.big-logo {
+  width: 140px;
+  height: auto;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+}
+
+/* --- LES ANNEAUX --- */
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.ring.gold { width: 260px; height: 260px; animation: rotateRing 4s linear infinite; }
+.ring.bordeaux { width: 310px; height: 310px; animation: rotateRing 6s linear infinite reverse; }
+.ring.white { width: 360px; height: 360px; animation: rotateRing 9s linear infinite; }
+
+.comet {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.gold .comet { background: #d4af37; box-shadow: 0 0 15px #d4af37; }
+.bordeaux .comet { background: #800020; box-shadow: 0 0 15px #800020; }
+.white .comet { background: #000; opacity: 0.1; }
+
+/* --- TEXTE ET BARRE --- */
+.welcome-msg {
+  color: #1a1a1a;
+  font-size: 1.8rem;
+  font-weight: 300;
+  margin-bottom: 15px;
+}
+
+.admin-name {
+  font-weight: 700;
+  color: #800020;
+  border-bottom: 3px solid #d4af37;
+}
+
+.luxury-bar {
+  width: 300px;
+  height: 4px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 10px auto;
+}
+
+.fill-permanent {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #d4af37, #800020);
+  animation: load30s 3s linear forwards; /* J'ai mis 3s pour matcher le setTimeout */
+}
+
+.loading-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #9ca3af;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes load30s {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}/* --- OVERLAY & CONTAINER --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.fiche-technique-card {
+    background: #ffffff;
+    width: 950px;
+    max-width: 95%;
+    border-radius: 12px;
+    padding: 35px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+}
+
+.agil-logo-fiche { height: 65px; }
+
+.btn-close-fiche {
+    background: none; border: none;
+    font-size: 2.5rem; color: #800020;
+    cursor: pointer; line-height: 0.8;
+}
+
+/* PHOTO STYLE VÉHICULE */
+.photo-container-premium {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    background: #fdfdfd;
+}
+
+.chauffeur-photo-main {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+/* TYPOGRAPHIE DROITE */
+.label-tech {
+    color: #800020; font-weight: 800; font-size: 0.75rem;
+    letter-spacing: 2px; display: block; border-left: 3px solid #D4AF37;
+    padding-left: 10px; margin-bottom: 10px;
+}
+
+.chauffeur-title { font-size: 2.8rem; font-weight: 800; color: #1a1a1a; margin: 0; }
+.prenom-light { font-weight: 300; }
+
+.matricule-badge-black {
+    background: #111827; color: white; display: inline-block;
+    padding: 12px 30px; border-radius: 6px; font-weight: 800;
+    font-size: 1.4rem; letter-spacing: 2px; margin-top: 10px;
+}
+
+/* BADGES INFO */
+.info-box-premium {
+    background: #ffffff; border: 1px solid #f1f1f1;
+    border-radius: 8px; padding: 18px;
+    display: flex; align-items: center; gap: 15px;
+}
+
+.icon-fiche { font-size: 1.3rem; color: #800020; opacity: 0.8; }
+.box-label { display: block; font-size: 0.85rem; color: #888; font-weight: 600; }
+.box-value { display: block; font-size: 1rem; color: #111; font-weight: 700; }
+
+/* ÉTATS COLORÉS */
+.box-value.DISPONIBLE { color: #2ecc71; }
+.box-value.EN_MISSION { color: #f39c12; }
+.box-value.INDISPONIBLE { color: #e74c3c; }
+
+.email-footer-fiche {
+    border-top: 1px solid #eee;
+    padding-top: 25px; font-weight: 600; color: #555;
+}
+
+/* ANIMATION ZOOM */
+.animate-zoom { animation: zoomInFiche 0.3s ease-out; }
+@keyframes zoomInFiche {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
 }
