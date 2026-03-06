@@ -20,141 +20,170 @@
       </div>
     </div>
   </div>
-</div>
-<app-adminlayoutcomponent></app-adminlayoutcomponent>
-<div class="agil-luxury-root">
- 
+</div> 
+<div class="ia-dashboard">
+  <div class="hero-header ia-mode">
+    <div class="hero-ornament">✦ IA ✦</div>
 
-  <main>
-    <div class="header-main">
-      <div class="title-group">
-        <h1>Annuaire des Chefs de Parc</h1>
-        <p>Gestion centrale des collaborateurs et de l'affectation des locaux</p>
+    <div class="hero-content-left">
+      <div class="hero-badge"><i class="bi bi-cpu"></i> Artificial Intelligence Center</div>
+      <div class="hero-title">Gérer les  <span>chefs du parc</span></div>
+      <div class="hero-subtitle">Analyse prédictive & optimisation intelligente des opérations chefs du parc</div>
+
+      <div class="hero-stats">
+        <div class="stat-pill">
+          <div class="stat-icon"><i class="bi bi-people"></i></div>
+          <div>
+            <div class="stat-val">{{ chefs.length }}</div>
+            <div class="stat-lbl">Chefs analysés</div>
+          </div>
+        </div>
+
+        <div class="stat-pill">
+          <div class="stat-icon"><i class="bi bi-graph-up"></i></div>
+          <div>
+            <div class="stat-val">{{ getUniqueLocaux() }}</div>
+            <div class="stat-lbl">Locaux Assignés</div>
+          </div>
+        </div>
+
+        <div class="stat-pill">
+          <div class="stat-icon"><i class="bi bi-shield-check"></i></div>
+          <div>
+            <div class="stat-val">{{ getUniqueRoles() }}</div>
+            <div class="stat-lbl">Niveaux de Responsabilité</div>
+          </div>
+        </div>
       </div>
-      <button class="btn-primary" (click)="openModal()">
-        <i class="fas fa-plus"></i> Nouveau Collaborateur
-      </button>
     </div>
 
-   <div class="stats-summary">
-  <div class="stat-box">
-    <i class="fas fa-users-cog"></i>
-    <h3>{{ chefs.length }}</h3>
-    <p>Total Chefs</p>
+    <div class="promo-video-box">
+      <div class="promo-label"><i class="bi bi-broadcast"></i> AGIL LIVE</div>
+      <video class="promo-video" autoplay muted loop playsinline>
+        <source src="assets/pub.mp4" type="video/mp4">
+      </video>
+      <div class="promo-overlay">
+        <div class="promo-text">
+          <span class="promo-title">AGIL</span>
+          <span class="promo-sub">Énergie · Mobilité · Excellence</span>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="stat-box">
-    <i class="fas fa-building"></i>
-    <h3>{{ getUniqueLocaux() }}</h3>
-    <p>Locaux Assignés</p>
-  </div>
-  <div class="stat-box">
-    <i class="fas fa-shield-alt"></i>
-    <h3>{{ getUniqueRoles() }}</h3>
-    <p>Niveaux de Responsabilité</p>
-  </div>
-</div>
-<div class="report-center-container">
-  <button class="btn-prestige-print" (click)="imprimerRapport()">
+
+  <div class="agil-luxury-root">
+    <main>
+      <div class="header-main prestige-bar">
+  <button class="btn-prestige-action" (click)="openModal()">
+    <div class="btn-inner">
+      <i class="fas fa-plus-circle"></i>
+      <div class="btn-text">
+        <span class="main-text">Nouveau Collaborateur</span>
+        <span class="sub-text">Ajouter à la base IA</span>
+      </div>
+    </div>
+    <div class="btn-glare"></div>
+  </button>
+
+  <button class="btn-prestige-action primary-gold" (click)="imprimerRapport()">
     <div class="btn-inner">
       <i class="fas fa-crown"></i>
       <div class="btn-text">
-        <span class="main-text">Générer l'État de Synthèse</span>
-        <span class="sub-text">Rapport Officiel & Export PDF</span>
+        <span class="main-text">État de Synthèse</span>
+        <span class="sub-text">Rapport Officiel PDF</span>
       </div>
     </div>
     <div class="btn-glare"></div>
   </button>
 </div>
 
-    <div class="card-container">
-  <div class="filters">
-    <div class="search-wrapper">
-      <i class="fas fa-search"></i>
-      <input type="text" [(ngModel)]="searchText" (keyup)="filterTable()" placeholder="Rechercher un nom, email ou local...">
-    </div>
-    <div style="font-size: 13px; color: var(--text-muted); font-weight: 600;">
-      Affichage de {{ filteredChefs.length > 0 || searchText ? filteredChefs.length : chefs.length }} résultat(s)
-    </div>
-  </div>
+    
 
-  <!-- Conteneur scrollable -->
-  <div class="table-container" style="max-height: 500px; overflow-y: auto; border-radius: 0 0 20px 20px;">
-    <table>
-      <thead>
-        <tr>
-          <th>Collaborateur</th>
-          <th>Local Affecté</th>
-          <th>Niveau</th>
-          <th>Date nomination</th>
-          <th>Ancienneté</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let chef of (searchText ? filteredChefs : chefs); let i = index">
-          <td>
-            <div class="emp-name-cell">
-              <div class="avatar" [attr.data-color]="(i % 8) + 1">
-                {{ chef.nom.charAt(0) }}
-              </div>
-              <div>
-                <div style="font-weight: 700; color: var(--primary-navy);">{{ chef.prenom }} {{ chef.nom }}</div>
-                <div style="font-size: 11px; color: var(--text-muted);">{{ chef.mail }}</div>
-              </div>
-            </div>
-          </td>
-         <td>
-          
-    <span class="badge" [class.badge-bordeaux]="chef.local" [class.badge-empty]="!chef.local">
-      <i [class]="chef.local ? 'fas fa-map-marker-alt' : 'fas fa-plus-circle'"></i>
-      {{ chef.local ? chef.local.nomLocal : 'Non assigné' }}
-    </span>
-    
-    
-    <div class="click-hint">Modifier <i class="fas fa-chevron-down"></i></div>
-         <td>
-  <span class="badge" 
-        [class.badge-stage]="chef.niveauResponsabilite" 
-        [class.badge-empty]="!chef.niveauResponsabilite">
-    
-    <i [class]="chef.niveauResponsabilite ? 'fas fa-shield-alt' : 'fas fa-user-slash'"></i>
-    
-    {{ 
-      chef.niveauResponsabilite === 'LOCAL_PRINCIPAL' ? 'Local Principal' : 
-      (chef.niveauResponsabilite === 'REGIONAL' ? 'Régional' : 'Non assigné') 
-    }}
-  </span>
-</td>
-          <td style="color: var(--text-muted);">
-            {{ chef.dateNomination | date:'dd/MM/yyyy' }}
-          </td>
-          <td style="color: var(--text-muted); font-weight: 500;">
-            {{ chef.ancienneteChef }} ans
-          </td>
-          <td>
-            <div class="actions-cell">
-             <button class="btn-icon" (click)="preparerModification(chef)" title="Modifier">
-  <i class="fas fa-edit"></i>
-</button>
-              <button class="btn-icon" (click)="supprimerChef(chef.idChefParc!)" title="Supprimer">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="(searchText ? filteredChefs : chefs).length === 0">
-          <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
-            Aucun collaborateur trouvé
-          </td>
-        </tr>
-      </tbody>
-    </table>
+     
+
+      <div class="card-container">
+        <div class="filters">
+          <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" [(ngModel)]="searchText" (keyup)="filterTable()" placeholder="Rechercher un nom, email ou local...">
+          </div>
+          <div style="font-size: 13px; color: var(--text-muted); font-weight: 600;">
+            Affichage de {{ filteredChefs.length > 0 || searchText ? filteredChefs.length : chefs.length }} résultat(s)
+          </div>
+        </div>
+
+        <div class="table-container" style="max-height: 500px; overflow-y: auto; border-radius: 0 0 20px 20px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Collaborateur</th>
+                <th>Local Affecté</th>
+                <th>Niveau</th>
+                <th>Date nomination</th>
+                <th>Ancienneté</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let chef of (searchText ? filteredChefs : chefs); let i = index">
+                <td>
+                  <div class="emp-name-cell">
+<div class="avatar" [attr.data-color]="(i % 4) + 1">
+  {{ chef.prenom.charAt(0) }}
+</div>                    <div>
+                      <div style="font-weight: 700; color: var(--primary-navy);">{{ chef.prenom }} {{ chef.nom }}</div>
+                      <div style="font-size: 11px; color: var(--text-muted);">{{ chef.mail }}</div>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <span class="badge" [class.badge-bordeaux]="chef.local" [class.badge-empty]="!chef.local">
+                    <i [class]="chef.local ? 'fas fa-map-marker-alt' : 'fas fa-plus-circle'"></i>
+                    {{ chef.local ? chef.local.nomLocal : 'Non assigné' }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="badge" [class.badge-stage]="chef.niveauResponsabilite" [class.badge-empty]="!chef.niveauResponsabilite">
+                    <i [class]="chef.niveauResponsabilite ? 'fas fa-shield-alt' : 'fas fa-user-slash'"></i>
+                    {{ 
+                      chef.niveauResponsabilite === 'LOCAL_PRINCIPAL' ? 'Local Principal' : 
+                      (chef.niveauResponsabilite === 'REGIONAL' ? 'Régional' : 'Non assigné') 
+                    }}
+                  </span>
+                </td>
+
+                <td style="color: var(--text-muted);">{{ chef.dateNomination | date:'dd/MM/yyyy' }}</td>
+                <td style="color: var(--text-muted); font-weight: 500;">{{ chef.ancienneteChef }} ans</td>
+
+                <td>
+                  <div class="actions-cell">
+                    <button class="btn-icon" (click)="preparerModification(chef)" title="Modifier">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-icon" (click)="supprimerChef(chef.idChefParc!)" title="Supprimer">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr *ngIf="(searchText ? filteredChefs : chefs).length === 0">
+                <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                  Aucun collaborateur trouvé
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
   </div>
 </div>
-  </main>
+
 <div class="modal" [class.show]="isModalOpen" (click)="$event.target === modal ? closeModal() : null" #modal>
   <div class="modal-content">
-    <!-- En-tête avec logo -->
     <div class="modal-header">
       <div class="header-logo">
         <img src="https://somacom.com.tn/wp-content/uploads/2022/03/logo-agil.jpg" alt="SNDP" class="small-logo">
@@ -165,9 +194,7 @@
       </div>
     </div>
 
-    <!-- Formulaire -->
     <form (ngSubmit)="soumettreFormulaire()" class="elegant-form">
-      <!-- Ligne 1 : Prénom & Nom -->
       <div class="form-row">
         <div class="form-group">
           <label><i class="fas fa-user"></i> Prénom</label>
@@ -179,46 +206,36 @@
         </div>
       </div>
 
-      <!-- Ligne 2 : Email (pleine largeur) -->
       <div class="form-group">
         <label><i class="fas fa-envelope"></i> Email Professionnel</label>
         <input type="email" [(ngModel)]="chefForm.mail" name="mail" required placeholder="jean.dupont@sndp.tn">
       </div>
 
-      <!-- Ligne 3 : Local & Niveau -->
       <div class="form-row">
         <div class="form-group">
-          <div class="form-group">
-  <label><i class="fas fa-map-marker-alt"></i> Local Affecté</label>
-  <select [(ngModel)]="chefForm.idLocal" name="idLocal" class="custom-select">
-    <option [ngValue]="null" class="null-option">
-      {{ isEditMode ? '❌ Retirer du local actuel (Libérer)' : '--- Aucun local assigné ---' }}
-    </option>
-
-    <option *ngFor="let loc of locaux" 
-            [value]="loc.idLocal" 
-            [disabled]="isLocalOccupe(loc.idLocal)">
-      {{ loc.nomLocal }} {{ isLocalOccupe(loc.idLocal) ? '(Occupé)' : '' }}
-    </option>
-  </select>
-  
-  
-</div>
+          <label><i class="fas fa-map-marker-alt"></i> Local Affecté</label>
+          <select [(ngModel)]="chefForm.idLocal" name="idLocal" class="custom-select">
+            <option [ngValue]="null">
+              {{ isEditMode ? '❌ Retirer du local actuel (Libérer)' : '--- Aucun local assigné ---' }}
+            </option>
+            <option *ngFor="let loc of locaux" [value]="loc.idLocal" [disabled]="isLocalOccupe(loc.idLocal)">
+              {{ loc.nomLocal }} {{ isLocalOccupe(loc.idLocal) ? '(Occupé)' : '' }}
+            </option>
+          </select>
         </div>
-        <div class="form-group prestige-group">
-  <label><i class="fas fa-star gold-star"></i> Responsabilité du Chef</label>
-  <div class="select-wrapper">
-    <select [(ngModel)]="chefForm.niveauResponsabilite" name="niveauResponsabilite" class="prestige-select">
-      <option [ngValue]="null">⚪ Non assigné (Libérer le poste)</option>
-      <option value="LOCAL_PRINCIPAL">🏢 Local Principal</option>
-      <option value="REGIONAL">🗺️ Régional</option>
-    </select>
-  </div>
-</div>
- 
-</div>
 
-      <!-- Ligne 4 : Date nomination & Ancienneté -->
+        <div class="form-group prestige-group">
+          <label><i class="fas fa-star gold-star"></i> Responsabilité du Chef</label>
+          <div class="select-wrapper">
+            <select [(ngModel)]="chefForm.niveauResponsabilite" name="niveauResponsabilite" class="prestige-select">
+              <option [ngValue]="null">⚪ Non assigné (Libérer le poste)</option>
+              <option value="LOCAL_PRINCIPAL">🏢 Local Principal</option>
+              <option value="REGIONAL">🗺️ Régional</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <div class="form-row">
         <div class="form-group">
           <label><i class="fas fa-calendar-alt"></i> Date de nomination</label>
@@ -226,37 +243,28 @@
         </div>
         <div class="form-group">
           <label><i class="fas fa-clock"></i> Ancienneté (années)</label>
-          <input type="number" [(ngModel)]="chefForm.ancienneteChef" name="ancienneteChef" required min="0" step="1">
+          <input type="number" [(ngModel)]="chefForm.ancienneteChef" name="ancienneteChef" required min="0">
         </div>
       </div>
 
-      <!-- Ligne 5 : Mot de passe (création uniquement) -->
       <div class="form-group full-width" *ngIf="!isEditMode">
         <label><i class="fas fa-lock"></i> Mot de passe sécurisé</label>
         <input type="password" [(ngModel)]="chefForm.motDePasse" name="password" required placeholder="••••••••">
       </div>
 
-      <!-- Boutons -->
       <div class="modal-footer">
-  <button type="button" class="btn-modal-cancel" (click)="closeModal()" *ngIf="!showSuccessState">
-    <i class="fas fa-times"></i> Annuler
-  </button>
-
-  <button type="submit" 
-          class="btn-modal-primary" 
-          [class.btn-success-active]="showSuccessState"
-          [disabled]="isSubmitting || showSuccessState">
-    
-    <i [class]="showSuccessState ? 'fas fa-check' : (isSubmitting ? 'fas fa-spinner fa-spin' : 'fas fa-save')"></i>
-    
-    <span *ngIf="!showSuccessState">
-      {{ isEditMode ? 'Enregistrer' : 'Créer' }}
-    </span>
-  </button>
-</div>
+        <button type="button" class="btn-modal-cancel" (click)="closeModal()" *ngIf="!showSuccessState">
+          <i class="fas fa-times"></i> Annuler
+        </button>
+        <button type="submit" class="btn-modal-primary" [class.btn-success-active]="showSuccessState" [disabled]="isSubmitting || showSuccessState">
+          <i [class]="showSuccessState ? 'fas fa-check' : (isSubmitting ? 'fas fa-spinner fa-spin' : 'fas fa-save')"></i>
+          <span *ngIf="!showSuccessState">{{ isEditMode ? 'Enregistrer' : 'Créer' }}</span>
+        </button>
+      </div>
     </form>
   </div>
 </div>
+
 <div class="hologram-card" [style.top.px]="mouseY" [style.left.px]="mouseX" *ngIf="hoveredChef">
   <div class="card-glass-effect">
     <div class="card-header">
@@ -266,7 +274,6 @@
         <span class="status-pill">Chef Certifié</span>
       </div>
     </div>
-    
     <div class="card-body">
       <div class="info-item">
         <i class="fas fa-calendar-check"></i>
@@ -277,10 +284,11 @@
         <span>Local actuel : <strong>{{ hoveredChef.local?.nomLocal || 'En attente' }}</strong></span>
       </div>
     </div>
-    
     <div class="card-footer">
       <div class="progress-label">Niveau d'expertise</div>
-      <div class="mini-progress"><div class="fill" [style.width.%]="(hoveredChef.ancienneteChef || 0) * 10"></div></div>
+      <div class="mini-progress">
+        <div class="fill" [style.width.%]="(hoveredChef.ancienneteChef || 0) * 10"></div>
+      </div>
     </div>
   </div>
 </div>

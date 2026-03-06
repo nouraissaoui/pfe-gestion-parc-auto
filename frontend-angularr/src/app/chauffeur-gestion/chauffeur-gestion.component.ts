@@ -12,6 +12,9 @@ import { Adminlayoutcomponent } from "../adminlayoutcomponent/adminlayoutcompone
   styleUrls: ['./chauffeur-gestion.component.css']
 })
 export class ChauffeurGestionComponent implements OnInit {
+openFicheModal() {
+throw new Error('Method not implemented.');
+}
   chauffeurs: Chauffeur[] = [];
   locaux: Local[] = [];
   showPreloader = true; 
@@ -22,6 +25,7 @@ export class ChauffeurGestionComponent implements OnInit {
   searchTerm: string = ''; // Pour la recherche
 
   chauffeurForm: any = this.resetModel();
+showFicheModal: any;
 
   constructor(private service: GestionParcService) {}
 
@@ -143,4 +147,18 @@ export class ChauffeurGestionComponent implements OnInit {
     link.setAttribute("download", `flotte_agil.csv`);
     link.click();
   }
+  showFormModal = false;
+
+openFormModal() {
+  this.showFormModal = true;
+  // éventuellement réinitialiser le formulaire si ce n'est pas une édition
+}
+
+closeFormModal() {
+  this.showFormModal = false;
+  this.isEditMode = false; // reset du mode édition
+  // réinitialiser le formulaire si besoin
+}
+
+
 }

@@ -1,0 +1,450 @@
+<div class="hero-header">
+
+    <div class="hero-ornament">✦ GM ✦</div>
+
+    <!-- Contenu gauche -->
+    <div class="hero-content-left">
+
+        <div class="hero-badge">
+            <i class="bi bi-stars"></i>
+            Mission Control Center
+        </div>
+
+        <div class="hero-title">
+            Gestion des <span>Missions</span>
+        </div>
+        <div class="hero-subtitle">
+            Planification intelligente des affectations chauffeurs &amp; véhicules
+        </div>
+
+        <div class="hero-stats">
+            <div class="stat-pill">
+                <div class="stat-icon"><i class="bi bi-person-badge"></i></div>
+                <div>
+                    <div class="stat-val">{{ chauffeursDispo.length }}</div>
+                    <div class="stat-lbl">Chauffeurs</div>
+                </div>
+            </div>
+            <div class="stat-pill">
+                <div class="stat-icon"><i class="bi bi-truck"></i></div>
+                <div>
+                    <div class="stat-val">{{ vehiculesDispo.length }}</div>
+                    <div class="stat-lbl">Véhicules dispo</div>
+                </div>
+            </div>
+            <div class="stat-pill">
+                <div class="stat-icon"><i class="bi bi-journal-check"></i></div>
+                <div>
+                    <div class="stat-val">{{ feuillesDeRoute.length }}</div>
+                    <div class="stat-lbl">Feuilles actives</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ══════ PUBLICITÉ VIDÉO ══════ -->
+    <div class="promo-video-box">
+        <div class="promo-label">
+            <i class="bi bi-broadcast"></i> AGIL LIVE
+        </div>
+        <video class="promo-video" autoplay muted loop playsinline>
+            <source src="assets/pub.mp4" type="video/mp4">
+        </video>
+        <div class="promo-overlay">
+            <div class="promo-text">
+                <span class="promo-title">AGIL</span>
+                <span class="promo-sub">Énergie · Mobilité · Excellence</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="main-content">
+
+    <div>
+        <div class="gold-card">
+            <div class="gold-card-header">
+                <div class="header-icon-wrap"><i class="bi bi-clipboard-plus"></i></div>
+                <div>
+                    <h5>Nouvelle Affectation</h5>
+                    <small>Remplissez les champs ci-dessous</small>
+                </div>
+            </div>
+
+            <div class="gold-card-body">
+                <form #missionForm="ngForm" (ngSubmit)="validerAffectation()">
+
+                    <div class="form-group">
+                        <label class="form-label-gold">
+                            <i class="bi bi-person-badge"></i>Chauffeur
+                        </label>
+                        <div class="gold-select-wrap">
+                            <select class="gold-select" [(ngModel)]="selectedChauffeur" name="chauffeur"
+                                (change)="onChauffeurChange(+$any($event.target).value)" required>
+                                <option [ngValue]="undefined" disabled selected>Choisir un chauffeur…</option>
+                                <option *ngFor="let c of chauffeursDispo" [value]="c.idChauffeur">
+                                    {{ c.nom }} {{ c.prenom }}
+                                    <ng-container *ngIf="c.etatChauffeur === 'EN_MISSION'"> — (Occupé 🚚)</ng-container>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-gold">
+                            <i class="bi bi-truck"></i>Véhicule
+                        </label>
+                        <div class="lock-wrap">
+                            <div class="gold-select-wrap" style="width:100%">
+                                <select class="gold-select" style="width:100%" [(ngModel)]="selectedVehicule"
+                                    name="vehicule" [disabled]="vehiculeVerrouille" required>
+                                    <option [ngValue]="undefined" disabled selected>Choisir un véhicule…</option>
+                                    <option *ngFor="let v of vehiculesDispo" [value]="v.idVehicule">
+                                        {{ v.matricule }} ({{ v.marque }} {{ v.modele }})
+                                    </option>
+                                </select>
+                            </div>
+                            <i class="bi bi-lock-fill lock-icon" *ngIf="vehiculeVerrouille"></i>
+                        </div>
+                        <div class="locked-hint" *ngIf="vehiculeVerrouille">
+                            <i class="bi bi-info-circle"></i> Véhicule actuel du chauffeur conservé.
+                        </div>
+                    </div>
+
+                    <div class="gold-divider"><span class="gold-divider-text">Nature du transport</span></div>
+
+                    <div class="form-group">
+                        <div class="transport-toggle">
+                            <label class="toggle-option">
+                                <input type="radio" name="typeMission" [(ngModel)]="typeMission" value="EMPLOYE"
+                                    (change)="onTypeChange()">
+                                <div class="toggle-label">
+                                    <i class="bi bi-people-fill"></i>
+                                    <span>Employés</span>
+                                </div>
+                            </label>
+                            <label class="toggle-option">
+                                <input type="radio" name="typeMission" [(ngModel)]="typeMission" value="MATERIEL"
+                                    (change)="onTypeChange()">
+                                <div class="toggle-label">
+                                    <i class="bi bi-box-seam-fill"></i>
+                                    <span>Matériel</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group bande-reveal" *ngIf="typeMission === 'MATERIEL'">
+                        <label class="form-label-gold" style="color:#dc2626">
+                            <i class="bi bi-exclamation-triangle" style="color:#dc2626"></i>
+                            Bande de Prélèvement *
+                        </label>
+                        <textarea class="gold-textarea" [(ngModel)]="missionData.bandePrelevement" name="bande" rows="3"
+                            placeholder="Liste des articles à exporter…" [required]="typeMission === 'MATERIEL'"
+                            style="border-color:rgba(220,38,38,0.4)">
+                        </textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-gold">
+                            <i class="bi bi-chat-left-text"></i>Description / Observations
+                        </label>
+                        <textarea class="gold-textarea" [(ngModel)]="missionData.description" name="desc" rows="2"
+                            placeholder="Détails de la mission…">
+                        </textarea>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label class="form-label-gold">
+                                <i class="bi bi-geo"></i>Point de Départ
+                            </label>
+                            <input type="text" class="gold-input" [(ngModel)]="missionData.pointDepart"
+                                name="pointDepart" placeholder="Ex: Entrepôt Principal" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label-gold">
+                                <i class="bi bi-geo-alt"></i>Destination
+                            </label>
+                            <input type="text" class="gold-input" [(ngModel)]="missionData.destination" name="dest"
+                                placeholder="Ex: Alger Centre" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-gold">
+                            <i class="bi bi-clock"></i>Heure Départ Prévue
+                        </label>
+                        <input type="time" class="gold-input" [(ngModel)]="missionData.heureDepartPrevue" name="heure"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn-gold-submit" [disabled]="!missionForm.valid">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Générer la Mission
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-col">
+
+        <div class="section-header">
+            <div class="section-title">
+                <i class="bi bi-journal-text"></i>
+                Feuilles de Route Actives
+            </div>
+            <div class="count-badge">
+                <strong>{{ feuillesFiltrees.length }}</strong>
+                <span>Résultat(s)</span>
+            </div>
+        </div>
+
+        <div class="search-box mb-3" style="padding: 0 10px;">
+            <div class="input-group" style="box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);">
+                <span class="input-group-text bg-white border-end-0"
+                    style="border-radius: 12px 0 0 12px; border-color: #d4af3750;">
+                    <i class="bi bi-search" style="color: #d4af37;"></i>
+                </span>
+                <input type="text" class="form-control border-start-0"
+                    style="border-radius: 0 12px 12px 0; border-color: #d4af3750; height: 45px; font-size: 0.95rem;"
+                    placeholder="Rechercher par nom de chauffeur..."
+                    [(ngModel)]="searchTerm">
+            </div>
+        </div>
+
+        <div class="empty-state" *ngIf="feuillesFiltrees.length === 0">
+            <div class="empty-icon-wrap">
+                <i class="bi" [ngClass]="searchTerm ? 'bi-search' : 'bi-inbox'"></i>
+            </div>
+            <p *ngIf="!searchTerm">Aucune feuille de route n'est active actuellement.</p>
+            <p *ngIf="searchTerm">Aucun chauffeur trouvé pour "{{ searchTerm }}"</p>
+        </div>
+
+        <div class="mission-card" *ngFor="let feuille of feuillesFiltrees; let i = index"
+            [style.animation-delay]="(i * 0.08) + 's'">
+            <div class="mission-card-body">
+
+                <div class="driver-cell">
+                    <div class="driver-avatar"><i class="bi bi-person-badge"></i></div>
+                    <div>
+                        <div class="driver-name">{{ feuille.chauffeur.nom }} {{ feuille.chauffeur.prenom }}</div>
+                        <div class="driver-id">#FD-{{ feuille.idFeuille }}</div>
+                    </div>
+                </div>
+
+                <div class="date-cell">
+                    <div class="date-label">Générée le</div>
+                    <div class="date-value">{{ feuille.dateGeneration | date:'dd/MM/yyyy HH:mm' }}</div>
+                </div>
+
+                <div>
+                    <span class="status-badge">
+                        <span class="status-dot"></span>{{ feuille.statut }}
+                    </span>
+                </div>
+
+                <div class="vehicle-chip">
+                    <i class="bi bi-truck"></i>
+                    {{ feuille.vehicule.matricule }}
+                </div>
+
+                <div>
+                    <button class="btn-consult" data-bs-toggle="modal" data-bs-target="#modalConsultation"
+                        (click)="selectFeuille(feuille)">
+                        <i class="bi bi-eye-fill"></i><span>Consulter</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ══════ MODAL CONSULTATION ══════ -->
+<div class="modal fade" id="modalConsultation" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0">
+
+            <div class="modal-gold-header">
+                <div class="modal-title-wrap">
+                    <div class="modal-icon"><i class="bi bi-map"></i></div>
+                    <div class="modal-title-text">
+                        <h4>
+                            {{ selectedFeuille?.chauffeur?.nom }}
+                            {{ selectedFeuille?.chauffeur?.prenom }}
+                        </h4>
+                        <small>#FD-{{ selectedFeuille?.idFeuille }}</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-modal-close" data-bs-dismiss="modal" aria-label="Fermer">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="modal-gold-summary">
+                <div class="summary-item">
+                    <div class="summary-item-icon"><i class="bi bi-truck"></i></div>
+                    <div>
+                        <div class="summary-item-lbl">Véhicule Affecté</div>
+                        <div class="summary-item-val">{{ selectedFeuille?.vehicule?.matricule }}</div>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-icon"><i class="bi bi-list-check"></i></div>
+                    <div>
+                        <div class="summary-item-lbl">Missions Planifiées</div>
+                        <div class="summary-item-val">{{ selectedFeuille?.missions?.length }}</div>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-icon"><i class="bi bi-activity"></i></div>
+                    <div>
+                        <div class="summary-item-lbl">Statut</div>
+                        <div class="summary-item-val active-status">● {{ selectedFeuille?.statut }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body p-3" style="background-color: #fdfbf5;">
+
+                <div class="date-navigator d-flex justify-content-between align-items-center mb-4 p-2 bg-white rounded shadow-sm">
+                    <button class="btn btn-outline-gold btn-sm" (click)="navigateDate(-1)" [disabled]="showAllMissions">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+
+                    <div class="text-center d-flex align-items-center gap-3">
+                        <h6 class="mb-0 fw-bold">
+                            {{ showAllMissions ? '📜 Historique Complet' : (currentViewDate | date:'dd MMMM yyyy') }}
+                        </h6>
+                        <button class="btn btn-sm"
+                            [ngClass]="showAllMissions ? 'btn-gold-submit py-1 px-2' : 'btn-outline-gold'"
+                            (click)="toggleAllMissions()">
+                            <i class="bi" [ngClass]="showAllMissions ? 'bi-calendar-event' : 'bi-infinity'"></i>
+                        </button>
+                    </div>
+
+                    <button class="btn btn-outline-gold btn-sm" (click)="navigateDate(1)" [disabled]="showAllMissions">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="mission-details-stack">
+                    <div *ngFor="let m of filteredMissions" class="detail-card mb-4">
+
+                        <div class="detail-card-header d-flex justify-content-between align-items-center">
+                            <span class="badge-id">MISSION #{{ m.idMission }}</span>
+
+                            <div class="d-flex gap-2">
+                                <ng-container *ngIf="isMissionModifiable(m); else missionTermineeTemplate">
+                                    <button class="btn-action-circle btn-edit" (click)="modifierMission(m)"
+                                        title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                </ng-container>
+
+                                <ng-template #missionTermineeTemplate>
+                                    <span class="badge bg-success-light text-success border">
+                                        <i class="bi bi-check-all"></i> Terminée
+                                    </span>
+                                </ng-template>
+
+                                <button class="btn-action-circle btn-delete" (click)="supprimerMission(m.idMission)"
+                                    title="Supprimer">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="detail-card-body">
+                            <div class="info-grid">
+                                <div class="info-group">
+                                    <label>Itinéraire & Planning</label>
+                                    <ng-container *ngIf="editingMissionId !== m.idMission">
+                                        <p><strong>De :</strong> {{ m.pointDepart }}</p>
+                                        <p><strong>Vers :</strong> {{ m.destination }}</p>
+                                        <p><strong>Départ prévu :</strong> <span class="text-gold">{{ m.heureDepartPrevue }}</span></p>
+                                    </ng-container>
+                                    <ng-container *ngIf="editingMissionId === m.idMission">
+                                        <input type="text" class="form-control form-control-sm mb-1 gold-input-edit"
+                                            [(ngModel)]="m.pointDepart" placeholder="Départ">
+                                        <input type="text" class="form-control form-control-sm mb-1 gold-input-edit"
+                                            [(ngModel)]="m.destination" placeholder="Destination">
+                                        <input type="time" class="form-control form-control-sm gold-input-edit"
+                                            [(ngModel)]="m.heureDepartPrevue">
+                                    </ng-container>
+                                </div>
+
+                                <div class="info-group">
+                                    <label>Détails Mission</label>
+                                    <ng-container *ngIf="editingMissionId !== m.idMission">
+                                        <p class="text-muted small"><i>{{ m.description || 'Aucune description' }}</i></p>
+                                        <div *ngIf="m.bandePrelevement" class="bande-box small">
+                                            <i class="bi bi-box-seam-fill"></i> {{ m.bandePrelevement }}
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="editingMissionId === m.idMission">
+                                        <textarea class="form-control form-control-sm mb-2"
+                                            [(ngModel)]="m.description" rows="2"></textarea>
+                                        <div *ngIf="m.bandePrelevement">
+                                            <small>Bande :</small>
+                                            <textarea class="form-control form-control-sm"
+                                                [(ngModel)]="m.bandePrelevement"></textarea>
+                                        </div>
+                                    </ng-container>
+                                </div>
+
+                                <div class="info-group highlight-group">
+                                    <label>Retour Temps Réel</label>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <small class="d-block text-muted">Départ réel :</small>
+                                            <span class="small">{{ m.heureDepartReelle || '⌛ --:--' }}</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="d-block text-muted">Arrivée réelle :</small>
+                                            <span class="small">{{ m.heureArriveeReelle || '⌛ --:--' }}</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="d-block text-muted">KM Début :</small>
+                                            <span class="small">{{ m.kmDepart || '⌛' }}</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="d-block text-muted">KM Fin :</small>
+                                            <span class="small">{{ m.kmArrivee || '⌛' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="editingMissionId === m.idMission"
+                                class="d-flex gap-2 mt-3 justify-content-end">
+                                <button class="btn btn-sm btn-outline-secondary"
+                                    (click)="annulerEditionDirecte()">Annuler</button>
+                                <button class="btn btn-sm btn-gold-submit"
+                                    (click)="sauvegarderModificationDirecte(m)">
+                                    <i class="bi bi-check2"></i> Enregistrer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-gold-footer d-flex justify-content-between align-items-center">
+                <button type="button" class="btn btn-outline-danger btn-sm"
+                    (click)="supprimerFeuilleDeRoute(selectedFeuille.idFeuille)">
+                    <i class="bi bi-trash3-fill"></i> Supprimer la feuille
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fermer</button>
+            </div>
+
+        </div>
+    </div>
+</div>

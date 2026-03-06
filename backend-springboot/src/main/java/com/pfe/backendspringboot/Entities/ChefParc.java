@@ -1,6 +1,7 @@
 package com.pfe.backendspringboot.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -27,7 +28,8 @@ public class ChefParc {
     private String motDePasse;
 
     @OneToOne
-    @JoinColumn(name = "id_local") // C'est cette colonne qui stocke l'ID dans la table chef_parc
+    @JoinColumn(name = "id_local", referencedColumnName = "id_local")
+    @JsonIgnoreProperties({"chefParc", "vehicules", "chauffeurs"})
     private Local local;
     private LocalDate dateNomination;
     private int ancienneteChef;

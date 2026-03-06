@@ -31,6 +31,14 @@ public class Mission {
     private String description;
     private String bandePrelevement;
 
+    // --- Nouveaux champs déplacés ---
+    private LocalTime heureDepartReelle;
+    private LocalTime heureArriveeReelle;
+    private Double kmDepart;
+    private Double kmArrivee;
+    private Double consommationCarburant;
+    private String observations;
+
     // Relations
     @ManyToOne
     @JoinColumn(name = "id_vehicule")
