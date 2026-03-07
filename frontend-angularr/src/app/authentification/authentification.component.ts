@@ -70,7 +70,7 @@ login(): void {
 
       // Redirection...
       switch(response.typeUtilisateur) {
-        case 'ADMIN': this.router.navigate(['/admin/locaux']); break;
+        case 'ADMIN': this.router.navigate(['/admin/dashboard']); break;
         case 'CHAUFFEUR': this.router.navigate(['/chauffeur/dashboard']); break;
         case 'CHEF_PARC': this.router.navigate(['/chef-parc/dashboard']); break;
       }

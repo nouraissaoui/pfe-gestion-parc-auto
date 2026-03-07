@@ -1,0 +1,120 @@
+<div id="preloader-prestige" *ngIf="showPreloader">
+  <div class="main-stage">
+    <div class="orbit-container">
+      <div class="ring gold"><div class="comet"></div></div>
+      <div class="ring bordeaux"><div class="comet"></div></div>
+      <div class="ring white"><div class="comet"></div></div>
+      
+      <div class="glass-sphere big-sphere">
+        <img src="assets/agil.png" alt="SNDP Agil Logo" class="big-logo">
+      </div>
+    </div>
+
+    <div class="text-area">
+      <h2 class="welcome-msg">Initialisation <span class="admin-name">Système AGIL</span></h2>
+      <div class="progress-section">
+        <div class="luxury-bar">
+          <div class="fill-permanent"></div>
+        </div>
+        <span class="loading-label">Sécurisation des accès en cours...</span>
+      </div>
+    </div>
+  </div>
+</div> 
+<div class="main-content">
+  <div class="gold-card">
+    <div class="gold-card-header">
+      <div class="header-icon-wrap">
+        <i class="bi" [ngClass]="isUpdateMode ? 'bi-pencil-square' : 'bi-exclamation-triangle'"></i>
+      </div>
+      <div>
+        <h5>{{ isUpdateMode ? 'Modifier la Déclaration' : 'Nouvelle Déclaration' }}</h5>
+        <small>{{ isUpdateMode ? 'Modification en cours...' : 'Signaler un incident au chef de parc' }}</small>
+      </div>
+    </div>
+    
+    <div class="gold-card-body">
+      <div *ngIf="messageSuccess" class="alert alert-success m-2">{{ messageSuccess }}</div>
+      <div *ngIf="messageError" class="alert alert-danger m-2">{{ messageError }}</div>
+      
+      <form (ngSubmit)="soumettreDeclaration()">
+        <div class="form-group">
+          <label class="form-label-gold"><i class="bi bi-tools"></i> Type d'incident</label>
+          <div class="gold-select-wrap">
+            <select class="gold-select" [(ngModel)]="declarationData.type" name="type">
+              <option value="PANNE">🛠️ Panne Mécanique</option>
+              <option value="ACCIDENT">🚗 Accident</option>
+              <option value="AMENDE">📄 Amende</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label-gold"><i class="bi bi-file-text"></i> Description des faits</label>
+          <textarea class="gold-textarea" rows="5" [(ngModel)]="declarationData.description" name="description" placeholder="Détaillez le problème..." required></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" [disabled]="loading" class="btn-gold-submit">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isUpdateMode ? 'Enregistrer les modifications' : 'Envoyer au Chef de Parc' }}
+          </button>
+          
+          <button type="button" *ngIf="isUpdateMode" (click)="annulerModification()" class="btn-outline-secondary">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="gold-card">
+    <div class="gold-card-header">
+      <div class="header-icon-wrap"><i class="bi bi-clock-history"></i></div>
+      <div>
+        <h5>Mes Déclarations</h5>
+        <small>Historique des incidents</small>
+      </div>
+    </div>
+    <div class="gold-card-body p-0">
+      <div class="table-container-prestige">
+        <table class="prestige-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Statut</th>
+              <th>Véhicule</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dec of mesDeclarations">
+              <td class="date-cell">
+                <span class="day">{{ dec.dateCreation | date:'dd' }}</span>
+                <span class="month-year">{{ dec.dateCreation | date:'MMM yyyy' }}</span>
+              </td>
+              <td class="type-cell">{{ dec.type }}</td>
+              <td>
+                <span class="status-pill" [ngClass]="getBadgeClass(dec.status)">
+                  {{ dec.status }}
+                </span>
+              </td>
+              <td>
+                <span class="matricule-tag">{{ dec.vehicule?.matricule || 'Non assigné' }}</span>
+              </td>
+              <td>
+                <button class="btn-modify" (click)="preparerModification(dec)" *ngIf="dec.status === 'EN_ATTENTE'">
+                  ✏️ Modifier
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="mesDeclarations.length === 0">
+              <td colspan="5" class="empty-message">Aucun historique de déclaration disponible.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

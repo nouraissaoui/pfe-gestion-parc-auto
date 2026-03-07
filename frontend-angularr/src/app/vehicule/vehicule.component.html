@@ -1,94 +1,86 @@
+
 <div id="preloader-prestige" *ngIf="showPreloader">
   <div class="main-stage">
     <div class="orbit-container">
       <div class="ring gold"><div class="comet"></div></div>
       <div class="ring bordeaux"><div class="comet"></div></div>
       <div class="ring white"><div class="comet"></div></div>
+      
       <div class="glass-sphere big-sphere">
         <img src="assets/agil.png" alt="SNDP Agil Logo" class="big-logo">
       </div>
     </div>
 
-    <div class="text-area text-center">
-      <h2 class="welcome-msg" style="color: black;">Initialisation <span class="admin-name">Système AGIL</span></h2>
+    <div class="text-area">
+      <h2 class="welcome-msg">Initialisation <span class="admin-name">Système AGIL</span></h2>
       <div class="progress-section">
         <div class="luxury-bar">
           <div class="fill-permanent"></div>
         </div>
-        <span class="loading-label">Chargement des infrastructures...</span>
+        <span class="loading-label">Sécurisation des accès en cours...</span>
       </div>
     </div>
   </div>
-</div>
+</div> 
 
+<div class="ia-dashboard">
+  <!-- Hero Header -->
+  <div class="hero-header ia-mode">
+    <div class="hero-ornament">✦ IA ✦</div>
+    <div class="hero-content-left">
+      <div class="hero-title">Gérer les  <span>Véhicules</span></div>
+      <div class="hero-subtitle">Analyse prédictive & optimisation intelligente des opérations des véhicules</div>
+      <div class="hero-stats">
+        <!-- Stat 1 : avec SVG (cercle de progression) -->
+        <div class="stat-pill">
+          <div class="stat-icon" style="background: transparent; padding: 0;">
+            <svg width="36" height="36" viewBox="0 0 100 100">
+              <circle class="orbit-bg" cx="50" cy="50" r="42"></circle>
+              <circle class="orbit-progress" cx="50" cy="50" r="42"
+                      [style.stroke-dashoffset]="264 - (264 * pourcentageDispo) / 100"></circle>
+            </svg>
+          </div>
+          <div>
+            <div class="stat-val">{{ vehicules.length }}</div>
+            <div class="stat-lbl">les véhicules</div>
+          </div>
+        </div>
+        <!-- Stat 2 : avec icône Font Awesome -->
+        <div class="stat-pill">
+          <div class="stat-icon"><i class="fas fa-car-side"></i></div>
+          <div>
+            <div class="stat-val">{{ pourcentageDispo }}%</div>
+            <div class="stat-lbl">Disponibilité</div>
+          </div>
+        </div>
+        <!-- Stat 3 : avec icône Bootstrap Icons -->
+        <div class="stat-pill">
+          <div class="stat-icon"><i class="bi bi-shield-check"></i></div>
+          <div>
+            <div class="stat-val">{{ nombreEnMission }}</div>
+            <div class="stat-lbl">Missions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="promo-video-box">
+      <div class="promo-label"><i class="bi bi-broadcast"></i> AGIL LIVE</div>
+      <video class="promo-video" autoplay muted loop playsinline>
+        <source src="assets/pub3.mp4" type="video/mp4">
+      </video>
+      <div class="promo-overlay">
+        <div class="promo-text">
+          <span class="promo-title">AGIL</span>
+          <span class="promo-sub">Énergie · Mobilité · Excellence</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <div class="dashboard-wrapper">
   <div class="container py-4 animate-fade-in">
-    
-    <header class="mb-5">
-      <div class="header-agil-prestige">
-        <div class="decoration-side"></div>
-        <div class="content-text">
-          <div class="top-label">Interface de Contrôle</div>
-          <h1 class="main-title">GÉRER LES <span class="highlight-gold">VÉHICULES</span></h1>
-          <div class="bottom-bar">
-            <span class="brand">AGIL</span>
-            <span class="divider"></span>
-            <span class="module">Gestion du Parc Automobile</span>
-          </div>
-        </div>
-      </div>
-      
-    </header>
 
-    <section class="stats-grid mb-5">
-      <div class="row g-4 justify-content-center">
-        <div class="col-12 col-md-4">
-          <div class="stat-pod pod-bordeaux">
-            <div class="pod-inner">
-              <div class="orbit-container">
-                <svg viewBox="0 0 100 100">
-                  <circle class="orbit-bg" cx="50" cy="50" r="42"></circle>
-                  <circle class="orbit-progress" cx="50" cy="50" r="42" 
-                          [style.stroke-dashoffset]="264 - (264 * pourcentageDispo) / 100"></circle>
-                </svg>
-                <div class="orbit-center"><span class="num">{{ pourcentageDispo }}%</span></div>
-              </div>
-              <div class="pod-info">
-                <span class="pod-title">Disponibilité</span>
-                <span class="pod-subtitle">Flotte Opérationnelle</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-
-        <div class="col-12 col-md-3">
-          <div class="stat-pod pod-dark">
-            <div class="pod-inner">
-              <div class="pod-icon-circle"><i class="fas fa-car-side"></i></div>
-              <div class="pod-data">
-                <span class="big-val">{{ vehicules.length }}</span>
-                <span class="pod-label">Unités Totales</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-3">
-          <div class="stat-pod pod-gold">
-            <div class="pod-inner">
-              <div class="live-indicator"><span class="ping"></span><i class="fas fa-satellite-dish"></i></div>
-              <div class="pod-data">
-                <span class="big-val">{{ nombreEnMission }}</span>
-                <span class="pod-label">Missions Live</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    <!-- Barre de répartition analytique -->
     <section class="analytics-bar mb-5">
       <div class="fleet-status-master">
         <div class="status-header">
@@ -114,6 +106,7 @@
       </div>
     </section>
 
+    <!-- Bouton d'ajout -->
     <div class="action-zone d-flex justify-content-center mb-5">
       <div class="magnetic-wrapper" *ngIf="!showForm">
         <button class="btn-agil-crystal" (click)="ouvrirFormulaireAjout()">
@@ -129,82 +122,86 @@
       </button>
     </div>
 
-    <section id="form-section" class="glass-form-container shadow-extra glass-panel mb-5" *ngIf="showForm">
-      <div class="row g-0">
-        <div class="col-lg-7 p-5 bg-white">
-          <div class="d-flex align-items-center mb-4">
-            <div class="icon-box-status" [ngClass]="isEdit ? 'bg-warning' : 'bg-success'">
-              <i class="fas" [ngClass]="isEdit ? 'fa-edit' : 'fa-plus'"></i>
-            </div>
-            <h3 class="ms-3 fw-bold m-0">{{ isEdit ? 'Modification' : 'Nouvelle Unité' }}</h3>
-          </div>
-          
-          <div class="row g-4">
-            <div class="col-md-6 input-group-fancy">
-              <label>Matricule Officiel</label>
-              <input type="text" [(ngModel)]="currentVehicule.matricule" placeholder="200-TUN-1234">
-            </div>
-            <div class="col-md-6 input-group-fancy">
-              <label>Affectation Site</label>
-              <select [(ngModel)]="selectedLocalId">
-                <option [value]="0">Parc Central</option>
-                <option *ngFor="let l of locaux" [value]="l.idLocal">{{ l.nomLocal }}</option>
-              </select>
-            </div>
-            <div class="col-md-6 input-group-fancy">
-              <label>Marque & Modèle</label>
-              <div class="d-flex gap-2">
-                <input type="text" [(ngModel)]="currentVehicule.marque" placeholder="Marque" class="w-50">
-                <input type="text" [(ngModel)]="currentVehicule.modele" placeholder="Modèle" class="w-50">
+    <!-- Overlay du formulaire d'ajout -->
+    <div class="modal-overlay" *ngIf="showForm" (click)="showForm = false">
+      <section id="form-section" class="glass-form-container shadow-extra glass-panel" (click)="$event.stopPropagation()" style="max-width: 900px; width: 95%; margin: auto;">
+        <div class="row g-0">
+          <div class="col-lg-7 p-5 bg-white">
+            <div class="d-flex align-items-center mb-4">
+              <div class="icon-box-status" [ngClass]="isEdit ? 'bg-warning' : 'bg-success'">
+                <i class="fas" [ngClass]="isEdit ? 'fa-edit' : 'fa-plus'"></i>
               </div>
+              <h3 class="ms-3 fw-bold m-0">{{ isEdit ? 'Modification' : 'Nouvelle Unité' }}</h3>
             </div>
-            <div class="col-md-6 input-group-fancy">
-              <label>Spécifications</label>
-              <div class="d-flex gap-2">
-                <select [(ngModel)]="currentVehicule.carburant" class="w-50">
-                  <option value="Diesel">Diesel</option>
-                  <option value="Essence">Essence</option>
+            
+            <div class="row g-4">
+              <div class="col-md-6 input-group-fancy">
+                <label>Matricule Officiel</label>
+                <input type="text" [(ngModel)]="currentVehicule.matricule" placeholder="200-TUN-1234">
+              </div>
+              <div class="col-md-6 input-group-fancy">
+                <label>Affectation Site</label>
+                <select [(ngModel)]="selectedLocalId">
+                  <option [value]="0">Parc Central</option>
+                  <option *ngFor="let l of locaux" [value]="l.idLocal">{{ l.nomLocal }}</option>
                 </select>
-                <input type="number" [(ngModel)]="currentVehicule.annee" placeholder="Année" class="w-50">
+              </div>
+              <div class="col-md-6 input-group-fancy">
+                <label>Marque & Modèle</label>
+                <div class="d-flex gap-2">
+                  <input type="text" [(ngModel)]="currentVehicule.marque" placeholder="Marque" class="w-50">
+                  <input type="text" [(ngModel)]="currentVehicule.modele" placeholder="Modèle" class="w-50">
+                </div>
+              </div>
+              <div class="col-md-6 input-group-fancy">
+                <label>Spécifications</label>
+                <div class="d-flex gap-2">
+                  <select [(ngModel)]="currentVehicule.carburant" class="w-50">
+                    <option value="Diesel">Diesel</option>
+                    <option value="Essence">Essence</option>
+                  </select>
+                  <input type="number" [(ngModel)]="currentVehicule.annee" placeholder="Année" class="w-50">
+                </div>
+              </div>
+              <div class="col-md-12 input-group-fancy">
+                <label>Statut de l'unité</label>
+                <select [(ngModel)]="currentVehicule.etat">
+                  <option value="DISPONIBLE">DISPONIBLE</option>
+                  <option value="INDISPONIBLE">INDISPONIBLE</option>
+                  <option value="EN_ENTRETIEN">EN ENTRETIEN</option>
+                  <option value="EN_MISSION">EN MISSION</option>
+                </select>
+              </div>
+              <div class="col-12 input-group-fancy">
+                <label>URL Image (HD)</label>
+                <input type="text" [(ngModel)]="currentVehicule.image" placeholder="Lien image...">
               </div>
             </div>
-            <div class="col-md-12 input-group-fancy">
-              <label>Statut de l'unité</label>
-              <select [(ngModel)]="currentVehicule.etat">
-                <option value="DISPONIBLE">DISPONIBLE</option>
-                <option value="INDISPONIBLE">INDISPONIBLE</option>
-                <option value="EN_ENTRETIEN">EN ENTRETIEN</option>
-                <option value="EN_MISSION">EN MISSION</option>
-              </select>
-            </div>
-            <div class="col-12 input-group-fancy">
-              <label>URL Image (HD)</label>
-              <input type="text" [(ngModel)]="currentVehicule.image" placeholder="Lien image...">
+
+            <div class="mt-5 d-flex gap-3">
+              <button class="btn-agil-main px-5" (click)="enregistrer()">
+                <i class="fas fa-save me-2"></i>{{ isEdit ? 'Mettre à jour' : 'Enregistrer' }}
+              </button>
+              <button class="btn-agil-outline" (click)="showForm = false">Annuler</button>
             </div>
           </div>
 
-          <div class="mt-5 d-flex gap-3">
-            <button class="btn-agil-main px-5" (click)="enregistrer()">
-              <i class="fas fa-save me-2"></i>{{ isEdit ? 'Mettre à jour' : 'Enregistrer' }}
-            </button>
-            <button class="btn-agil-outline" (click)="showForm = false">Annuler</button>
-          </div>
-        </div>
-
-        <div class="col-lg-5 p-0 d-none d-lg-block">
-          <div class="preview-card-live" [style.backgroundImage]="'url(' + (currentVehicule.image || 'assets/no-car.png') + ')'">
-            <div class="preview-overlay">
-              <div class="preview-content">
-                <span class="badge-status-live" [ngClass]="currentVehicule.etat">{{ currentVehicule.etat || 'STATUT' }}</span>
-                <h2 class="text-white fw-bold mb-0">{{ currentVehicule.marque || 'VÉHICULE' }}</h2>
-                <p class="text-gold-agil fs-4">{{ currentVehicule.modele || 'Modèle' }}</p>
+          <div class="col-lg-5 p-0 d-none d-lg-block">
+            <div class="preview-card-live" [style.backgroundImage]="'url(' + (currentVehicule.image || 'assets/no-car.png') + ')'" style="height: 100%; min-height: 400px; background-size: cover; background-position: center;">
+              <div class="preview-overlay">
+                <div class="preview-content">
+                  <span class="badge-status-live" [ngClass]="currentVehicule.etat">{{ currentVehicule.etat || 'STATUT' }}</span>
+                  <h2 class="text-white fw-bold mb-0">{{ currentVehicule.marque || 'VÉHICULE' }}</h2>
+                  <p class="text-gold-agil fs-4">{{ currentVehicule.modele || 'Modèle' }}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
+    <!-- Tableau des véhicules -->
     <section class="list-section">
       <div class="table-container-prestige">
         <div class="table-header-fancy p-4 d-flex justify-content-between align-items-center">
@@ -261,6 +258,7 @@
       </div>
     </section>
 
+    <!-- Overlay de consultation -->
     <div class="modal-overlay" *ngIf="vehiculeEnConsultation" (click)="fermerConsultation()">
       <div class="card-consultation shadow-extra" (click)="$event.stopPropagation()">
         <div class="card-header-agil">
@@ -292,5 +290,5 @@
       </div>
     </div>
 
-  </div> </div> 
-
+  </div>
+</div></div>

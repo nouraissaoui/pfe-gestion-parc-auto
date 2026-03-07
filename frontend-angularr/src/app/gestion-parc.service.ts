@@ -68,7 +68,29 @@ export interface Chauffeur {
   vehicule?: Vehicule | null;
   local?: Local | null; // Le local est envoyé en tant qu'objet imbriqué
 }
-
+export interface Declaration {
+  idDeclaration?: number;
+  type: 'PANNE' | 'AMENDE' | 'ACCIDENT';
+  description: string;
+  dateCreation?: string;
+  status?: 'EN_ATTENTE' | 'TRAITE' | 'REJETE';
+  vehicule?: Vehicule;
+  chauffeur?: Chauffeur;
+  chefParc?: ChefParc;
+}
+export interface Mission {
+  idMission: number;
+  dateMission: string;
+  pointDepart: string;
+  destination: string;
+  heureDepartPrevue: string;
+  description: string;
+  heureDepartReelle?: string;
+  heureArriveeReelle?: string;
+  kmDepart?: number;
+  kmArrivee?: number;
+  vehicule?: Vehicule;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -299,4 +321,35 @@ getCarte(numero: string): Observable<any> {
   deleteChauffeur(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/chauffeur/${id}`);
   }
+  // ==================== GESTION DES DÉCLARATIONS ====================
+
+// Créer une déclaration (Chauffeur)
+creerDeclaration(idChauffeur: number, type: string, description: string): Observable<Declaration> {
+  const payload = {
+    idChauffeur: idChauffeur,
+    type: type,
+    description: description
+  };
+  return this.http.post<Declaration>(`${this.baseUrl}/declaration/creer`, payload);
+}
+
+// Récupérer l'historique des déclarations d'un chauffeur
+getDeclarationsByChauffeur(idChauffeur: number): Observable<Declaration[]> {
+  return this.http.get<Declaration[]>(`${this.baseUrl}/chauffeur/${idChauffeur}/declarations`);
+}
+
+// Mettre à jour le statut (Chef de Parc)
+updateStatutDeclaration(idDeclaration: number, statut: string): Observable<Declaration> {
+  // Utilisation de HttpParams pour le @RequestParam status
+  const params = new HttpParams().set('status', statut);
+  return this.http.put<Declaration>(
+    `${this.baseUrl}/declaration/${idDeclaration}/statut`, 
+    {}, 
+    { params }
+  );
+}// Dans gestion-parc.service.ts
+updateDeclaration(id: number, data: any): Observable<any> {
+  // L'URL doit être exactement celle-ci pour correspondre au Controller Java
+  return this.http.put(`http://localhost:8080/api/gestion-parc/declaration/modifier/${id}`, data);
+}
 }

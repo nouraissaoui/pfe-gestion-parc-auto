@@ -22,6 +22,8 @@ import { CarteCarburantComponent } from './carte-carburant/carte-carburant.compo
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { ChauffeurLayoutComponent } from './chauffeur-layout/chauffeur-layout.component';
 import { ChauffeurDashboardComponent } from './chauffeur-dashboard/chauffeur-dashboard.component';
+import { FaireDeclarationComponent } from './faire-declaration/faire-declaration.component';
+import { MissionListComponent } from './mission-list/mission-list.component';
 
 export const routes: Routes = [
   // 1. Point d'entrée (Login)
@@ -60,6 +62,8 @@ export const routes: Routes = [
     component: ChauffeurLayoutComponent, // Le parent avec la sidebar
     children: [
       { path: 'dashboard', component: ChauffeurDashboardComponent }, // L'enfant
+      {path:'declarations',component:FaireDeclarationComponent},
+      {path:'missions',component:MissionListComponent}
     ]
   }
 ,
