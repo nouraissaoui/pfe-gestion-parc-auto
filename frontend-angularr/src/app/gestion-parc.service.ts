@@ -89,8 +89,20 @@ export interface Mission {
   heureArriveeReelle?: string;
   kmDepart?: number;
   kmArrivee?: number;
-  vehicule?: Vehicule;
+  consommationCarburant?: number;
+  observations?: string;
 }
+
+export interface FeuilleDeRoute {
+  idFeuille: number;
+  dateGeneration: string;
+  statut: string;
+  vehicule: any;
+  chauffeur: any;
+  chefParc: any;
+  missions: Mission[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -362,4 +374,12 @@ deleteDeclaration(id: number, idChauffeur: number): Observable<any> {
     responseType: 'text' as 'json' // Utile si le backend renvoie un message simple au lieu d'un objet
   });
 }
+// Récupère les feuilles de route du chauffeur connecté
+ getMesFeuilles(idChauffeur: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/chauffeur/${idChauffeur}/feuilles`);
+  }
+
+  completerMission(idMission: number, data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/mission/${idMission}/completer`, data);
+  }
 }

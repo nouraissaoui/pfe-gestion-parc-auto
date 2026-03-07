@@ -24,6 +24,7 @@ import { ChauffeurLayoutComponent } from './chauffeur-layout/chauffeur-layout.co
 import { ChauffeurDashboardComponent } from './chauffeur-dashboard/chauffeur-dashboard.component';
 import { FaireDeclarationComponent } from './faire-declaration/faire-declaration.component';
 import { MissionListComponent } from './mission-list/mission-list.component';
+import { FeuilleRoutechauffeurComponent } from './feuille-routechauffeur/feuille-routechauffeur.component';
 
 export const routes: Routes = [
   // 1. Point d'entrée (Login)
@@ -63,7 +64,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: ChauffeurDashboardComponent }, // L'enfant
       {path:'declarations',component:FaireDeclarationComponent},
-      {path:'missions',component:MissionListComponent}
+      {path:'feuille-route',component:FeuilleRoutechauffeurComponent}
     ]
   }
 ,

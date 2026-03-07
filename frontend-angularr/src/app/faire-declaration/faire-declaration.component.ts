@@ -17,7 +17,8 @@ export class FaireDeclarationComponent implements OnInit {
     type: 'PANNE',
     description: ''
   };
-
+chauffeurNom: string = '';
+chauffeurPrenom: string = '';
   mesDeclarations: Declaration[] = [];
   idChauffeur!: number;
   loading: boolean = false;
@@ -36,6 +37,13 @@ export class FaireDeclarationComponent implements OnInit {
       this.idChauffeur = user.id;
       if (this.idChauffeur) { this.chargerHistorique(); }
     }
+if (storedUser) {
+  const user = JSON.parse(storedUser);
+  this.idChauffeur = user.id;
+  this.chauffeurNom = user.nom || '';
+  this.chauffeurPrenom = user.prenom || '';
+  if (this.idChauffeur) { this.chargerHistorique(); }
+}
   }
 
   chargerHistorique() {
@@ -133,5 +141,12 @@ export class FaireDeclarationComponent implements OnInit {
       });
     }
   }
+  getDeclarationsEnAttente(): number {
+  return this.mesDeclarations.filter(d => d.status === 'EN_ATTENTE').length;
+}
+
+getDeclarationsTraitees(): number {
+  return this.mesDeclarations.filter(d => d.status === 'TRAITE').length;
+}
   
 }

@@ -35,6 +35,61 @@
   </div>
 
 </div>
+<div class="ia-dashboard">
+  <div class="hero-header ia-mode">
+
+    <div class="hero-content-left">
+      <div class="hero-badge"><i class="bi bi-cpu"></i> Artificial Intelligence Center</div>
+      <div class="hero-title">Déclarer  <span>des incidents</span></div>
+      <div class="hero-subtitle">  Gestion & suivi des déclarations d'incidents
+</div>
+
+     <div class="hero-stats">
+      <div class="stat-pill">
+    <div class="stat-icon"><i class="bi bi-person-badge"></i></div>
+    <div>
+      <div class="stat-val">{{ chauffeurPrenom }} {{ chauffeurNom }}</div>
+      <div class="stat-lbl">Chauffeur</div>
+    </div>
+  </div>
+  <div class="stat-pill">
+    <div class="stat-icon"><i class="bi bi-megaphone"></i></div>
+    <div>
+      <div class="stat-val">{{ mesDeclarations.length }}</div>
+      <div class="stat-lbl">Déclarations totales</div>
+    </div>
+  </div>
+
+  <div class="stat-pill">
+    <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+    <div>
+      <div class="stat-val">{{ getDeclarationsEnAttente() }}</div>
+      <div class="stat-lbl">En attente</div>
+    </div>
+  </div>
+
+  <div class="stat-pill">
+    <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+    <div>
+      <div class="stat-val">{{ getDeclarationsTraitees() }}</div>
+      <div class="stat-lbl">Traitées</div>
+    </div>
+  </div>
+</div>
+    </div>
+
+    <div class="promo-video-box">
+      <div class="promo-label"><i class="bi bi-broadcast"></i> AGIL LIVE</div>
+      <video class="promo-video" autoplay muted loop playsinline>
+        <source src="assets/pub.mp4" type="video/mp4">
+      </video>
+      <div class="promo-overlay">
+        <div class="promo-text">
+          <span class="promo-title">AGIL</span>
+          <span class="promo-sub">Énergie · Mobilité · Excellence</span>
+        </div>
+      </div>
+    </div></div>
 <div class="page-container">
 
   <!-- FORMULAIRE DECLARATION -->
@@ -200,4 +255,4 @@
 
   </div>
 
-</div>
+</div></div>
