@@ -113,4 +113,25 @@ export class FaireDeclarationComponent implements OnInit {
       default: return 'bg-secondary';
     }
   }
+  supprimerDeclaration(id: number | undefined) {
+    if (!id) return;
+
+    // Utilisation d'une confirmation standard (ou votre modal personnalisé)
+    if (confirm("Voulez-vous vraiment supprimer définitivement cette déclaration ?")) {
+      this.loading = true;
+      this.apiService.deleteDeclaration(id, this.idChauffeur).subscribe({
+        next: () => {
+          this.messageSuccess = "Déclaration supprimée avec succès.";
+          this.chargerHistorique(); // Rafraîchir la liste
+          this.loading = false;
+        },
+        error: (err) => {
+          this.loading = false;
+          this.messageError = "Erreur : Impossible de supprimer (Déjà traitée ou accès refusé).";
+          console.error(err);
+        }
+      });
+    }
+  }
+  
 }

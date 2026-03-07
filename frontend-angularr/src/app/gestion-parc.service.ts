@@ -352,4 +352,13 @@ updateDeclaration(id: number, data: any): Observable<any> {
   // L'URL doit être exactement celle-ci pour correspondre au Controller Java
   return this.http.put(`http://localhost:8080/api/gestion-parc/declaration/modifier/${id}`, data);
 }
+deleteDeclaration(id: number, idChauffeur: number): Observable<any> {
+  // On passe l'idChauffeur en paramètre de requête (?idChauffeur=...)
+  const params = new HttpParams().set('idChauffeur', idChauffeur.toString());
+  
+  return this.http.delete(`${this.baseUrl}/declarations/${id}`, { 
+    params,
+    responseType: 'text' as 'json' // Utile si le backend renvoie un message simple au lieu d'un objet
+  });
+}
 }

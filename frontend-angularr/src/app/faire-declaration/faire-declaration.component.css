@@ -3369,4 +3369,410 @@ font-style:italic;
   .btn-gold-submit {
     font-size: 0.75rem;
   }
+}/* PAGE */
+
+.page-container{
+
+  display:grid;
+
+  grid-template-columns: 420px 1fr;
+
+  gap:40px;
+
+  padding:40px;
+
+  background:linear-gradient(135deg,#ffffff,#f5f5f5);
+
+}
+
+
+
+/* CARD */
+
+.gold-card{
+
+  background:white;
+
+  border-radius:18px;
+
+  box-shadow:0 10px 40px rgba(0,0,0,0.1);
+
+  border:1px solid rgba(212,175,55,0.3);
+
+  overflow:hidden;
+
+}
+
+
+
+/* HEADER */
+
+.gold-card-header{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:15px;
+
+  padding:20px;
+
+  background:linear-gradient(135deg,#d4af37,#e6e6e6);
+
+  color:white;
+
+}
+
+
+
+.header-icon-wrap{
+
+  width:40px;
+
+  height:40px;
+
+  border-radius:10px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  background:white;
+
+  color:#d4af37;
+
+  font-size:18px;
+
+}
+
+
+
+/* BODY */
+
+.gold-card-body{
+
+  padding:20px;
+
+}
+
+
+
+/* FORM */
+
+.form-group{
+
+  margin-bottom:20px;
+
+}
+
+
+
+.gold-select,
+
+.gold-textarea{
+
+  width:100%;
+
+  padding:10px;
+
+  border-radius:10px;
+
+  border:1px solid #ddd;
+
+}
+
+
+
+.gold-select:focus,
+
+.gold-textarea:focus{
+
+  outline:none;
+
+  border-color:#d4af37;
+
+  box-shadow:0 0 10px rgba(212,175,55,0.4);
+
+}
+
+
+
+/* BUTTONS */
+
+.buttons-row{
+
+  display:flex;
+
+  gap:10px;
+
+}
+
+
+
+.btn-gold-submit{
+
+  background:linear-gradient(135deg,#d4af37,#f5e18b);
+
+  border:none;
+
+  padding:10px 18px;
+
+  border-radius:10px;
+
+  font-weight:600;
+
+}
+
+
+
+.btn-cancel{
+
+  background:#eee;
+
+  border:none;
+
+  padding:10px 18px;
+
+  border-radius:10px;
+
+}
+
+
+
+/* TABLE */
+
+.table-container{
+
+  padding:20px;
+
+}
+
+
+
+.prestige-table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+}
+
+
+
+.prestige-table th{
+
+  background:#d4af37;
+
+  color:white;
+
+  padding:12px;
+
+}
+
+
+
+.prestige-table td{
+
+  padding:12px;
+
+  border-bottom:1px solid #eee;
+
+}
+
+
+
+.prestige-table tr:hover{
+
+  background:#fafafa;
+
+}
+
+
+
+/* STATUS */
+
+.status-pill{
+
+  padding:4px 10px;
+
+  border-radius:20px;
+
+  font-size:12px;
+
+}
+
+
+
+.status-pill.EN_ATTENTE{
+
+  background:#fff3cd;
+
+}
+
+
+
+.status-pill.TRAITE{
+
+  background:#d4edda;
+
+}
+
+
+
+/* MATRICULE */
+
+.matricule-tag{
+
+  background:#f0f0f0;
+
+  padding:4px 8px;
+
+  border-radius:6px;
+
+}
+
+
+
+/* MODIFY BUTTON */
+
+.btn-modify{
+
+  background:#c0c0c0;
+
+  border:none;
+
+  padding:6px 10px;
+
+  border-radius:6px;
+
+}
+
+
+
+.btn-modify:hover{
+
+  background:#d4af37;
+
+  color:white;
+
+}.table-container{
+
+  width:100%;
+
+  overflow-x:auto;
+
+  overflow-y:hidden;
+
+  padding:20px;
+
+}
+
+/* largeur minimale de la table */
+
+.prestige-table{
+
+  min-width:700px;
+
+  border-collapse:collapse;
+
+}
+
+/* style scroll moderne */
+
+.table-container::-webkit-scrollbar{
+
+  height:8px;
+
+}
+
+.table-container::-webkit-scrollbar-track{
+
+  background:#f1f1f1;
+
+}
+
+.table-container::-webkit-scrollbar-thumb{
+
+  background:linear-gradient(90deg,#d4af37,#c0c0c0);
+
+  border-radius:10px;
+
+}/* --- CONTENEUR D'ACTIONS --- */
+.action-buttons-wrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-action {
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- BOUTON MODIFIER (OR) --- */
+.btn-edit {
+  background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+  color: #D4A017;
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+.btn-edit:hover {
+  background: linear-gradient(135deg, #D4A017 0%, #B8860B 100%);
+  color: white;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(212, 160, 23, 0.3);
+}
+
+/* --- BOUTON SUPPRIMER (ARGENT / ROUGE) --- */
+.btn-delete {
+  background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+  color: #a3a3a3; /* Argent mat */
+  border: 1px solid rgba(200, 200, 200, 0.5);
+}
+
+.btn-delete:hover {
+  background: linear-gradient(135deg, #fdfdfd 0%, #fff1f1 100%);
+  color: #dc3545; /* Rouge alerte */
+  border-color: #dc3545;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(220, 53, 69, 0.15);
+}
+
+/* --- STYLE TABLEAU AMELIORÉ --- */
+.prestige-table {
+  width: 100%;
+  border-spacing: 0 8px; /* Espacement entre les lignes */
+  border-collapse: separate;
+}
+
+.prestige-table tbody tr {
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  transition: transform 0.2s;
+}
+
+.prestige-table tbody tr:hover {
+  transform: scale(1.005);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.matricule-tag {
+  background: #1a1a1a;
+  color: #D4A017;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: 'Monaco', monospace;
+  font-size: 0.8rem;
+  border: 1px solid #D4A017;
 }
