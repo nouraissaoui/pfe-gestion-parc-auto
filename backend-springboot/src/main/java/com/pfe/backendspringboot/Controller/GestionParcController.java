@@ -525,4 +525,13 @@ private DeclarationRepository declarationRepository;
             return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+    @DeleteMapping("/declarations/{id}")
+    public ResponseEntity<?> supprimerDeclaration(@PathVariable Long id, @RequestParam Long idChauffeur) {
+        try {
+            gestionParcService.supprimerDeclaration(id, idChauffeur);
+            return ResponseEntity.ok().body("{\"message\": \"Déclaration supprimée avec succès\"}");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
 }

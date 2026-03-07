@@ -638,6 +638,22 @@ public class GestionParcService {
         return declarationRepository.findByChauffeur_IdChauffeur(idChauffeur);
     }
     // Dans GestionParcService.java
+    @Transactional
+    public void supprimerDeclaration(Long idDeclaration, Long idChauffeur) {
+        Declaration declaration = declarationRepository.findById(idDeclaration)
+                .orElseThrow(() -> new RuntimeException("Déclaration introuvable"));
 
+        // Vérifier que c'est bien le propriétaire qui supprime
+        if (!declaration.getChauffeur().getIdChauffeur().equals(idChauffeur)) {
+            throw new RuntimeException("Vous n'êtes pas autorisé à supprimer cette déclaration.");
+        }
+
+        // Optionnel : Empêcher la suppression si le chef l'a déjà validée/traitée
+        if (declaration.getStatus() != DeclarationStatus.EN_ATTENTE) {
+            throw new RuntimeException("Impossible de supprimer une déclaration déjà traitée.");
+        }
+
+        declarationRepository.delete(declaration);
+    }
 
 }
