@@ -45,6 +45,7 @@ public class GestionParcService {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private CarteCarburantRepository carteCarburantRepository;
+    @Autowired
     private FeuilleDeRouteRepository feuilleDeRouteRepository;
 
     // ==================== AUTHENTIFICATION & USERS ====================
@@ -655,5 +656,28 @@ public class GestionParcService {
 
         declarationRepository.delete(declaration);
     }
+// ==================== LOGIQUE CHAUFFEUR ====================
 
+    /**
+     * Récupère toutes les feuilles de route assignées à un chauffeur spécifique
+     */
+    public List<FeuilleDeRoute> getFeuillesParChauffeur(Long idChauffeur) {
+        return feuilleDeRouteRepository.findByChauffeur_IdChauffeur(idChauffeur);
+    }
+
+    /**
+     * Met à jour les données réelles d'une mission existante
+     */
+    @Transactional
+    public Mission completerMissionDonneesReelles(Long idMission, Double kmDep, Double kmArr, LocalTime hDep, LocalTime hArr) {
+        Mission mission = missionRepository.findById(idMission)
+                .orElseThrow(() -> new RuntimeException("Mission ID " + idMission + " introuvable"));
+
+        mission.setKmArrivee(kmArr);
+        mission.setKmDepart(kmDep);
+        mission.setHeureDepartReelle(hDep);
+        mission.setHeureArriveeReelle(hArr);
+
+        return missionRepository.save(mission);
+    }
 }

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -543,4 +544,43 @@ private DeclarationRepository declarationRepository;
             return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
-}
+    // ==================== ENDPOINTS CHAUFFEUR ====================
+
+    /**
+     * ÉTAPE 1 : Le chauffeur récupère ses feuilles de route
+     * GET http://localhost:8080/api/gestion-parc/chauffeur/{id}/feuilles
+     */
+    @GetMapping("/chauffeur/{idChauffeur}/feuilles")
+    public ResponseEntity<List<FeuilleDeRoute>> getFeuillesChauffeur(@PathVariable Long idChauffeur) {
+        List<FeuilleDeRoute> feuilles = gestionParcService.getFeuillesParChauffeur(idChauffeur);
+        return ResponseEntity.ok(feuilles);
+    }
+
+    /**
+     * ÉTAPE 2 : Le chauffeur complète les champs vides
+     * PUT http://localhost:8080/api/gestion-parc/mission/{id}/completer
+     */
+    // Remplacez votre méthode existante par celle-ci
+    @PutMapping("/mission/{idMission}/completer")
+    public ResponseEntity<?> completerMission(@PathVariable Long idMission, @RequestBody Map<String, Object> updates) {
+        try {
+            // On récupère la mission existante
+            Mission mission = missionRepository.findById(idMission)
+                    .orElseThrow(() -> new RuntimeException("Mission introuvable"));
+
+            // On met à jour seulement les champs de fin de mission
+            if (updates.containsKey("kmDepart")) mission.setKmDepart(Double.valueOf(updates.get("kmDepart").toString()));
+            if (updates.containsKey("kmArrivee")) mission.setKmArrivee(Double.valueOf(updates.get("kmArrivee").toString()));
+            if (updates.containsKey("observations")) mission.setObservations((String) updates.get("observations"));
+
+            // Gestion des heures (conversion String -> LocalTime)
+            if (updates.containsKey("heureDepartReelle"))
+                mission.setHeureDepartReelle(LocalTime.parse((String) updates.get("heureDepartReelle")));
+            if (updates.containsKey("heureArriveeReelle"))
+                mission.setHeureArriveeReelle(LocalTime.parse((String) updates.get("heureArriveeReelle")));
+
+            return ResponseEntity.ok(missionRepository.save(mission));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }}
