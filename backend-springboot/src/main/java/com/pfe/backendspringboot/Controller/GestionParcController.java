@@ -4,10 +4,7 @@ import com.pfe.backendspringboot.DTO.LoginRequest;
 import com.pfe.backendspringboot.DTO.ProfileResponse;
 import com.pfe.backendspringboot.DTO.UserRegistrationDTO;
 import com.pfe.backendspringboot.Entities.*;
-import com.pfe.backendspringboot.Repository.ChauffeurRepository;
-import com.pfe.backendspringboot.Repository.ChefParcRepository;
-import com.pfe.backendspringboot.Repository.FeuilleDeRouteRepository;
-import com.pfe.backendspringboot.Repository.MissionRepository;
+import com.pfe.backendspringboot.Repository.*;
 import com.pfe.backendspringboot.Service.GestionParcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +28,8 @@ public class GestionParcController {
     private MissionRepository missionRepository;
     @Autowired
     private FeuilleDeRouteRepository feuilleDeRouteRepository;
-
+@Autowired
+private DeclarationRepository declarationRepository;
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationDTO dto) {
         try {
@@ -469,6 +467,62 @@ public class GestionParcController {
             return ResponseEntity.ok().body("{\"message\": \"Chauffeur supprimé avec succès\"}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+    // ==================== GESTION DES DÉCLARATIONS (Chauffeur) ====================
+
+    @PostMapping("/declaration/creer")
+    public ResponseEntity<?> createDeclaration(@RequestBody Map<String, Object> payload) {
+        try {
+            Long idChauffeur = Long.valueOf(payload.get("idChauffeur").toString());
+            DeclarationType type = DeclarationType.valueOf(payload.get("type").toString().toUpperCase());
+            String description = payload.get("description").toString();
+
+            Declaration nouvelle = gestionParcService.creerDeclaration(idChauffeur, type, description);
+            return ResponseEntity.ok(nouvelle);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @GetMapping("/chauffeur/{idChauffeur}/declarations")
+    public ResponseEntity<List<Declaration>> getMesDeclarations(@PathVariable Long idChauffeur) {
+        return ResponseEntity.ok(gestionParcService.getDeclarationsByChauffeur(idChauffeur));
+    }
+
+    // Optionnel : Pour que le Chef de Parc puisse valider/traiter une déclaration
+    @PutMapping("/declaration/{idDeclaration}/statut")
+    public ResponseEntity<?> updateStatutDeclaration(
+            @PathVariable Long idDeclaration,
+            @RequestParam DeclarationStatus status) {
+        try {
+            Declaration dec = declarationRepository.findById(idDeclaration)
+                    .orElseThrow(() -> new RuntimeException("Déclaration introuvable"));
+            dec.setStatus(status);
+            return ResponseEntity.ok(declarationRepository.save(dec));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+    // Dans GestionParcController.java
+
+    // AJOUTEZ CECI DANS GestionParcController.java
+    @PutMapping("/declaration/modifier/{id}")
+    public ResponseEntity<?> modifierContenuDeclaration(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> payload) {
+        try {
+            return declarationRepository.findById(id).map(dec -> {
+                // On met à jour les champs reçus depuis Angular
+                dec.setType(DeclarationType.valueOf(payload.get("type").toString().toUpperCase()));
+                dec.setDescription(payload.get("description").toString());
+                dec.setStatus(DeclarationStatus.EN_ATTENTE); // On repasse en attente après modif
+
+                Declaration updated = declarationRepository.save(dec);
+                return ResponseEntity.ok(updated);
+            }).orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
 }

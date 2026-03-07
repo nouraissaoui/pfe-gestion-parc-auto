@@ -8,9 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface DeclarationRepository extends JpaRepository<Declaration, Long> {
 
     // Compter les déclarations "En attente" pour un chef du parc spécifique
     long countByChefParc_IdChefParcAndStatus(Long idChef, DeclarationStatus status);
+
+    List<Declaration> findByChauffeur_IdChauffeur(Long idChauffeur);
 }

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
@@ -602,4 +603,41 @@ public class GestionParcService {
         }
         chauffeurRepository.deleteById(id);
     }
+    @Transactional
+    public Declaration creerDeclaration(Long idChauffeur, DeclarationType type, String description) {
+        // 1. Récupérer le chauffeur
+        Chauffeur chauffeur = chauffeurRepository.findById(idChauffeur)
+                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
+
+        // 2. Vérifier si le chauffeur a un véhicule affecté
+        if (chauffeur.getVehicule() == null) {
+            throw new RuntimeException("Le chauffeur n'a pas de véhicule affecté pour faire une déclaration.");
+        }
+
+        // 3. Identifier le Chef de Parc du local du chauffeur
+        Local localChauffeur = chauffeur.getLocal();
+        if (localChauffeur == null || localChauffeur.getChefParc() == null) {
+            throw new RuntimeException("Aucun chef de parc n'est assigné au local de ce chauffeur.");
+        }
+
+        // 4. Créer la déclaration
+        Declaration declaration = Declaration.builder()
+                .type(type)
+                .description(description)
+                .dateCreation(LocalDateTime.now())
+                .status(DeclarationStatus.EN_ATTENTE)
+                .chauffeur(chauffeur)
+                .vehicule(chauffeur.getVehicule())
+                .chefParc(localChauffeur.getChefParc()) // Envoi automatique au chef du parc local
+                .build();
+
+        return declarationRepository.save(declaration);
+    }
+
+    public List<Declaration> getDeclarationsByChauffeur(Long idChauffeur) {
+        return declarationRepository.findByChauffeur_IdChauffeur(idChauffeur);
+    }
+    // Dans GestionParcService.java
+
+
 }
