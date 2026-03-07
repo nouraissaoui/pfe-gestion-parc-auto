@@ -6,13 +6,16 @@ import com.pfe.backendspringboot.DTO.UserRegistrationDTO;
 import com.pfe.backendspringboot.Entities.*;
 import com.pfe.backendspringboot.Repository.*;
 import com.pfe.backendspringboot.Service.GestionParcService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -401,9 +404,15 @@ private DeclarationRepository declarationRepository;
     public ResponseEntity<?> deleteVehicule(@PathVariable Long id) {
         try {
             gestionParcService.deleteVehicule(id);
-            return ResponseEntity.ok().body("{\"message\": \"Véhicule supprimé avec succès\"}");
+            // Utilisation d'une Map pour garantir un JSON valide
+            return ResponseEntity.ok(Collections.singletonMap("message", "Véhicule supprimé"));
+        } catch (EmptyResultDataAccessException | EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", "Véhicule introuvable ID: " + id));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            // Erreur de contrainte (ex: véhicule lié à une mission)
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Impossible de supprimer : le véhicule est utilisé ailleurs."));
         }
     }
 // ==================== GESTION DES CARTES CARBURANT ====================
