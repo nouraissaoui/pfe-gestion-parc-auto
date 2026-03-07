@@ -183,27 +183,4 @@ get pourcentageMaintenance(): number {
   if (!this.vehicules.length) return 0;
   return Math.round((this.vehicules.filter(v => v.etat === 'EN_ENTRETIEN').length / this.vehicules.length) * 100);
 }
-// Ouvre la modal en mode ajout
-ouvrirModalAjout() {
-  this.isEdit = false;
-  this.currentVehicule = { 
-    idVehicule: 0, 
-    matricule: '', 
-    marque: '', 
-    modele: '', 
-    annee: new Date().getFullYear(),
-    carburant: 'Diesel',
-    etat: 'DISPONIBLE',
-    image: '',
-    local: null
-  };
-  this.selectedLocalId = 0;
-  this.showForm = true;
-}
-
-// Prépare la modification (ouvre la modal)
-
-
-// Ferme la modal (déjà géré par le clic sur l'overlay ou bouton Annuler)
-// showForm = false suffit
 }

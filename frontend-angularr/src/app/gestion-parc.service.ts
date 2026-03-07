@@ -285,9 +285,10 @@ getAllLocaux(): Observable<Local[]> {
   }
 
   // 5. Supprimer un véhicule
-  deleteVehicule(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/vehicule/${id}`, { responseType: 'text' });
-  }
+ // Dans gestion-parc.service.ts
+deleteVehicule(id: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/vehicule/${id}`);
+}
 getCarte(numero: string): Observable<any> {
     return this.http.get(`${this.apiUrl1}/${numero}`);
   }
