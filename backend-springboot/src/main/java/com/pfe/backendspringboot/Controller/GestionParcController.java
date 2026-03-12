@@ -247,7 +247,7 @@ private DeclarationRepository declarationRepository;
     }
 
     // Modifier une mission existante dans le carnet
-    /*@PutMapping("/mission/modifier/{idMission}")
+    @PutMapping("/mission/modifier/{idMission}")
     public ResponseEntity<Mission> modifierMission(@PathVariable Long idMission, @RequestBody Mission missionDetails) {
         return missionRepository.findById(idMission).map(m -> {
             m.setPointDepart(missionDetails.getPointDepart());
@@ -256,7 +256,7 @@ private DeclarationRepository declarationRepository;
             m.setDescription(missionDetails.getDescription());
             return ResponseEntity.ok(missionRepository.save(m));
         }).orElse(ResponseEntity.notFound().build());
-    }*/
+    }
     // Dans GestionParcController.java
 
     @GetMapping("/local/{idLocal}/feuilles-actives")
@@ -265,16 +265,7 @@ private DeclarationRepository declarationRepository;
         List<FeuilleDeRoute> feuilles = feuilleDeRouteRepository.findByLocalId(idLocal);
         return ResponseEntity.ok(feuilles);
     }
-    // Modifier une mission existante
-    @PutMapping("/mission/modifier/{idMission}")
-    public ResponseEntity<?> modifierMission(@PathVariable Long idMission, @RequestBody Mission missionDetails) {
-        try {
-            Mission updated = gestionParcService.updateMission(idMission, missionDetails);
-            return ResponseEntity.ok(updated);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
-        }
-    }
+
 
     // Supprimer une mission
     @DeleteMapping("/mission/supprimer/{idMission}")
