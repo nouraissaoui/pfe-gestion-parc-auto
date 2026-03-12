@@ -20,4 +20,6 @@ public interface FeuilleDeRouteRepository extends JpaRepository<FeuilleDeRoute, 
     @Query("SELECT f FROM FeuilleDeRoute f WHERE f.vehicule.local.idLocal = :idLocal AND f.statut = 'OUVERTE'")
     List<FeuilleDeRoute> findByLocalId(@Param("idLocal") Long idLocal);
     // Optionnel : tu peux ajouter des méthodes custom si besoin pour filtrer par chauffeur/local
+
+    List<FeuilleDeRoute> findByChauffeur_IdChauffeur(Long idChauffeur);
 }

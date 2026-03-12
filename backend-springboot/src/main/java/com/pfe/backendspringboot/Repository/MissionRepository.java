@@ -21,4 +21,6 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
                 "AND m.feuilleDeRoute.statut <> :statut")
         int countMissionsEnCoursByLocal(@Param("idLocal") Long idLocal,
                                         @Param("statut") StatutFeuilleDeRoute statut);
+    @Query("SELECT m FROM Mission m WHERE m.chauffeur.idChauffeur = :idChauffeur AND m.chefDuParc.idChefParc = :idChefParc ORDER BY m.dateMission DESC")
+    List<Mission> findByChauffeurAndChefParc(@Param("idChauffeur") Long idChauffeur, @Param("idChefParc") Long idChefParc);
     }

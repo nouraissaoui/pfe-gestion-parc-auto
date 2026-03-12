@@ -11,6 +11,9 @@ import { Adminlayoutcomponent } from "../adminlayoutcomponent/adminlayoutcompone
   styleUrls: ['./chef-parc.component.css']
 })
 export class ChefParcComponent implements OnInit {
+getLocalName(arg0: any) {
+throw new Error('Method not implemented.');
+}
   chefs: ChefParc[] = [];
   locaux: Local[] = [];
   selectedChefId: number | null = null;// Fonction pour vérifier si un local est déjà pris

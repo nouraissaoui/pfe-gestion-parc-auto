@@ -1,0 +1,46 @@
+
+    <h1 class="page-title">Tableau de Bord</h1>
+
+    <!-- STATS CARDS -->
+    <div class="stats-grid">
+        <div class="stat-card" *ngFor="let stat of stats">
+        
+        <div class="stat-header">
+            <div>
+            <div class="stat-label">{{ stat.label }}</div>
+            <div class="stat-value">{{ stat.value | number }}</div>
+            </div>
+            <div class="stat-icon">{{ stat.icon }}</div>
+        </div>
+
+        <div class="stat-footer">
+            <span>{{ stat.footer }}</span>
+            <span 
+            class="stat-trend" 
+            [ngClass]="stat.trendClass"
+            *ngIf="stat.trend">
+            {{ stat.trend }}
+            </span>
+        </div>
+
+        <!-- petites particules animation -->
+        <div class="card-particles">
+            <div class="card-particle" *ngFor="let i of [1,2,3,4,5]"></div>
+        </div>
+
+        </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <div class="hero-section">
+        <img 
+        src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=1400&h=500&fit=crop"
+        alt="Parc Automobile"
+        class="hero-image"
+        />
+
+        <div class="hero-overlay">
+        <h1 class="hero-title">Parc Automobile AGIL</h1>
+        <p class="hero-subtitle">Excellence en Gestion de Flotte</p>
+        </div>
+    </div>

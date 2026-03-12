@@ -41,6 +41,7 @@ export interface ChefParc {
   local?: Local | null;
 }
 export interface Vehicule {
+type: any;
   idVehicule: number;
   matricule: string;
   marque: string;
@@ -74,6 +75,54 @@ export interface Entretien {
   garage: any;
   vehicule: Vehicule;
   chefDuParc: any;
+export interface Chauffeur {
+  idChauffeur?: number;
+  nom: string;
+  prenom: string;
+  mail: string;
+  motDePasse?: string; // Optionnel car WRITE_ONLY côté backend
+  datePriseLicense?: string;
+  anciennete?: number;
+  typeVehiculePermis?: string;
+  dateExpirationPermis?: string;
+  region?: string;
+  etatChauffeur: 'DISPONIBLE' | 'EN_MISSION' | 'EN_CONGE';
+  vehicule?: Vehicule | null;
+  local?: Local | null; // Le local est envoyé en tant qu'objet imbriqué
+}
+export interface Declaration {
+  idDeclaration?: number;
+  type: 'PANNE' | 'AMENDE' | 'ACCIDENT';
+  description: string;
+  dateCreation?: string;
+  status?: 'EN_ATTENTE' | 'TRAITE' | 'REJETE';
+  vehicule?: Vehicule;
+  chauffeur?: Chauffeur;
+  chefParc?: ChefParc;
+}
+export interface Mission {
+  idMission: number;
+  dateMission: string;
+  pointDepart: string;
+  destination: string;
+  heureDepartPrevue: string;
+  description: string;
+  heureDepartReelle?: string;
+  heureArriveeReelle?: string;
+  kmDepart?: number;
+  kmArrivee?: number;
+  consommationCarburant?: number;
+  observations?: string;
+}
+
+export interface FeuilleDeRoute {
+  idFeuille: number;
+  dateGeneration: string;
+  statut: string;
+  vehicule: any;
+  chauffeur: any;
+  chefParc: any;
+  missions: Mission[];
 }
 
 @Injectable({
@@ -83,7 +132,7 @@ export class GestionParcService {
 
   private baseUrl = 'http://localhost:8080/api/gestion-parc'; // URL de base
   private apiUrl = 'http://localhost:8080/api/gestion-parc/local'; 
-
+private apiUrl1 = 'http://localhost:8080/api/gestion-parc/carte';
 
   constructor(private http: HttpClient) { }
 
@@ -270,14 +319,19 @@ getAllLocaux(): Observable<Local[]> {
   }
 
   // 5. Supprimer un véhicule
-  deleteVehicule(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/vehicule/${id}`, { responseType: 'text' });
+ // Dans gestion-parc.service.ts
+deleteVehicule(id: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/vehicule/${id}`);
+}
+getCarte(numero: string): Observable<any> {
+    return this.http.get(`${this.apiUrl1}/${numero}`);
   }
 // Récupérer la liste des déclarations à traiter
 getDeclarationsEnAttenteLocal(idLocal: number): Observable<Declaration[]> {
   return this.http.get<Declaration[]>(`${this.baseUrl}/local/${idLocal}/declarations-en-attente`);
 }
 
+<<<<<<< HEAD
 // Envoyer le formulaire de traitement
 validerTraitementDeclaration(idDec: number, idChef: number, idGarage: number, type: string, date: string, obs: string): Observable<any> {
   const params = new HttpParams()
@@ -327,5 +381,83 @@ deleteEntretien(id: number): Observable<any> {
 /*recuperer les missions d'un chauffeur*/
 getMissionsByChauffeur(idChauffeur: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/chauffeur/${idChauffeur}`);
+=======
+  recharger(numero: string, montant: number): Observable<any> {
+    return this.http.put(`${this.apiUrl1}/recharger/${numero}`, { montant });
+  }
+  // ==================== CRUD CHAUFFEURS COMPLET ====================
+
+  // 1. Récupérer tous les chauffeurs
+  getAllChauffeurs(): Observable<Chauffeur[]> {
+    return this.http.get<Chauffeur[]>(`${this.baseUrl}/chauffeurs`);
+  }
+
+  // 2. Récupérer un chauffeur par ID
+  getChauffeurById(id: number): Observable<Chauffeur> {
+    return this.http.get<Chauffeur>(`${this.baseUrl}/chauffeur/${id}`);
+  }
+
+  // 3. Ajouter un chauffeur (Le Local est déjà dans l'objet Chauffeur)
+  addChauffeur(chauffeur: Chauffeur): Observable<Chauffeur> {
+    return this.http.post<Chauffeur>(`${this.baseUrl}/chauffeur`, chauffeur);
+  }
+
+  // 4. Modifier un chauffeur
+  updateChauffeur(id: number, chauffeur: Chauffeur): Observable<Chauffeur> {
+    return this.http.put<Chauffeur>(`${this.baseUrl}/chauffeur/${id}`, chauffeur);
+  }
+
+  // 5. Supprimer un chauffeur
+  deleteChauffeur(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/chauffeur/${id}`);
+  }
+  // ==================== GESTION DES DÉCLARATIONS ====================
+
+// Créer une déclaration (Chauffeur)
+creerDeclaration(idChauffeur: number, type: string, description: string): Observable<Declaration> {
+  const payload = {
+    idChauffeur: idChauffeur,
+    type: type,
+    description: description
+  };
+  return this.http.post<Declaration>(`${this.baseUrl}/declaration/creer`, payload);
+}
+
+// Récupérer l'historique des déclarations d'un chauffeur
+getDeclarationsByChauffeur(idChauffeur: number): Observable<Declaration[]> {
+  return this.http.get<Declaration[]>(`${this.baseUrl}/chauffeur/${idChauffeur}/declarations`);
+}
+
+// Mettre à jour le statut (Chef de Parc)
+updateStatutDeclaration(idDeclaration: number, statut: string): Observable<Declaration> {
+  // Utilisation de HttpParams pour le @RequestParam status
+  const params = new HttpParams().set('status', statut);
+  return this.http.put<Declaration>(
+    `${this.baseUrl}/declaration/${idDeclaration}/statut`, 
+    {}, 
+    { params }
+  );
+}// Dans gestion-parc.service.ts
+updateDeclaration(id: number, data: any): Observable<any> {
+  // L'URL doit être exactement celle-ci pour correspondre au Controller Java
+  return this.http.put(`http://localhost:8080/api/gestion-parc/declaration/modifier/${id}`, data);
+}
+deleteDeclaration(id: number, idChauffeur: number): Observable<any> {
+  // On passe l'idChauffeur en paramètre de requête (?idChauffeur=...)
+  const params = new HttpParams().set('idChauffeur', idChauffeur.toString());
+  
+  return this.http.delete(`${this.baseUrl}/declarations/${id}`, { 
+    params,
+    responseType: 'text' as 'json' // Utile si le backend renvoie un message simple au lieu d'un objet
+  });
+}
+// Récupère les feuilles de route du chauffeur connecté
+ getMesFeuilles(idChauffeur: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/chauffeur/${idChauffeur}/feuilles`);
+  }
+
+  completerMission(idMission: number, data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/mission/${idMission}/completer`, data);
+>>>>>>> 2f95c7b5b6a222b47c1e7a1ead7c1b51de534dd0
   }
 }

@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="card-visual">
+    <div class="card-inner" [class.flipped]="isFlipped">
+      
+      <div class="front">
+        <div class="top-row">
+          <div class="brand-info">
+            <div class="brand-logo">AGILIS</div>
+            <div class="sub-brand">e-DARA</div>
+          </div>
+          <div class="right-logos">
+<div class="award-container-premium">
+  <img src="/assets/capture.png" 
+       class="award-image-mini" style="width: 60px;height: 60px;">
+  <div class="award-glow"></div>
+</div>
+
+  <div class="agil-official-logo">
+    <img src="https://www.leaders.com.tn/uploads/FCK_files/Agil-min1.jpg" alt="Logo Agil">
+  </div>
+</div>
+        </div>
+
+        <div class="chip-area"></div>
+        <img src="assets/ChatGPT Image 25 févr. 2026, 05_56_25.png" class="fuel-nozzle" alt="pistolet">
+
+        <div class="card-data">
+          <div class="v-num">{{ formatNumero(carte.numeroCarte) }}</div>
+          <div class="v-name">{{ carte.titulaire || 'NOM DU TITULAIRE' | uppercase }}</div>
+          <div class="v-sub">{{ carte.adresse || 'ADRESSE CLIENT' | uppercase }}</div>
+          
+          <div class="v-solde">SOLDE: {{ (carte.montantReel || 0) | number:'1.2-2' }} TND</div>
+        </div>
+
+        <div class="expiry-date">{{ carte.dateExpiration || '--/--' }}</div>
+      </div>
+
+     <div class="back">
+  <div class="back-content">
+    <div class="arabic-text">
+      هذه البطاقة صالحة للاستعمال داخل الجمهورية التونسية و هي ملك للشركة الوطنية لتوزيع البترول "عجيل ش.خ.أ" وبإمكانها سحبها متى شاءت. الشركة الوطنية لتوزيع البترول غير مسؤولة عن الاستعمال الغير قانوني لهذه البطاقة. في صورة ضياع أو سرقة، كل شخص يجد هذه البطاقة عليه إرجاعها للشركة الوطنية لتوزيع البترول - شارع محمد علي عقيد 1003 الخضراء - تونس.
+    </div>
+    
+    <div class="divider"></div>
+    
+    <div class="french-text">
+      Cette carte est valable seulement en Tunisie, elle est la propriété de la SNDP qui peut la retirer à tout moment. La SNDP n’assume aucune responsabilité en cas d’utilisation frauduleuse. En cas de perte ou de vol, toute personne trouvant cette carte est invitée à la remettre à la SNDP.
+      <br>
+      <strong>Avenue Mohamed Ali Akid 1003 El Khadhra - Tunis.</strong>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+
+ <div class="form-area">
+  <h3 class="form-title">
+  </h3>
+  
+  <div class="input-grid">
+    <div class="field">
+      <label class="custom-label">Numéro de carte</label>
+      <div class="search-group">
+        <input type="text" 
+               [(ngModel)]="carte.numeroCarte" 
+               placeholder="Entrez le numéro"
+               class="custom-input search-input">
+        <button (click)="chargerDonneesCarte()" class="btn-search">
+          🔍
+        </button>
+      </div>
+    </div>
+
+    <div class="recharge-box">
+      <div class="field">
+        <label class="custom-label">Montant à ajouter au solde réel</label>
+        <div class="amount-wrapper">
+           <input type="number" 
+                  [(ngModel)]="nouveauMontant" 
+                  placeholder="0.00"
+                  class="custom-input amount-input">
+           <span class="currency">TND</span>
+        </div>
+      </div>
+      <button class="btn-update" (click)="modifierSolde()">
+        METTRE À JOUR 
+      </button>
+    </div>
+  </div>
+
+  <button class="btn-flip" (click)="flipCard()">
+    🔄 TOURNER LA CARTE
+  </button>
+</div>

@@ -1,0 +1,104 @@
+<div class="particles-bg">
+  <div class="bg-particle" *ngFor="let i of [1,2,3,4]"></div>
+</div>
+
+<header class="header">
+  <div class="header-left">
+    <div class="logo">
+      <img 
+        src="https://tse4.mm.bing.net/th/id/OIP.DqzAYevLmA0BnSvWkDiMsQAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+        alt="AGIL Logo"
+        class="logo-img"
+      />
+      <div>
+        <div class="company-title">AGIL Energy</div>
+        <div class="company-subtitle">
+          Société Nationale de Distribution des Pétroles
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="user-info">
+      <div class="user-avatar admin-badge">
+        {{ Nom.charAt(0) }}{{ Prenom.charAt(0) }}
+      </div>
+      <div class="user-details">
+        <h3>{{ Nom }} {{ Prenom }}</h3>
+        <p>{{ role }}</p>
+      </div>
+    </div>
+
+    <button class="logout-btn" (click)="logout()">
+      ⏻ Déconnexion
+    </button>
+  </div>
+</header>
+
+<aside class="sidebar">
+  <h2>
+    <a [routerLink]="['/admin/dashboard']" style="text-decoration: none; color: inherit;">
+      ⚙ Menu Admin
+    </a>
+  </h2>
+
+  <div class="menu-item"
+       [routerLink]="['/admin/chefsparc']"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }">
+    <span class="menu-icon"><i class="fa-solid fa-user-gear"></i></span>
+    <div class="menu-labels">
+      <span class="menu-title">Gérer les chefs de parc</span>
+      <small class="menu-subtitle">Supervision</small>
+    </div>
+  </div>
+
+  <div class="menu-item" 
+       [routerLink]="['/admin/chauffeurs']"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }">
+    <span class="menu-icon"><i class="fa-solid fa-user-tie"></i></span>
+    <div class="menu-labels">
+      <span class="menu-title">Gérer les chauffeurs</span>
+      <small class="menu-subtitle">Gouvernance Élite</small>
+    </div>
+  </div>
+
+  <div class="menu-item" 
+       [routerLink]="['/admin/vehicules']"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }">
+    <span class="menu-icon"><i class="fa-solid fa-car-side"></i></span>
+    <div class="menu-labels">
+      <span class="menu-title">Flotte Véhicules</span>
+      <small class="menu-subtitle">Actifs Stratégiques</small>
+    </div>
+  </div>
+
+  <div class="menu-item"        
+       [routerLink]="['/admin/locaux']"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }">
+    <span class="menu-icon"><i class="fa-solid fa-city"></i></span>
+    <div class="menu-labels">
+      <span class="menu-title">Unités & Locaux</span>
+      <small class="menu-subtitle">Infrastructures</small>
+    </div>
+  </div>
+
+  <div class="menu-item gold-item" 
+       [routerLink]="['/admin/rapports']"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }">
+    <span class="menu-icon"><i class="fa-solid fa-chart-line"></i></span>
+    <div class="menu-labels">
+      <span class="menu-title">Rapports Généraux</span>
+      <small class="menu-subtitle">Intelligence Data</small>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>

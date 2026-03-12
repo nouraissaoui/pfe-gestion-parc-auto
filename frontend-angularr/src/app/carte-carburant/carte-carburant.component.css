@@ -1,0 +1,1321 @@
+:root {
+  --agil-gray-light: #656161;
+  --agil-text: #2c3e50;
+  --agil-green: #5a7d32;
+  --agil-dark: #3b4a54;
+}
+
+.container { width: 100%; max-width: 480px; padding: 20px; margin: auto; font-family: 'Segoe UI', sans-serif; }
+
+/* VISUEL CARTE */
+.card-visual {
+  width: 400px;
+  height: 250px;
+  perspective: 1000px;
+  margin: 0 auto 30px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.card-inner.flipped { transform: rotateY(180deg); }
+
+.front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  padding: 22px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* RECTO */
+.front {
+  background-color: #d1d5d8;
+  background-size: 45%;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-row { display: flex; justify-content: space-between; align-items: flex-start; z-index: 5; }
+.brand-logo { font-size: 24px; font-weight: 900; color: darkblue; font-style: italic; letter-spacing: -1px; }
+.sub-brand { color: var(--agil-green); font-weight: bold; font-size: 22px; margin-top: -6px; }
+
+.right-logos { display: flex; gap: 8px; }
+.award-logo { 
+  width: 42px; height: 52px; background: #e35e6a; border-radius: 4px; 
+  color: white; font-size: 7px; text-align: center; padding: 4px; line-height: 1.1; font-weight: bold;
+}
+
+.agil-official-logo { 
+  width: 60px; height:60px; border-radius: 4px; 
+  display: flex; align-items: center; justify-content: center; border: 1px solid #ddd;
+}
+.agil-official-logo img { width: 90%; }
+
+.chip-area { 
+  width: 50px; height: 40px; background: linear-gradient(135deg, #d4af37, #f1c40f); 
+  border-radius: 8px; margin-top: 10px; border: 1px solid rgba(0,0,0,0.1); z-index: 5;
+}
+
+.fuel-nozzle {
+  position: absolute;
+  right: -5px; bottom: -15px;
+  width: 170px; z-index: 1;
+  transform: rotate(-2deg);
+  opacity: 0.8;
+  filter: drop-shadow(-5px 5px 10px rgba(0,0,0,0.1));
+}
+
+.card-data {
+  margin-top: auto;
+  font-family: 'OCR A Extended', monospace;
+  color: var(--agil-text);
+  z-index: 5;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.v-num { font-size: 19px; letter-spacing: 2px; margin-bottom: 5px; }
+.v-name { font-size: 14px; font-weight: bold; }
+.v-sub { font-size: 11px; opacity: 0.9; }
+.v-solde { 
+  margin-top: 8px; font-size: 15px; color: var(--agil-green); font-weight: bold; 
+  background: rgba(255,255,255,0.4); display: inline-block; padding: 2px 8px; border-radius: 4px;
+}
+
+.expiry-date { position: absolute; bottom: 15px; right: 25px; font-weight: bold; font-family: 'OCR A Extended'; font-size: 14px; z-index: 5; }
+
+/* VERSO */
+.back { background: #d1d5d8; transform: rotateY(180deg); color: #555; display: flex; flex-direction: column; justify-content: center; }
+.arabic-text { direction: rtl; font-size: 11px; font-weight: bold; margin-bottom: 10px; }
+.divider { border: 0; border-top: 1px solid #ccc; width: 100%; margin: 10px 0; }
+.french-text { font-size: 10px; line-height: 1.3; }
+.footer-addr { font-size: 10px; margin-top: 15px; color: var(--agil-dark); }
+
+/* FORMULAIRE */
+.form-area { background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.form-title { margin: 0 0 20px; font-size: 18px; color: var(--agil-dark); text-align: center; }
+.input-grid { display: grid; gap: 12px; }
+.field { display: flex; flex-direction: column; }
+.field label { font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; margin-bottom: 4px; }
+.field input { padding: 10px; border: 1.5px solid #eee; border-radius: 8px; font-size: 14px; transition: 0.3s; }
+.field input:focus { border-color: var(--agil-green); outline: none; background: #fafafa; }
+
+.row { display: flex; gap: 10px; }
+.flex-2 { flex: 2; }
+.flex-1 { flex: 1; }
+
+.recharge-box { margin-top: 10px; padding: 15px; background: #f9f9f9; border-radius: 10px; border: 1px dashed #ddd; }
+.btn-update { width: 100%; margin-top: 10px; background: var(--agil-green); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.btn-flip { width: 100%; margin-top: 15px; background: var(--agil-dark); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.btn-flip:hover { opacity: 0.9; transform: translateY(-2px); }
+/* --- Barre de Recherche Moderne --- */
+.search-container {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 5px 15px;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.search-container:focus-within {
+  border-color: #76b02c; /* Vert Agil */
+  box-shadow: 0 0 0 4px rgba(118, 176, 44, 0.1);
+  background: white;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px;
+  font-size: 15px;
+  outline: none;
+  color: #2d3436;
+}
+
+.search-btn {
+  background: #2d3436;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.search-btn:hover {
+  transform: scale(1.05);
+  background: #000;
+}
+
+/* --- Boutons d'Action --- */
+.btn-update {
+  width: 100%;
+  background: linear-gradient(135deg, #76b02c 0%, #5a8a22 100%);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(118, 176, 44, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-update:hover {
+  box-shadow: 0 6px 20px rgba(118, 176, 44, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-flip {
+  width: 100%;
+  margin-top: 15px;
+  background: white;
+  color: #2d3436;
+  border: 2px solid #2d3436;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-flip:hover {
+  background: #2d3436;
+  color: white;
+}
+
+/* --- Input de Montant --- */
+.amount-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  color: #76b02c;
+}/* --- Barre de Recherche "Glassmorphism" --- */
+.search-wrapper {
+  margin-bottom: 25px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  padding: 4px 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-container:focus-within {
+  border-color: #76b02c; /* Vert Agil */
+  box-shadow: 0 4px 20px rgba(118, 176, 44, 0.15);
+  transform: translateY(-1px);
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px 15px;
+  font-size: 15px;
+  outline: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.search-btn {
+  background: #2d3436;
+  color: white;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+  background: #000;
+  transform: scale(1.05);
+}
+
+/* --- Bouton de Validation (Recharge) --- */
+.btn-update {
+  width: 100%;
+  background: linear-gradient(135deg, #76b02c 0%, #5a8a22 100%);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(118, 176, 44, 0.3);
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-update:hover {
+  box-shadow: 0 10px 25px rgba(118, 176, 44, 0.45);
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
+
+.btn-update:active {
+  transform: translateY(-1px);
+}
+
+/* --- Bouton Flip Discret --- */
+.btn-flip {
+  width: 100%;
+  margin-top: 20px;
+  background: #f8f9fa;
+  color: #636e72;
+  border: 1px solid #dfe6e9;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-flip:hover {
+  background: #2d3436;
+  color: white;
+  border-color: #2d3436;
+}/* Container global du formulaire */
+.form-area {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 24px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  max-width: 450px;
+  margin: 20px auto;
+}
+
+.form-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1a202c;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Labels stylisés */
+.custom-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #a0aec0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+/* Inputs personnalisés */
+.custom-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #edf2f7;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  outline: none;
+  background: #f8fafc;
+}
+
+.custom-input:focus {
+  border-color: #3182ce;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(49, 130, 206, 0.1);
+}
+
+/* Groupe de recherche */
+.search-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-search {
+  background: #2d3748;
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-search:hover {
+  background: #1a202c;
+  transform: scale(1.05);
+}
+
+/* Boite de recharge */
+.recharge-box {
+  background: #f1f5f9;
+  padding: 20px;
+  border-radius: 18px;
+  margin-top: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.amount-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currency {
+  position: absolute;
+  right: 15px;
+  font-weight: bold;
+  color: #718096;
+  font-size: 12px;
+}
+
+/* Bouton Update */
+.btn-update {
+  width: 100%;
+  margin-top: 15px;
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-update:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(72, 187, 120, 0.4);
+}
+
+/* Bouton Flip */
+.btn-flip {
+  width: 100%;
+  margin-top: 20px;
+  background: transparent;
+  color: #4a5568;
+  border: 2px solid #e2e8f0;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-flip:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+}/* --- STYLE DU TITRE EXACT --- */
+
+.brand-logo {
+  font-family: 'Arial Black', sans-serif; /* Police grasse et épaisse */
+  font-size: 32px;
+  font-weight: 900;
+  color: #444b52; /* Gris foncé identique à l'image */
+  font-style: italic; /* Italique pour AGILIS */
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.sub-brand {
+  font-family: 'Arial Black', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: #e5e95e; /* Jaune vif e-DARA */
+  font-style: italic;
+  margin-top: -5px; /* Pour rapprocher les deux textes */
+  margin-left: 20px; /* Décalage vers la droite comme sur l'image */
+  
+  /* Effet de contour noir fin (Text Stroke) */
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+}.right-logos {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  z-index: 10;
+}
+
+/* Badge Rouge "Elu Produit de l'Année" */
+.award-logo {
+  width: 48px;
+  height: 60px;
+  background-color: #e35e6a; /* Rouge corail exact de l'image */
+  border-radius: 6px; /* Bords légèrement arrondis */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.award-content {
+  color: white;
+  font-family: 'Arial Narrow', sans-serif;
+  font-size: 7px; /* Très petit comme sur l'original */
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.award-content strong {
+  font-size: 10px;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Logo Agil Officiel (Le carré blanc) */
+.agil-official-logo {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.agil-official-logo img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}/* --- STYLE VERSO (BACK) --- */
+
+.back {
+  background-color: #d1d5d8; /* Gris clair identique à l'image */
+  transform: rotateY(180deg);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.back-content {
+  color: #333;
+  font-family: Arial, sans-serif;
+  text-align: justify;
+}
+
+.arabic-text {
+  direction: rtl; /* Ecriture de droite à gauche */
+  font-size: 10px;
+  line-height: 1.4;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  width: 100%;
+}
+
+.french-text {
+  font-size: 9px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.french-text strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+}.award-badge {
+  width: 50px;
+  height: 62px;
+  background-color: #e35e6a; /* Rouge corail exact */
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.award-circle {
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid white;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Nécessaire pour les lignes positionnées */
+  overflow: hidden;
+}
+
+/* --- AJOUT DES LIGNES ICI --- */
+.award-circle::before,
+.award-circle::after {
+  content: '';
+  position: absolute;
+  left: 3px; /* Espacement depuis le bord gauche du cercle */
+  right: 3px; /* Espacement depuis le bord droit du cercle */
+  height: 1px; /* Épaisseur de la ligne */
+  background-color: white; /* Couleur de la ligne */
+}
+
+/* Ligne supérieure (au-dessus de "PRODUIT") */
+.award-circle::before {
+  top: 15px;
+}
+
+/* Ligne inférieure (en dessous de "PRODUIT") */
+.award-circle::after {
+  bottom: 11px;
+}
+/* -------------------------- */
+
+.award-text {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1;
+}
+
+.award-text.top {
+  font-size: 8px;
+  margin-top: 2px;
+  z-index: 1; /* Assure que le texte est au-dessus des lignes */
+}
+
+.award-text.middle {
+  font-size: 7px;
+  margin: 1px 0;
+  z-index: 1; /* Assure que le texte est au-dessus des lignes */
+}
+
+.award-text.bottom-arc {
+  font-size: 5px;
+  position: absolute;
+  bottom: 4px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 1; /* Assure que le texte est au-dessus des lignes */
+}
+
+.award-text.bottom-arc span {
+  display: inline-block;
+}
+
+/* Ajustement manuel des lettres pour l'arc */
+.award-text.bottom-arc span:nth-child(1) { transform: rotate(-35deg) translateY(2px); }
+.award-text.bottom-arc span:nth-child(2) { transform: rotate(-25deg) translateY(1px); }
+.award-text.bottom-arc span:nth-child(3) { transform: rotate(-15deg); }
+.award-text.bottom-arc span:nth-child(4) { transform: rotate(-5deg); }
+.award-text.bottom-arc span.l-apostrophe { transform: rotate(5deg); }
+.award-text.bottom-arc span:nth-child(6) { transform: rotate(15deg); }
+.award-text.bottom-arc span:nth-child(7) { transform: rotate(25deg) translateY(1px); }
+.award-text.bottom-arc span:nth-child(8) { transform: rotate(35deg) translateY(2px); }
+.award-text.bottom-arc span:nth-child(9) { transform: rotate(45deg) translateY(3px); }
+.award-text.bottom-arc span:nth-child(10) { transform: rotate(55deg) translateY(4px); }
+
+.award-year {
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 3px;
+}.award-badge {
+  width: 50px;
+  height: 62px;
+  background-color: #e35e6a; /* Rouge corail exact de l'image */
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.award-circle {
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid white;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: white;
+}
+
+.award-text {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1;
+}
+
+.award-text.top {
+  font-size: 8px;
+  margin-top: 2px;
+}
+
+.award-text.middle {
+  font-size: 7px;
+  margin: 1px 0;
+}
+
+/* --- CLASSE POUR LA ROTATION (L'ARC DE CERCLE) --- */
+.award-text.bottom-arc {
+  font-size: 5px;
+  position: absolute;
+  bottom: 4px; /* Positionné en bas du cercle */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.award-text.bottom-arc span {
+  display: inline-block;
+}
+
+/* Ajustement manuel des lettres pour l'arc vers le bas */
+/* nth-child(1) correspond à 'D', nth-child(2) à 'E', etc. */
+.award-text.bottom-arc span:nth-child(1) { transform: rotate(-35deg) translateY(2px); }
+.award-text.bottom-arc span:nth-child(2) { transform: rotate(-25deg) translateY(1px); }
+.award-text.bottom-arc span:nth-child(3) { transform: rotate(-15deg); } /* L'espace ou D */
+.award-text.bottom-arc span:nth-child(4) { transform: rotate(-5deg); }  /* E */
+.award-text.bottom-arc span.l-apostrophe { transform: rotate(5deg); }   /* L' */
+.award-text.bottom-arc span:nth-child(6) { transform: rotate(15deg); }  /* A */
+.award-text.bottom-arc span:nth-child(7) { transform: rotate(25deg) translateY(1px); } /* N */
+.award-text.bottom-arc span:nth-child(8) { transform: rotate(35deg) translateY(2px); } /* N */
+.award-text.bottom-arc span:nth-child(9) { transform: rotate(45deg) translateY(3px); } /* É */
+.award-text.bottom-arc span:nth-child(10) { transform: rotate(55deg) translateY(4px); } /* E */
+
+.award-year {
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 3px;
+}/* Container pour aligner comme sur l'image */
+  .brand-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Aligné à gauche comme sur l'image */
+    font-family: 'Arial Black', 'Impact', sans-serif; /* Police très grasse */
+    background-color: white; /* Fond blanc pour bien voir */
+    padding: 20px;
+  }
+
+  /* Style pour AGILIS (Gris, gras, italique) */
+  .agilis-title {
+    color: #444b52; /* Gris foncé exact */
+    font-size: 40px;
+    font-weight: 900;
+    font-style: italic; /* Italique */
+    margin: 0;
+    line-height: 1;
+    letter-spacing: -2px; /* Lettres serrées */
+    text-transform: uppercase;
+  }
+
+  /* Style pour e-DARA (Jaune, contour noir, gras, italique) */
+  .edara-title {
+    color: #e5e95e; /* Jaune vif exact */
+    font-size: 32px;
+    font-weight: 900;
+    font-style: italic; /* Italique */
+    margin: -5px 0 0 25px; /* Décalage pour l'effet de l'image */
+    line-height: 1;
+    letter-spacing: -1px; /* Lettres serrées */
+    
+    /* EFFET DE CONTOUR NOIR EXACT (Text Stroke) */
+    -webkit-text-stroke: 1px #000000; /* Contour noir de 1px */
+    text-stroke: 1px #000000;
+    
+    /* Petite ombre pour la profondeur comme sur l'image */
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2); 
+  }.award-badge {
+  width: 50px;
+  height: 60px;
+  background: #d45c6a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Arial Black', sans-serif;
+}
+
+/* Cercle */
+.award-circle {
+  width: 38px;
+  height: 38px;
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Inclinaison */
+.stamp {
+  transform: rotate(-15deg);
+  text-align: center;
+  color: white;
+  line-height: 1;
+}
+
+/* ELU */
+.stamp-elu {
+  font-size: 6px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid white;   /* ligne 1 */
+  padding-bottom: 1px;
+  margin-bottom: 1px;
+}
+
+/* PRODUIT */
+.stamp-produit {
+  font-size: 5px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid white;   /* ligne 2 */
+  padding-bottom: 1px;
+  margin-bottom: 1px;
+}
+
+/* DE L'ANNÉE */
+.stamp-de {
+  font-size: 4px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Année */
+.award-year {
+  margin-top: 3px;
+  font-size: 7px;
+  font-weight: 900;
+  color: white;
+}.award-badge {
+  width: 50px;
+  height: 65px;
+  background: #d45c6a; /* Rouge rosé exact */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Arial Black', sans-serif;
+  border-radius: 4px;
+}
+
+.award-circle {
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid white; /* Bordure du cercle */
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  line-height: 1.1; /* Pour un espacement compact sans lignes */
+}
+
+.text-elu, .text-produit, .text-de-annee {
+  color: white;
+  font-weight: 20;
+  text-align: center;
+  border: none; /* AUCUNE ligne */
+  margin: 0;
+  padding: 0;
+}
+
+.text-elu {
+  font-size: 8px;
+  letter-spacing: 0.5px;
+}
+
+.text-produit {
+  font-size: 7px;
+  text-transform: uppercase;
+}
+
+.text-de-annee {
+  font-size: 4px;
+  text-transform: uppercase;
+}
+
+.award-year {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 900;
+  color: white;
+}.award-badge {
+  width: 50px;
+  height: 65px;
+  background: #d45c6a; /* Rouge rosé exact */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-family: 'Arial Black', sans-serif;
+}
+
+.award-circle {
+  width: 38px;
+  height: 38px;
+  border: 1.2px solid white; /* Cercle fin */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.stamp {
+  transform: rotate(-12deg); /* Inclinaison légère */
+  text-align: center;
+  color: white;
+  line-height: 1; /* Resserre le texte */
+}
+
+/* --- TAILLES DE POLICE RÉDUITES --- */
+.txt-elu {
+  font-size: 6px; /* Plus petit pour ne pas toucher les bords */
+  font-weight: 900;
+  margin-bottom: 1px;
+}
+
+.txt-produit {
+  font-size: 5.5px;
+  font-weight: 900;
+  margin-bottom: 1px;
+}
+
+.txt-de {
+  font-size: 3.5px; /* Très petit comme sur l'image */
+  font-weight: 900;
+}
+
+.award-year {
+  margin-top: 3px;
+  font-size: 10px; /* Année ajustée */
+  font-weight: 900;
+  color: white;
+}.award-badge {
+  width: 50px;
+  height: 65px;
+  background: #d45c6a; /* Rouge rosé exact */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-family: 'Arial Black', sans-serif;
+}
+
+.award-circle {
+  width: 38px;
+  height: 38px;
+  border: 1.2px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.stamp {
+  transform: rotate(-12deg);
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.txt-elu {
+  font-size: 6px;
+  font-weight: 900;
+  margin-top: -2px; /* Remonte un peu ELU */
+  margin-bottom: 4px; /* Crée l'espace pour pousser ce qui suit vers le bas */
+}
+
+.txt-produit {
+  font-size: 5.5px;
+  font-weight: 900;
+  margin-bottom: 2px; /* Espace entre Produit et De l'année */
+}
+
+.txt-de {
+  font-size: 3.5px;
+  font-weight: 900;
+}
+
+.award-year {
+  margin-top: 4px;
+  font-size: 11px; /* Taille de l'année */
+  font-weight: 900;
+  color: white;
+}.award-badge {
+  width: 50px;
+  height: 65px;
+  background: #d45c6a; /* Rouge rosé exact */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-family: 'Arial Black', sans-serif;
+}
+
+.award-circle {
+  width: 38px;
+  height: 38px;
+  border: 1.2px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.stamp {
+  transform: rotate(-12deg);
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.txt-elu {
+  font-size: 6px;
+  font-weight: 900;
+  margin-top: -2px; /* Remonte un peu ELU */
+  margin-bottom: 4px; /* Crée l'espace pour pousser ce qui suit vers le bas */
+}
+
+.txt-produit {
+  font-size: 5.5px;
+  font-weight: 900;
+  margin-bottom: 2px; /* Espace entre Produit et De l'année */
+}
+
+.txt-de {
+  font-size: 3.5px;
+  font-weight: 900;
+}
+
+.award-year {
+  margin-top: 4px;
+  font-size: 11px; /* Taille de l'année */
+  font-weight: 900;
+  color: white;
+}/* ==========================================================================
+   AGIL PREDICTIVE - BORDEAUX ROYALE
+   Theme: Bordeaux, Gold, Ivory, Heritage Typography
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@100;300;400;700&display=swap');
+
+:root {
+    /* Palette Élégante */
+    --bordeaux: #6b1d24; /* Couleur de base riche */
+    --bordeaux-dark: #4a1318;
+    --gold: #d4af37; /* Accents dorés */
+    --gold-light: #f3e5ab;
+    --ivory: #fffff0; /* Fond doux */
+    --ivory-dark: #faf0e6;
+    
+    /* Typographie */
+    --font-heritage: 'Playfair Display', serif; /* Pour titres */
+    --font-clean: 'Roboto', sans-serif; /* Pour texte */
+}
+
+/* --- Base --- */
+body {
+    background: linear-gradient(135deg, var(--ivory) 0%, var(--ivory-dark) 100%);
+    color: #333;
+    font-family: var(--font-clean);
+    margin: 0;
+}
+
+/* --- Layout --- */
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px;
+}
+
+/* --- Header avec Touche Dorée --- */
+.header-top {
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 20px;
+    margin-bottom: 50px;
+}
+
+.header-top h1 {
+    font-family: var(--font-heritage);
+    font-weight: 900;
+    color: var(--bordeaux);
+}
+
+.gold-text {
+    color: var(--gold);
+}
+
+/* --- Cartes Flottantes (Glassmorphism Doux) --- */
+.main-focus-container {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Ombre douce */
+}
+
+/* --- Graphique Premium --- */
+.total-count {
+    color: var(--gold);
+    font-size: 5rem;
+    font-weight: 900;
+}
+
+/* --- Liste de Flotte avec Effet Hover --- */
+.vehicle-item {
+    background: white;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.vehicle-item:hover {
+    background: var(--ivory-dark);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* --- Bouton IA Doré --- */
+.btn-ia-gold {
+    background-color: var(--gold);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-ia-gold:hover {
+    background-color: var(--bordeaux);
+}
+.chip-area {
+    position: relative; /* INDISPENSABLE */
+    overflow: visible;  /* Assure que le triangle qui dépasse à gauche n'est pas coupé */
+    z-index: 10;        /* Assure qu'il passe au-dessus du fond de la carte */
+}.chip-area::before {
+    content: ""; /* Vérifiez bien les guillemets */
+    position: absolute;
+    display: block; /* Force l'affichage */
+    
+    /* Positionnement */
+    left: -20px; 
+    top: 20%;
+    transform: translateY(-50%);
+    
+    /* Construction */
+    width: 0; 
+    height: 0; 
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-right: 35px solid #6b1d24; /* Testez avec la couleur brute ici */
+    
+    /* Visibilité */
+    z-index: 99;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.chip-area {
+    --gap: 15px; /* L'espace que vous voulez */
+}
+
+.chip-area::before {
+    /* -35px (largeur triangle) - 15px (espace) = -50px */
+    left: calc(-35px - var(--gap)); 
+}.chip-area {
+    position: relative;
+    margin-left: 50px; /* Ajustez cette valeur pour décaler le bloc */
+    overflow: visible;
+    z-index: 10;
+}.chip-area::before {
+    content: "";
+    position: absolute;
+    display: block;
+    
+    /* Positionnement : Pensez à ajuster le 'left' si besoin 
+       vu que le triangle est plus petit */
+    left: -20px; 
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* Construction du triangle réduit */
+    width: 0; 
+    height: 0; 
+    /* AJUSTEMENTS ICI : Hauteur réduite (15px + 15px = 30px au total) */
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    /* AJUSTEMENT ICI : Largeur réduite à 20px */
+    border-right: 20px solid #6b1d24; 
+    
+    z-index: 99;
+}.chip-area::before {
+    content: "";
+    position: absolute;
+    display: block;
+    
+    /* POSITIONNEMENT À GAUCHE */
+    /* On utilise une valeur négative pour le sortir de la puce vers la gauche */
+    left: -60px; 
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* CONSTRUCTION DU TRIANGLE (PLUS PETIT) */
+    width: 0; 
+    height: 0; 
+    border-top: 15px solid transparent;    /* Hauteur haut */
+    border-bottom: 15px solid transparent; /* Hauteur bas */
+    
+    /* La couleur est sur le bord DROIT pour que la pointe regarde à GAUCHE */
+    border-right: 20px solid #6b1d24; 
+    
+    z-index: 99;
+}
+.chip-area {
+    position: relative;
+
+    z-index: 80; /* La puce est à un niveau de base */
+    background-color: var(--gold); /* Ou votre couleur de puce */
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-left: 30px; /* On laisse de la place pour le triangle à gauche */
+}
+
+.chip-area::before {
+    content: "";
+    position: absolute;
+    display: block;
+    
+    /* POSITIONNEMENT : À GAUCHE */
+    /* On le place à la limite du bord gauche de la puce */
+    left: -50px; 
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* L'ORDRE DE COUCHE : PLUS HAUT QUE LA PUCE */
+    z-index: 20; 
+    
+    /* TAILLE RÉDUITE */
+    width: 0; 
+    height: 0; 
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 25px solid #6b1d24; /* La couleur qui "cache" le bord de la puce */
+}
+.chip-area {
+    position: relative;
+    z-index: 10; /* La puce est en dessous */
+    background-color: var(--gold);
+    padding: 20px 20px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-left: 40px; /* Espace pour le triangle à gauche */
+}
+
+.chip-area::before {
+    content: "";
+    position: absolute;
+    display: block;
+    
+    /* POSITIONNEMENT : On le cale sur le bord gauche */
+    /* -25px correspond exactement à la largeur du triangle (border-right) */
+    left: -35px; 
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* SUPERPOSITION : Plus haut que la puce */
+    z-index: 99; 
+    
+    /* CONSTRUCTION DU TRIANGLE */
+    width: 0; 
+    height: 0; 
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    
+    /* La pointe regarde à gauche car la couleur est à DROITE */
+    border-right: 25px solid #6b1d24; 
+}

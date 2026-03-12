@@ -38,10 +38,11 @@ public class CarteCarburant {
     private LocalDate dateChargement;
 
     // 🔹 Relation MANY TO ONE avec ChefDuParc
+// 🔹 Relation MANY TO ONE avec ChefDuParc
+    // nullable = true permet d'enregistrer une carte sans chef de parc associé
     @ManyToOne
-    @JoinColumn(name = "id_chefparc")
+    @JoinColumn(name = "id_chefparc", nullable = true)
     private ChefParc chefDuParc;
-
 
     // 🔹 Relation MANY TO ONE avec Vehicule
     @ManyToOne

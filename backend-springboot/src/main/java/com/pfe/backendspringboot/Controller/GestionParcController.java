@@ -10,15 +10,17 @@ import com.pfe.backendspringboot.DTO.UserRegistrationDTO;
 import com.pfe.backendspringboot.Entities.*;
 import com.pfe.backendspringboot.Repository.*;
 import com.pfe.backendspringboot.Service.GestionParcService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -33,10 +35,6 @@ public class GestionParcController {
     private MissionRepository missionRepository;
     @Autowired
     private FeuilleDeRouteRepository feuilleDeRouteRepository;
-
-    @Autowired
-    private DeclarationRepository declarationRepository;
-
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationDTO dto) {
@@ -409,103 +407,114 @@ public class GestionParcController {
     public ResponseEntity<?> deleteVehicule(@PathVariable Long id) {
         try {
             gestionParcService.deleteVehicule(id);
-            return ResponseEntity.ok().body("{\"message\": \"Véhicule supprimé avec succès\"}");
+            // Utilisation d'une Map pour garantir un JSON valide
+            return ResponseEntity.ok(Collections.singletonMap("message", "Véhicule supprimé"));
+        } catch (EmptyResultDataAccessException | EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", "Véhicule introuvable ID: " + id));
+        } catch (Exception e) {
+            // Erreur de contrainte (ex: véhicule lié à une mission)
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Impossible de supprimer : le véhicule est utilisé ailleurs."));
+        }
+    }
+// ==================== GESTION DES CARTES CARBURANT ====================
+
+    @GetMapping("/carte/{numero}")
+    public ResponseEntity<CarteCarburant> getCarte(@PathVariable String numero) {
+        try {
+            return ResponseEntity.ok(gestionParcService.getCarteByNumero(numero));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/carte/recharger/{numero}")
+    public ResponseEntity<?> recharger(@PathVariable String numero, @RequestBody Map<String, Double> payload) {
+        try {
+            Double montant = payload.get("montant");
+            CarteCarburant updated = gestionParcService.rechargerCarte(numero, montant);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    // ==================== CRUD CHAUFFEUR (API) ====================
+
+    @GetMapping("/chauffeurs")
+    public List<Chauffeur> getAllChauffeurs() {
+        return gestionParcService.getAllChauffeurs();
+    }
+
+    @GetMapping("/chauffeur/{id}")
+    public ResponseEntity<Chauffeur> getChauffeurById(@PathVariable Long id) {
+        return gestionParcService.getChauffeurById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/chauffeur")
+    public ResponseEntity<?> addChauffeur(@RequestBody Chauffeur c) {
+        try {
+            Chauffeur saved = gestionParcService.createChauffeur(c);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @PutMapping("/chauffeur/{id}")
+    public ResponseEntity<?> updateChauffeur(@PathVariable Long id, @RequestBody Chauffeur c) {
+        try {
+            Chauffeur updated = gestionParcService.updateChauffeur(id, c);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+    @DeleteMapping("/chauffeur/{id}")
+    public ResponseEntity<?> deleteChauffeur(@PathVariable Long id) {
+        try {
+            gestionParcService.deleteChauffeur(id);
+            return ResponseEntity.ok().body("{\"message\": \"Chauffeur supprimé avec succès\"}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-    // ===========gestion des declaration===============
-    @GetMapping("/local/{idLocal}/declarations-en-attente")
-    public List<Declaration> getDeclarations(@PathVariable Long idLocal) {
-        return gestionParcService.getDeclarationsEnAttenteParLocal(idLocal);
+    // ==================== GESTION DES DÉCLARATIONS (Chauffeur) ====================
+
+    @PostMapping("/declaration/creer")
+    public ResponseEntity<?> createDeclaration(@RequestBody Map<String, Object> payload) {
+        try {
+            Long idChauffeur = Long.valueOf(payload.get("idChauffeur").toString());
+            DeclarationType type = DeclarationType.valueOf(payload.get("type").toString().toUpperCase());
+            String description = payload.get("description").toString();
+
+            Declaration nouvelle = gestionParcService.creerDeclaration(idChauffeur, type, description);
+            return ResponseEntity.ok(nouvelle);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
     }
 
-    /*@PostMapping("/declaration/{idDeclaration}/traiter")
-    public ResponseEntity<?> traiter(
+    @GetMapping("/chauffeur/{idChauffeur}/declarations")
+    public ResponseEntity<List<Declaration>> getMesDeclarations(@PathVariable Long idChauffeur) {
+        return ResponseEntity.ok(gestionParcService.getDeclarationsByChauffeur(idChauffeur));
+    }
+
+    // Optionnel : Pour que le Chef de Parc puisse valider/traiter une déclaration
+    @PutMapping("/declaration/{idDeclaration}/statut")
+    public ResponseEntity<?> updateStatutDeclaration(
             @PathVariable Long idDeclaration,
-            @RequestParam Long idChef,
-            @RequestParam String datePrevue,
-            @RequestParam(required = false) String obs) {
+            @RequestParam DeclarationStatus status) {
         try {
-            LocalDate date = LocalDate.parse(datePrevue);
-            return ResponseEntity.ok(gestionParcService.traiterDeclarationEtCreerEntretien(idDeclaration, idChef, date, obs));
+            Declaration dec = declarationRepository.findById(idDeclaration)
+                    .orElseThrow(() -> new RuntimeException("Déclaration introuvable"));
+            dec.setStatus(status);
+            return ResponseEntity.ok(declarationRepository.save(dec));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
-        }
-    }*/
-    @PostMapping("/declaration/{idDeclaration}/traiter")
-    public ResponseEntity<?> traiter(
-            @PathVariable Long idDeclaration,
-            @RequestParam Long idChef,
-            @RequestParam Long idGarage,      // Nouvel ID
-            @RequestParam String typeEntretien, // Nouveau champ
-            @RequestParam String datePrevue,
-            @RequestParam(required = false) String obs) {
-        try {
-            LocalDate date = LocalDate.parse(datePrevue);
-            return ResponseEntity.ok(gestionParcService.traiterDeclarationEtCreerEntretien(
-                    idDeclaration, idChef, idGarage, date, typeEntretien, obs));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
-    @GetMapping("/garages")
-    public List<GarageMaintenance> getGarages() {
-        return gestionParcService.getAllGarages();
-    }
-    @GetMapping("/local/{idLocal}/declarations-toutes")
-    public List<Declaration> getAllDeclarationsByLocal(@PathVariable Long idLocal) {
-        return gestionParcService.getAllDeclarationsByLocal(idLocal); // Appelle la nouvelle méthode du repo
-    }
-
-
-    //===================gestion des entretiens===================
-    // 1. Lister les entretiens d'un local
-    @GetMapping("/local/{idLocal}/entretiens")
-    public List<Entretien> getEntretiens(@PathVariable Long idLocal) {
-        return gestionParcService.getEntretiensByLocal(idLocal);
-    }
-
-    // 2. Créer un entretien périodique (Préventif)
-    @PostMapping("/entretien/periodique")
-    public ResponseEntity<?> planifierPeriodique(
-            @RequestBody Entretien entretien,
-            @RequestParam Long idVehicule,
-            @RequestParam Long idGarage,
-            @RequestParam Long idChef) {
-        try {
-            return ResponseEntity.ok(gestionParcService.creerEntretienPeriodique(entretien, idVehicule, idGarage, idChef));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
-        }
-    }
-
-    // 3. Mettre à jour (Valider la fin des travaux)
-    @PutMapping("/entretien/{id}")
-    public ResponseEntity<?> updateEntretien(@PathVariable Long id, @RequestBody Entretien details) {
-        try {
-            return ResponseEntity.ok(gestionParcService.updateEntretien(id, details));
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
-
-    // 4. Supprimer l'entretien
-    @DeleteMapping("/entretien/{id}")
-    public ResponseEntity<?> supprimerEntretien(@PathVariable Long id) {
-        try {
-            gestionParcService.deleteEntretien(id);
-            return ResponseEntity.ok().body("{\"message\": \"Entretien supprimé\"}");
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
-    //recuperer les missions d'un chauffeur
-    @GetMapping("/chauffeur/{idChauffeur}")
-    public ResponseEntity<List<Mission>> getMissionsByChauffeur(@PathVariable Long idChauffeur) {
-        return ResponseEntity.ok(missionRepository.findByChauffeurIdChauffeur(idChauffeur));
-    }
-
 
 }

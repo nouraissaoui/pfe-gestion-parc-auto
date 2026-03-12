@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.pfe.backendspringboot.Entities.Vehicule;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
@@ -43,6 +44,8 @@ public class GestionParcService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private CarteCarburantRepository carteCarburantRepository;
     @Autowired
     private FeuilleDeRouteRepository feuilleDeRouteRepository;
     @Autowired
@@ -259,6 +262,7 @@ public class GestionParcService {
 
         return chauffeurRepository.save(chauffeur);
     }
+
     @Transactional
     public Mission affecterMissionManuelle(Mission mission, Long idChauffeur, Long idVehicule, Long idChefParc) {
         Chauffeur chauffeur = chauffeurRepository.findById(idChauffeur)
@@ -379,6 +383,7 @@ public class GestionParcService {
     public List<ChefParc> getAllChefsParc() {
         return chefParcRepository.findAll();
     }
+
     public Optional<ChefParc> getChefParcById(Long id) {
         return chefParcRepository.findById(id);
     }
@@ -408,6 +413,7 @@ public class GestionParcService {
 
         return chefParcRepository.save(chef);
     }
+
     @Transactional
     public ChefParc updateChefParc(Long id, String nom, String prenom, String mail, String motDePasse,
                                    LocalDate dateNomination, int ancienneteChef,
@@ -440,6 +446,7 @@ public class GestionParcService {
 
         return chefParcRepository.save(chef);
     }
+
     @Transactional
     public void deleteChefParc(Long id) {
         // 1. Trouver le chef
@@ -505,8 +512,7 @@ public class GestionParcService {
             Local local = localRepository.findById(idLocal)
                     .orElseThrow(() -> new RuntimeException("Local non trouvé"));
             existing.setLocal(local);
-        }
-        else{
+        } else {
             existing.setLocal(null);
         }
 
@@ -669,4 +675,163 @@ public class GestionParcService {
 
 
 
+
+    public CarteCarburant getCarteByNumero(String numero) {
+        return carteCarburantRepository.findByNumeroCarte(numero)
+                .orElseThrow(() -> new RuntimeException("Carte introuvable"));
+    }
+
+    public CarteCarburant rechargerCarte(String numero, Double montant) {
+        CarteCarburant carte = getCarteByNumero(numero);
+
+        // Mise à jour selon votre entité
+        carte.setMontantCharge(montant); // Dernier montant chargé
+        carte.setMontantReel(carte.getMontantReel() + montant); // Cumul du solde
+        carte.setDateChargement(LocalDate.now());
+
+        return carteCarburantRepository.save(carte);
+    }
+// ==================== GESTION DES CHAUFFEURS (CRUD COMPLET) ====================
+
+    public List<Chauffeur> getAllChauffeurs() {
+        return chauffeurRepository.findAll();
+    }
+
+    public Optional<Chauffeur> getChauffeurById(Long id) {
+        return chauffeurRepository.findById(id);
+    }
+
+    @Transactional
+    public Chauffeur createChauffeur(Chauffeur chauffeur) {
+        // 1. Validation du mot de passe (obligatoire à la création)
+        if (chauffeur.getMotDePasse() == null || chauffeur.getMotDePasse().isEmpty()) {
+            throw new RuntimeException("Le mot de passe est obligatoire pour la création.");
+        }
+        chauffeur.setMotDePasse(passwordEncoder.encode(chauffeur.getMotDePasse()));
+
+        // 2. Gestion du Local (depuis le body)
+        if (chauffeur.getLocal() != null && chauffeur.getLocal().getIdLocal() != null) {
+            Local local = localRepository.findById(chauffeur.getLocal().getIdLocal())
+                    .orElseThrow(() -> new RuntimeException("Local non trouvé"));
+            chauffeur.setLocal(local);
+        }
+
+        return chauffeurRepository.save(chauffeur);
+    }
+
+    @Transactional
+    public Chauffeur updateChauffeur(Long id, Chauffeur data) {
+        Chauffeur existing = chauffeurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
+
+        // Mise à jour des champs simples
+        existing.setNom(data.getNom());
+        existing.setPrenom(data.getPrenom());
+        existing.setMail(data.getMail());
+        existing.setRegion(data.getRegion());
+        existing.setAnciennete(data.getAnciennete());
+        existing.setEtatChauffeur(data.getEtatChauffeur());
+        existing.setTypeVehiculePermis(data.getTypeVehiculePermis());
+        existing.setDateExpirationPermis(data.getDateExpirationPermis());
+        existing.setDatePriseLicense(data.getDatePriseLicense());
+
+        // 3. Protection du mot de passe (si vide dans le body, on garde l'ancien)
+        if (data.getMotDePasse() != null && !data.getMotDePasse().isEmpty()) {
+            existing.setMotDePasse(passwordEncoder.encode(data.getMotDePasse()));
+        }
+
+        // 4. Mise à jour du Local (depuis le body)
+        if (data.getLocal() != null && data.getLocal().getIdLocal() != null) {
+            Local local = localRepository.findById(data.getLocal().getIdLocal())
+                    .orElseThrow(() -> new RuntimeException("Local non trouvé"));
+            existing.setLocal(local);
+        } else {
+            existing.setLocal(null); // Permet de retirer l'affectation
+        }
+
+        return chauffeurRepository.save(existing);
+    }
+
+    public void deleteChauffeur(Long id) {
+        if (!chauffeurRepository.existsById(id)) {
+            throw new RuntimeException("Chauffeur introuvable");
+        }
+        chauffeurRepository.deleteById(id);
+    }
+    @Transactional
+    public Declaration creerDeclaration(Long idChauffeur, DeclarationType type, String description) {
+        // 1. Récupérer le chauffeur
+        Chauffeur chauffeur = chauffeurRepository.findById(idChauffeur)
+                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
+
+        // 2. Vérifier si le chauffeur a un véhicule affecté
+        if (chauffeur.getVehicule() == null) {
+            throw new RuntimeException("Le chauffeur n'a pas de véhicule affecté pour faire une déclaration.");
+        }
+
+        // 3. Identifier le Chef de Parc du local du chauffeur
+        Local localChauffeur = chauffeur.getLocal();
+        if (localChauffeur == null || localChauffeur.getChefParc() == null) {
+            throw new RuntimeException("Aucun chef de parc n'est assigné au local de ce chauffeur.");
+        }
+
+        // 4. Créer la déclaration
+        Declaration declaration = Declaration.builder()
+                .type(type)
+                .description(description)
+                .dateCreation(LocalDateTime.now())
+                .status(DeclarationStatus.EN_ATTENTE)
+                .chauffeur(chauffeur)
+                .vehicule(chauffeur.getVehicule())
+                .chefParc(localChauffeur.getChefParc()) // Envoi automatique au chef du parc local
+                .build();
+
+        return declarationRepository.save(declaration);
+    }
+
+    public List<Declaration> getDeclarationsByChauffeur(Long idChauffeur) {
+        return declarationRepository.findByChauffeur_IdChauffeur(idChauffeur);
+    }
+    // Dans GestionParcService.java
+    @Transactional
+    public void supprimerDeclaration(Long idDeclaration, Long idChauffeur) {
+        Declaration declaration = declarationRepository.findById(idDeclaration)
+                .orElseThrow(() -> new RuntimeException("Déclaration introuvable"));
+
+        // Vérifier que c'est bien le propriétaire qui supprime
+        if (!declaration.getChauffeur().getIdChauffeur().equals(idChauffeur)) {
+            throw new RuntimeException("Vous n'êtes pas autorisé à supprimer cette déclaration.");
+        }
+
+        // Optionnel : Empêcher la suppression si le chef l'a déjà validée/traitée
+        if (declaration.getStatus() != DeclarationStatus.EN_ATTENTE) {
+            throw new RuntimeException("Impossible de supprimer une déclaration déjà traitée.");
+        }
+
+        declarationRepository.delete(declaration);
+    }
+// ==================== LOGIQUE CHAUFFEUR ====================
+
+    /**
+     * Récupère toutes les feuilles de route assignées à un chauffeur spécifique
+     */
+    public List<FeuilleDeRoute> getFeuillesParChauffeur(Long idChauffeur) {
+        return feuilleDeRouteRepository.findByChauffeur_IdChauffeur(idChauffeur);
+    }
+
+    /**
+     * Met à jour les données réelles d'une mission existante
+     */
+    @Transactional
+    public Mission completerMissionDonneesReelles(Long idMission, Double kmDep, Double kmArr, LocalTime hDep, LocalTime hArr) {
+        Mission mission = missionRepository.findById(idMission)
+                .orElseThrow(() -> new RuntimeException("Mission ID " + idMission + " introuvable"));
+
+        mission.setKmArrivee(kmArr);
+        mission.setKmDepart(kmDep);
+        mission.setHeureDepartReelle(hDep);
+        mission.setHeureArriveeReelle(hArr);
+
+        return missionRepository.save(mission);
+    }
 }
