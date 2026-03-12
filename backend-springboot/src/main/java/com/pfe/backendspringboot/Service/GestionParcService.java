@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.pfe.backendspringboot.Entities.Vehicule;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,6 +48,9 @@ public class GestionParcService {
     private CarteCarburantRepository carteCarburantRepository;
     @Autowired
     private FeuilleDeRouteRepository feuilleDeRouteRepository;
+    @Autowired
+    private GarageMaintenanceRepository garageMaintenanceRepository;
+
 
     // ==================== AUTHENTIFICATION & USERS ====================
     public Object authenticate(String mail, String password) {
@@ -443,7 +447,31 @@ public class GestionParcService {
         return chefParcRepository.save(chef);
     }
 
-   // ==================== CRUD VÉHICULES COMPLET ====================
+    /*@Transactional
+    public void deleteChefParc(Long id) {
+        // 1. Trouver le chef
+        ChefParc chef = chefParcRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chef non trouvé"));
+
+        // 2. Récupérer le local associé
+        Local local = chef.getLocal();
+
+        if (local != null) {
+            // IMPORTANT : On casse le lien des deux côtés pour que la contrainte d'unicité soit levée
+            local.setChefParc(null); // On libère le local
+            localRepository.save(local);
+
+            chef.setLocal(null); // On libère le chef
+            chefParcRepository.save(chef);
+        }
+
+        // 3. On force la synchronisation avec la base de données
+        chefParcRepository.flush();
+
+        // 4. On supprime l'entité ChefParc définitivement
+        chefParcRepository.delete(chef);
+    }*/
+// ==================== CRUD VÉHICULES COMPLET ====================
 
     public List<Vehicule> getAllVehicules() {
         return vehiculeRepository.findAll();
@@ -491,39 +519,160 @@ public class GestionParcService {
         return vehiculeRepository.save(existing);
     }
 
-    @Transactional
-    public void deleteVehicule(Long id) {
-        Vehicule vehicule = vehiculeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Véhicule introuvable"));
-
-        // 1. CARTE CARBURANT : Supprimer la carte liée au véhicule
-        // (Une carte ne peut pas exister sans véhicule dans ton SQL)
-        carteCarburantRepository.findByVehicule_IdVehicule(id).ifPresent(carte -> {
-            carteCarburantRepository.delete(carte);
-        });
-
-        // 2. MISSIONS : Supprimer ou détacher les missions
-        List<Mission> missions = missionRepository.findByVehicule_IdVehicule(id);
-        if (!missions.isEmpty()) {
-            missionRepository.deleteAll(missions);
+   /* public void deleteVehicule(Long id) {
+        if (!vehiculeRepository.existsById(id)) {
+            throw new RuntimeException("Véhicule introuvable");
         }
+        vehiculeRepository.deleteById(id);
+    }*/
+    //=================trater declaration==============
+    // ==================== GESTION DES DÉCLARATIONS & ENTRETIENS ====================
 
-        // 3. DECLARATIONS
-        List<Declaration> declarations = declarationRepository.findByVehicule_IdVehicule(id);
-        if (!declarations.isEmpty()) {
-            declarationRepository.deleteAll(declarations);
-        }
-
-        // 4. CHAUFFEUR : Libérer le chauffeur qui utilisait ce véhicule
-        chauffeurRepository.findByVehicule(vehicule).ifPresent(chauffeur -> {
-            chauffeur.setVehicule(null);
-            chauffeur.setEtatChauffeur(Chauffeur.EtatChauffeur.DISPONIBLE);
-            chauffeurRepository.save(chauffeur);
-        });
-
-        // 5. Suppression finale du véhicule
-        vehiculeRepository.delete(vehicule);
+    public List<Declaration> getDeclarationsEnAttenteParLocal(Long idLocal) {
+        return declarationRepository.findByVehicule_Local_IdLocalAndStatus(idLocal, DeclarationStatus.EN_ATTENTE);
     }
+
+    @Transactional
+    public Entretien traiterDeclarationEtCreerEntretien(Long idDeclaration, Long idChef, Long idGarage, LocalDate datePrevue, String typeEntretien, String obs) {
+        // 1. Récupérer la déclaration
+        Declaration dec = declarationRepository.findById(idDeclaration)
+                .orElseThrow(() -> new RuntimeException("Déclaration introuvable"));
+
+        // 2. Récupérer le chef de parc
+        ChefParc chef = chefParcRepository.findById(idChef)
+                .orElseThrow(() -> new RuntimeException("Chef de parc introuvable"));
+
+        // 3. Récupérer le garage
+        GarageMaintenance garage = garageMaintenanceRepository.findById(idGarage)
+                .orElseThrow(() -> new RuntimeException("Garage introuvable"));
+
+        // 4. Mettre à jour la déclaration
+        dec.setStatus(DeclarationStatus.TRAITE);
+        declarationRepository.save(dec);
+
+        // 5. Créer l'entretien (Correction des setters et Enums)
+        Entretien entretien = new Entretien();
+        entretien.setDeclaration(dec);
+        entretien.setVehicule(dec.getVehicule());
+
+        // Correction ici : le nom du setter suit le nom de l'attribut 'chefDuParc'
+        entretien.setChefDuParc(chef);
+
+        entretien.setGarage(garage);
+        entretien.setDatePrevue(datePrevue);
+        entretien.setTypeEntretien(typeEntretien);
+        entretien.setObservations(obs);
+
+        // Correction ici : Utilisation de Categorie.ENTRETIEN_SUITE_DECLARATION
+        entretien.setCategorie(Entretien.Categorie.ENTRETIEN_SUITE_DECLARATION);
+
+        // Correction ici : Utilisation de Status.EN_ATTENTE (puisqu'il n'est pas encore traité)
+        entretien.setStatus(Entretien.Status.EN_ATTENTE);
+
+        // Mettre le véhicule en état 'EN_ENTRETIEN'
+        if (dec.getVehicule() != null) {
+            dec.getVehicule().setEtat(EtatVehicule.EN_ENTRETIEN);
+            vehiculeRepository.save(dec.getVehicule());
+        }
+
+        return entretienRepository.save(entretien);
+    }
+
+    // Ajouter aussi la méthode pour l'UI du Frontend
+    public List<GarageMaintenance> getAllGarages() {
+        return garageMaintenanceRepository.findAll();
+    }
+
+    public List<Declaration> getAllDeclarationsByLocal(Long idLocal) {
+        // Cette méthode récupère TOUT (En attente, Traité, Rejeté) pour ce local
+        return declarationRepository.findByVehicule_Local_IdLocal(idLocal);
+    }
+    // ==================== SERVICE ENTRETIENS ====================
+
+    public List<Entretien> getEntretiensByLocal(Long idLocal) {
+        // Supposant que vous ajoutez findByVehiculeLocalIdLocal dans EntretienRepository
+        return entretienRepository.findByVehicule_Local_IdLocal(idLocal);
+    }
+
+    @Transactional
+    public Entretien creerEntretienPeriodique(Entretien ent, Long idVehicule, Long idGarage, Long idChef) {
+        Vehicule v = vehiculeRepository.findById(idVehicule)
+                .orElseThrow(() -> new RuntimeException("Véhicule non trouvé"));
+
+        // ... chargement garage et chef ...
+
+        ent.setVehicule(v);
+        ent.setCategorie(Entretien.Categorie.ENTRETIEN_PERIODIQUE);
+        ent.setStatus(Entretien.Status.EN_ATTENTE); // Notez le 'S' majuscule
+
+        // Correction de l'accès privé : utilisez le SETTER
+        v.setEtat(EtatVehicule.EN_ENTRETIEN);
+        vehiculeRepository.save(v);
+
+        return entretienRepository.save(ent);
+    }
+
+    @Transactional
+    public Entretien updateEntretien(Long id, Entretien details) {
+        Entretien ent = entretienRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entretien non trouvé avec l'id : " + id));
+
+        // --- MISE À JOUR DES CHAMPS MANQUANTS ---
+        if (details.getTypeEntretien() != null) {
+            ent.setTypeEntretien(details.getTypeEntretien());
+        }
+        if (details.getDatePrevue() != null) {
+            ent.setDatePrevue(details.getDatePrevue());
+        }
+        if (details.getObservations() != null) {
+            ent.setObservations(details.getObservations());
+        }
+        if (details.getGarage() != null) {
+            ent.setGarage(details.getGarage());
+        }
+        if (details.getCategorie() != null) {
+            ent.setCategorie(details.getCategorie());
+        }
+
+        // --- GESTION DU STATUT (Ton code existant) ---
+        ent.setStatus(details.getStatus());
+
+        if (details.getStatus() == Entretien.Status.TRAITE || details.getStatus() == Entretien.Status.REJETE) {
+            Vehicule v = ent.getVehicule();
+            if (v != null) {
+                v.setEtat(EtatVehicule.DISPONIBLE);
+                vehiculeRepository.save(v);
+            }
+            ent.setDateEffectuee(LocalDate.now());
+        }
+
+        // Sauvegarde de l'objet mis à jour
+        return entretienRepository.save(ent);
+    }
+
+    @Transactional
+    public void deleteEntretien(Long id) {
+        Entretien ent = entretienRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entretien non trouvé"));
+
+        // Libérer le véhicule
+        if (ent.getVehicule() != null) {
+            Vehicule v = ent.getVehicule();
+            v.setEtat(EtatVehicule.DISPONIBLE);
+            vehiculeRepository.save(v);
+        }
+
+        // Correction ici : Utilisation de DeclarationStatus
+        if (ent.getDeclaration() != null) {
+            Declaration d = ent.getDeclaration();
+            d.setStatus(DeclarationStatus.EN_ATTENTE); // <--- Correction faite ici
+            declarationRepository.save(d);
+        }
+
+        entretienRepository.delete(ent);
+    }
+
+
     public CarteCarburant getCarteByNumero(String numero) {
         return carteCarburantRepository.findByNumeroCarte(numero)
                 .orElseThrow(() -> new RuntimeException("Carte introuvable"));
@@ -599,40 +748,46 @@ public class GestionParcService {
 
         return chauffeurRepository.save(existing);
     }
-    @Transactional
-    public void deleteChauffeur(Long id) {
-        Chauffeur chauffeur = chauffeurRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
 
-        // 1. MISSIONS : Supprimer les missions liées au chauffeur
-        List<Mission> missions = missionRepository.findByChauffeur_IdChauffeur(id);
-        if (!missions.isEmpty()) {
-            missionRepository.deleteAll(missions);
+   /* public void deleteChauffeur(Long id) {
+        if (!chauffeurRepository.existsById(id)) {
+            throw new RuntimeException("Chauffeur introuvable");
         }
+        chauffeurRepository.deleteById(id);
+    }*/
 
-        // 2. FEUILLE_DE_ROUTE : Supprimer les feuilles de route
-        List<FeuilleDeRoute> feuilles = feuilleDeRouteRepository.findByChauffeur_IdChauffeur(id);
-        if (!feuilles.isEmpty()) {
-            feuilleDeRouteRepository.deleteAll(feuilles);
-        }
 
-        // 3. DECLARATION : Supprimer les déclarations faites par ce chauffeur
-        List<Declaration> declarations = declarationRepository.findByChauffeur_IdChauffeur(id);
-        if (!declarations.isEmpty()) {
-            declarationRepository.deleteAll(declarations);
-        }
+    // Dans GestionParcService.java
 
-        // 4. VEHICULE : Si le chauffeur avait un véhicule, on remet le véhicule en DISPONIBLE
-        if (chauffeur.getVehicule() != null) {
-            Vehicule v = chauffeur.getVehicule();
-            v.setEtat(EtatVehicule.DISPONIBLE);
-            vehiculeRepository.save(v);
-        }
+// ==================== LOGIQUE CHAUFFEUR ====================
 
-        // 5. Suppression finale du chauffeur
-        chauffeurRepository.delete(chauffeur);
+    /**
+     * Récupère toutes les feuilles de route assignées à un chauffeur spécifique
+     */
+    public List<FeuilleDeRoute> getFeuillesParChauffeur(Long idChauffeur) {
+        return feuilleDeRouteRepository.findByChauffeur_IdChauffeur(idChauffeur);
     }
 
+    /**
+     * Met à jour les données réelles d'une mission existante
+     */
+    @Transactional
+    public Mission completerMissionDonneesReelles(Long idMission, Double kmDep, Double kmArr, LocalTime hDep, LocalTime hArr) {
+        Mission mission = missionRepository.findById(idMission)
+                .orElseThrow(() -> new RuntimeException("Mission ID " + idMission + " introuvable"));
+
+        mission.setKmArrivee(kmArr);
+        mission.setKmDepart(kmDep);
+        mission.setHeureDepartReelle(hDep);
+        mission.setHeureArriveeReelle(hArr);
+
+        return missionRepository.save(mission);
+    }
+
+    //gestion des entretiens
+    public List<Mission> getMissionsByChauffeurId(Long idChauffeur) {
+        return missionRepository.findByChauffeur_IdChauffeur(idChauffeur);
+    }
 
     @Transactional
     public Declaration creerDeclaration(Long idChauffeur, DeclarationType type, String description) {
@@ -668,6 +823,7 @@ public class GestionParcService {
     public List<Declaration> getDeclarationsByChauffeur(Long idChauffeur) {
         return declarationRepository.findByChauffeur_IdChauffeur(idChauffeur);
     }
+
     // Dans GestionParcService.java
     @Transactional
     public void supprimerDeclaration(Long idDeclaration, Long idChauffeur) {
@@ -686,30 +842,7 @@ public class GestionParcService {
 
         declarationRepository.delete(declaration);
     }
-// ==================== LOGIQUE CHAUFFEUR ====================
 
-    /**
-     * Récupère toutes les feuilles de route assignées à un chauffeur spécifique
-     */
-    public List<FeuilleDeRoute> getFeuillesParChauffeur(Long idChauffeur) {
-        return feuilleDeRouteRepository.findByChauffeur_IdChauffeur(idChauffeur);
-    }
-
-    /**
-     * Met à jour les données réelles d'une mission existante
-     */
-    @Transactional
-    public Mission completerMissionDonneesReelles(Long idMission, Double kmDep, Double kmArr, LocalTime hDep, LocalTime hArr) {
-        Mission mission = missionRepository.findById(idMission)
-                .orElseThrow(() -> new RuntimeException("Mission ID " + idMission + " introuvable"));
-
-        mission.setKmArrivee(kmArr);
-        mission.setKmDepart(kmDep);
-        mission.setHeureDepartReelle(hDep);
-        mission.setHeureArriveeReelle(hArr);
-
-        return missionRepository.save(mission);
-    }
     @Transactional
     public void deleteChefParc(Long id) {
         ChefParc chef = chefParcRepository.findById(id)
@@ -762,4 +895,79 @@ public class GestionParcService {
 
         // Flush pour valider immédiatement
         chefParcRepository.flush();
-    }}
+    }
+
+    @Transactional
+    public void deleteVehicule(Long id) {
+        Vehicule vehicule = vehiculeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Véhicule introuvable"));
+
+        // 1. CARTE CARBURANT : Supprimer la carte liée au véhicule
+        // (Une carte ne peut pas exister sans véhicule dans ton SQL)
+        carteCarburantRepository.findByVehicule_IdVehicule(id).ifPresent(carte -> {
+            carteCarburantRepository.delete(carte);
+        });
+
+        // 2. MISSIONS : Supprimer ou détacher les missions
+        List<Mission> missions = missionRepository.findByVehicule_IdVehicule(id);
+        if (!missions.isEmpty()) {
+            missionRepository.deleteAll(missions);
+        }
+
+        // 3. DECLARATIONS
+        List<Declaration> declarations = declarationRepository.findByVehicule_IdVehicule(id);
+        if (!declarations.isEmpty()) {
+            declarationRepository.deleteAll(declarations);
+        }
+
+        // 4. CHAUFFEUR : Libérer le chauffeur qui utilisait ce véhicule
+        chauffeurRepository.findByVehicule(vehicule).ifPresent(chauffeur -> {
+            chauffeur.setVehicule(null);
+            chauffeur.setEtatChauffeur(Chauffeur.EtatChauffeur.DISPONIBLE);
+            chauffeurRepository.save(chauffeur);
+        });
+
+        // 5. Suppression finale du véhicule
+        vehiculeRepository.delete(vehicule);
+    }
+
+    @Transactional
+    public void deleteChauffeur(Long id) {
+        Chauffeur chauffeur = chauffeurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
+
+        // 1. MISSIONS : Supprimer les missions liées au chauffeur
+        List<Mission> missions = missionRepository.findByChauffeur_IdChauffeur(id);
+        if (!missions.isEmpty()) {
+            missionRepository.deleteAll(missions);
+        }
+
+        // 2. FEUILLE_DE_ROUTE : Supprimer les feuilles de route
+        List<FeuilleDeRoute> feuilles = feuilleDeRouteRepository.findByChauffeur_IdChauffeur(id);
+        if (!feuilles.isEmpty()) {
+            feuilleDeRouteRepository.deleteAll(feuilles);
+        }
+
+        // 3. ENTRETIEN & DECLARATION (L'étape CRUCIALE)
+        List<Declaration> declarations = declarationRepository.findByChauffeur_IdChauffeur(id);
+        if (!declarations.isEmpty()) {
+            for (Declaration dec : declarations) {
+                // On cherche s'il existe un entretien lié à cette déclaration
+                // Si tu as un EntretienRepository, utilise-le pour supprimer par id_declaration
+                entretienRepository.deleteByDeclaration_IdDeclaration(dec.getIdDeclaration());
+            }
+            // Maintenant que les entretiens sont supprimés, on peut supprimer les déclarations
+            declarationRepository.deleteAll(declarations);
+        }
+
+        // 4. VEHICULE : Remise en état DISPONIBLE
+        if (chauffeur.getVehicule() != null) {
+            Vehicule v = chauffeur.getVehicule();
+            v.setEtat(EtatVehicule.DISPONIBLE);
+            vehiculeRepository.save(v);
+        }
+
+        // 5. Suppression finale du chauffeur
+        chauffeurRepository.delete(chauffeur);
+    }
+}

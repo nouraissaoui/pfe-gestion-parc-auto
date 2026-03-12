@@ -53,32 +53,46 @@ export class ChefParcDashboardComponent implements OnInit {
     }
   }
 
-  loadStats() {
-    this.service.getTotalVehicules(this.localId).subscribe(data => {
-      this.totalVehicules = data;
-      this.updateStats();
-    });
+loadStats() {
+  // 1. Total Véhicules (OK)
+  this.service.getTotalVehicules(this.localId).subscribe(data => {
+    this.totalVehicules = data;
+    this.updateStats();
+  });
 
-    this.service.getMissionsEnCours(this.localId).subscribe(data => {
-      this.missionsEnCours = data;
-      this.updateStats();
-    });
+  // 2. Missions en cours (OK)
+  this.service.getMissionsEnCours(this.localId).subscribe(data => {
+    this.missionsEnCours = data;
+    this.updateStats();
+  });
 
-    this.service.getVehiculesDisponibles(this.localId).subscribe(data => {
-      this.vehiculesDisponibles = data;
-      this.updateStats();
-    });
+  // 3. Véhicules disponibles (OK)
+  this.service.getVehiculesDisponibles(this.localId).subscribe(data => {
+    this.vehiculesDisponibles = data;
+    this.updateStats();
+  });
 
-    this.service.getDeclarationsEnAttente(this.chefId).subscribe(data => {
-      this.declarationsEnAttente = data;
-      this.updateStats();
-    });
+  /**
+   * CORRECTION : Déclarations en Attente
+   * Note : Votre service possède 'getDeclarationsEnAttenteLocal(idLocal)' 
+   * qui renvoie un tableau d'objets []. C'est plus fiable pour compter.
+   */
+  this.service.getDeclarationsEnAttenteLocal(this.localId).subscribe(data => {
+    // Si data est un tableau, on prend sa longueur
+    this.declarationsEnAttente = Array.isArray(data) ? data.length : data;
+    this.updateStats();
+  });
 
-    this.service.getEntretiensEnAttente(this.chefId).subscribe(data => {
-      this.maintenanceEnAttente = data;
-      this.updateStats();
-    });
-  }
+  /**
+   * CORRECTION : Entretiens Programmés
+   * Note : Votre service possède 'getEntretiensByLocal(idLocal)'
+   * On compte combien d'entretiens sont programmés dans le local.
+   */
+  this.service.getEntretiensByLocal(this.localId).subscribe(data => {
+    this.maintenanceEnAttente = Array.isArray(data) ? data.length : data;
+    this.updateStats();
+  });
+}
 
   updateStats() {
     this.stats = [
@@ -115,7 +129,7 @@ export class ChefParcDashboardComponent implements OnInit {
         trendClass: ''
       },
       {
-        label: 'Maintenance en Attente',
+        label: 'Entretien Programmées',
         value: this.maintenanceEnAttente,
         icon: '🔧',
         footer: 'Programmées',

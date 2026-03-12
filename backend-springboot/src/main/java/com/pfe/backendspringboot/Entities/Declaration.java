@@ -31,7 +31,7 @@ public class Declaration {
     private LocalDateTime dateCreation;
 
     @Enumerated(EnumType.STRING)
-    private DeclarationStatus status; // EN_ATTENTE, VALIDEE, REJETEE
+    private DeclarationStatus status; // EN_ATTENTE, traite REJETEE
 
     // ================= RELATIONS =================
 

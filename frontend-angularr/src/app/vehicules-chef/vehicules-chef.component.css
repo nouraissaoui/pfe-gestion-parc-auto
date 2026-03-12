@@ -40,6 +40,34 @@
   }
   
   
+.page-title-row {
+  display: flex; align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+}
+
+.page-title {
+  font-size: 45px; font-weight: 900;
+  letter-spacing: -1px; color: var(--black); line-height: 1;
+  animation: titleReveal 0.7s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.page-title span {
+  background: linear-gradient(90deg, #7a5500, #c8961a, #e2b840, #c8961a, #7a5500);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite, titleReveal 0.7s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.page-subtitle {
+  font-size: 14px; color: var(--gray-500); margin-top: 3px;
+  animation: subtitleFade 0.6s 0.3s ease both;
+  display: flex; align-items: center; gap: 8px;
+}
+.page-subtitle i { color: #c8961a; animation: bounce-icon 2s ease-in-out infinite; }
+
     
 
     /* Copie ici tout le CSS que tu avais entre <style>…</style> */

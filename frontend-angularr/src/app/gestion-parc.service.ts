@@ -53,6 +53,20 @@ type: any;
     local?: any; // On peut typer plus précisément si on a l'interface Local
 
 }
+// 1. Interface à ajouter en haut du fichier
+export interface Entretien {
+  idEntretien?: number;
+  typeEntretien: string;
+  categorie: 'ENTRETIEN_PERIODIQUE' | 'ENTRETIEN_SUITE_DECLARATION';
+  datePrevue: string;
+  // dateEffectuee supprimée
+  observations: string;
+  // status supprimé (car la création vaut ordre de mission)
+  declaration?: Declaration;
+  garage: any;
+  vehicule: Vehicule;
+  chefDuParc: any;
+}
 export interface Chauffeur {
   idChauffeur?: number;
   nom: string;
@@ -258,7 +272,6 @@ updateChefParc(id: number, payload: any): Observable<ChefParc> {
   console.log("Données envoyées au serveur :", payload); // Vérifiez dans la console F12 si niveauResponsabilite est bien à null
   return this.http.put<ChefParc>(`${this.baseUrl}/chefparc/${id}`, payload);
 }
- 
 // Dans gestion-parc.service.ts
 deleteChefParc(id: number): Observable<string> {
   return this.http.delete(`${this.baseUrl}/chefparc/${id}`, { responseType: 'text' });
@@ -304,7 +317,63 @@ deleteVehicule(id: number): Observable<any> {
 getCarte(numero: string): Observable<any> {
     return this.http.get(`${this.apiUrl1}/${numero}`);
   }
+// Récupérer la liste des déclarations à traiter
+getDeclarationsEnAttenteLocal(idLocal: number): Observable<Declaration[]> {
+  return this.http.get<Declaration[]>(`${this.baseUrl}/local/${idLocal}/declarations-en-attente`);
+}
 
+// Envoyer le formulaire de traitement
+validerTraitementDeclaration(idDec: number, idChef: number, idGarage: number, type: string, date: string, obs: string): Observable<any> {
+  const params = new HttpParams()
+    .set('idChef', idChef.toString())
+    .set('idGarage', idGarage.toString()) // Ajouté
+    .set('typeEntretien', type)          // Ajouté
+    .set('datePrevue', date)
+    .set('obs', obs);
+
+  return this.http.post(`${this.baseUrl}/declaration/${idDec}/traiter`, null, { params });
+}
+
+getGarages(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/garages`);
+}
+getToutesDeclarationsLocal(idLocal: number): Observable<Declaration[]> {
+  return this.http.get<Declaration[]>(`${this.baseUrl}/local/${idLocal}/declarations-toutes`);
+}
+
+// 2 gestion des entretienss 
+// -------------------------------------------------------
+
+// Récupérer tous les entretiens (Curatifs et Périodiques) du local
+getEntretiensByLocal(idLocal: number): Observable<Entretien[]> {
+  return this.http.get<Entretien[]>(`${this.baseUrl}/local/${idLocal}/entretiens`);
+}
+
+// Planifier un entretien périodique (Préventif)
+planifierEntretienPeriodique(entretien: Partial<Entretien>, idVehicule: number, idGarage: number, idChef: number): Observable<Entretien> {
+  const params = new HttpParams()
+    .set('idVehicule', idVehicule.toString())
+    .set('idGarage', idGarage.toString())
+    .set('idChef', idChef.toString());
+  
+  return this.http.post<Entretien>(`${this.baseUrl}/entretien/periodique`, entretien, { params });
+}
+
+// Mettre à jour un entretien (ex: changer le statut à TRAITE une fois terminé)
+updateEntretien(id: number, entretien: Partial<Entretien>): Observable<Entretien> {
+  return this.http.put<Entretien>(`${this.baseUrl}/entretien/${id}`, entretien);
+}
+
+// Supprimer un entretien
+deleteEntretien(id: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/entretien/${id}`);
+}
+/*recuperer les missions d'un chauffeur*/
+/* Remplacer l'ancienne méthode par celle-ci */
+getMissionsByChauffeur(idChauffeur: number): Observable<Mission[]> {
+  // On ajoute bien /missions à la fin pour correspondre au @GetMapping du controller
+  return this.http.get<Mission[]>(`${this.baseUrl}/chauffeur/${idChauffeur}/missions`);
+}
   recharger(numero: string, montant: number): Observable<any> {
     return this.http.put(`${this.apiUrl1}/recharger/${numero}`, { montant });
   }
@@ -382,4 +451,9 @@ deleteDeclaration(id: number, idChauffeur: number): Observable<any> {
   completerMission(idMission: number, data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/mission/${idMission}/completer`, data);
   }
+  /**
+ * Récupère toutes les missions assignées à un chauffeur spécifique.
+ * L'URL correspond au Mapping : /api/gestion-parc/chauffeur/{idChauffeur}/missions
+ */
+
 }

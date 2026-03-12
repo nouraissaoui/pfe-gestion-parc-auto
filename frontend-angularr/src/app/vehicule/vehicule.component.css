@@ -3,6 +3,119 @@
    ============================================= */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;600;700;800;900&family=Montserrat:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
 
+
+
+.container {
+    background-color: #f8f9fa;
+    padding-bottom: 50px;
+}
+
+h2, h3 {
+    color: #1a1a1a;
+    font-weight: 700;
+    border-left: 5px solid #D4AF37;
+    padding-left: 15px;
+    margin-bottom: 30px;
+}
+
+/* --- FORMULAIRE --- */
+.card {
+    border: none;
+    border-top: 4px solid #800020; /* Ligne Bordeaux en haut */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.form-control, .form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+/* --- BOUTONS --- */
+.btn-success {
+    background-color: #800020; /* Bordeaux */
+    border: 1px solid #D4AF37; /* Liseré Doré */
+    color: #D4AF37;
+    font-weight: 600;
+    padding: 10px 25px;
+    transition: all 0.4s;
+}
+
+.btn-success:hover {
+    background-color: #1a1a1a; /* Devient Noir au survol */
+    color: #fff;
+    border-color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-info {
+    background-color: #D4AF37; /* Doré */
+    border: none;
+    color: #fff;
+}
+
+.btn-outline-danger {
+    color: #800020;
+    border-color: #800020;
+}
+
+.btn-outline-danger:hover {
+    background-color: #800020;
+    color: #fff;
+}
+
+/* --- TABLEAU --- */
+.table-dark {
+    background-color: #1a1a1a !important; /* Noir profond */
+    border-bottom: 3px solid #D4AF37; /* Séparateur Doré */
+}
+
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.table thead th {
+    color: #D4AF37 !important; /* Texte Doré sur fond Noir */
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    padding: 15px;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+/* --- BADGES D'ÉTAT --- */
+.badge {
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+.bg-success { background-color: #27ae60 !important; } /* Dispo - Vert */
+.bg-warning { background-color: #f39c12 !important; color: #fff; } /* Mission - Orange */
+.bg-danger { background-color: #800020 !important; } /* Entretien - Bordeaux */
+
+/* Effet sur les lignes du tableau */
+tr:hover {
+    background-color: rgba(212, 175, 55, 0.05) !important;
+}
+/* Couleurs AGIL Energy & Prestige */
 :root {
   --gold-light: #FFD700;
   --gold: #D4A017;

@@ -1,0 +1,126 @@
+    <div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary font-weight-bold">🛠️ Plan de Maintenance</h2>
+        <button class="btn btn-success shadow-sm" (click)="ouvrirModale()">
+        <i class="fas fa-plus"></i> Programmer un Entretien Périodique
+        </button>
+    </div>
+
+    <div class="btn-group mb-4 shadow-sm">
+        <button class="btn btn-outline-primary" [class.active]="categorieFiltre === 'TOUT'" (click)="filtrer('TOUT')">Tout</button>
+        <button class="btn btn-outline-primary" [class.active]="categorieFiltre === 'ENTRETIEN_PERIODIQUE'" (click)="filtrer('ENTRETIEN_PERIODIQUE')">périodique</button>
+        <button class="btn btn-outline-primary" [class.active]="categorieFiltre === 'ENTRETIEN_SUITE_DECLARATION'" (click)="filtrer('ENTRETIEN_SUITE_DECLARATION')">suite a une declaration</button>
+    </div>
+
+    <div class="card shadow border-0">
+        <div class="table-responsive">
+        <table class="table align-items-center mb-0">
+            <thead class="thead-light">
+            <tr>
+                <th>Véhicule</th>
+                <th>Intervention</th>
+                <th>Garage</th>
+                <th>Date Prévue</th>
+                <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let ent of filteredEntretiens">
+                <td>
+                <div class="font-weight-bold">{{ ent.vehicule?.matricule }}</div>
+                <small class="text-muted">{{ ent.vehicule?.marque }}</small>
+                </td>
+                <td>
+                <span class="badge" [ngClass]="ent.categorie === 'ENTRETIEN_PERIODIQUE' ? 'badge-info' : 'badge-warning'">{{ent.typeEntretien}}</span>
+                </td>
+                <td>{{ ent.garage?.nomGarage || '---' }}</td>
+                <td>{{ ent.datePrevue | date:'dd/MM/yyyy' }}</td>
+                <td class="text-center">
+                <button class="btn btn-sm btn-outline-info mr-2" (click)="ouvrirConsultation(ent)" title="Consulter/Imprimer">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-primary mr-2" (click)="ouvrirModification(ent)" title="Modifier">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" (click)="supprimer(ent.idEntretien!)" title="Annuler">
+                    <i class="fas fa-trash"></i>
+                </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+    </div>
+
+    <div class="modal d-block" *ngIf="showModal" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5>{{ isEditMode ? 'Modifier l\'entretien' : 'Programmer un entretien' }}</h5>
+        </div>
+        <div class="modal-body">
+            <div class="form-group mb-3">
+            <label>Véhicule</label>
+            <select class="form-control" [(ngModel)]="nouveauEntretien.idVehicule" [disabled]="isEditMode">
+                <option *ngFor="let v of listeVehicules" [value]="v.idVehicule">{{ v.matricule }}</option>
+            </select>
+            </div>
+            <div class="form-group mb-3">
+            <label>Garage</label>
+            <select class="form-control" [(ngModel)]="nouveauEntretien.idGarage">
+                <option *ngFor="let g of garages" [value]="g.idGarage">{{ g.nomGarage }}</option>
+            </select>
+            </div>
+            <div class="form-group mb-3">
+            <label>Type de travaux</label>
+            <input type="text" class="form-control" [(ngModel)]="nouveauEntretien.typeEntretien">
+            </div>
+            <div class="form-group mb-3">
+            <label>Date prévue</label>
+            <input type="date" class="form-control" [(ngModel)]="nouveauEntretien.datePrevue">
+            </div>
+            <div class="form-group mb-3">
+                <label>Observations</label>
+                <textarea class="form-control" [(ngModel)]="nouveauEntretien.observations"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="showModal = false">Annuler</button>
+            <button class="btn btn-primary" (click)="enregistrerEntretien()">{{ isEditMode ? 'Enregistrer les modifications' : 'Créer l\'entretien' }}</button>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="modal d-block" *ngIf="showConsultModal && selectedEntretien" style="background: rgba(0,0,0,0.6);">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content shadow-lg">
+        <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">BON DE TRAVAUX #{{selectedEntretien?.idEntretien}}</h5>
+            <button type="button" class="close text-white" (click)="fermerConsultation()">&times;</button>
+        </div>
+        <div class="modal-body p-5" id="printZone">
+            <div style="text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px;">
+                <h3>ORDRE DE RÉPARATION</h3>
+                <p>Date d'émission : {{ today | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <p><strong>Véhicule :</strong> {{selectedEntretien?.vehicule?.matricule}} ({{selectedEntretien?.vehicule?.marque}})</p>
+            <p><strong>Garage :</strong> {{selectedEntretien?.garage?.nomGarage}}</p>
+            <p><strong>Date de l'intervention :</strong> {{selectedEntretien?.datePrevue | date:'dd/MM/yyyy'}}</p>
+            <p><strong>Travaux à effectuer :</strong> {{selectedEntretien?.typeEntretien}}</p>
+            <div style="border: 1px solid #ccc; padding: 10px; margin-top: 20px; min-height: 100px;">
+                <strong>Consignes :</strong><br>{{selectedEntretien?.observations}}
+            </div>
+            <div style="margin-top: 50px; display: flex; justify-content: space-between;">
+                <p>Signature Chef de Parc</p>
+                <p>Signature Chauffeur</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="fermerConsultation()">Fermer</button>
+            <button class="btn btn-primary" (click)="imprimerFiche()"><i class="fas fa-print mr-2"></i>Imprimer</button>
+        </div>
+        </div>
+    </div>
+    </div>

@@ -14,4 +14,9 @@ public interface EntretienRepository extends JpaRepository<Entretien, Long> {
     // Compter les entretiens "EN_ATTENTE" pour un chef du parc spécifique
     @Query("SELECT COUNT(e) FROM Entretien e WHERE e.chefDuParc.idChefParc = :idChef AND e.status = 'EN_ATTENTE'")
     long countEntretiensEnAttenteByChef(@Param("idChef") Long idChef);
-    List<Entretien> findByChefDuParc_IdChefParc(Long id);}
+    // On navigue : Entretien -> Vehicule -> Local -> idLocal
+    List<Entretien> findByVehicule_Local_IdLocal(Long idLocal);
+    List<Entretien> findByVehicule_Local_IdLocalAndStatus(Long idLocal, Entretien.Status status);
+    List<Entretien> findByChefDuParc_IdChefParc(Long id);
+    void deleteByDeclaration_IdDeclaration(Long idDeclaration);
+}

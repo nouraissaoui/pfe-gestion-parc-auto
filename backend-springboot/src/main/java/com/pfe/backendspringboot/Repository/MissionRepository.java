@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface MissionRepository extends JpaRepository<Mission, Long> {
+    // Récupère les missions d'un chauffeur spécifique
+    List<Mission> findByChauffeurIdChauffeur(Long idChauffeur);
 
     // a fin de Compter les missions en cours dans un local
         @Query("SELECT COUNT(m) " +
@@ -21,7 +23,8 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
                                         @Param("statut") StatutFeuilleDeRoute statut);
     @Query("SELECT m FROM Mission m WHERE m.chauffeur.idChauffeur = :idChauffeur AND m.chefDuParc.idChefParc = :idChefParc ORDER BY m.dateMission DESC")
     List<Mission> findByChauffeurAndChefParc(@Param("idChauffeur") Long idChauffeur, @Param("idChefParc") Long idChefParc);
-    List<Mission> findByChefDuParc_IdChefParc(Long idChefParc);
     List<Mission> findByChauffeur_IdChauffeur(Long idChauffeur);
-List<Mission> findByVehicule_IdVehicule(Long id);}
+    List<Mission> findByChefDuParc_IdChefParc(Long idChefParc);
+    List<Mission> findByVehicule_IdVehicule(Long id);
 
+}

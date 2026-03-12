@@ -42,9 +42,11 @@ public class Entretien {
         REJETE
     }
 
+    // Dans Entretien.java
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status;
+    private Status status = Status.EN_ATTENTE; // Valeur par défaut automatique
+
 
     // ==================== RELATIONS ====================
 

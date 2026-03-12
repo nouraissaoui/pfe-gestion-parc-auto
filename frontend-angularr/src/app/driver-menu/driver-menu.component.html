@@ -1,0 +1,170 @@
+    <!-- =============================================
+    DRIVER MENU — AGIL SNDP (DYNAMIQUE)
+    ============================================= -->
+    <div class="driver-menu-container">
+
+    <!-- ===== SKELETON LOADER (pendant chargement) ===== -->
+    <div class="skeleton-hero" *ngIf="isLoading">
+        <div class="sk-left">
+        <div class="sk-line sk-short"></div>
+        <div class="sk-line sk-long"></div>
+        <div class="sk-line sk-medium"></div>
+        <div class="sk-badges">
+            <div class="sk-badge"></div>
+            <div class="sk-badge"></div>
+        </div>
+        </div>
+        <div class="sk-card">
+        <div class="sk-avatar"></div>
+        <div class="sk-info">
+            <div class="sk-line sk-long"></div>
+            <div class="sk-line sk-short"></div>
+        </div>
+        </div>
+    </div>
+
+    <!-- ===== SECTION HERO (après chargement) ===== -->
+    <div class="hero-section" *ngIf="!isLoading">
+
+        <!-- GAUCHE : Greeting -->
+        <div class="greeting-side">
+        <span class="pre-label">Bienvenue dans votre espace personnel</span>
+
+        <h1 class="hero-title">
+            Prêt pour<br>
+            la route,<br>
+            <span class="driver-name-shine">{{ Nom }} {{ Prenom }}</span>&nbsp;?
+        </h1>
+
+        <div class="hero-divider"></div>
+
+        <p class="hero-sub">
+            Sélectionnez une action ci-dessous<br>pour commencer votre session
+        </p>
+
+        <div class="hero-badge-row">
+            <!-- Date réelle d'aujourd'hui -->
+            <div class="mini-badge">
+            <span>📅</span>
+            <span>{{ todayFormatted }}</span>
+            </div>
+            <!-- Zone du chauffeur -->
+            <div class="mini-badge">
+            <span>🚛</span>
+            <span>{{ zoneLabel }}</span>
+            </div>
+        </div>
+        </div>
+
+        <!-- DROITE : Carte Chauffeur -->
+        <div class="card-side">
+        <div class="driver-id-card">
+            <div class="card-stripe"></div>
+            <div class="card-deco-circle"></div>
+
+            <div class="card-header-row">
+            <div class="avatar-zone">
+                <div class="avatar-circle">🧑‍✈️</div>
+                <div class="avatar-ring"></div>
+            </div>
+            <div class="driver-info">
+                <!-- Vrai nom depuis la session -->
+                <div class="driver-full-name">{{ Nom }} {{ Prenom }}</div>
+                <div class="driver-role">Chauffeur — {{ zoneLabel }}</div>
+                <!-- Badge état dynamique -->
+                <div class="session-pill" [class.session-mission]="sessionColor === 'orange'">
+                <span class="session-dot" [class.dot-orange]="sessionColor === 'orange'"></span>
+                {{ sessionLabel }}
+                </div>
+            </div>
+            </div>
+
+            <div class="card-divider"></div>
+
+            <div class="card-stats-row">
+            <!-- Nombre réel de missions -->
+            <div class="stat-block">
+                <span class="stat-val">{{ missionsCount }}</span>
+                <span class="stat-lbl">Missions</span>
+            </div>
+            <div class="stat-sep"></div>
+            <!-- Km parcourus aujourd'hui -->
+            <div class="stat-block">
+                <span class="stat-val">{{ kmDisplay }}</span>
+                <span class="stat-lbl">km parcourus</span>
+            </div>
+            <div class="stat-sep"></div>
+            <!-- Vraie date -->
+            <div class="stat-block">
+                <span class="stat-val">{{ todayShort }}</span>
+                <span class="stat-lbl">Aujourd'hui</span>
+            </div>
+            </div>
+
+        </div>
+        </div>
+
+    </div>
+
+    <!-- ===== SÉPARATEUR SECTION ===== -->
+    <div class="section-label" *ngIf="!isLoading">
+        <div class="section-line"></div>
+        <span>Choisissez une action</span>
+        <div class="section-line"></div>
+    </div>
+
+    <!-- ===== GRILLE DES ACTIONS ===== -->
+    <div class="button-grid" *ngIf="!isLoading">
+
+        <!-- MISSIONS -->
+        <div class="action-card floating" (click)="navigate('missions')">
+        <div class="card-glow gold-glow"></div>
+        <div class="card-accent-top gold-accent"></div>
+        <div class="icon-box gold-box">🗺️</div>
+        <div class="card-body">
+            <h3 class="card-title">Mes Missions</h3>
+            <p class="card-desc">Consulter les missions assignées et l'historique de vos trajets</p>
+        </div>
+        <div class="card-footer">
+            <!-- Tag dynamique selon les missions du jour -->
+            <span class="card-tag gold-tag">{{ missionTag }}</span>
+            <span class="card-arrow gold-arr">→</span>
+        </div>
+        </div>
+
+        <!-- FEUILLE DE ROUTE -->
+        <div class="action-card floating delay-1" (click)="navigate('feuille-route')">
+        <div class="card-glow blue-glow"></div>
+        <div class="card-accent-top blue-accent"></div>
+        <div class="icon-box blue-box">📜</div>
+        <div class="card-body">
+            <h3 class="card-title">Feuille de Route</h3>
+            <p class="card-desc">Gérer les étapes, le kilométrage et la consommation carburant</p>
+        </div>
+        <div class="card-footer">
+            <!-- Km dynamiques -->
+            <span class="card-tag blue-tag">
+            {{ kmParcourus > 0 ? kmDisplay + ' km aujourd\'hui' : 'Aucun trajet ce jour' }}
+            </span>
+            <span class="card-arrow blue-arr">→</span>
+        </div>
+        </div>
+
+        <!-- DÉCLARATIONS -->
+        <div class="action-card floating delay-2" (click)="navigate('declarations')">
+        <div class="card-glow red-glow"></div>
+        <div class="card-accent-top red-accent"></div>
+        <div class="icon-box red-box">⚠️</div>
+        <div class="card-body">
+            <h3 class="card-title">Déclarations</h3>
+            <p class="card-desc">Signaler une panne, un accident ou tout incident de trajet</p>
+        </div>
+        <div class="card-footer">
+            <span class="card-tag red-tag">Signalement rapide</span>
+            <span class="card-arrow red-arr">→</span>
+        </div>
+        </div>
+
+    </div>
+
+    </div>

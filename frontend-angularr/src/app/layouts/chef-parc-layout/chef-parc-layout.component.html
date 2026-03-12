@@ -69,13 +69,6 @@
         <span>Affecter les Missions</span>
     </div>
 
-    <div class="menu-item"        
-        [routerLink]="['/chef-parc/entretiens']"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }">>
-        <span class="menu-icon">🔧</span>
-        <span>Gérer les Entretiens</span>
-    </div>
 
     <div class="menu-item" 
         [routerLink]="['/chef-parc/declarations']"
@@ -83,6 +76,13 @@
         [routerLinkActiveOptions]="{ exact: true }">
         <span class="menu-icon">📄</span>
         <span>Consulter Déclarations</span>
+    </div>
+        <div class="menu-item"        
+        [routerLink]="['/chef-parc/entretiens']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">>
+        <span class="menu-icon">🔧</span>
+        <span>Gérer les Entretiens</span>
     </div>
 
     <div class="menu-item" 
@@ -94,7 +94,7 @@
     </div>
 
     <div class="menu-item"         
-        [routerLink]="['/chef-parc/stats']"
+        [routerLink]="['/chef-parc/statistique']"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }">>
         <span class="menu-icon">📊</span>
