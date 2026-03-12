@@ -125,9 +125,9 @@
 
             <!-- Status + priority -->
             <div class="top-row">
-            <span class="status-pill" [ngClass]="getStatusClass(dec.status)">
+            <span class="status-pill" [ngClass]="getStatusClass(dec.status!)">
                 <span class="dot-live"></span>
-                {{ getStatusLabel(dec.status) }}
+                {{ getStatusLabel(dec.status!) }}
             </span>
             <span class="priority-tag" *ngIf="dec.status === 'EN_ATTENTE'">
                 <i class="fas fa-exclamation-triangle" style="color:#dc2626;margin-right:3px;"></i>
@@ -150,9 +150,9 @@
                 <i class="fas fa-car-side"></i>
             </div>
             <div>
-                <div class="vehicule-matricule">{{ dec.vehicule.matricule }}</div>
+                <div class="vehicule-matricule">{{ dec.vehicule?.matricule }}</div>
                 <div class="vehicule-model">
-                {{ dec.vehicule.marque }} {{ dec.vehicule.modele }}
+                {{ dec.vehicule?.marque }} {{ dec.vehicule?.modele }}
                 </div>
             </div>
             </div>
@@ -163,7 +163,7 @@
             <!-- Chauffeur -->
             <div class="chauffeur-meta">
             <div class="avatar-circle"><i class="fas fa-user-tie"></i></div>
-            <span>Signalé par <strong>{{ dec.chauffeur.nom }} {{ dec.chauffeur.prenom }}</strong></span>
+            <span>Signalé par <strong>{{ dec.chauffeur?.nom }} {{ dec.chauffeur?.prenom }}</strong></span>
             <span class="time-tag">
                 <i class="fas fa-clock"></i>
                 {{ dec.dateCreation | date:'HH:mm' }}

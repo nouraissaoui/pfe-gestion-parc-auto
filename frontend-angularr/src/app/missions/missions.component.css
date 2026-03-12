@@ -2,6 +2,522 @@
    MISSIONS CSS — AGIL SNDP
    Thème premium clair / or
    ====================================================== */
+   /* =============================================
+   PRELOADER PRESTIGE – Extraordinaire
+   ============================================= */
+#preloader-prestige {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(26, 20, 8, 0.85);
+  backdrop-filter: blur(15px) saturate(180%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  animation: preloaderFadeIn 0.8s ease-out;
+}
+
+#preloader-prestige.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.main-stage {
+  position: relative;
+  width: 500px;
+  max-width: 90vw;
+  height: 500px;
+  max-height: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Conteneur d'orbites */
+.orbit-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Anneaux */
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  box-shadow: 
+    0 0 30px rgba(212,160,23,0.3),
+    inset 0 0 20px rgba(212,160,23,0.2);
+  animation: rotateRing var(--speed) linear infinite;
+}
+
+.ring.gold {
+  width: 380px;
+  height: 380px;
+  border-top: 3px solid var(--gold-light);
+  border-bottom: 3px solid var(--gold-deep);
+  --speed: 12s;
+  filter: drop-shadow(0 0 15px gold);
+}
+
+.ring.bordeaux {
+  width: 300px;
+  height: 300px;
+  border-left: 3px solid #800020;
+  border-right: 3px solid #b8860b;
+  --speed: 9s;
+  filter: drop-shadow(0 0 10px #b8860b);
+}
+
+.ring.white {
+  width: 220px;
+  height: 220px;
+  border-top: 3px solid rgba(255,255,255,0.6);
+  border-bottom: 3px solid rgba(255,255,255,0.2);
+  --speed: 6s;
+  filter: drop-shadow(0 0 5px white);
+}
+
+/* Comètes sur les anneaux */
+.comet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #fff, gold);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px gold;
+  animation: cometOrbit var(--speed) linear infinite;
+}
+
+.ring.gold .comet {
+  --speed: 12s;
+  background: radial-gradient(circle, #fff, #ffd700);
+}
+.ring.bordeaux .comet {
+  --speed: 9s;
+  background: radial-gradient(circle, #fff, #b8860b);
+}
+.ring.white .comet {
+  --speed: 6s;
+  background: radial-gradient(circle, #fff, #c0c0c0);
+}
+
+/* Sphère de verre */
+.glass-sphere {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 248, 231, 0.15);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 
+    0 0 60px rgba(212,160,23,0.3),
+    inset 0 0 40px rgba(255,215,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: spherePulse 4s ease-in-out infinite;
+}
+
+.glass-sphere.big-sphere {
+  width: 150px;
+  height: 150px;
+}
+
+.big-logo {
+  width: 80px;
+  height: auto;
+  filter: drop-shadow(0 0 20px gold);
+  animation: logoGlow 3s ease-in-out infinite;
+}
+
+/* Zone de texte */
+.text-area {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  z-index: 10;
+}
+
+.welcome-msg {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px gold;
+  background: linear-gradient(135deg, #fff, var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.admin-name {
+  background: linear-gradient(135deg, var(--gold-light), #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+/* Barre de progression */
+.progress-section {
+  width: 300px;
+  margin: 0 auto;
+}
+
+.luxury-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(212,160,23,0.3);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+}
+
+.fill-permanent {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-light), var(--gold-deep));
+  background-size: 200% 100%;
+  animation: loadingBar 1.8s ease-in-out infinite;
+}
+
+.loading-label {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.6);
+  text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  animation: labelPulse 2s infinite;
+}
+
+/* Animations */
+@keyframes rotateRing {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes cometOrbit {
+  0% { transform: translate(-50%, -50%) rotate(0deg) translateX(190px) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(190px) rotate(-360deg); }
+}
+
+.ring.bordeaux .comet {
+  animation: cometOrbitBordeaux 9s linear infinite;
+}
+@keyframes cometOrbitBordeaux {
+  0% { transform: translate(-50%, -50%) rotate(0deg) translateX(150px) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(150px) rotate(-360deg); }
+}
+
+.ring.white .comet {
+  animation: cometOrbitWhite 6s linear infinite;
+}
+@keyframes cometOrbitWhite {
+  0% { transform: translate(-50%, -50%) rotate(0deg) translateX(110px) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(110px) rotate(-360deg); }
+}
+
+@keyframes spherePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 60px rgba(212,160,23,0.3), inset 0 0 40px rgba(255,215,0,0.2); }
+  50% { transform: scale(1.05); box-shadow: 0 0 80px rgba(212,160,23,0.5), inset 0 0 60px rgba(255,215,0,0.4); }
+}
+
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 20px gold); }
+  50% { filter: drop-shadow(0 0 40px gold); }
+}
+
+@keyframes loadingBar {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes labelPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes preloaderFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}/* =============================================
+   AMÉLIORATIONS SUPPLÉMENTAIRES – PRESTIGE ULTIME
+   ============================================= */
+
+/* Particules scintillantes en arrière-plan */
+#preloader-prestige::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 10px 20px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 30px 150px, #ffd700, rgba(0,0,0,0)),
+    radial-gradient(3px 3px at 80px 250px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 200px 80px, gold, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 320px 400px, #fff, rgba(0,0,0,0)),
+    radial-gradient(4px 4px at 450px 120px, #ffd700, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 600px 300px, #fff, rgba(0,0,0,0)),
+    radial-gradient(3px 3px at 700px 80px, gold, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 850px 500px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 950px 200px, #ffd700, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: sparkleMove 20s linear infinite;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@keyframes sparkleMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 200px 200px; }
+}
+
+/* Halo lumineux derrière la sphère */
+.glass-sphere::after {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: calc(100% + 60px);
+  height: calc(100% + 60px);
+  background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+  animation: haloPulse 3s ease-in-out infinite;
+}
+
+@keyframes haloPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+/* Anneaux avec effet de scintillement */
+.ring {
+  animation: rotateRing var(--speed) linear infinite, ringGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes ringGlow {
+  0% { filter: drop-shadow(0 0 5px gold); }
+  100% { filter: drop-shadow(0 0 20px gold); }
+}
+
+/* Comètes avec traînée */
+.comet {
+  position: relative;
+}
+
+.comet::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(90deg, gold, transparent);
+  transform: translate(-50%, -50%) rotate(-45deg);
+  animation: cometTail 1s infinite;
+}
+
+@keyframes cometTail {
+  0% { opacity: 1; width: 30px; }
+  100% { opacity: 0; width: 60px; }
+}
+
+/* Texte avec effet machine à écrire */
+.welcome-msg {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid gold;
+  width: fit-content;
+  margin: 0 auto 20px auto;
+  animation: typing 3s steps(30, end), blinkCursor 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blinkCursor {
+  from, to { border-color: transparent; }
+  50% { border-color: gold; }
+}
+
+/* Barre de progression avec effet de vague */
+.fill-permanent {
+  position: relative;
+  overflow: hidden;
+}
+
+.fill-permanent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: wave 1.5s linear infinite;
+}
+
+@keyframes wave {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Label avec effet de lueur pulsante */
+.loading-label {
+  animation: labelPulse 1.5s ease-in-out infinite, textGlow 2s alternate infinite;
+}
+
+@keyframes textGlow {
+  0% { text-shadow: 0 0 5px gold; }
+  100% { text-shadow: 0 0 20px gold, 0 0 30px gold; }
+}
+
+/* Sphère avec rotation lente */
+.glass-sphere {
+  animation: spherePulse 4s ease-in-out infinite, sphereRotate 10s linear infinite;
+}
+
+@keyframes sphereRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Ajout d'une touche de bordeaux plus marquée */
+.ring.bordeaux {
+  border-left: 3px solid #800020;
+  border-right: 3px solid #b8860b;
+  filter: drop-shadow(0 0 15px #800020);
+}
+
+/* Logo avec effet de respiration plus prononcé */
+.big-logo {
+  animation: logoBreath 3s ease-in-out infinite;
+}
+
+@keyframes logoBreath {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px gold); }
+  50% { transform: scale(1.1); filter: drop-shadow(0 0 40px gold); }
+}
+
+/* Overlay de fondu plus élégant */
+#preloader-prestige.fade-out {
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}.glass-sphere {
+  animation: spherePulse 4s ease-in-out infinite, sphereRotate 10s linear infinite;
+}
+@keyframes sphereRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+/* Sphère de verre plus grande */
+.glass-sphere.big-sphere {
+  width: 220px;   /* Augmenté de 150px à 220px */
+  height: 220px;
+}
+
+/* Logo plus grand et sans rotation */
+.big-logo {
+  width: 140px;   /* Augmenté de 80px à 140px */
+  height: auto;
+  filter: drop-shadow(0 0 30px gold);
+  animation: logoGlow 3s ease-in-out infinite; /* Garde l'effet de lueur */
+  /* Suppression de toute animation de rotation */
+}
+
+/* Optionnel : ajuster la taille des anneaux si nécessaire pour s'adapter */
+.ring.gold {
+  width: 480px;   /* Augmenté de 380px pour garder l'harmonie */
+  height: 480px;
+}
+.ring.bordeaux {
+  width: 400px;
+  height: 400px;
+}
+.ring.white {
+  width: 320px;
+  height: 320px;
+}/* Retirer sphereRotate de la sphère */
+.glass-sphere {
+  animation: spherePulse 4s ease-in-out infinite; /* seulement pulse, plus de rotate */
+  /* sphereRotate supprimé */
+}
+
+/* Si on veut garder la sphère rotative mais pas le logo, on peut faire : */
+.glass-sphere {
+  animation: spherePulse 4s ease-in-out infinite, sphereRotate 10s linear infinite;
+}
+.big-logo {
+  animation: logoGlow 3s ease-in-out infinite, antiRotate 10s linear infinite;
+}.welcome-msg {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid #D4A017; /* Or Agil */
+  margin: 0 auto 20px auto;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  
+  /* On assure une couleur de base si le gradient échoue */
+  color: #FFFFFF; 
+  background: linear-gradient(135deg, #FFFFFF 0%, #F5D76E 50%, #D4A017 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* L'ombre portée est CRUCIALRE pour la lisibilité sur fond sombre */
+  text-shadow: 0 0 15px rgba(212, 160, 23, 0.6);
+  
+  /* Animation corrigée avec une largeur max définie */
+  width: 0;
+  animation: 
+    typing 2.5s steps(40, end) forwards, 
+    blinkCursor 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; } /* S'adaptera au contenu du texte */
+}.admin-name {
+  display: block; /* Pour qu'il soit sur sa propre ligne si besoin */
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #D4A017;
+  text-shadow: 0 0 20px rgba(212, 160, 23, 0.8);
+  margin-top: 10px;
+}#preloader-prestige {
+  background: radial-gradient(circle at center, rgba(26, 20, 8, 0.92) 0%, #000000 100%);
+  /* Un peu plus sombre pour faire ressortir l'Or */
+}
+@keyframes antiRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600;700;800&display=swap');
 

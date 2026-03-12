@@ -53,15 +53,6 @@ type: any;
     local?: any; // On peut typer plus précisément si on a l'interface Local
 
 }
-export interface Declaration {
-  idDeclaration: number;
-  type: 'ACCIDENT' | 'PANNE' | 'RECLAMATION';
-  description: string;
-  dateCreation: string;
-  status: 'EN_ATTENTE' | 'TRAITE' | 'REJETE';
-  vehicule: Vehicule;
-  chauffeur: any;
-}
 // 1. Interface à ajouter en haut du fichier
 export interface Entretien {
   idEntretien?: number;
@@ -75,6 +66,7 @@ export interface Entretien {
   garage: any;
   vehicule: Vehicule;
   chefDuParc: any;
+}
 export interface Chauffeur {
   idChauffeur?: number;
   nom: string;
@@ -280,7 +272,6 @@ updateChefParc(id: number, payload: any): Observable<ChefParc> {
   console.log("Données envoyées au serveur :", payload); // Vérifiez dans la console F12 si niveauResponsabilite est bien à null
   return this.http.put<ChefParc>(`${this.baseUrl}/chefparc/${id}`, payload);
 }
- 
 // Dans gestion-parc.service.ts
 deleteChefParc(id: number): Observable<string> {
   return this.http.delete(`${this.baseUrl}/chefparc/${id}`, { responseType: 'text' });
@@ -331,7 +322,6 @@ getDeclarationsEnAttenteLocal(idLocal: number): Observable<Declaration[]> {
   return this.http.get<Declaration[]>(`${this.baseUrl}/local/${idLocal}/declarations-en-attente`);
 }
 
-<<<<<<< HEAD
 // Envoyer le formulaire de traitement
 validerTraitementDeclaration(idDec: number, idChef: number, idGarage: number, type: string, date: string, obs: string): Observable<any> {
   const params = new HttpParams()
@@ -379,9 +369,11 @@ deleteEntretien(id: number): Observable<any> {
   return this.http.delete(`${this.baseUrl}/entretien/${id}`);
 }
 /*recuperer les missions d'un chauffeur*/
-getMissionsByChauffeur(idChauffeur: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/chauffeur/${idChauffeur}`);
-=======
+/* Remplacer l'ancienne méthode par celle-ci */
+getMissionsByChauffeur(idChauffeur: number): Observable<Mission[]> {
+  // On ajoute bien /missions à la fin pour correspondre au @GetMapping du controller
+  return this.http.get<Mission[]>(`${this.baseUrl}/chauffeur/${idChauffeur}/missions`);
+}
   recharger(numero: string, montant: number): Observable<any> {
     return this.http.put(`${this.apiUrl1}/recharger/${numero}`, { montant });
   }
@@ -458,6 +450,10 @@ deleteDeclaration(id: number, idChauffeur: number): Observable<any> {
 
   completerMission(idMission: number, data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/mission/${idMission}/completer`, data);
->>>>>>> 2f95c7b5b6a222b47c1e7a1ead7c1b51de534dd0
   }
+  /**
+ * Récupère toutes les missions assignées à un chauffeur spécifique.
+ * L'URL correspond au Mapping : /api/gestion-parc/chauffeur/{idChauffeur}/missions
+ */
+
 }

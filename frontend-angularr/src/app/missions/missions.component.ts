@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GestionParcService } from '../gestion-parc.service';
+import { GestionParcService, Mission } from '../gestion-parc.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -31,37 +31,54 @@ export class MissionsComponent implements OnInit {
   ];
 
   constructor(private missionService: GestionParcService) {}
+ showPreloader = true;
+ngOnInit(): void {
+  setTimeout(() => this.showPreloader = false, 2500);
+  console.log("1. Initialisation du composant Missions...");
+  const userData = localStorage.getItem('user');
+  console.log("2. Données localStorage :", userData);
 
-  ngOnInit(): void {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      const user = JSON.parse(userData);
-      const id   = user.id ?? user.idChauffeur;
-      if (id) {
-        this.loadMissions(id);
-      } else {
-        console.error('Aucun ID trouvé dans l\'objet user');
-        this.loading = false;
-      }
+  if (userData) {
+    const user = JSON.parse(userData);
+    // On vérifie toutes les possibilités d'ID
+    const id = user.id || user.idChauffeur || user.idLocal; 
+    console.log("3. ID Chauffeur identifié :", id);
+
+    if (id) {
+      this.loadMissions(id);
     } else {
+      console.error("ERREUR : ID introuvable dans l'objet user");
       this.loading = false;
     }
+  } else {
+    console.error("ERREUR : Aucun utilisateur dans le localStorage");
+    this.loading = false;
   }
+}
 
   // ── Chargement ──────────────────────────────────────────────
-  loadMissions(id: number): void {
-    this.missionService.getMissionsByChauffeur(id).subscribe({
-      next: (data) => {
-        this.missions = data;
-        this.applyFilters();
-        this.loading  = false;
-      },
-      error: (err) => {
-        console.error('Erreur:', err);
-        this.loading = false;
-      }
-    });
-  }
+loadMissions(id: number): void {
+  this.loading = true; // Déclenche le spinner si tu en as un
+  
+  this.missionService.getMissionsByChauffeur(id).subscribe({
+    next: (res: Mission[]) => {
+      console.log("7. Missions reçues du backend :", res);
+      
+      // Le backend renvoie maintenant directement le tableau [ {mission1}, ... ]
+      // Plus besoin de chercher dans res.missions ou res.feuilleDeRoute
+      this.missions = res;
+
+      this.applyFilters();
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error("Erreur lors de la récupération :", err);
+      this.missions = [];
+      this.filtered = [];
+      this.loading = false;
+    }
+  });
+}
 
   // ── Statut d'une mission ────────────────────────────────────
   // Logique : si heureArriveeReelle → Terminée, sinon → En cours

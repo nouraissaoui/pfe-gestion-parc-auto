@@ -151,7 +151,7 @@ export class DeclarationsListeComponent implements OnInit, AfterViewInit, OnDest
     }
 
     this.service.validerTraitementDeclaration(
-      this.selectedDec.idDeclaration,
+      this.selectedDec.idDeclaration!,
       userId,
       this.idGarage,
       this.typeEntretien,
