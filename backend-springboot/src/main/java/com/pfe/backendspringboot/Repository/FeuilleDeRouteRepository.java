@@ -22,4 +22,6 @@ public interface FeuilleDeRouteRepository extends JpaRepository<FeuilleDeRoute, 
     // Optionnel : tu peux ajouter des méthodes custom si besoin pour filtrer par chauffeur/local
 
     List<FeuilleDeRoute> findByChauffeur_IdChauffeur(Long idChauffeur);
+    // Correction : Nom unique harmonisé
+    List<FeuilleDeRoute> findByChefParc_IdChefParc(Long id);
 }

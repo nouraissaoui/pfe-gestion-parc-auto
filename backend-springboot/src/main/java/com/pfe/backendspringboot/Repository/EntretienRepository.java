@@ -16,7 +16,7 @@ public interface EntretienRepository extends JpaRepository<Entretien, Long> {
     long countEntretiensEnAttenteByChef(@Param("idChef") Long idChef);
     // On navigue : Entretien -> Vehicule -> Local -> idLocal
     List<Entretien> findByVehicule_Local_IdLocal(Long idLocal);
-
-    // Alternativement, si vous voulez filtrer par statut aussi
     List<Entretien> findByVehicule_Local_IdLocalAndStatus(Long idLocal, Entretien.Status status);
+    List<Entretien> findByChefDuParc_IdChefParc(Long id);
+    void deleteByDeclaration_IdDeclaration(Long idDeclaration);
 }

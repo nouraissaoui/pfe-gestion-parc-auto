@@ -23,4 +23,8 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
                                         @Param("statut") StatutFeuilleDeRoute statut);
     @Query("SELECT m FROM Mission m WHERE m.chauffeur.idChauffeur = :idChauffeur AND m.chefDuParc.idChefParc = :idChefParc ORDER BY m.dateMission DESC")
     List<Mission> findByChauffeurAndChefParc(@Param("idChauffeur") Long idChauffeur, @Param("idChefParc") Long idChefParc);
-    }
+    List<Mission> findByChauffeur_IdChauffeur(Long idChauffeur);
+    List<Mission> findByChefDuParc_IdChefParc(Long idChefParc);
+    List<Mission> findByVehicule_IdVehicule(Long id);
+
+}
