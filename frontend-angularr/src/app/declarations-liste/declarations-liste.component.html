@@ -1,0 +1,286 @@
+    <!-- Particle Canvas -->
+    <canvas #particleCanvas class="particle-canvas"></canvas>
+
+    <!-- Floating decorative icons -->
+    <div class="float-icon float-icon-1"><i class="fas fa-car-side"></i></div>
+    <div class="float-icon float-icon-2"><i class="fas fa-wrench"></i></div>
+    <div class="float-icon float-icon-3"><i class="fas fa-clipboard-check"></i></div>
+    <div class="float-icon float-icon-4"><i class="fas fa-tools"></i></div>
+
+    <!-- Toast notification -->
+    <div class="toast-notif" [class.show]="showToast">
+    <i class="fas fa-check-circle"></i>
+    <span>{{ toastMessage }}</span>
+    </div>
+
+    <div class="main-container">
+
+    <!-- ── Page Header ── -->
+    <div class="page-header">
+        <div class="page-title-row">
+        <div>
+            <div class="page-title">Gestion des <span>Déclarations</span></div>
+            <p class="page-subtitle">
+            <i class="fas fa-broadcast-tower"></i>
+            Consultez et traitez les incidents signalés par les chauffeurs
+            </p>
+        </div>
+        <div class="live-badge">
+            <div class="live-dot"></div>
+            Mise à jour en direct
+        </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+        <div class="stat-card total">
+            <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
+            <div>
+            <div class="stat-num">{{ allDeclarations.length }}</div>
+            <div class="stat-label">Total</div>
+            </div>
+        </div>
+        <div class="stat-card attente">
+            <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+            <div>
+            <div class="stat-num">{{ countByStatus('EN_ATTENTE') }}</div>
+            <div class="stat-label">En attente</div>
+            </div>
+        </div>
+        <div class="stat-card traite">
+            <div class="stat-icon"><i class="fas fa-check-double"></i></div>
+            <div>
+            <div class="stat-num">{{ countByStatus('TRAITE') }}</div>
+            <div class="stat-label">Traitées</div>
+            </div>
+        </div>
+        <div class="stat-card rejete">
+            <div class="stat-icon"><i class="fas fa-ban"></i></div>
+            <div>
+            <div class="stat-num">{{ countByStatus('REJETE') }}</div>
+            <div class="stat-label">Rejetées</div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Tabs + Search -->
+        <div class="tabs-row">
+        <div class="tabs-container">
+            <button [class.active]="filtreActuel === 'EN_ATTENTE'" (click)="appliquerFiltre('EN_ATTENTE')">
+            <i class="fas fa-hourglass-half"></i> En Attente
+            <span class="badge">{{ countByStatus('EN_ATTENTE') }}</span>
+            </button>
+            <button [class.active]="filtreActuel === 'TRAITE'" (click)="appliquerFiltre('TRAITE')">
+            <i class="fas fa-check"></i> Traitées
+            </button>
+            <button [class.active]="filtreActuel === 'REJETE'" (click)="appliquerFiltre('REJETE')">
+            <i class="fas fa-times"></i> Rejetées
+            </button>
+            <button [class.active]="filtreActuel === 'TOUT'" (click)="appliquerFiltre('TOUT')">
+            <i class="fas fa-history"></i> Historique
+            </button>
+        </div>
+
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+            type="text"
+            placeholder="Rechercher par véhicule, chauffeur..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearch()"
+            />
+        </div>
+        </div>
+    </div>
+
+    <!-- Section label -->
+    <div class="section-header">
+        <div class="section-dot"></div>
+        <span class="section-title">{{ sectionLabel }}</span>
+        <span class="section-count">{{ filteredDeclarations.length }} résultat{{ filteredDeclarations.length > 1 ? 's' : '' }}</span>
+    </div>
+
+    <!-- Grid -->
+    <div class="declarations-grid" *ngIf="filteredDeclarations.length > 0; else noData">
+        <div
+        class="card-item"
+        *ngFor="let dec of filteredDeclarations; let i = index"
+        [ngClass]="dec.status"
+        [style.animation-delay]="(0.55 + i * 0.12) + 's'"
+        >
+        <div class="card-ribbon"></div>
+
+        <div class="card-content">
+            <!-- Top row: type + date -->
+            <div class="top-row">
+            <span class="type-badge" [ngClass]="dec.type">
+                <i class="fas" [ngClass]="getTypeIcon(dec.type)"></i>
+                {{ dec.type }}
+            </span>
+            <span class="date-text">
+                <i class="far fa-calendar-alt"></i>
+                {{ dec.dateCreation | date:'dd MMM yyyy' }}
+            </span>
+            </div>
+
+            <!-- Status + priority -->
+            <div class="top-row">
+            <span class="status-pill" [ngClass]="getStatusClass(dec.status)">
+                <span class="dot-live"></span>
+                {{ getStatusLabel(dec.status) }}
+            </span>
+            <span class="priority-tag" *ngIf="dec.status === 'EN_ATTENTE'">
+                <i class="fas fa-exclamation-triangle" style="color:#dc2626;margin-right:3px;"></i>
+                Prioritaire
+            </span>
+            <span class="priority-tag success" *ngIf="dec.status === 'TRAITE'">
+                <i class="fas fa-check-circle" style="color:#059669;margin-right:3px;"></i>
+                Résolu
+            </span>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="card-progress">
+            <div class="card-progress-fill"></div>
+            </div>
+
+            <!-- Vehicle block -->
+            <div class="vehicule-block">
+            <div class="vehicule-icon">
+                <i class="fas fa-car-side"></i>
+            </div>
+            <div>
+                <div class="vehicule-matricule">{{ dec.vehicule.matricule }}</div>
+                <div class="vehicule-model">
+                {{ dec.vehicule.marque }} {{ dec.vehicule.modele }}
+                </div>
+            </div>
+            </div>
+
+            <!-- Description -->
+            <p class="description-text">"{{ dec.description }}"</p>
+
+            <!-- Chauffeur -->
+            <div class="chauffeur-meta">
+            <div class="avatar-circle"><i class="fas fa-user-tie"></i></div>
+            <span>Signalé par <strong>{{ dec.chauffeur.nom }} {{ dec.chauffeur.prenom }}</strong></span>
+            <span class="time-tag">
+                <i class="fas fa-clock"></i>
+                {{ dec.dateCreation | date:'HH:mm' }}
+            </span>
+            </div>
+        </div>
+
+        <!-- Actions (seulement EN_ATTENTE) -->
+        <div class="card-actions" *ngIf="dec.status === 'EN_ATTENTE'">
+            <button class="btn-plan" (click)="ouvrirModale(dec)">
+            <i class="fas fa-calendar-plus"></i> Planifier l'entretien
+            </button>
+            <button class="btn-reject" title="Rejeter">
+            <i class="fas fa-times"></i>
+            </button>
+        </div>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <ng-template #noData>
+        <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+        <p>Aucune déclaration trouvée</p>
+        <p style="font-size:13px;margin-top:6px;">pour le filtre <strong>{{ filtreActuel }}</strong></p>
+        </div>
+    </ng-template>
+
+    </div>
+
+    <!-- ── Modal ── -->
+    <div class="modal-backdrop" *ngIf="showModal" (click)="onBackdropClick($event)">
+    <div class="modal-card maintenance-sheet">
+
+        <div class="sheet-header">
+            <div class="brand-section">
+                <img src="assets/agil.png" alt="Logo Agil" class="agil-logo">
+                <div class="brand-text">
+                    <h4>AGIL ENERGIE</h4>
+                    <span>Département Logistique & Maintenance</span>
+                </div>
+            </div>
+            <div class="sheet-title">
+                <h3>ORDRE DE MAINTENANCE N° {{ selectedDec?.idDeclaration }}</h3>
+                <p>Catégorie: <strong>ENTRETIEN SUITE DECLARATION</strong></p>
+            </div>
+            <button class="close-btn-sheet" (click)="fermerModale()">&times;</button>
+        </div>
+
+        <div class="modal-body sheet-content">
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Véhicule</label>
+                    <div class="val">{{ selectedDec?.vehicule?.matricule }} ({{ selectedDec?.vehicule?.marque }})</div>
+                </div>
+                <div class="info-item">
+                    <label>Chauffeur</label>
+                    <div class="val">{{ selectedDec?.chauffeur?.nom }} {{ selectedDec?.chauffeur?.prenom }}</div>
+                </div>
+                <div class="info-item full">
+                    <label>Incident signalé</label>
+                    <div class="val italic">"{{ selectedDec?.description }}"</div>
+                </div>
+             </div>
+
+             <hr class="sheet-divider">
+
+            <div class="maintenance-form">
+                <div class="form-row">
+                    <div class="form-field flex-2">
+                        <label><i class="fas fa-wrench"></i> Type d'intervention précise</label>
+                        <input type="text" [(ngModel)]="typeEntretien" placeholder="Ex: Réparation moteur, Système freinage, Électricité...">
+                    </div>
+                    <div class="form-field flex-1">
+                        <label><i class="fas fa-calendar-day"></i> Date prévue</label>
+                        <input type="date" [(ngModel)]="datePrevue" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field flex-2">
+                        <label><i class="fas fa-warehouse"></i> Garage de maintenance</label>
+                        <select [(ngModel)]="idGarage">
+                            <option [value]="null" disabled>Choisir un garage...</option>
+                            <option *ngFor="let g of listeGarages" [value]="g.idGarage">
+                                {{ g.nomGarage }} - {{ g.adresse }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-field flex-1">
+                        <label>Statut initial</label>
+                        <input type="text" value="PROGRAMMÉ" disabled class="disabled-input">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label><i class="fas fa-clipboard-list"></i> Instructions techniques & Observations</label>
+                    <textarea
+                        [(ngModel)]="observations"
+                        rows="3"
+                        placeholder="Précisez les pièces à commander ou les points de contrôle particuliers..."
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer sheet-footer">
+            <button class="btn-cancel-light" (click)="fermerModale()">
+                <i class="fas fa-times"></i> Abandonner
+            </button>
+            <button
+                class="btn-confirm-agil"
+                [disabled]="!datePrevue || !idGarage || !typeEntretien"
+                (click)="confirmerTraitement()"
+            >
+                <i class="fas fa-file-signature"></i> Générer l'Ordre de Maintenance
+            </button>
+        </div>
+    </div>
+</div>

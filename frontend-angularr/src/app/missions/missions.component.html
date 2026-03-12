@@ -1,0 +1,236 @@
+    <!-- ======================================================
+        MISSIONS COMPONENT — AGIL SNDP
+        Design premium clair / or avec recherche & filtres
+        ====================================================== -->
+    <div class="full-width-page">
+
+    <!-- ===== EN-TÊTE ===== -->
+    <div class="page-top-section">
+        <div class="top-left">
+        <span class="page-eyebrow">Espace Chauffeur</span>
+        <h1 class="main-title">Mes <span class="gold-highlight">Missions</span></h1>
+        <div class="title-underline"></div>
+        </div>
+        <div class="top-right" *ngIf="!loading">
+        <div class="summary-chips">
+            <div class="sum-chip chip-total">
+            <span class="chip-num">{{ missions.length }}</span>
+            <span class="chip-lbl">Total</span>
+            </div>
+            <div class="sum-chip chip-live">
+            <span class="chip-num">{{ countByStatus('live') }}</span>
+            <span class="chip-lbl">En cours</span>
+            </div>
+            <div class="sum-chip chip-done">
+            <span class="chip-num">{{ countByStatus('done') }}</span>
+            <span class="chip-lbl">Terminées</span>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- ===== BARRE RECHERCHE + FILTRES ===== -->
+    <div class="toolbar" *ngIf="!loading">
+
+        <!-- Recherche -->
+        <div class="search-wrap" [class.focused]="searchFocused">
+        <span class="search-ico">🔍</span>
+        <input
+            type="text"
+            class="search-input"
+            placeholder="Rechercher par ville, véhicule, bande..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="applyFilters()"
+            (focus)="searchFocused=true"
+            (blur)="searchFocused=false"
+        />
+        <button class="search-clear" *ngIf="searchQuery" (click)="clearSearch()">✕</button>
+        </div>
+
+        <!-- Filtres statut -->
+        <div class="filter-group">
+        <button class="filter-pill"
+            [class.active]="activeFilter === 'all'"
+            (click)="setFilter('all')">
+            Toutes <span class="pill-count">{{ missions.length }}</span>
+        </button>
+        <button class="filter-pill live-pill"
+            [class.active]="activeFilter === 'live'"
+            (click)="setFilter('live')">
+            <span class="live-dot"></span>
+            En cours <span class="pill-count">{{ countByStatus('live') }}</span>
+        </button>
+        <button class="filter-pill"
+            [class.active]="activeFilter === 'done'"
+            (click)="setFilter('done')">
+            Terminées <span class="pill-count">{{ countByStatus('done') }}</span>
+        </button>
+        </div>
+
+        <!-- Tri -->
+        <div class="sort-wrap">
+        <select class="sort-select" [(ngModel)]="sortOrder" (ngModelChange)="applyFilters()">
+            <option value="date-desc">Date ↓ (récent)</option>
+            <option value="date-asc">Date ↑ (ancien)</option>
+            <option value="depart-asc">Départ A→Z</option>
+        </select>
+        </div>
+
+    </div>
+
+    <!-- ===== LOADER ===== -->
+    <div *ngIf="loading" class="loading-overlay">
+        <div class="spinner-gold"></div>
+        <p>Récupération des missions en cours...</p>
+    </div>
+
+    <!-- ===== LISTE MISSIONS ===== -->
+    <div class="missions-list" *ngIf="!loading">
+
+        <!-- État vide -->
+        <div class="empty-state" *ngIf="filtered.length === 0">
+        <div class="empty-icon">🗺️</div>
+        <div class="empty-title">Aucune mission trouvée</div>
+        <p class="empty-sub">
+            {{ searchQuery ? 'Aucun résultat pour "' + searchQuery + '"' : 'Aucune mission pour ce filtre.' }}
+        </p>
+        <button class="empty-reset" (click)="resetFilters()">Réinitialiser les filtres</button>
+        </div>
+
+        <!-- Cartes -->
+        <div
+        class="mission-card-premium"
+        *ngFor="let m of filtered; let i = index"
+        [class.card-live]="getStatus(m) === 'live'"
+        [class.card-done]="getStatus(m) === 'done'"
+        [style.animation-delay.ms]="i * 60">
+
+        <!-- ── PANNEAU GAUCHE : image + statut + date ── -->
+        <div class="card-visual">
+            <div class="img-wrapper">
+            <img
+                [src]="m.vehicule?.image || 'assets/truck-placeholder.png'"
+                [alt]="m.vehicule?.marque + ' ' + m.vehicule?.modele"
+                onerror="this.src='https://via.placeholder.com/280x160/FDF3D0/B8860B?text=🚛'"
+            />
+            </div>
+
+            <!-- Badge statut -->
+            <div class="status-badge" [ngClass]="'status-' + getStatus(m)">
+            <span class="dot"></span>
+            {{ getStatusLabel(m) }}
+            </div>
+
+            <!-- Date encadrée -->
+            <div class="date-block">
+            <span class="date-day">{{ m.dateMission | slice:8:10 }}</span>
+            <span class="date-month">{{ getMonthLabel(m.dateMission) }}</span>
+            <span class="date-year">{{ m.dateMission | slice:0:4 }}</span>
+            </div>
+
+            <!-- Matricule -->
+            <div class="vehicle-plate" *ngIf="m.vehicule?.matricule">
+            🚛 {{ m.vehicule.matricule }}
+            </div>
+        </div>
+
+        <!-- ── CONTENU PRINCIPAL ── -->
+        <div class="card-content">
+
+            <!-- Header -->
+            <div class="info-header">
+            <div class="mission-ref-wrap">
+                <span class="mission-ref">#{{ m.idMission }}</span>
+                <span class="mission-marque" *ngIf="m.vehicule">
+                {{ m.vehicule.marque }} {{ m.vehicule.modele }}
+                </span>
+            </div>
+            <div class="header-chips">
+                <span class="hchip" *ngIf="m.feuilleDeRoute">
+                📋 Feuille #{{ m.feuilleDeRoute.idFeuille }}
+                </span>
+            </div>
+            </div>
+
+            <!-- Trajet -->
+            <div class="route-timeline">
+            <div class="route-node">
+                <span class="node-time">{{ m.heureDepartPrevue | slice:0:5 }}</span>
+                <span class="node-label-sm">Départ prévu</span>
+                <span class="node-city">{{ m.pointDepart }}</span>
+            </div>
+
+            <div class="route-connector">
+                <div class="connector-line">
+                <div class="connector-dot cd-start"></div>
+                <div class="connector-track">
+                    <div class="connector-progress"
+                    [style.width]="getProgress(m) + '%'">
+                    </div>
+                </div>
+                <div class="connector-dot cd-end"></div>
+                </div>
+                <span class="connector-arrow">→</span>
+            </div>
+
+            <div class="route-node align-right">
+                <span class="node-time arrival-time">{{ m.heureArriveeReelle ? (m.heureArriveeReelle | slice:0:5) : '--:--' }}</span>
+                <span class="node-label-sm">Arrivée</span>
+                <span class="node-city destination">{{ m.destination }}</span>
+            </div>
+            </div>
+
+            <!-- Specs techniques -->
+            <div class="tech-specs">
+            <div class="spec-box">
+                <div class="spec-icon">📍</div>
+                <div class="spec-text">
+                <label>Kilométrage</label>
+                <p>
+                    <span class="km-val">{{ m.kmDepart ?? '—' }}</span>
+                    <span class="km-sep">›</span>
+                    <span class="km-val gold-val">{{ m.kmArrivee ?? '—' }} km</span>
+                </p>
+                </div>
+            </div>
+
+            <div class="spec-box">
+                <div class="spec-icon">⛽</div>
+                <div class="spec-text">
+                <label>Consommation</label>
+                <p class="gold-bold">{{ m.consommationCarburant ? m.consommationCarburant + ' L' : '—' }}</p>
+                </div>
+            </div>
+
+            <div class="spec-box">
+                <div class="spec-icon">🕐</div>
+                <div class="spec-text">
+                <label>Horaires réels</label>
+                <p>
+                    {{ m.heureDepartReelle ? (m.heureDepartReelle | slice:0:5) : '--:--' }}
+                    ›
+                    {{ m.heureArriveeReelle ? (m.heureArriveeReelle | slice:0:5) : '--:--' }}
+                </p>
+                </div>
+            </div>
+
+            <div class="spec-box">
+                <div class="spec-icon">🏷️</div>
+                <div class="spec-text">
+                <label>Bande Prélèvement</label>
+                <p>{{ m.bandePrelevement || '—' }}</p>
+                </div>
+            </div>
+            </div>
+
+            <!-- Observations -->
+            <div class="footer-details" *ngIf="m.observations || m.description">
+            <span class="obs-icon">💬</span>
+            <p>{{ m.observations || m.description }}</p>
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+    </div>

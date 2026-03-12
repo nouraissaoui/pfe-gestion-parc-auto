@@ -10,19 +10,23 @@ import { AffectationMissionComponent } from './affectation-mission/affectation-m
 import { ChefParcComponent } from './chef-parc/chef-parc.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { VehiculeComponent } from './vehicule/vehicule.component';
+import { DeclarationsListeComponent } from './declarations-liste/declarations-liste.component';
+import { EntretiensComponent } from './entretiens/entretiens.component';
+import { DriverLayoutComponent } from './driver-layout/driver-layout.component';
+import { DriverMenuComponent } from './driver-menu/driver-menu.component';
+import { MissionsComponent } from './missions/missions.component';
+
 
 export const routes: Routes = [
 { path: '', component: AuthentificationComponent },
  {
   path: 'admin',
   children: [
-
-    { path: 'dashboard', component: DashboardComponent },
-{
-  path:'locaux',component:LocauxadminComponent
-} 
-,{path:'chefsparc',component:ChefParcComponent} 
-,{path:'vehicules',component:VehiculeComponent}]
+      { path: 'dashboard', component: DashboardComponent },
+      {path:'locaux',component:LocauxadminComponent},
+      {path:'chefsparc',component:ChefParcComponent},
+      {path:'vehicules',component:VehiculeComponent},
+]
 }
 ,
 {
@@ -35,7 +39,20 @@ export const routes: Routes = [
     { path: 'vehicules', component: VehiculesChefComponent },
     { path: 'chauffeurs', component: ConsulterChauffeursComponent },
     { path: 'missions', component: AffectationMissionComponent },
+    {path:'declarations',component:DeclarationsListeComponent},
+    {path:'entretiens',component:EntretiensComponent},
+    
 
   ]
 },
+{
+  path: 'chauffeur',
+  component: DriverLayoutComponent,
+  children: [
+    // par défaut, redirige vers le dashboard
+    { path: '', redirectTo: 'menu', pathMatch: 'full' },
+    { path: 'menu', component: DriverMenuComponent },
+    { path: 'missions', component: MissionsComponent },
+  ]
+}
 ];

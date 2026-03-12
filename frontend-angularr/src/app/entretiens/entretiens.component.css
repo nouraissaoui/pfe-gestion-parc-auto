@@ -1,0 +1,532 @@
+/* ================================================================
+   ENTRETIENS — AGIL Gold | Inspiré du thème Chauffeurs
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Sora:wght@400;600;700;800&display=swap');
+
+/* ── Palette exacte ─────────────────────────────────────────────── */
+:host {
+  --gold-light: #FFD700;
+  --gold:       #D4A017;
+  --gold-deep:  #B8860B;
+  --gold-muted: #C9A84C;
+  --parchment:  #FFF8E7;
+  --cream:      #FFFDF5;
+  --white:      #FFFFFF;
+  --text-dark:  #1A1408;
+  --text-mid:   #4A3E1A;
+  --text-light: #8A7A4A;
+  --border-gold: rgba(212,160,23,0.3);
+  --shadow-gold: 0 10px 40px rgba(212,160,23,0.15);
+}
+
+/* ── Container — pleine largeur ─────────────────────────────────── */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.container-fluid {
+  background: var(--cream) !important;
+  min-height: 100vh !important;
+  padding: 30px 36px !important;
+  font-family: 'Sora', sans-serif !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* annule tout max-width Bootstrap qui rétrécit le contenu */
+.container-fluid > *,
+.container-fluid .row,
+.container-fluid .col,
+.container-fluid [class*="col-"] {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* la card occupe toute la largeur */
+.card {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   KEYFRAMES D'ENTRÉE
+   ════════════════════════════════════════════════════════════════ */
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes rowSlideIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes goldPulseOnce {
+  0%   { box-shadow: 0 0 0 0 rgba(212,160,23,0.45); }
+  60%  { box-shadow: 0 0 0 12px rgba(212,160,23,0); }
+  100% { box-shadow: 0 0 0 0 rgba(212,160,23,0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Header (titre + bouton) — glisse depuis le haut ───────────── */
+.d-flex.justify-content-between.align-items-center.mb-4 {
+  animation: fadeInDown 0.55s cubic-bezier(0.22,1,0.36,1) 0s both;
+}
+
+/* ── Filtres — glisse depuis la gauche ─────────────────────────── */
+.btn-group.mb-4 {
+  animation: fadeInLeft 0.5s cubic-bezier(0.22,1,0.36,1) 0.18s both !important;
+}
+
+/* ── Card table — monte depuis le bas + pulse or ────────────────── */
+.card.shadow.border-0 {
+  animation: fadeInUp 0.6s cubic-bezier(0.22,1,0.36,1) 0.3s both,
+             goldPulseOnce 1.1s ease 0.92s both !important;
+}
+
+/* ── Thead — fond doré glisse vers le bas ───────────────────────── */
+.table thead tr {
+  animation: fadeInDown 0.4s ease 0.36s both !important;
+}
+
+/* ── Lignes tbody — cascade en vague ───────────────────────────── */
+.table tbody tr {
+  animation: rowSlideIn 0.42s cubic-bezier(0.22,1,0.36,1) both !important;
+}
+
+.table tbody tr:nth-child(1)  { animation-delay: 0.42s !important; }
+.table tbody tr:nth-child(2)  { animation-delay: 0.52s !important; }
+.table tbody tr:nth-child(3)  { animation-delay: 0.62s !important; }
+.table tbody tr:nth-child(4)  { animation-delay: 0.72s !important; }
+.table tbody tr:nth-child(5)  { animation-delay: 0.82s !important; }
+.table tbody tr:nth-child(6)  { animation-delay: 0.92s !important; }
+.table tbody tr:nth-child(7)  { animation-delay: 1.02s !important; }
+.table tbody tr:nth-child(8)  { animation-delay: 1.12s !important; }
+.table tbody tr:nth-child(9)  { animation-delay: 1.22s !important; }
+.table tbody tr:nth-child(10) { animation-delay: 1.32s !important; }
+
+/* ── Titre ──────────────────────────────────────────────────────── */
+h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  letter-spacing: -0.3px !important;
+}
+
+/* ── Bouton principal ───────────────────────────────────────────── */
+.btn-success {
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold)) !important;
+  border: none !important;
+  color: var(--text-dark) !important;
+  font-family: 'Sora', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  padding: 0.75rem 1.6rem !important;
+  border-radius: 50px !important;
+  box-shadow: 0 4px 18px rgba(212,160,23,0.3) !important;
+  transition: all 0.25s ease !important;
+  letter-spacing: 0.3px !important;
+  text-transform: uppercase !important;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light)) !important;
+  color: var(--text-dark) !important;
+  box-shadow: 0 6px 24px rgba(212,160,23,0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-success:active { transform: translateY(0) !important; }
+
+/* ── Filtres ────────────────────────────────────────────────────── */
+.btn-group {
+  background: var(--parchment) !important;
+  border: 1.5px solid var(--border-gold) !important;
+  border-radius: 50px !important;
+  padding: 4px !important;
+  box-shadow: none !important;
+}
+
+.btn-group .btn-outline-primary {
+  border: none !important;
+  border-radius: 50px !important;
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  color: var(--text-light) !important;
+  background: transparent !important;
+  padding: 0.45rem 1.2rem !important;
+  transition: all 0.2s ease !important;
+  margin: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.btn-group .btn-outline-primary:hover {
+  color: var(--text-dark) !important;
+  background: rgba(212,160,23,0.1) !important;
+}
+
+.btn-group .btn-outline-primary.active {
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold)) !important;
+  color: var(--text-dark) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 10px rgba(212,160,23,0.3) !important;
+}
+
+/* ── Card & Table ───────────────────────────────────────────────── */
+.card {
+  background: var(--white) !important;
+  border: 1px solid var(--border-gold) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-gold) !important;
+  overflow: hidden !important;
+  margin-top: 0 !important;
+}
+
+/* Thead — style parchment comme chauffeurs */
+.table thead {
+  background: var(--parchment) !important;
+}
+
+.table thead th {
+  background: var(--parchment) !important;
+  color: var(--gold-deep) !important;
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  padding: 14px 16px !important;
+  border-bottom: 2px solid var(--border-gold) !important;
+  border-top: none !important;
+}
+
+/* Tbody */
+.table tbody td {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.88rem !important;
+  color: var(--text-mid) !important;
+  vertical-align: middle !important;
+  padding: 16px 16px !important;
+  border-bottom: 1px solid rgba(212,160,23,0.1) !important;
+  border-top: none !important;
+}
+
+.table tbody tr {
+  transition: background 0.25s ease !important;
+}
+
+.table tbody tr:hover {
+  background: rgba(212,160,23,0.05) !important;
+}
+
+/* Nom véhicule */
+.table tbody td .font-weight-bold {
+  font-family: 'Sora', sans-serif !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  font-size: 0.92rem !important;
+}
+
+.table tbody td small.text-muted {
+  font-size: 0.72rem !important;
+  color: var(--text-light) !important;
+}
+
+/* ── Badges ─────────────────────────────────────────────────────── */
+.badge {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  padding: 0.38rem 0.9rem !important;
+  border-radius: 50px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.4px !important;
+}
+
+.badge-info {
+  background: linear-gradient(135deg, rgba(212,160,23,0.15), rgba(212,160,23,0.05)) !important;
+  color: var(--gold-deep) !important;
+  border: 1px solid var(--border-gold) !important;
+}
+
+.badge-warning {
+  background: rgba(212,160,23,0.08) !important;
+  color: var(--text-mid) !important;
+  border: 1px solid rgba(212,160,23,0.2) !important;
+}
+
+/* ── Boutons action ─────────────────────────────────────────────── */
+.btn-sm {
+  border-radius: 10px !important;
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.82rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-sm:hover {
+  transform: translateY(-2px) scale(1.08) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.btn-outline-info {
+  color: var(--gold-deep) !important;
+  border-color: var(--border-gold) !important;
+  background: rgba(212,160,23,0.08) !important;
+}
+.btn-outline-info:hover {
+  background: rgba(212,160,23,0.18) !important;
+  color: var(--gold-deep) !important;
+  border-color: var(--gold) !important;
+}
+
+.btn-outline-primary {
+  color: var(--text-mid) !important;
+  border-color: rgba(212,160,23,0.25) !important;
+  background: var(--parchment) !important;
+}
+.btn-outline-primary:hover {
+  background: rgba(212,160,23,0.12) !important;
+  color: var(--text-dark) !important;
+}
+
+.btn-outline-danger {
+  color: #c0392b !important;
+  border-color: rgba(192,57,43,0.2) !important;
+  background: rgba(192,57,43,0.05) !important;
+}
+.btn-outline-danger:hover {
+  background: rgba(192,57,43,0.12) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MODALES — même style que modal-gold des chauffeurs
+   ════════════════════════════════════════════════════════════════ */
+.modal-content {
+  background: var(--white) !important;
+  border: 1.5px solid var(--border-gold) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.2), 0 0 40px rgba(212,160,23,0.1) !important;
+  overflow: hidden !important;
+  animation: modalPop 0.35s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+
+@keyframes modalPop {
+  from { opacity:0; transform:scale(0.88) translateY(24px); }
+  to   { opacity:1; transform:scale(1) translateY(0); }
+}
+
+/* Header — dark gold comme modal-gold-header */
+.modal-header,
+.modal-header.bg-primary {
+  background: linear-gradient(135deg, #1A1408 0%, #2C2000 100%) !important;
+  border-bottom: none !important;
+  padding: 1.4rem 1.8rem !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+/* ligne or animée en bas du header */
+.modal-header::after,
+.modal-header.bg-primary::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0; left: 0; right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent) !important;
+}
+
+.modal-header h5,
+.modal-header .modal-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  margin: 0 !important;
+}
+
+.modal-header .close {
+  color: rgba(255,255,255,0.7) !important;
+  opacity: 1 !important;
+  font-size: 1.3rem !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  background: rgba(255,255,255,0.06) !important;
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+}
+.modal-header .close:hover {
+  background: rgba(212,160,23,0.2) !important;
+  color: var(--gold-light) !important;
+  transform: rotate(90deg) !important;
+  border-color: rgba(212,160,23,0.4) !important;
+}
+
+/* Body */
+.modal-body {
+  background: var(--white) !important;
+  padding: 1.6rem 1.8rem !important;
+}
+
+/* Labels */
+.modal-body label,
+.form-group label {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  color: var(--text-light) !important;
+  letter-spacing: 1.2px !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0.4rem !important;
+  display: block !important;
+}
+
+/* Inputs */
+.form-control {
+  background: var(--parchment) !important;
+  border: 1.5px solid var(--border-gold) !important;
+  border-radius: 10px !important;
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.88rem !important;
+  color: var(--text-dark) !important;
+  padding: 0.68rem 1rem !important;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+}
+.form-control:focus {
+  border-color: var(--gold) !important;
+  background: var(--cream) !important;
+  box-shadow: 0 0 0 4px rgba(212,160,23,0.1) !important;
+  outline: none !important;
+}
+
+/* Footer */
+.modal-footer {
+  background: var(--parchment) !important;
+  border-top: 1px solid var(--border-gold) !important;
+  padding: 1rem 1.8rem !important;
+}
+
+.modal-footer .btn-secondary {
+  background: transparent !important;
+  border: 1px solid var(--border-gold) !important;
+  color: var(--text-light) !important;
+  border-radius: 12px !important;
+  font-family: 'Sora', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.84rem !important;
+  padding: 0.6rem 1.4rem !important;
+  transition: all 0.2s ease !important;
+}
+.modal-footer .btn-secondary:hover {
+  background: rgba(212,160,23,0.08) !important;
+  color: var(--text-dark) !important;
+  border-color: var(--gold) !important;
+}
+
+.modal-footer .btn-primary {
+  background: linear-gradient(135deg, #1A1408, #2C2000) !important;
+  border: 1px solid var(--gold-deep) !important;
+  color: var(--gold-light) !important;
+  border-radius: 12px !important;
+  font-family: 'Sora', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.88rem !important;
+  padding: 0.68rem 1.7rem !important;
+  transition: all 0.25s ease !important;
+}
+.modal-footer .btn-primary:hover {
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold)) !important;
+  color: var(--text-dark) !important;
+  border-color: var(--gold) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(212,160,23,0.3) !important;
+}
+
+/* ── Zone impression ─────────────────────────────────────────────── */
+.modal-lg { max-width: 780px !important; }
+
+.modal-body.p-5 h3 {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-weight: 700 !important;
+  font-size: 1.3rem !important;
+  color: var(--text-dark) !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+}
+
+.modal-body.p-5 > div:first-child {
+  border-bottom: 2px solid var(--gold) !important;
+  padding-bottom: 0.8rem !important;
+  margin-bottom: 1.4rem !important;
+}
+
+.modal-body.p-5 > p {
+  font-size: 0.9rem !important;
+  color: var(--text-mid) !important;
+  padding: 0.4rem 0.6rem !important;
+  border-radius: 7px !important;
+  transition: background 0.2s !important;
+}
+.modal-body.p-5 > p:hover { background: rgba(212,160,23,0.05) !important; }
+.modal-body.p-5 > p strong { color: var(--text-dark) !important; font-weight: 700 !important; }
+
+.modal-body.p-5 > div[style*="border: 1px solid #ccc"] {
+  background: var(--parchment) !important;
+  border: 1.5px solid var(--border-gold) !important;
+  border-left: 3px solid var(--gold) !important;
+  border-radius: 10px !important;
+  padding: 1rem 1.2rem !important;
+}
+
+.modal-body.p-5 > div[style*="margin-top: 50px"] p {
+  font-size: 0.8rem !important;
+  color: var(--text-light) !important;
+  font-weight: 600 !important;
+  padding-top: 0.5rem !important;
+  border-top: 1px dashed var(--border-gold) !important;
+}
+
+/* ── Print ───────────────────────────────────────────────────────── */
+@media print {
+  .modal-header, .modal-footer { display: none !important; }
+  .modal-content { box-shadow: none !important; border: none !important; }
+}

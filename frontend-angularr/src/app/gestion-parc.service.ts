@@ -52,7 +52,29 @@ export interface Vehicule {
     local?: any; // On peut typer plus précisément si on a l'interface Local
 
 }
-
+export interface Declaration {
+  idDeclaration: number;
+  type: 'ACCIDENT' | 'PANNE' | 'RECLAMATION';
+  description: string;
+  dateCreation: string;
+  status: 'EN_ATTENTE' | 'TRAITE' | 'REJETE';
+  vehicule: Vehicule;
+  chauffeur: any;
+}
+// 1. Interface à ajouter en haut du fichier
+export interface Entretien {
+  idEntretien?: number;
+  typeEntretien: string;
+  categorie: 'ENTRETIEN_PERIODIQUE' | 'ENTRETIEN_SUITE_DECLARATION';
+  datePrevue: string;
+  // dateEffectuee supprimée
+  observations: string;
+  // status supprimé (car la création vaut ordre de mission)
+  declaration?: Declaration;
+  garage: any;
+  vehicule: Vehicule;
+  chefDuParc: any;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -251,5 +273,59 @@ getAllLocaux(): Observable<Local[]> {
   deleteVehicule(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/vehicule/${id}`, { responseType: 'text' });
   }
+// Récupérer la liste des déclarations à traiter
+getDeclarationsEnAttenteLocal(idLocal: number): Observable<Declaration[]> {
+  return this.http.get<Declaration[]>(`${this.baseUrl}/local/${idLocal}/declarations-en-attente`);
+}
 
+// Envoyer le formulaire de traitement
+validerTraitementDeclaration(idDec: number, idChef: number, idGarage: number, type: string, date: string, obs: string): Observable<any> {
+  const params = new HttpParams()
+    .set('idChef', idChef.toString())
+    .set('idGarage', idGarage.toString()) // Ajouté
+    .set('typeEntretien', type)          // Ajouté
+    .set('datePrevue', date)
+    .set('obs', obs);
+
+  return this.http.post(`${this.baseUrl}/declaration/${idDec}/traiter`, null, { params });
+}
+
+getGarages(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/garages`);
+}
+getToutesDeclarationsLocal(idLocal: number): Observable<Declaration[]> {
+  return this.http.get<Declaration[]>(`${this.baseUrl}/local/${idLocal}/declarations-toutes`);
+}
+
+// 2 gestion des entretienss 
+// -------------------------------------------------------
+
+// Récupérer tous les entretiens (Curatifs et Périodiques) du local
+getEntretiensByLocal(idLocal: number): Observable<Entretien[]> {
+  return this.http.get<Entretien[]>(`${this.baseUrl}/local/${idLocal}/entretiens`);
+}
+
+// Planifier un entretien périodique (Préventif)
+planifierEntretienPeriodique(entretien: Partial<Entretien>, idVehicule: number, idGarage: number, idChef: number): Observable<Entretien> {
+  const params = new HttpParams()
+    .set('idVehicule', idVehicule.toString())
+    .set('idGarage', idGarage.toString())
+    .set('idChef', idChef.toString());
+  
+  return this.http.post<Entretien>(`${this.baseUrl}/entretien/periodique`, entretien, { params });
+}
+
+// Mettre à jour un entretien (ex: changer le statut à TRAITE une fois terminé)
+updateEntretien(id: number, entretien: Partial<Entretien>): Observable<Entretien> {
+  return this.http.put<Entretien>(`${this.baseUrl}/entretien/${id}`, entretien);
+}
+
+// Supprimer un entretien
+deleteEntretien(id: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/entretien/${id}`);
+}
+/*recuperer les missions d'un chauffeur*/
+getMissionsByChauffeur(idChauffeur: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/chauffeur/${idChauffeur}`);
+  }
 }
