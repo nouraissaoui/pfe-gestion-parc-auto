@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.pfe.backendspringboot.Entities.Vehicule;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,6 +45,9 @@ public class GestionParcService {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private FeuilleDeRouteRepository feuilleDeRouteRepository;
+    @Autowired
+    private  GarageMaintenanceRepository  garageMaintenanceRepository;
+
 
     // ==================== AUTHENTIFICATION & USERS ====================
     public Object authenticate(String mail, String password) {
@@ -514,4 +518,155 @@ public class GestionParcService {
             throw new RuntimeException("Véhicule introuvable");
         }
         vehiculeRepository.deleteById(id);
-    }}
+    }
+    //=================trater declaration==============
+    // ==================== GESTION DES DÉCLARATIONS & ENTRETIENS ====================
+
+    public List<Declaration> getDeclarationsEnAttenteParLocal(Long idLocal) {
+        return declarationRepository.findByVehicule_Local_IdLocalAndStatus(idLocal, DeclarationStatus.EN_ATTENTE);
+    }
+    @Transactional
+    public Entretien traiterDeclarationEtCreerEntretien(Long idDeclaration, Long idChef, Long idGarage, LocalDate datePrevue, String typeEntretien, String obs) {
+        // 1. Récupérer la déclaration
+        Declaration dec = declarationRepository.findById(idDeclaration)
+                .orElseThrow(() -> new RuntimeException("Déclaration introuvable"));
+
+        // 2. Récupérer le chef de parc
+        ChefParc chef = chefParcRepository.findById(idChef)
+                .orElseThrow(() -> new RuntimeException("Chef de parc introuvable"));
+
+        // 3. Récupérer le garage
+        GarageMaintenance garage = garageMaintenanceRepository.findById(idGarage)
+                .orElseThrow(() -> new RuntimeException("Garage introuvable"));
+
+        // 4. Mettre à jour la déclaration
+        dec.setStatus(DeclarationStatus.TRAITE);
+        declarationRepository.save(dec);
+
+        // 5. Créer l'entretien (Correction des setters et Enums)
+        Entretien entretien = new Entretien();
+        entretien.setDeclaration(dec);
+        entretien.setVehicule(dec.getVehicule());
+
+        // Correction ici : le nom du setter suit le nom de l'attribut 'chefDuParc'
+        entretien.setChefDuParc(chef);
+
+        entretien.setGarage(garage);
+        entretien.setDatePrevue(datePrevue);
+        entretien.setTypeEntretien(typeEntretien);
+        entretien.setObservations(obs);
+
+        // Correction ici : Utilisation de Categorie.ENTRETIEN_SUITE_DECLARATION
+        entretien.setCategorie(Entretien.Categorie.ENTRETIEN_SUITE_DECLARATION);
+
+        // Correction ici : Utilisation de Status.EN_ATTENTE (puisqu'il n'est pas encore traité)
+        entretien.setStatus(Entretien.Status.EN_ATTENTE);
+
+        // Mettre le véhicule en état 'EN_ENTRETIEN'
+        if (dec.getVehicule() != null) {
+            dec.getVehicule().setEtat(EtatVehicule.EN_ENTRETIEN);
+            vehiculeRepository.save(dec.getVehicule());
+        }
+
+        return entretienRepository.save(entretien);
+    }
+
+    // Ajouter aussi la méthode pour l'UI du Frontend
+    public List<GarageMaintenance> getAllGarages() {
+        return garageMaintenanceRepository.findAll();
+    }
+    public List<Declaration> getAllDeclarationsByLocal(Long idLocal) {
+        // Cette méthode récupère TOUT (En attente, Traité, Rejeté) pour ce local
+        return declarationRepository.findByVehicule_Local_IdLocal(idLocal);
+    }
+    // ==================== SERVICE ENTRETIENS ====================
+
+    public List<Entretien> getEntretiensByLocal(Long idLocal) {
+        // Supposant que vous ajoutez findByVehiculeLocalIdLocal dans EntretienRepository
+        return entretienRepository.findByVehicule_Local_IdLocal(idLocal);
+    }
+
+    @Transactional
+    public Entretien creerEntretienPeriodique(Entretien ent, Long idVehicule, Long idGarage, Long idChef) {
+        Vehicule v = vehiculeRepository.findById(idVehicule)
+                .orElseThrow(() -> new RuntimeException("Véhicule non trouvé"));
+
+        // ... chargement garage et chef ...
+
+        ent.setVehicule(v);
+        ent.setCategorie(Entretien.Categorie.ENTRETIEN_PERIODIQUE);
+        ent.setStatus(Entretien.Status.EN_ATTENTE); // Notez le 'S' majuscule
+
+        // Correction de l'accès privé : utilisez le SETTER
+        v.setEtat(EtatVehicule.EN_ENTRETIEN);
+        vehiculeRepository.save(v);
+
+        return entretienRepository.save(ent);
+    }
+
+    @Transactional
+    public Entretien updateEntretien(Long id, Entretien details) {
+        Entretien ent = entretienRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entretien non trouvé avec l'id : " + id));
+
+        // --- MISE À JOUR DES CHAMPS MANQUANTS ---
+        if (details.getTypeEntretien() != null) {
+            ent.setTypeEntretien(details.getTypeEntretien());
+        }
+        if (details.getDatePrevue() != null) {
+            ent.setDatePrevue(details.getDatePrevue());
+        }
+        if (details.getObservations() != null) {
+            ent.setObservations(details.getObservations());
+        }
+        if (details.getGarage() != null) {
+            ent.setGarage(details.getGarage());
+        }
+        if (details.getCategorie() != null) {
+            ent.setCategorie(details.getCategorie());
+        }
+
+        // --- GESTION DU STATUT (Ton code existant) ---
+        ent.setStatus(details.getStatus());
+
+        if (details.getStatus() == Entretien.Status.TRAITE || details.getStatus() == Entretien.Status.REJETE) {
+            Vehicule v = ent.getVehicule();
+            if (v != null) {
+                v.setEtat(EtatVehicule.DISPONIBLE);
+                vehiculeRepository.save(v);
+            }
+            ent.setDateEffectuee(LocalDate.now());
+        }
+
+        // Sauvegarde de l'objet mis à jour
+        return entretienRepository.save(ent);
+    }
+    @Transactional
+    public void deleteEntretien(Long id) {
+        Entretien ent = entretienRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entretien non trouvé"));
+
+        // Libérer le véhicule
+        if (ent.getVehicule() != null) {
+            Vehicule v = ent.getVehicule();
+            v.setEtat(EtatVehicule.DISPONIBLE);
+            vehiculeRepository.save(v);
+        }
+
+        // Correction ici : Utilisation de DeclarationStatus
+        if (ent.getDeclaration() != null) {
+            Declaration d = ent.getDeclaration();
+            d.setStatus(DeclarationStatus.EN_ATTENTE); // <--- Correction faite ici
+            declarationRepository.save(d);
+        }
+
+        entretienRepository.delete(ent);
+    }
+
+
+
+
+
+
+
+}

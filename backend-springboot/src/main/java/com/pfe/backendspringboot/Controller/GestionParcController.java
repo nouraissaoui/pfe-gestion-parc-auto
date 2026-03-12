@@ -1,24 +1,26 @@
 package com.pfe.backendspringboot.Controller;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
 import com.pfe.backendspringboot.DTO.LoginRequest;
 import com.pfe.backendspringboot.DTO.ProfileResponse;
 import com.pfe.backendspringboot.DTO.UserRegistrationDTO;
 import com.pfe.backendspringboot.Entities.*;
-import com.pfe.backendspringboot.Repository.ChauffeurRepository;
-import com.pfe.backendspringboot.Repository.ChefParcRepository;
-import com.pfe.backendspringboot.Repository.FeuilleDeRouteRepository;
-import com.pfe.backendspringboot.Repository.MissionRepository;
+import com.pfe.backendspringboot.Repository.*;
 import com.pfe.backendspringboot.Service.GestionParcService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/gestion-parc")
@@ -31,6 +33,10 @@ public class GestionParcController {
     private MissionRepository missionRepository;
     @Autowired
     private FeuilleDeRouteRepository feuilleDeRouteRepository;
+
+    @Autowired
+    private DeclarationRepository declarationRepository;
+
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationDTO dto) {
@@ -408,5 +414,98 @@ public class GestionParcController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    // ===========gestion des declaration===============
+    @GetMapping("/local/{idLocal}/declarations-en-attente")
+    public List<Declaration> getDeclarations(@PathVariable Long idLocal) {
+        return gestionParcService.getDeclarationsEnAttenteParLocal(idLocal);
+    }
+
+    /*@PostMapping("/declaration/{idDeclaration}/traiter")
+    public ResponseEntity<?> traiter(
+            @PathVariable Long idDeclaration,
+            @RequestParam Long idChef,
+            @RequestParam String datePrevue,
+            @RequestParam(required = false) String obs) {
+        try {
+            LocalDate date = LocalDate.parse(datePrevue);
+            return ResponseEntity.ok(gestionParcService.traiterDeclarationEtCreerEntretien(idDeclaration, idChef, date, obs));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }*/
+    @PostMapping("/declaration/{idDeclaration}/traiter")
+    public ResponseEntity<?> traiter(
+            @PathVariable Long idDeclaration,
+            @RequestParam Long idChef,
+            @RequestParam Long idGarage,      // Nouvel ID
+            @RequestParam String typeEntretien, // Nouveau champ
+            @RequestParam String datePrevue,
+            @RequestParam(required = false) String obs) {
+        try {
+            LocalDate date = LocalDate.parse(datePrevue);
+            return ResponseEntity.ok(gestionParcService.traiterDeclarationEtCreerEntretien(
+                    idDeclaration, idChef, idGarage, date, typeEntretien, obs));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @GetMapping("/garages")
+    public List<GarageMaintenance> getGarages() {
+        return gestionParcService.getAllGarages();
+    }
+    @GetMapping("/local/{idLocal}/declarations-toutes")
+    public List<Declaration> getAllDeclarationsByLocal(@PathVariable Long idLocal) {
+        return gestionParcService.getAllDeclarationsByLocal(idLocal); // Appelle la nouvelle méthode du repo
+    }
+
+
+    //===================gestion des entretiens===================
+    // 1. Lister les entretiens d'un local
+    @GetMapping("/local/{idLocal}/entretiens")
+    public List<Entretien> getEntretiens(@PathVariable Long idLocal) {
+        return gestionParcService.getEntretiensByLocal(idLocal);
+    }
+
+    // 2. Créer un entretien périodique (Préventif)
+    @PostMapping("/entretien/periodique")
+    public ResponseEntity<?> planifierPeriodique(
+            @RequestBody Entretien entretien,
+            @RequestParam Long idVehicule,
+            @RequestParam Long idGarage,
+            @RequestParam Long idChef) {
+        try {
+            return ResponseEntity.ok(gestionParcService.creerEntretienPeriodique(entretien, idVehicule, idGarage, idChef));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    // 3. Mettre à jour (Valider la fin des travaux)
+    @PutMapping("/entretien/{id}")
+    public ResponseEntity<?> updateEntretien(@PathVariable Long id, @RequestBody Entretien details) {
+        try {
+            return ResponseEntity.ok(gestionParcService.updateEntretien(id, details));
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    // 4. Supprimer l'entretien
+    @DeleteMapping("/entretien/{id}")
+    public ResponseEntity<?> supprimerEntretien(@PathVariable Long id) {
+        try {
+            gestionParcService.deleteEntretien(id);
+            return ResponseEntity.ok().body("{\"message\": \"Entretien supprimé\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+    //recuperer les missions d'un chauffeur
+    @GetMapping("/chauffeur/{idChauffeur}")
+    public ResponseEntity<List<Mission>> getMissionsByChauffeur(@PathVariable Long idChauffeur) {
+        return ResponseEntity.ok(missionRepository.findByChauffeurIdChauffeur(idChauffeur));
+    }
+
 
 }

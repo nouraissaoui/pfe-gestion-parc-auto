@@ -18,21 +18,6 @@ public class WebSecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    /*pour tester avec postman , je dois desactiver la securité puis la remettre*/
-    /*@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        // 🔹 Tout le monde peut accéder aux endpoints d'authentification
-                        .requestMatchers("/api/auth/**").permitAll()
-                        // 🔹 Les autres endpoints sont accessibles à tous les rôles
-                        .anyRequest().hasAnyAuthority("ADMIN", "CHEF_DU_PARC", "CHAUFFEUR")
-                )
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
-
-        return http.build();
-    }*/
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
