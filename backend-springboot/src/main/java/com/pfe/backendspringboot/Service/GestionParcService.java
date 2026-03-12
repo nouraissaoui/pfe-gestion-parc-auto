@@ -443,31 +443,7 @@ public class GestionParcService {
         return chefParcRepository.save(chef);
     }
 
-    @Transactional
-    public void deleteChefParc(Long id) {
-        // 1. Trouver le chef
-        ChefParc chef = chefParcRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Chef non trouvé"));
-
-        // 2. Récupérer le local associé
-        Local local = chef.getLocal();
-
-        if (local != null) {
-            // IMPORTANT : On casse le lien des deux côtés pour que la contrainte d'unicité soit levée
-            local.setChefParc(null); // On libère le local
-            localRepository.save(local);
-
-            chef.setLocal(null); // On libère le chef
-            chefParcRepository.save(chef);
-        }
-
-        // 3. On force la synchronisation avec la base de données
-        chefParcRepository.flush();
-
-        // 4. On supprime l'entité ChefParc définitivement
-        chefParcRepository.delete(chef);
-    }
-// ==================== CRUD VÉHICULES COMPLET ====================
+   // ==================== CRUD VÉHICULES COMPLET ====================
 
     public List<Vehicule> getAllVehicules() {
         return vehiculeRepository.findAll();
@@ -515,13 +491,39 @@ public class GestionParcService {
         return vehiculeRepository.save(existing);
     }
 
+    @Transactional
     public void deleteVehicule(Long id) {
-        if (!vehiculeRepository.existsById(id)) {
-            throw new RuntimeException("Véhicule introuvable");
-        }
-        vehiculeRepository.deleteById(id);
-    }
+        Vehicule vehicule = vehiculeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Véhicule introuvable"));
 
+        // 1. CARTE CARBURANT : Supprimer la carte liée au véhicule
+        // (Une carte ne peut pas exister sans véhicule dans ton SQL)
+        carteCarburantRepository.findByVehicule_IdVehicule(id).ifPresent(carte -> {
+            carteCarburantRepository.delete(carte);
+        });
+
+        // 2. MISSIONS : Supprimer ou détacher les missions
+        List<Mission> missions = missionRepository.findByVehicule_IdVehicule(id);
+        if (!missions.isEmpty()) {
+            missionRepository.deleteAll(missions);
+        }
+
+        // 3. DECLARATIONS
+        List<Declaration> declarations = declarationRepository.findByVehicule_IdVehicule(id);
+        if (!declarations.isEmpty()) {
+            declarationRepository.deleteAll(declarations);
+        }
+
+        // 4. CHAUFFEUR : Libérer le chauffeur qui utilisait ce véhicule
+        chauffeurRepository.findByVehicule(vehicule).ifPresent(chauffeur -> {
+            chauffeur.setVehicule(null);
+            chauffeur.setEtatChauffeur(Chauffeur.EtatChauffeur.DISPONIBLE);
+            chauffeurRepository.save(chauffeur);
+        });
+
+        // 5. Suppression finale du véhicule
+        vehiculeRepository.delete(vehicule);
+    }
     public CarteCarburant getCarteByNumero(String numero) {
         return carteCarburantRepository.findByNumeroCarte(numero)
                 .orElseThrow(() -> new RuntimeException("Carte introuvable"));
@@ -597,13 +599,41 @@ public class GestionParcService {
 
         return chauffeurRepository.save(existing);
     }
-
+    @Transactional
     public void deleteChauffeur(Long id) {
-        if (!chauffeurRepository.existsById(id)) {
-            throw new RuntimeException("Chauffeur introuvable");
+        Chauffeur chauffeur = chauffeurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));
+
+        // 1. MISSIONS : Supprimer les missions liées au chauffeur
+        List<Mission> missions = missionRepository.findByChauffeur_IdChauffeur(id);
+        if (!missions.isEmpty()) {
+            missionRepository.deleteAll(missions);
         }
-        chauffeurRepository.deleteById(id);
+
+        // 2. FEUILLE_DE_ROUTE : Supprimer les feuilles de route
+        List<FeuilleDeRoute> feuilles = feuilleDeRouteRepository.findByChauffeur_IdChauffeur(id);
+        if (!feuilles.isEmpty()) {
+            feuilleDeRouteRepository.deleteAll(feuilles);
+        }
+
+        // 3. DECLARATION : Supprimer les déclarations faites par ce chauffeur
+        List<Declaration> declarations = declarationRepository.findByChauffeur_IdChauffeur(id);
+        if (!declarations.isEmpty()) {
+            declarationRepository.deleteAll(declarations);
+        }
+
+        // 4. VEHICULE : Si le chauffeur avait un véhicule, on remet le véhicule en DISPONIBLE
+        if (chauffeur.getVehicule() != null) {
+            Vehicule v = chauffeur.getVehicule();
+            v.setEtat(EtatVehicule.DISPONIBLE);
+            vehiculeRepository.save(v);
+        }
+
+        // 5. Suppression finale du chauffeur
+        chauffeurRepository.delete(chauffeur);
     }
+
+
     @Transactional
     public Declaration creerDeclaration(Long idChauffeur, DeclarationType type, String description) {
         // 1. Récupérer le chauffeur
@@ -680,4 +710,56 @@ public class GestionParcService {
 
         return missionRepository.save(mission);
     }
-}
+    @Transactional
+    public void deleteChefParc(Long id) {
+        ChefParc chef = chefParcRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chef de parc introuvable avec l'ID : " + id));
+
+        // --- CORRECTION FEUILLE DE ROUTE ---
+        // On enlève le "Du" pour correspondre à l'entité
+        List<FeuilleDeRoute> feuilles = feuilleDeRouteRepository.findByChefParc_IdChefParc(id);
+        if (!feuilles.isEmpty()) {
+            feuilleDeRouteRepository.deleteAll(feuilles);
+        }
+
+        // 3. Table CARTE_CARBURANT
+        // Vérifiez si CarteCarburant utilise "chefDuParc" ou "chefParc" dans son entité.
+        // Si vous avez une erreur sur celle-ci, retirez aussi le "Du".
+        List<CarteCarburant> cartes = carteCarburantRepository.findByChefDuParc_IdChefParc(id);
+        if (!cartes.isEmpty()) {
+            carteCarburantRepository.deleteAll(cartes);
+        }
+
+        // 4. Table DECLARATION (C'est déjà corrigé ici, bien joué !)
+        List<Declaration> declarations = declarationRepository.findByChefParc_IdChefParc(id);
+        if (!declarations.isEmpty()) {
+            declarationRepository.deleteAll(declarations);
+        }
+
+        // 5. Table ENTRETIEN (Suppression forcée)
+        List<Entretien> entretiens = entretienRepository.findByChefDuParc_IdChefParc(id);
+        if (!entretiens.isEmpty()) {
+            entretienRepository.deleteAll(entretiens);
+        }
+
+        // 6. Table MISSIONS (Suppression forcée)
+        List<Mission> missions = missionRepository.findByChefDuParc_IdChefParc(id);
+        if (!missions.isEmpty()) {
+            missionRepository.deleteAll(missions);
+        }
+
+        // 7. Table LOCAL (Relation 1:1)
+        // On libère simplement le local sans le supprimer (généralement le bâtiment reste)
+        localRepository.findAll().stream()
+                .filter(l -> chef.equals(l.getChefParc()))
+                .forEach(l -> {
+                    l.setChefParc(null);
+                    localRepository.save(l);
+                });
+
+        // 8. Suppression finale du Chef
+        chefParcRepository.delete(chef);
+
+        // Flush pour valider immédiatement
+        chefParcRepository.flush();
+    }}

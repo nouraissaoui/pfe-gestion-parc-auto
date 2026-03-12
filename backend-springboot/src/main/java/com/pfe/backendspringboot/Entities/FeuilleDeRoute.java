@@ -33,7 +33,7 @@ public class FeuilleDeRoute {
     private Chauffeur chauffeur;
 
     @ManyToOne
-    @JoinColumn(name = "id_chefparc", referencedColumnName = "id_chefparc", nullable = false)
+    @JoinColumn(name = "id_chefparc", referencedColumnName = "id_chefparc", nullable = true)
     private ChefParc chefParc;
 
     //====récupérer toutes les missions d’une feuille facilement

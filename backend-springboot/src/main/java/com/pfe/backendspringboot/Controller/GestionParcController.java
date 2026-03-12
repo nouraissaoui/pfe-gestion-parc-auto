@@ -357,9 +357,10 @@ private DeclarationRepository declarationRepository;
     public ResponseEntity<?> deleteChefParc(@PathVariable Long id) {
         try {
             gestionParcService.deleteChefParc(id);
-            return ResponseEntity.ok("Chef Parc supprimé avec succès");
+            return ResponseEntity.ok().body("{\"message\": \"Chef Parc et ses références ont été traités avec succès\"}");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la suppression : " + e.getMessage());
         }
     }
     // ==================== CRUD VÉHICULE (API) ====================

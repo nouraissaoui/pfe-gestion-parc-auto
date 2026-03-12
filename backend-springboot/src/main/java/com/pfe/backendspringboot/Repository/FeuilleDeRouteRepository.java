@@ -11,15 +11,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-
 @Repository
 public interface FeuilleDeRouteRepository extends JpaRepository<FeuilleDeRoute, Long> {
-    // Trouve une feuille ouverte pour un chauffeur spécifique
     Optional<FeuilleDeRoute> findByChauffeurAndStatut(Chauffeur chauffeur, StatutFeuilleDeRoute statut);
-    // Exemple de requête dans le Repository
+
     @Query("SELECT f FROM FeuilleDeRoute f WHERE f.vehicule.local.idLocal = :idLocal AND f.statut = 'OUVERTE'")
     List<FeuilleDeRoute> findByLocalId(@Param("idLocal") Long idLocal);
-    // Optionnel : tu peux ajouter des méthodes custom si besoin pour filtrer par chauffeur/local
 
     List<FeuilleDeRoute> findByChauffeur_IdChauffeur(Long idChauffeur);
-}
+
+    // Correction : Nom unique harmonisé
+    List<FeuilleDeRoute> findByChefParc_IdChefParc(Long id);}
