@@ -902,13 +902,12 @@ public class GestionParcService {
         Vehicule vehicule = vehiculeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Véhicule introuvable"));
 
-        // 1. CARTE CARBURANT : Supprimer la carte liée au véhicule
-        // (Une carte ne peut pas exister sans véhicule dans ton SQL)
+        // 1. CARTE CARBURANT
         carteCarburantRepository.findByVehicule_IdVehicule(id).ifPresent(carte -> {
             carteCarburantRepository.delete(carte);
         });
 
-        // 2. MISSIONS : Supprimer ou détacher les missions
+        // 2. MISSIONS
         List<Mission> missions = missionRepository.findByVehicule_IdVehicule(id);
         if (!missions.isEmpty()) {
             missionRepository.deleteAll(missions);
@@ -920,18 +919,25 @@ public class GestionParcService {
             declarationRepository.deleteAll(declarations);
         }
 
-        // 4. CHAUFFEUR : Libérer le chauffeur qui utilisait ce véhicule
+        // --- AJOUTEZ CETTE PARTIE ---
+        // 4. ENTRETIENS (L'erreur venait d'ici !)
+        // Assurez-vous d'avoir une méthode findByVehicule_IdVehicule dans votre EntretienRepository
+        List<Entretien> entretiens = entretienRepository.findByVehicule_IdVehicule(id);
+        if (!entretiens.isEmpty()) {
+            entretienRepository.deleteAll(entretiens);
+        }
+        // ----------------------------
+
+        // 5. CHAUFFEUR : Libérer le chauffeur
         chauffeurRepository.findByVehicule(vehicule).ifPresent(chauffeur -> {
             chauffeur.setVehicule(null);
             chauffeur.setEtatChauffeur(Chauffeur.EtatChauffeur.DISPONIBLE);
             chauffeurRepository.save(chauffeur);
         });
 
-        // 5. Suppression finale du véhicule
+        // 6. Suppression finale du véhicule
         vehiculeRepository.delete(vehicule);
-    }
-
-    @Transactional
+    } @Transactional
     public void deleteChauffeur(Long id) {
         Chauffeur chauffeur = chauffeurRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Chauffeur introuvable"));

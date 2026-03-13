@@ -43,7 +43,6 @@ export const routes: Routes = [
       { path: 'chefsparc', component: ChefParcComponent },
       { path: 'vehicules', component: VehiculeComponent },
       { path: 'chauffeurs', component: ChauffeurGestionComponent },
-      { path: 'rapports', component: StatsDashboardComponent }
     ]
   },
 

@@ -19,4 +19,5 @@ public interface EntretienRepository extends JpaRepository<Entretien, Long> {
     List<Entretien> findByVehicule_Local_IdLocalAndStatus(Long idLocal, Entretien.Status status);
     List<Entretien> findByChefDuParc_IdChefParc(Long id);
     void deleteByDeclaration_IdDeclaration(Long idDeclaration);
+    List<Entretien> findByVehicule_IdVehicule(Long idVehicule);
 }

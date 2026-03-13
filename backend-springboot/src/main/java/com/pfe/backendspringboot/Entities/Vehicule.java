@@ -22,7 +22,8 @@ public class Vehicule {
     private int annee;
     private String carburant;
 
-    @Column(name = "image", length = 5000)
+    @Lob
+    @Column(name = "image", columnDefinition = "LONGTEXT")
     private String image;
 
     // Relation Many-to-One avec Local
