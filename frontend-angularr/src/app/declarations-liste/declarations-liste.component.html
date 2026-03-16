@@ -174,7 +174,8 @@
         <!-- Actions (seulement EN_ATTENTE) -->
         <div class="card-actions" *ngIf="dec.status === 'EN_ATTENTE'">
             <button class="btn-plan" (click)="ouvrirModale(dec)">
-            <i class="fas fa-calendar-plus"></i> Planifier l'entretien
+            <i class="fas" [ngClass]="dec.type === 'AMENDE' ? 'fa-file-invoice-dollar' : 'fa-calendar-plus'"></i>
+            {{ dec.type === 'AMENDE' ? 'Traiter Déclaration' : "Planifier l'entretien" }}
             </button>
             <button class="btn-reject" title="Rejeter">
             <i class="fas fa-times"></i>
@@ -230,8 +231,16 @@
              </div>
 
              <hr class="sheet-divider">
+             <!-- CAS AMENDE -->
+<div *ngIf="selectedDec?.type === 'AMENDE'" class="info-amende">
 
-            <div class="maintenance-form">
+<i class="fas fa-file-invoice-dollar"></i>
+Cette déclaration concerne une <b>amende</b>.  
+Aucune planification de maintenance n'est nécessaire.
+
+</div>
+
+            <div class="maintenance-form" *ngIf="selectedDec?.type !== 'AMENDE'">
                 <div class="form-row">
                     <div class="form-field flex-2">
                         <label><i class="fas fa-wrench"></i> Type d'intervention précise</label>
@@ -276,10 +285,11 @@
             </button>
             <button
                 class="btn-confirm-agil"
-                [disabled]="!datePrevue || !idGarage || !typeEntretien"
+                [disabled]="selectedDec?.type !== 'AMENDE' && (!datePrevue || !idGarage || !typeEntretien)"
                 (click)="confirmerTraitement()"
             >
-                <i class="fas fa-file-signature"></i> Générer l'Ordre de Maintenance
+                <i class="fas fa-file-signature"></i>
+                {{ selectedDec?.type === 'AMENDE' ? 'Confirmer le traitement' : "Générer l'Ordre de Maintenance" }}
             </button>
         </div>
     </div>

@@ -81,6 +81,14 @@ export class EntretiensComponent implements OnInit {
   }
 
 enregistrerEntretien() {
+
+    console.log("Vehicule:", this.nouveauEntretien.idVehicule);
+  console.log("Garage:", this.nouveauEntretien.idGarage);
+
+  if(!this.nouveauEntretien.idGarage){
+    alert("Veuillez sélectionner un garage");
+    return;
+  }
   if (this.isEditMode) {
     // --- MODE MODIFICATION ---
     

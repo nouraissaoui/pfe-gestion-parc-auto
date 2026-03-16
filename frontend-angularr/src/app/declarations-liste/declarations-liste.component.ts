@@ -134,41 +134,63 @@ export class DeclarationsListeComponent implements OnInit, AfterViewInit, OnDest
     });
   }
 
-  confirmerTraitement(): void {
-    const userStr = localStorage.getItem('user');
-    if (!userStr) {
-      this.showNotification("Erreur : Session utilisateur introuvable.");
-      return;
-    }
-    const user = JSON.parse(userStr);
-    
-    // Sécurité : Récupération de l'ID selon votre ProfileResponse (id ou idChefParc)
-    const userId = user.id || user.idChefParc;
-
-    if (!this.selectedDec || !this.datePrevue || !this.idGarage || !this.typeEntretien || !userId) {
-      this.showNotification("Veuillez remplir tous les champs obligatoires.");
-      return;
-    }
-
-    this.service.validerTraitementDeclaration(
-      this.selectedDec.idDeclaration!,
-      userId,
-      this.idGarage,
-      this.typeEntretien,
-      this.datePrevue,
-      this.observations || ''
-    ).subscribe({
-      next: () => {
-        this.fermerModale();
-        this.chargerDeclarations();
-        this.showNotification('Ordre de maintenance généré avec succès !');
-      },
-      error: (err) => {
-        console.error('Erreur traitement:', err);
-        this.showNotification('Erreur : ' + (err.error?.message || 'Échec de la validation'));
-      }
-    });
+confirmerTraitement(): void {
+  if (!this.selectedDec) {
+    this.showNotification("Aucune déclaration sélectionnée.");
+    return;
   }
+
+  const userStr = localStorage.getItem('user');
+  if (!userStr) {
+    this.showNotification("Erreur : session utilisateur introuvable.");
+    return;
+  }
+
+  const user = JSON.parse(userStr);
+  const userId = user.id || user.idChefParc;
+  if (!userId) {
+    this.showNotification("Erreur : ID utilisateur introuvable.");
+    return;
+  }
+
+  const isAmende = this.selectedDec.type === 'AMENDE';
+
+  // Vérification des champs obligatoires
+  if (!isAmende && (!this.idGarage || !this.datePrevue)) {
+    this.showNotification("Veuillez sélectionner un garage et une date prévue.");
+    return;
+  }
+  
+
+  // Appel du service
+  this.service.validerTraitementDeclaration(
+    this.selectedDec.idDeclaration!,
+    userId,
+    isAmende ? 0 : this.idGarage!,      // Garage = 0 si AMENDE (ou null si backend accepte)
+    this.typeEntretien || this.selectedDec.type, // Si AMENDE, type = 'AMENDE'
+    isAmende ? '' : this.datePrevue!,
+    this.observations || ''
+  ).subscribe({
+    next: () => {
+      this.fermerModale();
+      this.chargerDeclarations();
+      this.showNotification(isAmende
+        ? "Amende confirmée avec succès !"
+        : "Ordre de maintenance généré avec succès !");
+      
+      // Réinitialisation des champs
+      this.idGarage = null;
+      this.datePrevue = '';
+      this.typeEntretien = '';
+      this.observations = '';
+      this.selectedDec = null;
+    },
+    error: (err) => {
+      console.error("Erreur traitement:", err);
+      this.showNotification("Erreur lors du traitement : " + (err.error?.message || 'Échec'));
+    }
+  });
+}
 
   /* ════════════════════════════════
       Filtres & Recherche

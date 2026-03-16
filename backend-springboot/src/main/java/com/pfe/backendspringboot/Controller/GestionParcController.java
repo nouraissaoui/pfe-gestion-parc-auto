@@ -467,50 +467,6 @@ public class GestionParcController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
-    /*@DeleteMapping("/chauffeur/{id}")
-    public ResponseEntity<?> deleteChauffeur(@PathVariable Long id) {
-        try {
-            gestionParcService.deleteChauffeur(id);
-            return ResponseEntity.ok().body("{\"message\": \"Chauffeur supprimé avec succès\"}");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }*/
-    // ==================== GESTION DES DÉCLARATIONS (Chauffeur) ====================
-/*
-    @PostMapping("/declaration/creer")
-    public ResponseEntity<?> createDeclaration(@RequestBody Map<String, Object> payload) {
-        try {
-            Long idChauffeur = Long.valueOf(payload.get("idChauffeur").toString());
-            DeclarationType type = DeclarationType.valueOf(payload.get("type").toString().toUpperCase());
-            String description = payload.get("description").toString();
-
-            Declaration nouvelle = gestionParcService.creerDeclaration(idChauffeur, type, description);
-            return ResponseEntity.ok(nouvelle);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
-        }
-    }
-
-    @GetMapping("/chauffeur/{idChauffeur}/declarations")
-    public ResponseEntity<List<Declaration>> getMesDeclarations(@PathVariable Long idChauffeur) {
-        return ResponseEntity.ok(gestionParcService.getDeclarationsByChauffeur(idChauffeur));
-    }
-
-    // Optionnel : Pour que le Chef de Parc puisse valider/traiter une déclaration
-    @PutMapping("/declaration/{idDeclaration}/statut")
-    public ResponseEntity<?> updateStatutDeclaration(
-            @PathVariable Long idDeclaration,
-            @RequestParam DeclarationStatus status) {
-        try {
-            Declaration dec = declarationRepository.findById(idDeclaration)
-                    .orElseThrow(() -> new RuntimeException("Déclaration introuvable"));
-            dec.setStatus(status);
-            return ResponseEntity.ok(declarationRepository.save(dec));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }*/
     // Récupérer tous les entretiens d'un local
     @GetMapping("/local/{idLocal}/entretiens")
     public ResponseEntity<List<Entretien>> getEntretiensByLocal(@PathVariable Long idLocal) {
@@ -558,19 +514,38 @@ public class GestionParcController {
         return ResponseEntity.ok(gestionParcService.getAllDeclarationsByLocal(idLocal));
     }
 
-    // Action de validation du traitement (Crée l'entretien automatiquement)
     @PostMapping("/declaration/{idDec}/traiter")
     public ResponseEntity<?> validerTraitement(
             @PathVariable Long idDec,
             @RequestParam Long idChef,
-            @RequestParam Long idGarage,
-            @RequestParam String typeEntretien,
-            @RequestParam String datePrevue,
-            @RequestParam String obs) {
+            @RequestParam(required = false) Long idGarage, // Optionnel pour les amendes
+            @RequestParam(required = false) String typeEntretien,
+            @RequestParam(required = false) String datePrevue, // Optionnel pour les amendes
+            @RequestParam(required = false) String obs) {
         try {
-            java.time.LocalDate date = java.time.LocalDate.parse(datePrevue);
-            Entretien e = gestionParcService.traiterDeclarationEtCreerEntretien(idDec, idChef, idGarage, date, typeEntretien, obs);
+            java.time.LocalDate date = null;
+
+            // On ne parse la date que si elle est fournie et non vide
+            if (datePrevue != null && !datePrevue.trim().isEmpty() && !datePrevue.equals("undefined")) {
+                date = java.time.LocalDate.parse(datePrevue);
+            } else {
+                // Pour une amende, on peut mettre la date du jour par défaut
+                date = java.time.LocalDate.now();
+            }
+
+            // Appel du service (assure-toi d'avoir corrigé le getType().name() dans le service)
+            Entretien e = gestionParcService.traiterDeclarationEtCreerEntretien(
+                    idDec,
+                    idChef,
+                    idGarage,
+                    date,
+                    typeEntretien,
+                    obs
+            );
+
             return ResponseEntity.ok(e);
+        } catch (java.time.format.DateTimeParseException e) {
+            return ResponseEntity.badRequest().body("{\"message\": \"Format de date invalide : " + datePrevue + "\"}");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("{\"message\": \"" + e.getMessage() + "\"}");
         }
@@ -590,34 +565,6 @@ public class GestionParcController {
         System.out.println("Nombre de missions trouvées : " + missions.size());
         return ResponseEntity.ok(missions);
     }
-    // AJOUTEZ CECI DANS GestionParcController.java
-    /*@PutMapping("/declaration/modifier/{id}")
-    public ResponseEntity<?> modifierContenuDeclaration(
-            @PathVariable Long id,
-            @RequestBody Map<String, Object> payload) {
-        try {
-            return declarationRepository.findById(id).map(dec -> {
-                // On met à jour les champs reçus depuis Angular
-                dec.setType(DeclarationType.valueOf(payload.get("type").toString().toUpperCase()));
-                dec.setDescription(payload.get("description").toString());
-                dec.setStatus(DeclarationStatus.EN_ATTENTE); // On repasse en attente après modif
-
-                Declaration updated = declarationRepository.save(dec);
-                return ResponseEntity.ok(updated);
-            }).orElse(ResponseEntity.notFound().build());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
-        }
-    }
-    @DeleteMapping("/declarations/{id}")
-    public ResponseEntity<?> supprimerDeclaration(@PathVariable Long id, @RequestParam Long idChauffeur) {
-        try {
-            gestionParcService.supprimerDeclaration(id, idChauffeur);
-            return ResponseEntity.ok().body("{\"message\": \"Déclaration supprimée avec succès\"}");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
-        }
-    }*/
     // ==================== ENDPOINTS CHAUFFEUR ====================
 
     @GetMapping("/chauffeur/{idChauffeur}/feuilles")
