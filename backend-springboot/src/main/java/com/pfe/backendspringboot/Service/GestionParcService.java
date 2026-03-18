@@ -868,42 +868,47 @@ public class GestionParcService {
     @Transactional
     public void deleteVehicule(Long id) {
         Vehicule vehicule = vehiculeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Véhicule introuvable"));
+                .orElseThrow(() -> new RuntimeException("Véhicule introuvable avec l'ID : " + id));
 
-        // 1. CARTE CARBURANT
-        carteCarburantRepository.findByVehicule_IdVehicule(id).ifPresent(carte -> {
-            carteCarburantRepository.delete(carte);
-        });
-
-        // 2. MISSIONS
+        // 1. MISSIONS : On doit supprimer les missions d'abord (car liées aux feuilles)
         List<Mission> missions = missionRepository.findByVehicule_IdVehicule(id);
         if (!missions.isEmpty()) {
             missionRepository.deleteAll(missions);
         }
 
-        // 3. DECLARATIONS
+        // 2. FEUILLE DE ROUTE : C'est ce qui bloquait !
+        // On récupère les feuilles de route liées à ce véhicule
+        List<FeuilleDeRoute> feuilles = feuilleDeRouteRepository.findByVehicule_IdVehicule(id);
+        if (!feuilles.isEmpty()) {
+            feuilleDeRouteRepository.deleteAll(feuilles);
+        }
+
+        // 3. ENTRETIENS : Suppression suite aux déclarations ou périodiques
+        List<Entretien> entretiens = entretienRepository.findByVehicule_IdVehicule(id);
+        if (!entretiens.isEmpty()) {
+            entretienRepository.deleteAll(entretiens);
+        }
+
+        // 4. DECLARATIONS : Suppression des pannes/accidents signalés
         List<Declaration> declarations = declarationRepository.findByVehicule_IdVehicule(id);
         if (!declarations.isEmpty()) {
             declarationRepository.deleteAll(declarations);
         }
 
-        // --- AJOUTEZ CETTE PARTIE ---
-        // 4. ENTRETIENS (L'erreur venait d'ici !)
-        // Assurez-vous d'avoir une méthode findByVehicule_IdVehicule dans votre EntretienRepository
-        List<Entretien> entretiens = entretienRepository.findByVehicule_IdVehicule(id);
-        if (!entretiens.isEmpty()) {
-            entretienRepository.deleteAll(entretiens);
-        }
-        // ----------------------------
+        // 5. CARTE CARBURANT : Suppression de la carte liée
+        carteCarburantRepository.findByVehicule_IdVehicule(id).ifPresent(carte -> {
+            carteCarburantRepository.delete(carte);
+        });
 
-        // 5. CHAUFFEUR : Libérer le chauffeur
+        // 6. CHAUFFEUR : LIBÉRER (Mettre à NULL, ne pas supprimer l'utilisateur)
         chauffeurRepository.findByVehicule(vehicule).ifPresent(chauffeur -> {
             chauffeur.setVehicule(null);
+            // On le remet disponible puisqu'il n'a plus de véhicule
             chauffeur.setEtatChauffeur(Chauffeur.EtatChauffeur.DISPONIBLE);
             chauffeurRepository.save(chauffeur);
         });
 
-        // 6. Suppression finale du véhicule
+        // 7. SUPPRESSION FINALE DU VÉHICULE
         vehiculeRepository.delete(vehicule);
     } @Transactional
     public void deleteChauffeur(Long id) {
