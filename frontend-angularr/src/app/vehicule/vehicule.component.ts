@@ -115,21 +115,21 @@ preparerModif(v: any) {
     }
   }
 
-  reinitialiser() {
-    this.currentVehicule = { 
-      matricule: '', 
-      marque: '', 
-      modele: '', 
-      annee: new Date().getFullYear(), 
-      carburant: 'Diesel', 
-      image: '', 
-      etat: 'DISPONIBLE' 
-    };
-    this.selectedLocalId = 0;
-    this.isEdit = false;
-    this.chargerVehicules();
-  }
-  // Ajoutez cette variable dans votre classe
+ reinitialiser() {
+  this.currentVehicule = { 
+    matricule: '', 
+    marque: '', 
+    modele: '', 
+    annee: new Date().getFullYear(), 
+    carburant: 'Diesel', 
+    image: '', 
+    etat: 'DISPONIBLE' 
+  };
+  this.selectedLocalId = 0;
+  this.isEdit = false;
+  this.showForm = false; // <--- AJOUTER CECI : Ferme l'overlay/le formulaire
+  this.chargerVehicules(); // Rafraîchit la liste
+} // Ajoutez cette variable dans votre classe
 vehiculeSelectionne: any = null;
 
 // Ajoutez ces deux méthodes
