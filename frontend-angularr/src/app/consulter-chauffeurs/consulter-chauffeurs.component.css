@@ -143,6 +143,17 @@
 .user-name { font-weight: 700; color: var(--text-dark); }
 .user-id   { font-size: 0.7rem; color: var(--text-light); }
 
+/* Permis tag */
+.permis-tag {
+  background: linear-gradient(135deg, rgba(212,160,23,0.15), rgba(212,160,23,0.05));
+  border: 1px solid var(--border-gold);
+  color: var(--gold-deep);
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
 /* Status */
 .status-indicator {
   display: inline-flex;
@@ -162,12 +173,12 @@
   animation: pulse 1.5s infinite;
 }
 
-.disponible     { background: rgba(34,197,94,0.1);  color: #16a34a; }
+.disponible      { background: rgba(34,197,94,0.1);  color: #16a34a; }
 .disponible .dot { background: #22c55e; }
-.en_mission     { background: rgba(59,130,246,0.1);  color: #2563eb; }
+.en_mission      { background: rgba(59,130,246,0.1);  color: #2563eb; }
 .en_mission .dot { background: #3b82f6; }
-.en_conge       { background: rgba(239,68,68,0.1);   color: #dc2626; }
-.en_conge .dot  { background: #ef4444; }
+.en_conge        { background: rgba(239,68,68,0.1);   color: #dc2626; }
+.en_conge .dot   { background: #ef4444; }
 
 /* Action Select */
 .action-select {
@@ -229,6 +240,7 @@
   flex-direction: column;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 /* ── Ornement ── */
@@ -294,25 +306,28 @@
   animation: fadeInDown 0.8s ease 0.2s both;
 }
 
-/* ── Stats pills ── */
+/* ── Stats pills ── CORRECTION : nowrap pour aligner sur 1 ligne ── */
 .hero-header .hero-stats {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   margin-top: 14px;
   animation: fadeInDown 0.9s ease 0.3s both;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;       /* ← CORRECTION : était wrap */
+  align-items: center;
 }
 
 .hero-header .stat-pill {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;                /* ← légèrement réduit */
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(212,160,23,0.2);
   border-radius: 12px;
-  padding: 10px 16px;
+  padding: 8px 12px;       /* ← légèrement réduit */
   transition: all 0.3s ease;
   cursor: default;
+  white-space: nowrap;     /* ← CORRECTION : empêche le texte de casser */
+  flex-shrink: 0;          /* ← CORRECTION : empêche la compression */
 }
 
 .hero-header .stat-pill:hover {
@@ -322,28 +337,28 @@
 }
 
 .hero-header .stat-icon {
-  width: 36px;
-  height: 36px;
+  width: 34px;             /* ← légèrement réduit */
+  height: 34px;
   background: linear-gradient(135deg, var(--gold-deep), var(--gold));
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-dark);
-  font-size: 1rem;
+  font-size: 0.9rem;
   flex-shrink: 0;
 }
 
 .hero-header .stat-val {
   color: white;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.05rem;      /* ← légèrement réduit */
   line-height: 1;
 }
 
 .hero-header .stat-lbl {
   color: rgba(255,255,255,0.45);
-  font-size: 0.7rem;
+  font-size: 0.65rem;      /* ← légèrement réduit */
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -759,5 +774,9 @@
   .promo-video-box {
     width: 100%;
     height: 160px;
+  }
+
+  .hero-header .hero-stats {
+    flex-wrap: wrap;
   }
 }

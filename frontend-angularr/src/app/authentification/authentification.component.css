@@ -1,4 +1,5 @@
 /* ================= GLOBAL ================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -10,12 +11,13 @@ body {
     background: linear-gradient(145deg, #f5f5f5, #e0e0e0);
     color: #222;
     overflow-x: hidden;
+    overflow-y: hidden; /* prevent vertical scroll on desktop */
 }
 
 /* ================= HEADER ================= */
 header {
     background: #1b1b1b;
-    height: 100px;
+    height: 70px; /* reduced from 100px */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -33,7 +35,7 @@ header {
 }
 
 .logo-img {
-    height: 70px;
+    height: 55px; /* reduced from 85px */
     width: auto;
     border-radius: 20px;
     box-shadow: 0 8px 30px rgba(255,215,0,0.6);
@@ -47,7 +49,7 @@ header {
 }
 
 .logo span {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 900;
     background: linear-gradient(90deg, #FFD700, #FFA500);
     -webkit-background-clip: text;
@@ -58,7 +60,7 @@ header {
 /* ================= HERO ================= */
 .hero {
     display: flex;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 74px); /* matches header height + border */
     animation: fadeIn 1.2s ease;
     background: linear-gradient(145deg, #f5f5f5, #e8e8e8);
 }
@@ -66,18 +68,14 @@ header {
 /* ================= LEFT ================= */
 .hero-left {
     width: 55%;
-    /* On passe de 140px à 180px pour donner de l'air sous le header */
-    padding: 9px 100px 100px 100px; 
+    padding: 20px 80px 20px 100px;
     display: flex;
     flex-direction: column;
-    /* On retire justify-content: center car il remonte le texte si l'écran est petit */
-    justify-content: flex-start; 
+    justify-content: space-evenly; /* distribute space evenly between all children */
 }
 
-
-
 .hero-left small {
-    font-size: 14px;
+    font-size: 13px;
     letter-spacing: 2px;
     font-weight: 700;
     color: #d12424;
@@ -85,41 +83,43 @@ header {
 }
 
 .hero-left h1 {
-    font-size: 56px;
-    margin: 25px 0;
-    line-height: 1.2;
+    font-size: 44px;
+    margin: 0;
+    line-height: 1.15;
     color: #222;
     text-shadow: 2px 2px 12px rgba(0,0,0,0.15);
 }
 
 .hero-left p {
-    font-size: 17px;
+    font-size: 15px;
     color: #555;
-    max-width: 550px;
-    margin-bottom: 50px;
+    max-width: 520px;
+    margin-bottom: 0; /* let space-evenly handle spacing */
+    line-height: 1.5;
 }
 
 /* ================= FORM (Glassmorphism) ================= */
 .login-form {
-    width: 450px;
-    padding: 40px;
-    margin-top: -30px; 
-    border-radius: 25px;
-    background: rgba(255,255,255,0.1);
+    width: 100%; /* fill the full left column width */
+    max-width: 500px;
+    padding: 50px 32px; /* more vertical padding → squarer shape */
+    margin-top: 0;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #93999f, #878d91);
+    border: 2px solid #FFD700;
     backdrop-filter: blur(15px) saturate(180%);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 22px; /* more space between fields */
 }
 
-
 .login-form input {
-    padding: 18px 20px;
-    font-size: 16px;
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.2);
+    padding: 14px 18px; /* reduced from 18px 20px */
+    font-size: 15px;
+    border-radius: 12px;
+    border: 1px solid #023249;
+    background: #ffffff;
     color: #1b1b1b;
     outline: none;
     transition: all 0.5s ease;
@@ -127,26 +127,28 @@ header {
 }
 
 .login-form input::placeholder {
-    color: #333;
+    color: #555;
+    opacity: 1;
+    font-weight: 500;
 }
 
 .login-form input:focus {
-    border-color: #FFD700;
-    box-shadow: 0 0 18px rgba(255,215,0,0.8);
-    background: rgba(255,255,255,0.25);
+    border-color: #e1e50d;
+    box-shadow: 0 0 12px #e1e50d;
+    background: #f0f8fb;
 }
 
 .login-form button {
-    padding: 18px;
-    font-size: 16px;
+    padding: 15px; /* reduced from 18px */
+    font-size: 15px;
     font-weight: 800;
-    background: linear-gradient(145deg,#FFD700,#FFA500);
-    border-radius: 20px;
+    background: linear-gradient(45deg, #FFD700, #FFD700);
+    border-radius: 16px;
     border: none;
     cursor: pointer;
     color: #1b1b1b;
-    box-shadow: 0 10px 35px rgba(255,165,0,0.5);
-    transition: all 0.5s ease;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
 }
@@ -167,8 +169,8 @@ header {
 }
 
 .login-form button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 15px 45px rgba(255,165,0,0.7);
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
 /* ================= RIGHT ================= */
@@ -214,95 +216,41 @@ header {
     to { opacity: 1; transform: translateY(0);}
 }
 
-@keyframes slideCar {
-    from { opacity: 0; transform: translateX(150px);}
-    to { opacity: 1; transform: translateX(0);}
-}
-
 /* ================= RESPONSIVE ================= */
 @media(max-width:1100px) {
+    body {
+        overflow-y: auto; /* allow scroll on small screens */
+    }
     .hero {
         flex-direction: column-reverse;
+        height: auto;
     }
     .hero-left, .hero-right {
         width: 100%;
     }
     .hero-left {
-        padding: 80px 40px;
+        padding: 50px 40px;
         text-align: center;
     }
     .login-form {
         width: 90%;
         margin: 0 auto;
     }
+    .hero-right {
+        height: 300px;
+        border-radius: 0;
+    }
 }
 
 @media(max-width:600px) {
     .hero-left h1 {
-        font-size: 36px;
+        font-size: 30px;
     }
     .hero-left p {
-        font-size: 14px;
-        
+        font-size: 13px;
     }
     .login-form input, .login-form button {
         font-size: 14px;
-        padding: 14px;
+        padding: 12px;
     }
-}
-/* ================= LOGIN FORM - CLAIR STYLE PETROL ================= */
-.login-form {
-    background: linear-gradient(145deg, #93999f, #878d91); /* dégradé clair bleu-pétrole doux */
-    border: 2px solid #FFD700; /* bordure dorée */
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
-}
-
-.login-form input {
-    background: #ffffff; /* blanc lumineux */
-    color: #1b1b1b;       /* texte noir */
-    border: 1px solid #023249; /* gris-bleu clair */
-    border-radius: 15px;
-}
-
-.login-form input::placeholder {
-    color: #5d7a8c; /* bleu pétrole clair pour placeholder */
-}
-
-.login-form input:focus {
-    border-color: #e1e50d; /* bleu pétrole foncé au focus */
-    box-shadow: 0 0 12px #e1e50d;
-    background: #f0f8fb;
-}
-
-.login-form button {
-    background: linear-gradient(45deg, #FFD700, #FFD700); /* bleu pétrole → doré */
-    color: #ffffff;
-    font-weight: 800;
-    border-radius: 20px;
-    transition: all 0.4s ease;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.login-form button:hover {
-    background: linear-gradient(45deg, #FFD700, #FFD700); /* hover inversé doré → bleu pétrole */
-    transform: scale(1.05);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-}
-.logo-img {
-    height: 85px;        /* agrandi de 70px → 120px */
-    width: auto;
-    border-radius: 25px;  /* un peu plus arrondi pour le grand logo */
-    box-shadow: 0 10px 40px rgba(255,215,0,0.6); /* ombre légèrement plus grande */
-    transform: perspective(400px) rotateY(12deg); /* ajusté perspective pour le plus grand logo */
-    transition: transform 0.8s ease, box-shadow 0.8s ease;
-}
-
-.logo-img:hover {
-    transform: perspective(400px) rotateY(0deg) scale(1.15);
-    box-shadow: 0 15px 50px rgba(255,215,0,0.9);
-}
-.login-form input::placeholder {
-    color: #555; /* gris moyen, visible sur fond clair */
-    opacity: 1;  /* parfois les navigateurs mettent une opacité faible par défaut */
-    font-weight: 500;
 }

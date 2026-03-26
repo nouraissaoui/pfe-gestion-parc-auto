@@ -30,8 +30,8 @@
   --blue-bg:     #dbeafe;
   --purple:      #7c3aed;
   --purple-bg:   #ede9fe;
-  --radius:      14px;
-  --radius-sm:   9px;
+  --radius:      12px;
+  --radius-sm:   7px;
 
   display: block;
   font-family: 'Inter', sans-serif;
@@ -330,18 +330,22 @@
   padding: 2px 9px; border-radius: 20px;
 }
 
+/* ══════════════════════════════════════════════════
+   GRID & CARDS — VERSION COMPACTE
+══════════════════════════════════════════════════ */
+
 /* ── Grid ── */
 .declarations-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
 }
 
 /* ── Card ── */
 .card-item {
   background: var(--white);
   border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius);
+  border-radius: 10px;
   overflow: hidden; display: flex; flex-direction: column;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   transition: border-color 0.3s, transform 0.35s cubic-bezier(0.34,1.3,0.64,1), box-shadow 0.3s;
@@ -350,15 +354,15 @@
 }
 .card-item:hover {
   border-color: var(--gold-border);
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 20px 50px rgba(180,130,10,0.12), 0 6px 18px rgba(0,0,0,0.08);
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 16px 40px rgba(180,130,10,0.12), 0 4px 14px rgba(0,0,0,0.08);
 }
 
 /* Corner sparkle */
 .card-item::after {
   content: '✦';
-  position: absolute; top: 10px; right: 12px;
-  font-size: 14px; color: var(--gold-bright);
+  position: absolute; top: 8px; right: 10px;
+  font-size: 12px; color: var(--gold-bright);
   opacity: 0; transform: scale(0) rotate(-30deg);
   transition: opacity 0.3s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
   pointer-events: none;
@@ -367,22 +371,26 @@
 
 /* Status colored ribbon top */
 .card-ribbon {
-  height: 3px; width: 100%;
+  height: 2px; width: 100%;
   animation: ribbonSlide 0.6s ease both;
 }
 .card-item.EN_ATTENTE .card-ribbon { background: linear-gradient(90deg, #7a5500, #d4a017, #c8961a); }
 .card-item.TRAITE     .card-ribbon { background: linear-gradient(90deg, #059669, #34d399); }
 .card-item.REJETE     .card-ribbon { background: linear-gradient(90deg, #dc2626, #f87171); }
 
-.card-content { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+/* ── Card content ── */
+.card-content {
+  padding: 13px 15px;
+  flex: 1; display: flex; flex-direction: column; gap: 9px;
+}
 
 .top-row { display: flex; align-items: center; justify-content: space-between; }
 
 /* ── Type badge ── */
 .type-badge {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
-  text-transform: uppercase; padding: 4px 10px; border-radius: 6px;
-  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 5px;
+  display: inline-flex; align-items: center; gap: 4px;
   transition: transform 0.2s;
 }
 .type-badge:hover { transform: scale(1.05); }
@@ -395,10 +403,10 @@
 /* ── Status pill ── */
 .status-pill {
   display: inline-flex; align-items: center; gap: 5px;
-  font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px;
 }
 .status-pill .dot-live {
-  width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+  width: 5px; height: 5px; border-radius: 50%; background: currentColor;
 }
 .status-pill.attente { background: var(--orange-bg); color: var(--orange); }
 .status-pill.attente .dot-live { animation: dotPulse 1.2s ease-in-out infinite; }
@@ -407,45 +415,20 @@
 
 /* Priority tag */
 .priority-tag {
-  font-size: 11px; font-weight: 500; color: var(--gray-400);
+  font-size: 10px; font-weight: 500; color: var(--gray-400);
   display: flex; align-items: center;
 }
 .priority-tag.success { color: var(--green); }
 
 .date-text {
-  font-size: 12px; color: var(--gray-400);
+  font-size: 11px; color: var(--gray-400);
   display: flex; align-items: center; gap: 4px;
 }
 .date-text i { color: var(--gold-light); }
 
-/* ── Vehicle block ── */
-.vehicule-block {
-  background: var(--gray-50); border: 1px solid var(--gray-200);
-  border-radius: var(--radius-sm); padding: 12px 14px;
-  display: flex; align-items: center; gap: 12px;
-  transition: background 0.2s, border-color 0.2s;
-}
-.card-item:hover .vehicule-block {
-  background: var(--gold-bg); border-color: var(--gold-border);
-}
-.vehicule-icon {
-  width: 40px; height: 40px; background: var(--black);
-  border-radius: 10px; display: grid; place-items: center;
-  color: var(--gold-bright); font-size: 17px; flex-shrink: 0;
-  transition: transform 0.3s;
-}
-.card-item:hover .vehicule-icon {
-  transform: scale(1.1) rotate(-5deg);
-  animation: bounce-icon 1s ease-in-out infinite;
-}
-.vehicule-matricule {
-  font-size: 15px; font-weight: 800; color: var(--black); letter-spacing: 0.5px;
-}
-.vehicule-model { font-size: 12px; color: var(--gray-500); margin-top: 1px; }
-
 /* ── Progress bar ── */
 .card-progress {
-  background: var(--gray-100); border-radius: 4px; height: 4px; overflow: hidden;
+  background: var(--gray-100); border-radius: 4px; height: 3px; overflow: hidden;
 }
 .card-progress-fill {
   height: 100%; border-radius: 4px;
@@ -455,49 +438,75 @@
 .TRAITE     .card-progress-fill { background: linear-gradient(90deg, #059669, #34d399); --progress-w: 100%; }
 .REJETE     .card-progress-fill { background: linear-gradient(90deg, #dc2626, #f87171); --progress-w: 100%; }
 
+/* ── Vehicle block ── */
+.vehicule-block {
+  background: var(--gray-50); border: 1px solid var(--gray-200);
+  border-radius: 7px; padding: 8px 10px;
+  display: flex; align-items: center; gap: 9px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.card-item:hover .vehicule-block {
+  background: var(--gold-bg); border-color: var(--gold-border);
+}
+.vehicule-icon {
+  width: 32px; height: 32px; background: var(--black);
+  border-radius: 8px; display: grid; place-items: center;
+  color: var(--gold-bright); font-size: 13px; flex-shrink: 0;
+  transition: transform 0.3s;
+}
+.card-item:hover .vehicule-icon {
+  transform: scale(1.1) rotate(-5deg);
+  animation: bounce-icon 1s ease-in-out infinite;
+}
+.vehicule-matricule {
+  font-size: 13px; font-weight: 800; color: var(--black); letter-spacing: 0.5px;
+}
+.vehicule-model { font-size: 11px; color: var(--gray-500); margin-top: 1px; }
+
 /* ── Description ── */
 .description-text {
-  font-size: 13px; color: var(--gray-500); font-style: italic; line-height: 1.65;
-  border-left: 3px solid var(--gold-border); padding-left: 12px;
+  font-size: 12px; color: var(--gray-500); font-style: italic; line-height: 1.5;
+  border-left: 3px solid var(--gold-border); padding-left: 9px;
   transition: border-color 0.2s;
+  margin: 0;
 }
 .card-item:hover .description-text { border-color: var(--gold-bright); }
 
 /* ── Chauffeur meta ── */
 .chauffeur-meta {
-  display: flex; align-items: center; gap: 9px;
-  padding-top: 10px; border-top: 1px dashed var(--gray-200); margin-top: auto;
+  display: flex; align-items: center; gap: 7px;
+  padding-top: 8px; border-top: 1px dashed var(--gray-200); margin-top: auto;
 }
 .avatar-circle {
-  width: 30px; height: 30px; border-radius: 50%;
+  width: 24px; height: 24px; border-radius: 50%;
   background: var(--black); display: grid; place-items: center;
-  color: var(--gold-bright); font-size: 12px; flex-shrink: 0;
+  color: var(--gold-bright); font-size: 10px; flex-shrink: 0;
   transition: transform 0.3s;
 }
 .card-item:hover .avatar-circle { transform: scale(1.15); }
-.chauffeur-meta span { font-size: 12.5px; color: var(--gray-500); }
+.chauffeur-meta span { font-size: 11px; color: var(--gray-500); }
 .chauffeur-meta strong { color: var(--gray-900); font-weight: 600; }
 .time-tag {
   margin-left: auto;
-  font-size: 11px; background: var(--gray-100);
-  padding: 2px 8px; border-radius: 10px; color: var(--gray-500);
+  font-size: 10px; background: var(--gray-100);
+  padding: 2px 6px; border-radius: 10px; color: var(--gray-500);
   display: flex; align-items: center; gap: 4px;
 }
 .time-tag i { color: var(--gold-light); }
 
 /* ── Card actions ── */
 .card-actions {
-  padding: 14px 20px; border-top: 1px solid var(--gray-100);
-  background: var(--gray-50); display: flex; gap: 8px;
+  padding: 10px 15px; border-top: 1px solid var(--gray-100);
+  background: var(--gray-50); display: flex; gap: 7px;
   transition: background 0.2s;
 }
 .card-item:hover .card-actions { background: var(--gold-bg); }
 
 .btn-plan {
   flex: 1; font-family: 'Inter', sans-serif;
-  font-size: 13px; font-weight: 700; padding: 10px 16px;
-  border-radius: var(--radius-sm); border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 7px;
+  font-size: 12px; font-weight: 700; padding: 8px 12px;
+  border-radius: 7px; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
   background: var(--black); color: var(--gold-bright);
   transition: all 0.25s; position: relative; overflow: hidden;
 }
@@ -515,8 +524,8 @@
 .btn-plan:hover i { animation: spin-slow 1s linear infinite; }
 
 .btn-reject {
-  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
-  padding: 10px 14px; border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+  padding: 8px 11px; border-radius: 7px;
   border: 1.5px solid var(--gray-200); cursor: pointer;
   background: transparent; color: var(--gray-400); transition: all 0.2s;
 }
@@ -540,7 +549,16 @@
 .empty-state p { font-size: 15px; }
 .empty-state strong { color: var(--gray-700); }
 
-/* ── Modal backdrop ── */
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--white); }
+::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
+
+
+/* ══════════════════════════════════════════════════
+   MODAL BACKDROP
+══════════════════════════════════════════════════ */
+
 .modal-backdrop {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5);
   backdrop-filter: blur(6px);
@@ -668,13 +686,10 @@
 }
 .btn-confirm:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--white); }
-::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
-/* ─────────────────────────────────────────────
+
+/* ══════════════════════════════════════════════════
    MAINTENANCE SHEET — AGIL OFFICIAL STYLE
-───────────────────────────────────────────── */
+══════════════════════════════════════════════════ */
 
 .maintenance-sheet {
   background: #ffffff;
@@ -756,7 +771,6 @@
 }
 
 /* ── BODY ── */
-
 .sheet-content {
   padding: 30px 35px;
 }
@@ -796,7 +810,6 @@
 }
 
 /* ── FORM ── */
-
 .maintenance-form {
   display: flex;
   flex-direction: column;
@@ -847,7 +860,6 @@
 }
 
 /* ── FOOTER ── */
-
 .sheet-footer {
   padding: 20px 35px;
   display: flex;
