@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; // Plus besoin de Router si on ne fait pas de navigation manuelle complexe
+import { Router, RouterModule } from '@angular/router'; // Plus besoin de Router si on ne fait pas de navigation manuelle complexe
 import { GestionParcService } from '../gestion-parc.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class AdminDashboradComponent implements OnInit {
   localId = 0;
   stats: any[] = [];
 
-  constructor(private service: GestionParcService) {}
+  constructor(private service: GestionParcService, private router: Router,) {}
 
   ngOnInit(): void {
     this.loadSession();
@@ -58,4 +58,7 @@ export class AdminDashboradComponent implements OnInit {
       { label: 'Maintenances', value: this.maintenanceEnAttente, icon: '🔧', footer: 'Programmées' }
     ];
   }
+    goToChatbot() {
+  this.router.navigate(['chef-parc/chatbot']); // la route de ton composant chatbot
+}
 }

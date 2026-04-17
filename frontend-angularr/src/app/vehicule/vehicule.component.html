@@ -95,8 +95,10 @@
             <span class="segment-label" *ngIf="pourcentageMission > 10">{{ pourcentageMission }}%</span>
           </div>
           <div class="segment maintenance" [style.width.%]="pourcentageMaintenance" title="Maintenance">
-            <span class="segment-label" *ngIf="pourcentageMaintenance > 10">{{ pourcentageMaintenance }}%</span>
-          </div>
+  <span class="segment-label" *ngIf="pourcentageMaintenance > 10">
+    {{ pourcentageMaintenance }}%
+  </span>
+</div>
         </div>
         <div class="legend-container">
           <div class="legend-item"><span class="dot dispo"></span> Disponible</div>

@@ -25,4 +25,6 @@ public interface DeclarationRepository extends JpaRepository<Declaration, Long> 
     List<Declaration> findByChefParc_IdChefParc(Long idChefParc);
     List<Declaration> findByVehicule_IdVehicule(Long id);
 
+
+
 }

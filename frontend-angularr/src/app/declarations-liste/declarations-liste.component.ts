@@ -174,9 +174,11 @@ confirmerTraitement(): void {
     next: () => {
       this.fermerModale();
       this.chargerDeclarations();
+     
       this.showNotification(isAmende
         ? "Amende confirmée avec succès !"
-        : "Ordre de maintenance généré avec succès !");
+        : "Ordre de maintenance généré avec succès !"
+      );
       
       // Réinitialisation des champs
       this.idGarage = null;

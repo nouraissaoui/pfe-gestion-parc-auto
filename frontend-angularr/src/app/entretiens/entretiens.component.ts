@@ -119,6 +119,7 @@ enregistrerEntretien() {
       next: () => {
         this.showModal = false;
         this.chargerDonnees();
+        alert("modification avec succes"); // Message de modification
       },
       error: (err) => {
         console.error("Erreur détaillée :", err);
@@ -143,6 +144,7 @@ enregistrerEntretien() {
     ).subscribe(() => {
       this.showModal = false;
       this.chargerDonnees();
+      alert("insertion de entretien periodique avec succees"); // Message d'insertion
     });
   }
 }
@@ -150,6 +152,6 @@ enregistrerEntretien() {
   // ... (ouvrirConsultation, supprimer, imprimerFiche restent identiques)
   ouvrirConsultation(ent: Entretien) { this.selectedEntretien = ent; this.showConsultModal = true; }
   fermerConsultation() { this.showConsultModal = false; }
-  supprimer(id: number) { if(confirm("Supprimer?")) this.service.deleteEntretien(id).subscribe(() => this.chargerDonnees()); }
+  supprimer(id: number) { if(confirm("Supprimer?")) this.service.deleteEntretien(id).subscribe(() => this.chargerDonnees());alert("suppression avec succees"); }
   imprimerFiche() { window.print(); }
 }

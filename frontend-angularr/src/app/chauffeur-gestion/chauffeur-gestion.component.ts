@@ -12,9 +12,7 @@ import { Adminlayoutcomponent } from "../adminlayoutcomponent/adminlayoutcompone
   styleUrls: ['./chauffeur-gestion.component.css']
 })
 export class ChauffeurGestionComponent implements OnInit {
-openFicheModal() {
-throw new Error('Method not implemented.');
-}
+  // ... (vos propriétés existantes)
   chauffeurs: Chauffeur[] = [];
   locaux: Local[] = [];
   showPreloader = true; 
@@ -22,20 +20,16 @@ throw new Error('Method not implemented.');
   showConsultModal = false;
   showForm = false;
   selectedChauffeur: any = null;
-  searchTerm: string = ''; // Pour la recherche
-
+  searchTerm: string = '';
   chauffeurForm: any = this.resetModel();
-showFicheModal: any;
+  showFicheModal: any;
+  showFormModal = false;
 
   constructor(private service: GestionParcService) {}
 
   ngOnInit(): void {
     this.chargerDonnees();
-
-    // Simulation du temps de chargement pour le preloader prestige
-    setTimeout(() => {
-      this.showPreloader = false;
-    }, 3000); 
+    setTimeout(() => { this.showPreloader = false; }, 3000); 
   }
 
   chargerDonnees() {
@@ -43,7 +37,46 @@ showFicheModal: any;
     this.service.getAllLocaux().subscribe(data => this.locaux = data);
   }
 
-  // --- Getters pour les statistiques ---
+  // --- Actions avec alertes de succès ---
+
+  enregistrer() {
+  console.log("Données envoyées au backend :", this.chauffeurForm); // <--- AJOUTEZ CECI
+  
+  if (this.isEditMode && this.chauffeurForm.idChauffeur) {
+    this.service.updateChauffeur(this.chauffeurForm.idChauffeur, this.chauffeurForm).subscribe({
+      next: () => {
+        alert('Modification effectuée avec succès !');
+        this.finirAction();
+      },
+      error: (err) => {
+        console.error("Erreur Backend :", err);
+        alert("Erreur lors de la modification. Vérifiez les champs.");
+      }
+    });
+  } else {
+    this.service.addChauffeur(this.chauffeurForm).subscribe({
+      next: () => {
+        alert('Ajout effectué avec succès !');
+        this.finirAction();
+      },
+      error: (err) => {
+        console.error("Erreur Backend :", err);
+        alert("Erreur lors de l'ajout. Un champ obligatoire est peut-être vide.");
+      }
+    });
+  }
+}
+  supprimer(id: number | undefined) {
+    if (id && confirm('Confirmer la suppression ?')) {
+      this.service.deleteChauffeur(id).subscribe(() => {
+        alert('Suppression effectuée avec succès !'); // Alerte Suppression
+        this.chargerDonnees();
+      });
+    }
+  }
+
+  // --- Reste de votre logique (inchangée) ---
+
   get totalDisponible(): number {
     return this.chauffeurs.filter(c => c.etatChauffeur === 'DISPONIBLE').length;
   }
@@ -57,7 +90,6 @@ showFicheModal: any;
     return Math.round((this.totalDisponible / this.chauffeurs.length) * 100);
   }
 
-  // Getter pour filtrer la table sans accents pour éviter les erreurs Lexer
   get chauffeursFiltres() {
     const search = this.searchTerm.toLowerCase().trim();
     return this.chauffeurs.filter(c => {
@@ -87,14 +119,6 @@ showFicheModal: any;
     }
   }
 
-  enregistrer() {
-    if (this.isEditMode && this.chauffeurForm.idChauffeur) {
-      this.service.updateChauffeur(this.chauffeurForm.idChauffeur, this.chauffeurForm).subscribe(() => this.finirAction());
-    } else {
-      this.service.addChauffeur(this.chauffeurForm).subscribe(() => this.finirAction());
-    }
-  }
-
   editer(c: Chauffeur) {
     this.isEditMode = true;
     this.showForm = true;
@@ -111,17 +135,12 @@ showFicheModal: any;
     }
   }
 
-  supprimer(id: number | undefined) {
-    if (id && confirm('Confirmer la suppression ?')) {
-      this.service.deleteChauffeur(id).subscribe(() => this.chargerDonnees());
-    }
-  }
-
   finirAction() {
     this.showForm = false;
     this.isEditMode = false;
     this.chauffeurForm = this.resetModel();
     this.chargerDonnees();
+    this.closeFormModal();
   }
 
   isPermisEnDanger(dateExpiration: string | undefined | null): boolean {
@@ -147,18 +166,8 @@ showFicheModal: any;
     link.setAttribute("download", `flotte_agil.csv`);
     link.click();
   }
-  showFormModal = false;
 
-openFormModal() {
-  this.showFormModal = true;
-  // éventuellement réinitialiser le formulaire si ce n'est pas une édition
-}
-
-closeFormModal() {
-  this.showFormModal = false;
-  this.isEditMode = false; // reset du mode édition
-  // réinitialiser le formulaire si besoin
-}
-
-
+  openFormModal() { this.showFormModal = true; }
+  closeFormModal() { this.showFormModal = false; this.isEditMode = false; }
+  openFicheModal() { throw new Error('Method not implemented.'); }
 }

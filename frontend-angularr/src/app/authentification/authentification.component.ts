@@ -59,6 +59,14 @@ login(): void {
     next: (response: LoginResponse) => {
       // 🔐 Sauvegarde l'objet complet
       localStorage.setItem('user', JSON.stringify(response));
+            localStorage.setItem('userProfile', JSON.stringify({
+        id:      response.id,
+        nom:     response.nom,
+        prenom:  response.prenom,
+        mail:    response.mail,
+        role:    response.typeUtilisateur,   // "CHAUFFEUR", "CHEF_PARC", "ADMIN"
+        localId: response.idLocal ?? null
+      }));
       
       // 📍 SAUVEGARDE INDIVIDUELLE (Crucial pour votre composant Affectation)
       if (response.idLocal) {

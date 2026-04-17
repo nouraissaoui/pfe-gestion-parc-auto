@@ -2446,3 +2446,17 @@ body::before {
   font-weight: 800;
   letter-spacing: 1px;
 }
+.segment.maintenance {
+    background-color: #6D071A; /* Rouge Bordeaux AGIL */
+    color: white; /* Pour que le texte reste lisible */
+    transition: width 0.5s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Optionnel : ajouter un léger dégradé pour l'effet "Executive" */
+.segment.maintenance {
+    background: linear-gradient(135deg, #800000 0%, #6D071A 100%);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}

@@ -1,118 +1,29 @@
+<div class="stats-page">
 
-<div class="app-container">
-  
-  
-
-  <main>
-    <header class="header-top">
-      <div>
-        <h1>Bonjour, <span class="gold-text">Directeur Général</span></h1>
-        <p>Analyse prédictive de la flotte en temps réel</p>
-      </div>
-      <div class="date-badge">{{ today | date:'dd MMMM yyyy' }}</div>
-    </header>
-
-    <section class="dashboard-solo">
-      <div class="main-focus-container">
-        <header class="luxury-header">
-          <div class="brand-badge">SNDP AGIL PREDICTIVE</div>
-          <h2>Analyse Opérationnelle de la Flotte</h2>
-          <p>ID LOCAL : #{{idLocal}} — État synchronisé</p>
-        </header>
-
-        <div class="chart-aura-wrapper">
-          <div class="glass-chart-card">
-            <canvas id="luxuryDoughnutChart"></canvas>
-            
-            <div class="chart-center-info">
-              <span class="total-label">VÉHICULES</span>
-              <span class="total-count">{{ stats.total }}</span>
-              <div class="pulse-indicator"></div>
-            </div>
-          </div>
-
-          <div class="premium-legend">
-            <div class="legend-item" (mouseenter)="highlight(0)">
-              <span class="dot dispo"></span>
-              <label>Disponible</label>
-              <span class="count">{{ stats.dispo }}</span>
-            </div>
-            <div class="legend-item" (mouseenter)="highlight(1)">
-              <span class="dot mission"></span>
-              <label>En Mission</label>
-              <span class="count">{{ stats.mission }}</span>
-            </div>
-            <div class="legend-item" (mouseenter)="highlight(2)">
-              <span class="dot entretien"></span>
-              <label>Maintenance</label>
-              <span class="count">{{ stats.entretien }}</span>
-            </div>
-            <div class="legend-item" (mouseenter)="highlight(3)">
-              <span class="dot indispo"></span>
-              <label>Critique</label>
-              <span class="count">{{ stats.indisponible }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="footer-actions">
-          <button class="btn-executive-back" (click)="refreshData()">
-            <i class="fas fa-sync-alt"></i> ACTUALISER L'INTELLIGENCE
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <div class="fleet-browser card-premium">
-      <div class="list-header">
-        <h3>Répartition du Parc Automobile</h3>
-        <button class="btn-refresh" (click)="refreshData()"><i class="fas fa-sync"></i></button>
-      </div>
-      
-      <div class="scroll-area">
-        <div *ngFor="let v of vehicules" class="vehicle-item">
-          <div class="v-icon-box"><i class="fas fa-truck-moving"></i></div>
-          <div class="v-main-info">
-            <b class="matricule">{{ v.matricule }}</b>
-            <span class="model">{{ v.marque }} {{ v.modele }}</span>
-          </div>
-          <div class="v-status-badge" [attr.data-etat]="v.etat">{{ v.etat }}</div>
-          <button class="btn-ia-gold" (click)="openReport(v)">
-            <span>ANALYSE IA</span>
-            <i class="fas fa-brain"></i>
-          </button>
-        </div>
-      </div>
+  <div class="stats-header">
+    <div class="stats-titre">
+      <span class="icon">📊</span>
+      <span class="titre-text">Statistiques du Parc</span>
     </div>
-  </main>
-</div>
 
-<div id="report-view" *ngIf="selectedVehicule" (click)="closeReport()">
-  <div class="report-page-executive anime-slide-up" (click)="$event.stopPropagation()">
-    <div class="report-decoration-top"></div>
-    <div class="report-header">
-      <div class="report-title">
-        <img src="https://th.bing.com/th/id/R.32bd63221b473f501fbc96ca089a36b5?rik=cET5zM9AklbM7w&riu=http%3a%2f%2ftacomposite.com%2fimages%2fagil-tunisie.png&ehk=iYGlqLgROlooI6s12LCBELt2TN4%2fLtHPm%2fWoUlenFf4%3d&risl=&pid=ImgRaw&r=0" alt="Logo Agil" class="report-logo">
-        <div>
-          <h2>CERTIFICAT D'AUDIT IA</h2>
-          <p>SNDP AGIL - DÉPARTEMENT LOGISTIQUE</p>
-        </div>
-      </div>
-      <div class="audit-number">#AUDIT-{{selectedVehicule.matricule}}-2026</div>
-    </div>
-    <div class="report-body">
-      <div class="info-grid-luxury">
-        <div class="info-item"><label>MATRICULE</label><span>{{ selectedVehicule.matricule }}</span></div>
-        <div class="info-item"><label>ÉTAT</label><span>{{ selectedVehicule.etat }}</span></div>
-      </div>
-      <div class="ia-diagnosis-box">
-        <h3><i class="fas fa-microchip"></i> DIAGNOSTIC NEURONAL</h3>
-        <p class="ai-text-luxe">{{ rapportIA }}</p>
-      </div>
-    </div>
-    <div class="report-footer">
-      <button class="btn-print-luxe" (click)="printReport()">IMPRIMER LE DOCUMENT</button>
-      <button class="btn-close-text" (click)="closeReport()">FERMER</button>
-    </div>
+    <button
+      class="btn-envoyer"
+      [class.envoye]="rapportEnvoye"
+      (click)="envoyerRapportAdmin()"
+      [disabled]="rapportEnvoye">
+      <ng-container *ngIf="!rapportEnvoye">
+        <span class="btn-icon">📤</span>
+        Envoyer le rapport à l'Admin
+      </ng-container>
+      <ng-container *ngIf="rapportEnvoye">
+        <span class="btn-icon">✅</span>
+        Rapport transmis !
+      </ng-container>
+    </button>
   </div>
+
+  <div class="iframe-container">
+    <iframe [src]="reportUrl" width="100%" height="100%" frameborder="0" allowFullScreen="true"></iframe>
+  </div>
+
 </div>

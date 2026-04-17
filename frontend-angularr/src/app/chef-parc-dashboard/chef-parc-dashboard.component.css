@@ -50,6 +50,39 @@
             height: 100%;
             object-fit: contain;
         }
+        .page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* titre à gauche, icône à droite */
+  margin-bottom: 20px;
+}
+
+/* Bouton Chatbot */
+.chatbot-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #000; /* couleur du texte */
+  cursor: pointer;
+}
+
+.chatbot-button img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%; /* cercle */
+  transition: transform 0.2s;
+}
+
+.chatbot-button img:hover {
+  transform: scale(1.1); /* effet au survol */
+}
+
+.chatbot-button span {
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
 
         .company-title {
             color: var(--primary-yellow);

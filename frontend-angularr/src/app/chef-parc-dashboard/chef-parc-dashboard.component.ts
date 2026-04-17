@@ -158,4 +158,7 @@ loadStats() {
     const sidebar = document.querySelector('.sidebar');
     sidebar?.classList.toggle('active');
   }
+  goToChatbot() {
+  this.router.navigate(['chef-parc/chatbot']); // la route de ton composant chatbot
+}
 }

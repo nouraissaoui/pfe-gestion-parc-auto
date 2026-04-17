@@ -57,6 +57,7 @@ stats: any;
     // 2. Charger les locaux pour le menu déroulant
     this.gestionService.getAllLocaux().subscribe(data => this.locaux = data);
   }
+  
 preparerModification(chef: ChefParc) {
   this.isEditMode = true; 
   this.selectedChefId = chef.idChefParc ?? null;
@@ -89,11 +90,10 @@ playSuccessSound() {
   this.isSubmitting = true;
 
   if (this.isEditMode && this.selectedChefId) {
-    // On envoie directement chefForm qui contient le niveauResponsabilite mis à jour
     this.gestionService.updateChefParc(this.selectedChefId, this.chefForm).subscribe({
       next: () => {
-        this.terminerAvecSucces();
-        // Optionnel : Recharger immédiatement les données locales pour être sûr
+        // Message spécifique pour la modification
+        this.terminerAvecSucces("Modification effectuée avec succès !");
         this.chargerDonnees();
       },
       error: (err) => { 
@@ -102,44 +102,42 @@ playSuccessSound() {
       }
     });
   } else {
+    // Appel de la méthode ajouterChef qui gérera son propre message
     this.ajouterChef();
   }
 }
-terminerAvecSucces() {
-  this.isSubmitting = false;   // Arrête le spinner
-  this.showSuccessState = true; // Devient VERT (C'est bon !)
-  this.playSuccessSound();      // Le petit son cristallin
+terminerAvecSucces(message: string) {
+  this.isSubmitting = false;
+  this.showSuccessState = true;
+  this.playSuccessSound();
+
+  // Affiche l'alerte Windows (ou vous pouvez utiliser un Toast plus tard)
+  alert(message);
 
   setTimeout(() => {
-    this.isModalOpen = false;   // Ferme la modale
+    this.isModalOpen = false;
     
-    // On attend la fin de l'animation de fermeture pour reset le reste
     setTimeout(() => {
       this.showSuccessState = false;
       this.isEditMode = false;
       this.resetForm();
       this.chargerDonnees();
     }, 400);
-  }, 1500); // Temps pour que l'utilisateur voie que "C'est bon"
+  }, 1500);
 }
-
   annulerEdition() {
     this.isEditMode = false;
     this.selectedChefId = null;
     this.resetForm();
   }
  ajouterChef() {
-  this.isSubmitting = true; // 1. Le bouton commence à tourner
-
   this.gestionService.createChefParc(this.chefForm).subscribe({
     next: (res) => {
-      // 2. ON DIT "C'EST BON" ICI
-      this.terminerAvecSucces(); 
-      // Cette méthode va jouer le son, mettre le bouton en vert, 
-      // puis fermer la modale après 1.5s
+      // Message spécifique pour l'ajout
+      this.terminerAvecSucces("Nouveau collaborateur ajouté avec succès !");
     },
     error: (err) => {
-      this.isSubmitting = false; // On arrête de tourner si ça échoue
+      this.isSubmitting = false;
       alert("Erreur lors de l'ajout : " + err.error);
     }
   });
@@ -167,19 +165,21 @@ playDisengageSound() {
 supprimerChef(id: number) {
   if (!id) return;
 
-  if (confirm('Voulez-vous supprimer ce chef et libérer son local en un seul clic ?')) {
+  // Utilisation d'une modale de confirmation native
+  if (confirm('Voulez-vous supprimer ce chef et libérer son local ?')) {
     this.gestionService.deleteChefParc(id).subscribe({
       next: (response) => {
-        // On arrive ici UNIQUEMENT si la suppression en base de données a réussi
-        console.log('Suppression réussie :', response);
-        
-        // On met à jour l'interface : on retire le chef de la liste
+        // 1. Mise à jour de la liste locale pour l'interface
         this.chefs = this.chefs.filter(c => c.idChefParc !== id);
         
-        // Optionnel : Recharger les locaux pour être sûr que le menu déroulant est à jour
+        // 2. Jouer le son de "libération" (plus léger que le succès)
+        this.playDisengageSound(); 
+
+        // 3. Afficher l'alerte de succès demandée
+        alert("Suppression avec succès !");
+
+        // 4. Rafraîchir les données globales (stats, locaux libres)
         this.chargerDonnees(); 
-        
-        alert("Chef supprimé et local libéré !");
       },
       error: (err) => {
         console.error('Erreur lors de la suppression :', err);
@@ -188,7 +188,6 @@ supprimerChef(id: number) {
     });
   }
 }
-
   resetForm() {
     this.chefForm = { nom: '', prenom: '', mail: '', motDePasse: '', niveauResponsabilite: 'LOCAL_PRINCIPAL', idLocal: null };
   }

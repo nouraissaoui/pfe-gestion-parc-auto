@@ -1,6 +1,7 @@
 package com.pfe.backendspringboot.Repository;
 
 import com.pfe.backendspringboot.Entities.Chauffeur;
+import com.pfe.backendspringboot.Entities.ChefParc;
 import com.pfe.backendspringboot.Entities.Vehicule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,5 +16,8 @@ public interface ChauffeurRepository extends JpaRepository<Chauffeur, Long> {
     @Query("SELECT c FROM Chauffeur c WHERE c.local.idLocal = :idLocal")
     List<Chauffeur> findChauffeursByLocal(@Param("idLocal") Long idLocal);
     Optional<Chauffeur> findByMail(String mail);
+
+    @Query("SELECT cp FROM ChefParc cp WHERE cp.local.idLocal = :idLocal")
+    List<ChefParc> findChefsByLocalId(@Param("idLocal") Long idLocal);
 
 }

@@ -1,0 +1,76 @@
+<div class="admin-wrapper">
+
+  <!-- ══════════════════════════════ -->
+  <!-- ÉTAT 1 : Aucune notification  -->
+  <!-- ══════════════════════════════ -->
+  <div *ngIf="etat === 'attente'" class="etat-attente">
+    <div class="spinner"></div>
+    <p class="attente-titre">En attente d'un rapport...</p>
+    <p class="attente-sous">Aucun rapport n'a été transmis par le Chef de Parc.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- ÉTAT 2 : Liste des notifications reçues   -->
+  <!-- ══════════════════════════════════════════ -->
+  <div *ngIf="etat === 'liste'" class="etat-liste">
+
+    <div class="liste-header">
+      <div class="liste-titre">
+        <span>📋 Rapports reçus</span>
+        <span class="badge-count" *ngIf="nbNonLus > 0">{{ nbNonLus }} nouveau(x)</span>
+      </div>
+    </div>
+
+    <div class="notifications-list">
+      <div
+        *ngFor="let notif of notifications"
+        class="notif-item"
+        [class.non-lu]="!notif.lu"
+        (click)="ouvrirRapport(notif)">
+
+        <div class="notif-item-left">
+          <span class="notif-dot" *ngIf="!notif.lu"></span>
+          <span class="notif-icon">📊</span>
+          <div class="notif-item-texte">
+            <span class="notif-item-titre">Rapport Exécutif AGIL</span>
+            <span class="notif-item-date">{{ formaterDate(notif.timestamp) }}</span>
+          </div>
+        </div>
+
+        <div class="notif-item-right">
+          <span class="btn-consulter">Consulter →</span>
+          <button class="btn-supprimer" (click)="supprimerNotif(notif, $event)">✕</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- ÉTAT 3 : Rapport Power BI (page Rapport Exécutif) -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div *ngIf="etat === 'rapport'" class="etat-rapport">
+
+    <div class="rapport-header">
+      <button class="btn-retour" (click)="fermerRapport()">← Retour</button>
+      <span class="rapport-titre">📊 DIRECTION AGIL — RAPPORT EXÉCUTIF</span>
+      <span class="rapport-date" *ngIf="rapportOuvert">
+        {{ formaterDate(rapportOuvert.timestamp) }}
+      </span>
+    </div>
+
+    <!-- L'iframe avec pageName forcé sur Rapport Exécutif + boutons cachés -->
+    <div class="rapport-iframe-wrapper">
+      <iframe
+        *ngIf="rapportOuvert"
+        [src]="rapportOuvert.urlSecurisee"
+        frameborder="0"
+        allowFullScreen="true"
+        class="powerbi-iframe">
+      </iframe>
+    </div>
+
+  </div>
+
+</div>

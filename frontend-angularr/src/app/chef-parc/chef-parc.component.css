@@ -2763,3 +2763,19 @@ tr:hover .avatar {
   from { transform: rotate(0deg); }
   to { transform: rotate(-360deg); }
 }
+.btn-consulter {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Hover */
+.btn-consulter:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Bouton actif (cliqué) */
+.btn-consulter.active {
+  border: 2px solid gold;
+  box-shadow: 0 0 15px gold;
+}

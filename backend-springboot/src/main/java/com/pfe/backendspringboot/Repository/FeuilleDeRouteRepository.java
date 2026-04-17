@@ -24,4 +24,6 @@ public interface FeuilleDeRouteRepository extends JpaRepository<FeuilleDeRoute, 
     List<FeuilleDeRoute> findByChauffeur_IdChauffeur(Long idChauffeur);
     // Correction : Nom unique harmonisé
     List<FeuilleDeRoute> findByChefParc_IdChefParc(Long id);
-    List<FeuilleDeRoute> findByVehicule_IdVehicule(Long idVehicule);}
+    List<FeuilleDeRoute> findByVehicule_IdVehicule(Long idVehicule);
+
+}

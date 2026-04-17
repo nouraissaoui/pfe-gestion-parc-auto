@@ -2,6 +2,7 @@ package com.pfe.backendspringboot.Repository;
 
 import com.pfe.backendspringboot.Entities.Mission;
 import com.pfe.backendspringboot.Entities.StatutFeuilleDeRoute;
+import com.pfe.backendspringboot.Entities.Vehicule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,5 +27,7 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
     List<Mission> findByChauffeur_IdChauffeur(Long idChauffeur);
     List<Mission> findByChefDuParc_IdChefParc(Long idChefParc);
     List<Mission> findByVehicule_IdVehicule(Long id);
+    List<Mission> findByVehicule(Vehicule vehicule);
+    // Pour les statistiques globales
 
 }

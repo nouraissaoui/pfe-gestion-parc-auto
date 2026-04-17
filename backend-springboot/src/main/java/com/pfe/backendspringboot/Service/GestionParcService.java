@@ -387,21 +387,48 @@ public class GestionParcService {
     public Optional<ChefParc> getChefParcById(Long id) {
         return chefParcRepository.findById(id);
     }
-
     @Transactional
     public ChefParc createChefParc(String nom, String prenom, String mail, String motDePasse,
                                    LocalDate dateNomination, int ancienneteChef,
                                    String niveauResponsabilite, Long idLocal) {
 
+        // 1. VÉRIFICATION DES CHAMPS OBLIGATOIRES (Validation)
+        // Sauf idLocal, niveauResponsabilite et mail
+        if (nom == null || nom.trim().isEmpty() ||
+                prenom == null || prenom.trim().isEmpty() ||
+                motDePasse == null || motDePasse.trim().isEmpty() ||
+                dateNomination == null||ancienneteChef ==0) {
+            throw new RuntimeException("Erreur : Tous les champs (Nom, Prénom, Mot de passe, Date Nomination) sont obligatoires.");
+        }
+
         ChefParc chef = new ChefParc();
-        chef.setNom(nom);
-        chef.setPrenom(prenom);
-        chef.setMail(mail);
+
+        // 2. FORMATAGE EN MINUSCULES (Stockage uniforme)
+        // On transforme le nom et prénom en minuscules dès le départ
+        String nomMin = nom.trim().toLowerCase();
+        String prenomMin = prenom.trim().toLowerCase();
+
+        chef.setNom(nomMin);
+        chef.setPrenom(prenomMin);
+
+        // 3. LOGIQUE GÉNÉRATION EMAIL (Automatique ou Admin)
+        if (mail == null || mail.trim().isEmpty()) {
+            // format: prenom.nom@agil.com.tn (déjà en minuscules grâce à l'étape 2)
+            String generatedMail = prenomMin.replace(" ", "") + "."
+                    + nomMin.replace(" ", "")
+                    + "@agil.com.tn";
+            chef.setMail(generatedMail);
+        } else {
+            chef.setMail(mail.trim().toLowerCase());
+        }
+
+        // 4. ATTRIBUTION DES AUTRES CHAMPS
         chef.setMotDePasse(passwordEncoder.encode(motDePasse));
         chef.setDateNomination(dateNomination);
         chef.setAncienneteChef(ancienneteChef);
 
-        if (niveauResponsabilite != null) {
+        // Champs optionnels (Selects)
+        if (niveauResponsabilite != null && !niveauResponsabilite.isEmpty()) {
             chef.setNiveauResponsabilite(NiveauResponsabilite.valueOf(niveauResponsabilite.toUpperCase()));
         }
 
@@ -413,7 +440,6 @@ public class GestionParcService {
 
         return chefParcRepository.save(chef);
     }
-
     @Transactional
     public ChefParc updateChefParc(Long id, String nom, String prenom, String mail, String motDePasse,
                                    LocalDate dateNomination, int ancienneteChef,
@@ -455,21 +481,38 @@ public class GestionParcService {
     public Optional<Vehicule> getVehiculeById(Long id) {
         return vehiculeRepository.findById(id);
     }
-
     @Transactional
     public Vehicule createVehicule(Vehicule v, Long idLocal) {
-        if (idLocal != null) {
-            Local local = localRepository.findById(idLocal)
-                    .orElseThrow(() -> new RuntimeException("Local non trouvé"));
-            v.setLocal(local);
+        // 1. VÉRIFICATION DES CHAMPS OBLIGATOIRES
+        if (v.getMatricule() == null || v.getMatricule().trim().isEmpty() ||
+                v.getMarque() == null || v.getMarque().trim().isEmpty() ||
+                v.getModele() == null || v.getModele().trim().isEmpty() ||
+                v.getAnnee() == 0 ||
+                v.getCarburant() == null ||
+                idLocal == null) {
+            throw new RuntimeException("Erreur : Tous les champs (Matricule, Marque, Modèle, Année, Carburant, Local) sont obligatoires.");
         }
-        // Par défaut, un nouveau véhicule est disponible
+
+        // 2. VALIDATION DU FORMAT MATRICULE (123 TN 4567)
+        // Expression régulière : ^[0-9]{3} TN [0-9]{4}$
+        // ^ : début, [0-9]{3} : 3 chiffres, TN : texte fixe, [0-9]{4} : 4 chiffres, $ : fin
+        String matriculePattern = "^[0-9]{3} TN [0-9]{4}$";
+        if (!v.getMatricule().matches(matriculePattern)) {
+            throw new RuntimeException("Format matricule invalide. Le format doit être : 123 TN 4567");
+        }
+
+        // 3. AFFECTATION DU LOCAL
+        Local local = localRepository.findById(idLocal)
+                .orElseThrow(() -> new RuntimeException("Le local spécifié n'existe pas."));
+        v.setLocal(local);
+
+        // 4. ÉTAT PAR DÉFAUT
         if (v.getEtat() == null) {
             v.setEtat(EtatVehicule.DISPONIBLE);
         }
+
         return vehiculeRepository.save(v);
     }
-
     @Transactional
     public Vehicule updateVehicule(Long id, Vehicule newVehicule, Long idLocal) {
         Vehicule existing = vehiculeRepository.findById(id)
@@ -679,22 +722,53 @@ public class GestionParcService {
 
     @Transactional
     public Chauffeur createChauffeur(Chauffeur chauffeur) {
-        // 1. Validation du mot de passe (obligatoire à la création)
-        if (chauffeur.getMotDePasse() == null || chauffeur.getMotDePasse().isEmpty()) {
-            throw new RuntimeException("Le mot de passe est obligatoire pour la création.");
+        // 1. VÉRIFICATION DES CHAMPS OBLIGATOIRES
+        // On vérifie les champs essentiels (Nom, Prénom, MDP, Dates, etc.)
+        if (chauffeur.getNom() == null || chauffeur.getNom().trim().isEmpty() ||
+                chauffeur.getPrenom() == null || chauffeur.getPrenom().trim().isEmpty() ||
+                chauffeur.getMotDePasse() == null || chauffeur.getMotDePasse().trim().isEmpty() ||
+                chauffeur.getDatePriseLicense() == null ||
+                chauffeur.getDateExpirationPermis() == null ||
+                chauffeur.getTypeVehiculePermis() == null) {
+            throw new RuntimeException("Erreur : Tous les champs du chauffeur sont obligatoires (sauf Local et Mail).");
         }
+
+        // 2. FORMATAGE ET NORMALISATION (Minuscules)
+        String nomMin = chauffeur.getNom().trim().toLowerCase();
+        String prenomMin = chauffeur.getPrenom().trim().toLowerCase();
+
+        chauffeur.setNom(nomMin);
+        chauffeur.setPrenom(prenomMin);
+
+        // 3. LOGIQUE GÉNÉRATION EMAIL AUTOMATIQUE
+        if (chauffeur.getMail() == null || chauffeur.getMail().trim().isEmpty()) {
+            String generatedMail = prenomMin.replace(" ", "") + "."
+                    + nomMin.replace(" ", "")
+                    + "@agil.com.tn";
+            chauffeur.setMail(generatedMail);
+        } else {
+            chauffeur.setMail(chauffeur.getMail().trim().toLowerCase());
+        }
+
+        // 4. SÉCURISATION DU MOT DE PASSE
         chauffeur.setMotDePasse(passwordEncoder.encode(chauffeur.getMotDePasse()));
 
-        // 2. Gestion du Local (depuis le body)
+        // 5. GESTION DU LOCAL (Optionnel)
         if (chauffeur.getLocal() != null && chauffeur.getLocal().getIdLocal() != null) {
             Local local = localRepository.findById(chauffeur.getLocal().getIdLocal())
                     .orElseThrow(() -> new RuntimeException("Local non trouvé"));
             chauffeur.setLocal(local);
+        } else {
+            chauffeur.setLocal(null);
+        }
+
+        // Initialisation de l'état par défaut si non précisé
+        if (chauffeur.getEtatChauffeur() == null) {
+            chauffeur.setEtatChauffeur(Chauffeur.EtatChauffeur.DISPONIBLE);
         }
 
         return chauffeurRepository.save(chauffeur);
     }
-
     @Transactional
     public Chauffeur updateChauffeur(Long id, Chauffeur data) {
         Chauffeur existing = chauffeurRepository.findById(id)

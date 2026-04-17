@@ -27,15 +27,17 @@ import { EntretiensComponent } from './entretiens/entretiens.component';
 import { DriverMenuComponent } from './driver-menu/driver-menu.component';
 import { MissionsComponent } from './missions/missions.component';
 import { DriverLayoutComponent } from './driver-layout/driver-layout.component';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+import { authGuard } from './auth.guard';
+import { RapportStatistiquesComponent } from './rapport-statistiques/rapport-statistiques.component';
 
 export const routes: Routes = [
   // 1. Point d'entrée (Login)
-  { path: '', component: AuthentificationComponent },
+ { path: '', component: AuthentificationComponent },
 
-  // 2. Espace ADMINISTRATEUR
   {
     path: 'admin',
-    component: AdminLayoutComponent, // Le "cadre" avec le menu Admin
+    component: AdminLayoutComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: AdminDashboradComponent },
@@ -43,6 +45,7 @@ export const routes: Routes = [
       { path: 'chefsparc', component: ChefParcComponent },
       { path: 'vehicules', component: VehiculeComponent },
       { path: 'chauffeurs', component: ChauffeurGestionComponent },
+      { path: 'rapports', component:RapportStatistiquesComponent } 
     ]
   },
 
@@ -59,6 +62,9 @@ export const routes: Routes = [
       { path: 'carburants', component: CarteCarburantComponent },
       {path:'declarations',component:DeclarationsListeComponent},
       {path:'entretiens',component:EntretiensComponent},
+      { path: 'chatbot', component:ChatbotComponent },
+            {path:'rapports',component:StatsDashboardComponent}
+
     ]
   },
   {
@@ -70,6 +76,7 @@ export const routes: Routes = [
       {path:'declarations',component:FaireDeclarationComponent},
       {path:'feuille-route',component:FeuilleRoutechauffeurComponent},
       { path: 'missions', component: MissionsComponent },
+      { path: 'chatbot', component:ChatbotComponent },
     ]
   }
 ,

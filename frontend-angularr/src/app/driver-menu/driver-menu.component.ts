@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { GestionParcService } from '../gestion-parc.service';
 
 @Component({
   selector: 'app-driver-menu',
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe,RouterModule],
   templateUrl: './driver-menu.component.html',
   styleUrl: './driver-menu.component.css'
 })
