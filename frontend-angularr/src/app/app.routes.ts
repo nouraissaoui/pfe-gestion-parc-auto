@@ -30,6 +30,7 @@ import { DriverLayoutComponent } from './driver-layout/driver-layout.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { authGuard } from './auth.guard';
 import { RapportStatistiquesComponent } from './rapport-statistiques/rapport-statistiques.component';
+import { ConsultationFeuillesComponent } from './consultation-feuilles/consultation-feuilles.component';
 
 export const routes: Routes = [
   // 1. Point d'entrée (Login)
@@ -63,7 +64,8 @@ export const routes: Routes = [
       {path:'declarations',component:DeclarationsListeComponent},
       {path:'entretiens',component:EntretiensComponent},
       { path: 'chatbot', component:ChatbotComponent },
-            {path:'rapports',component:StatsDashboardComponent}
+            {path:'rapports',component:StatsDashboardComponent},
+            { path: 'consultation-feuilles', component: ConsultationFeuillesComponent },
 
     ]
   },

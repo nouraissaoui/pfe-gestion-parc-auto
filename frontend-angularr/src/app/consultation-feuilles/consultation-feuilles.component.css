@@ -1192,288 +1192,108 @@
   .transport-toggle { grid-template-columns: 1fr; }
   .hero-stats { flex-direction: column; gap: 10px; }
 }
-/* CONTENEUR GLOBAL */
-.form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
+/* 1. Reset du container principal pour occuper 100% de la largeur */
+.main-content {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 20px 40px !important; /* Marge confortable sur les côtés */
+    margin: 0 !important;
+    display: block !important;
 }
 
-/* SECTIONS */
-.section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-/* TITRES */
-.section-title {
-    text-align: center;
-    font-weight: 600;
-    letter-spacing: 2px;
-    color: #b58b1a;
-    margin-bottom: 10px;
-}
-
-/* TOGGLE (Employé / Matériel) */
-.transport-toggle {
-    display: flex;
-    gap: 20px;
-}
-
-.toggle-option {
-    flex: 1;
-    cursor: pointer;
-}
-
-.toggle-label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    border-radius: 16px;
-    border: 2px solid #e0c37a;
-    background: #f7f1df;
-    transition: 0.3s;
-}
-
-/* effet hover */
-.toggle-label:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-}
-
-/* sélection active */
-input[type="radio"]:checked + .toggle-label {
-    border-color: #c89b2c;
-    background: linear-gradient(135deg, #f5e6b3, #e8c76a);
-}
-
-/* INPUTS */
-.gold-input, .gold-textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #e0c37a;
-    background: #f7f1df;
-    transition: 0.2s;
-}
-
-/* focus */
-.gold-input:focus, .gold-textarea:focus {
-    outline: none;
-    border-color: #c89b2c;
-    box-shadow: 0 0 5px rgba(200,155,44,0.4);
-}
-
-/* 2 colonnes */
-.form-row-2 {
-    display: flex;
-    gap: 15px;
-}
-
-.form-row-2 input {
+/* 2. Faire en sorte que la colonne de droite prenne toute la place disponible */
+.right-col {
+    width: 100% !important;
+    max-width: 100% !important;
     flex: 1;
 }
 
-/* BOUTON */
-.btn-gold-submit {
-    margin-top: 10px;
-    padding: 15px;
-    border-radius: 14px;
-    border: none;
-    background: linear-gradient(135deg, #b8890b, #e0b84c);
-    color: black;
-    font-weight: bold;
-    letter-spacing: 1px;
-    transition: 0.3s;
-}
-
-/* hover bouton */
-.btn-gold-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-}/* Container de centrage */
-.main-content-centered {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 50px 20px;
-    background: radial-gradient(circle at top right, #fdfbf5 0%, #f7f3e9 100%);
-    min-height: 80vh;
-}
-
-/* La Carte Premium */
-.gold-card-premium {
-    width: 100%;
-    max-width: 850px;
+/* 3. Optimisation des cartes pour une vue large */
+.mission-card {
+    width: 100% !important;
+    margin-bottom: 15px;
     background: #ffffff;
-    border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(184, 134, 11, 0.08);
-    border: 1px solid rgba(212, 175, 55, 0.15);
-    overflow: hidden;
-    animation: slideUp 0.6s ease-out;
+    border-radius: 15px;
+    border-left: 5px solid #d4af37; /* Bordure dorée Agil */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
 }
 
-/* Header de la carte */
-.gold-card-header {
-    background: #1a1a1a;
-    padding: 30px 40px;
+.mission-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+}
+
+/* 4. Alignement horizontal des éléments dans la carte */
+.mission-card-body {
+    display: grid;
+    /* Grille pour aligner proprement les informations sur une ligne large */
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 0.5fr; 
+    align-items: center;
+    padding: 15px 25px;
+    gap: 20px;
+}
+
+/* 5. Style du badge de statut pour qu'il soit élégant (comme sur la capture) */
+.status-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #c8e6c9;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px #4caf50;
+}
+
+/* 6. Adaptation du Header (Hero) pour le plein écran */
+.hero-header {
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 0 30px 30px; /* Arrondi léger en bas uniquement */
+    padding: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 3px solid #d4af37;
 }
 
-.header-main-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+/* 7. Champ de recherche plus large et moderne */
+.search-box {
+    margin: 20px 0 30px 0;
 }
 
-.header-icon-wrap {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #d4af37, #b8860b);
+.search-box .form-control {
+    border-radius: 12px;
+    padding-left: 15px;
+    border: 1px solid #d4af3730;
+}
+
+/* 8. Bouton d'action "Ouvrir" (Eye) */
+.btn-consult {
+    background: #fdfbf5;
+    color: #d4af37;
+    border: 1px solid #d4af3740;
+    width: 45px;
+    height: 45px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    font-size: 1.5rem;
-}
-
-.header-main-info h5 {
-    color: #fff;
-    margin: 0;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-.header-main-info p {
-    color: rgba(255,255,255,0.6);
-    margin: 0;
-    font-size: 0.85rem;
-}
-
-/* Grille de formulaire */
-.gold-card-body {
-    padding: 40px;
-}
-
-.form-section-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-    margin-bottom: 25px;
-}
-
-.full-width {
-    grid-column: span 2;
-    margin-bottom: 20px;
-}
-
-/* Éléments de formulaire */
-.label-premium {
-    display: block;
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: #4a4a4a;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.label-premium i {
-    color: #d4af37;
-    margin-right: 8px;
-}
-
-.input-premium, .select-premium, .textarea-premium {
-    width: 100%;
-    padding: 12px 18px;
-    border: 1.5px solid #eee;
-    border-radius: 12px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    background: #fcfcfc;
-}
-
-.input-premium:focus, .select-premium:focus {
-    border-color: #d4af37;
-    background: #fff;
-    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
-    outline: none;
-}
-
-/* Toggle de transport */
-.transport-toggle-premium {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.toggle-card {
-    cursor: pointer;
-}
-
-.toggle-card input {
-    display: none;
-}
-
-.toggle-content {
-    padding: 15px;
-    text-align: center;
-    border: 1.5px solid #eee;
-    border-radius: 15px;
-    transition: all 0.3s;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.toggle-card input:checked + .toggle-content {
-    background: rgba(212, 175, 55, 0.05);
-    border-color: #d4af37;
-    color: #b8860b;
-}
-
-/* Bouton de déploiement */
-.btn-launch-mission {
-    width: 100%;
-    margin-top: 30px;
-    background: #1a1a1a;
-    color: #d4af37;
-    border: 1px solid #d4af37;
-    padding: 16px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
     transition: all 0.3s;
 }
 
-.btn-launch-mission:hover {
+.btn-consult:hover {
     background: #d4af37;
-    color: #1a1a1a;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
-}
-
-/* Animations */
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .form-section-grid { grid-template-columns: 1fr; }
-    .full-width { grid-column: span 1; }
+    color: white;
 }

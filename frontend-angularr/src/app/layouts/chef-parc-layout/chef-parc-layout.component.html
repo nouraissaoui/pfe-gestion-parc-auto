@@ -68,7 +68,11 @@
         <span class="menu-icon">📋</span>
         <span>Affecter les Missions</span>
     </div>
-
+<div class="menu-item" [routerLink]="['/chef-parc/consultation-feuilles']" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <span class="menu-icon">🗺️</span>
+        <span>Consulter Feuilles de Route</span>
+    </div>
 
     <div class="menu-item" 
         [routerLink]="['/chef-parc/declarations']"
