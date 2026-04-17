@@ -30,12 +30,9 @@ import { DriverLayoutComponent } from './driver-layout/driver-layout.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { authGuard } from './auth.guard';
 import { RapportStatistiquesComponent } from './rapport-statistiques/rapport-statistiques.component';
-<<<<<<< HEAD
 import { ConsultationFeuillesComponent } from './consultation-feuilles/consultation-feuilles.component';
-=======
 import { PredictionComponent } from './prediction/prediction.component';
-import { ParcbotChatComponent } from './parcbot/parcbot.component';
->>>>>>> 6850879874ceccb576d29075559c1925ea1d46fb
+
 
 export const routes: Routes = [
   // 1. Point d'entrée (Login)
@@ -69,14 +66,9 @@ export const routes: Routes = [
       {path:'declarations',component:DeclarationsListeComponent},
       {path:'entretiens',component:EntretiensComponent},
       { path: 'chatbot', component:ChatbotComponent },
-<<<<<<< HEAD
-            {path:'rapports',component:StatsDashboardComponent},
-            { path: 'consultation-feuilles', component: ConsultationFeuillesComponent },
-
-=======
       {path:'rapports',component:StatsDashboardComponent},
+      { path: 'consultation-feuilles', component: ConsultationFeuillesComponent },
       {path: 'predire', component:PredictionComponent }
->>>>>>> 6850879874ceccb576d29075559c1925ea1d46fb
     ]
   },
   {

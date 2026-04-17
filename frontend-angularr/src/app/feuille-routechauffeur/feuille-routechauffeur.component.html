@@ -4,12 +4,10 @@
       <div class="ring gold"><div class="comet"></div></div>
       <div class="ring bordeaux"><div class="comet"></div></div>
       <div class="ring white"><div class="comet"></div></div>
-      
       <div class="glass-sphere big-sphere">
         <img src="assets/agil.png" alt="SNDP Agil Logo" class="big-logo">
       </div>
     </div>
-
     <div class="text-area">
       <h2 class="welcome-msg">Initialisation <span class="admin-name">Système AGIL</span></h2>
       <div class="progress-section">
@@ -21,42 +19,33 @@
     </div>
   </div>
 </div>
+
 <div class="page-wrapper">
-
-
 <div class="ia-dashboard">
   <div class="hero-header ia-mode">
 
     <div class="hero-content-left">
-      <div class="hero-badge"><i class="bi bi-cpu"></i> Système de Gestion · Chauffeur
-</div>
-      <div class="hero-title">Consultation & complétion <span> vos missions assignées
-</span></div>
-      <div class="hero-subtitle">  Analyse prédictive & optimisation intelligente de vos feuilles de route et missions
-</div>
+      <div class="hero-badge"><i class="bi bi-cpu"></i> Système de Gestion · Chauffeur</div>
+      <div class="hero-title">Consultation &amp; complétion <span>vos missions assignées</span></div>
+      <div class="hero-subtitle">Analyse prédictive &amp; optimisation intelligente de vos feuilles de route et missions</div>
 
       <div class="hero-stats">
         <div class="stat-pill">
-          <div class="stat-icon"><div class="stat-icon">📄</div>
-</div>
+          <div class="stat-icon">📄</div>
           <div>
             <div class="stat-val">{{ feuilles.length }}</div>
             <div class="stat-lbl">Feuilles</div>
           </div>
         </div>
-
         <div class="stat-pill">
-  <div class="stat-icon"><div class="stat-icon">👤</div></div>
-  <div>
-    <div class="stat-val">
-{{ chauffeurNom }} {{ chauffeurPrenom }}    </div>
-    <div class="stat-lbl">Chauffeur Assigné</div>
-  </div>
-</div>
-
+          <div class="stat-icon">👤</div>
+          <div>
+            <div class="stat-val">{{ chauffeurNom }} {{ chauffeurPrenom }}</div>
+            <div class="stat-lbl">Chauffeur Assigné</div>
+          </div>
+        </div>
         <div class="stat-pill">
-          <div class="stat-icon"><div class="stat-icon">🔖</div>
-</div>
+          <div class="stat-icon">🔖</div>
           <div>
             <div class="stat-val">#{{ idChauffeur }}</div>
             <div class="stat-lbl">Identifiant</div>
@@ -77,340 +66,266 @@
         </div>
       </div>
     </div>
+
   </div>
 
-<!-- MAIN CONTENT -->
-
-<main class="main-content">
-
-<!-- COLONNE GAUCHE -->
-<section class="left-col">
-
-<div class="section-header">
-<h2 class="section-title">
-<i class="bi bi-collection"></i>
-Mes Feuilles de Route
-</h2>
-
-<span class="count-badge">
-{{ feuilles.length }} feuille(s)
-</span>
-</div>
-
-<!-- ETAT VIDE -->
-<div class="empty-state" *ngIf="feuilles.length === 0">
-
-<div class="empty-icon-wrap">
-<i class="bi bi-inbox"></i>
-</div>
-
-<p>Aucune feuille de route disponible</p>
-
-</div>
-
-<!-- LISTE DES FEUILLES -->
-
-<div class="mission-list" *ngIf="feuilles.length > 0">
-
-<div *ngFor="let f of feuilles" class="feuille-card">
-
-<!-- INFO FEUILLE -->
-
-<div class="feuille-header">
-
-<div class="feuille-id">
-Feuille #{{ f.idFeuille }}
-</div>
-
-<div class="feuille-date">
-{{ f.dateGeneration | date:'dd/MM/yyyy' }}
-</div>
-
-<div class="feuille-status">
-{{ f.statut }}
-</div>
-
-</div>
-
-<div class="feuille-info">
-
-<span>
-🚗 Véhicule :
-<strong>{{ f.vehicule?.matricule }}</strong>
-</span>
-
-<span>
-👤 Chauffeur :
-<strong>{{ f.chauffeur?.nom }} {{ f.chauffeur?.prenom }}</strong>
-</span>
-
-<span>
-🧑‍💼 Chef Parc :
-<strong>{{ f.chefParc?.nom }}</strong>
-</span>
-
-</div>
-
-<!-- MISSIONS -->
-
-<div class="missions-container">
-
-<div
-class="mission-card"
-*ngFor="let m of f.missions"
-(click)="selectionnerMission(m)"
-[class.mission-card--active]="missionSelectionnee?.idMission === m.idMission">
-
-<div class="mission-card-body">
-
-<div class="driver-cell">
-
-<div class="driver-avatar">
-🚗
-</div>
-
-<div>
-
-<div class="driver-name">
-Mission #{{ m.idMission }}
-</div>
-
-<span class="driver-id">
-{{ m.pointDepart }} → {{ m.destination }}
-</span>
-
-</div>
-
-</div>
-
-<div class="date-cell">
-
-<div class="date-label">
-Date
-</div>
-
-<div class="date-value">
-{{ m.dateMission | date:'dd/MM/yy' }}
-</div>
-
-</div>
-
-<div class="status-badge">
-
-<span class="status-dot"></span>
-
-{{ m.kmArrivee ? 'Terminée' : 'Assignée' }}
-
-</div>
-
-<div class="vehicle-chip">
-
-<i class="bi bi-geo-alt"></i>
-
-{{ m.pointDepart }}
-
-</div>
-
-<button
-class="btn-consult"
-[class.btn-consult--active]="missionSelectionnee?.idMission === m.idMission">
-
-<span>
-
-
-</span>
-
-<i class="bi bi-chevron-right"></i>
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- COLONNE DROITE FORMULAIRE -->
-
-<section class="right-col">
-
-<!-- PLACEHOLDER -->
-
-<div class="empty-state empty-state--form" *ngIf="!missionSelectionnee">
-
-<div class="empty-icon-wrap empty-icon-wrap--lg">
-<i class="bi bi-pencil-square"></i>
-</div>
-
-<h3 class="placeholder-title">
-Sélectionnez une mission
-</h3>
-
-<p>
-Cliquez sur une mission pour la compléter
-</p>
-
-</div>
-
-<!-- FORMULAIRE -->
-<br>
-<div class="gold-card" *ngIf="missionSelectionnee">
-
-<div class="gold-card-header">
-
-<div class="header-icon-wrap">
-<i class="bi bi-pencil-fill"></i>
-</div>
-
-<div>
-
-<h5>
-Compléter la Mission
-</h5>
-
-<small>
-Mission #{{ missionSelectionnee.idMission }}
-</small>
-
-</div>
-
-</div>
-
-<div class="gold-card-body">
-
-<!-- KM -->
-
-<div class="form-row-2">
-
-<div class="form-group">
-
-<label class="form-label-gold">
-KM Départ
-</label>
-
-<input
-type="number"
-class="gold-input"
-[(ngModel)]="missionSelectionnee.kmDepart">
-
-</div>
-
-<div class="form-group">
-
-<label class="form-label-gold">
-KM Arrivée
-</label>
-
-<input
-type="number"
-class="gold-input"
-[(ngModel)]="missionSelectionnee.kmArrivee">
-
-</div>
-
-</div>
-
-<!-- HEURES -->
-
-<div class="form-row-2">
-
-<div class="form-group">
-
-<label class="form-label-gold">
-Heure Départ
-</label>
-
-<input
-type="time"
-class="gold-input"
-[(ngModel)]="missionSelectionnee.heureDepartReelle">
-
-</div>
-
-<div class="form-group">
-
-<label class="form-label-gold">
-Heure Arrivée
-</label>
-
-<input
-type="time"
-class="gold-input"
-[(ngModel)]="missionSelectionnee.heureArriveeReelle">
+  <!-- ══════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════ -->
+  <main class="main-content">
+
+    <!-- ── COLONNE GAUCHE : liste des feuilles ── -->
+    <section class="left-col">
+
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="bi bi-collection"></i>
+          Mes Feuilles de Route
+        </h2>
+        <span class="count-badge">{{ feuilles.length }} feuille(s)</span>
+      </div>
+
+      <!-- Etat vide -->
+      <div class="empty-state" *ngIf="feuilles.length === 0">
+        <div class="empty-icon-wrap"><i class="bi bi-inbox"></i></div>
+        <p>Aucune feuille de route disponible</p>
+      </div>
+
+      <!-- Liste des feuilles -->
+      <div class="mission-list" *ngIf="feuilles.length > 0">
+        <div *ngFor="let f of feuilles" class="feuille-card">
+
+          <div class="feuille-header">
+            <div class="feuille-id">Feuille #{{ f.idFeuille }}</div>
+            <div class="feuille-date">{{ f.dateGeneration | date:'dd/MM/yyyy' }}</div>
+            <div class="feuille-status">{{ f.statut }}</div>
+          </div>
+
+          <div class="feuille-info">
+            <span>🚗 Véhicule : <strong>{{ f.vehicule?.matricule }}</strong></span>
+            <span>👤 Chauffeur : <strong>{{ f.chauffeur?.nom }} {{ f.chauffeur?.prenom }}</strong></span>
+            <span>🧑‍💼 Chef Parc : <strong>{{ f.chefParc?.nom }}</strong></span>
+          </div>
+
+          <!-- Missions -->
+          <div class="missions-container">
+            <div
+              class="mission-card"
+              *ngFor="let m of f.missions"
+              (click)="selectionnerMission(m)"
+              [class.mission-card--active]="missionSelectionnee?.idMission === m.idMission">
+
+              <div class="mission-card-body">
+
+                <div class="driver-cell">
+                  <div class="driver-avatar">🚗</div>
+                  <div>
+                    <div class="driver-name">Mission #{{ m.idMission }}</div>
+                    <span class="driver-id">{{ m.pointDepart }} → {{ m.destination }}</span>
+                  </div>
+                </div>
+
+                <div class="date-cell">
+                  <div class="date-label">Date</div>
+                  <div class="date-value">{{ m.dateMission | date:'dd/MM/yy' }}</div>
+                </div>
+
+                <div class="status-badge">
+                  <span class="status-dot"></span>
+                  {{ m.kmArrivee ? 'Terminée' : 'Assignée' }}
+                </div>
+
+                <div class="vehicle-chip">
+                  <i class="bi bi-geo-alt"></i>
+                  {{ m.pointDepart }}
+                </div>
+
+                <button
+                  class="btn-consult"
+                  [class.btn-consult--active]="missionSelectionnee?.idMission === m.idMission">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── COLONNE DROITE : formulaire ── -->
+    <section class="right-col">
+
+      <!-- Placeholder -->
+      <div class="empty-state empty-state--form" *ngIf="!missionSelectionnee">
+        <div class="empty-icon-wrap empty-icon-wrap--lg">
+          <i class="bi bi-pencil-square"></i>
+        </div>
+        <h3 class="placeholder-title">Sélectionnez une mission</h3>
+        <p>Cliquez sur une mission pour la compléter</p>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           FORMULAIRE DE COMPLÉTION
+      ══════════════════════════════════════ -->
+      <br>
+      <div class="gold-card" *ngIf="missionSelectionnee">
+
+        <div class="gold-card-header">
+          <div class="header-icon-wrap">
+            <i class="bi bi-pencil-fill"></i>
+          </div>
+          <div>
+            <h5>Compléter la Mission</h5>
+            <small>Mission #{{ missionSelectionnee.idMission }} — Tous les champs sont obligatoires</small>
+          </div>
+        </div>
+
+        <div class="gold-card-body">
+
+          <!-- ── KM ── -->
+          <div class="form-row-2">
+
+            <!-- KM Départ -->
+            <div class="form-group">
+              <label class="form-label-gold">
+                KM Départ <span class="required-star">*</span>
+              </label>
+              <input
+                type="number"
+                class="gold-input"
+                [class.input-error]="errors.kmDepart"
+                [(ngModel)]="missionSelectionnee.kmDepart"
+                (blur)="validateKmDepart()"
+                (ngModelChange)="errors.kmDepart = ''"
+                placeholder="Ex : 12450"
+                min="0">
+              <span class="error-msg" *ngIf="errors.kmDepart">
+                <i class="bi bi-exclamation-circle-fill"></i> {{ errors.kmDepart }}
+              </span>
+            </div>
+
+            <!-- KM Arrivée -->
+            <div class="form-group">
+              <label class="form-label-gold">
+                KM Arrivée <span class="required-star">*</span>
+              </label>
+              <input
+                type="number"
+                class="gold-input"
+                [class.input-error]="errors.kmArrivee"
+                [(ngModel)]="missionSelectionnee.kmArrivee"
+                (blur)="validateKmArrivee()"
+                (ngModelChange)="errors.kmArrivee = ''"
+                placeholder="Ex : 12530"
+                min="0">
+              <span class="error-msg" *ngIf="errors.kmArrivee">
+                <i class="bi bi-exclamation-circle-fill"></i> {{ errors.kmArrivee }}
+              </span>
+            </div>
+
+          </div>
+
+          <!-- ── HEURES ── -->
+          <div class="form-row-2">
+
+            <!-- Heure Départ -->
+            <div class="form-group">
+              <label class="form-label-gold">
+                Heure Départ Réelle <span class="required-star">*</span>
+              </label>
+              <input
+                type="time"
+                class="gold-input"
+                [class.input-error]="errors.heureDepartReelle"
+                [(ngModel)]="missionSelectionnee.heureDepartReelle"
+                (blur)="validateHeureDepartReelle()"
+                (ngModelChange)="errors.heureDepartReelle = ''">
+              <span class="error-msg" *ngIf="errors.heureDepartReelle">
+                <i class="bi bi-exclamation-circle-fill"></i> {{ errors.heureDepartReelle }}
+              </span>
+            </div>
+
+            <!-- Heure Arrivée -->
+            <div class="form-group">
+              <label class="form-label-gold">
+                Heure Arrivée Réelle <span class="required-star">*</span>
+              </label>
+              <input
+                type="time"
+                class="gold-input"
+                [class.input-error]="errors.heureArriveeReelle"
+                [(ngModel)]="missionSelectionnee.heureArriveeReelle"
+                (blur)="validateHeureArriveeReelle()"
+                (ngModelChange)="errors.heureArriveeReelle = ''">
+              <span class="error-msg" *ngIf="errors.heureArriveeReelle">
+                <i class="bi bi-exclamation-circle-fill"></i> {{ errors.heureArriveeReelle }}
+              </span>
+            </div>
+
+          </div>
+
+          <!-- ── OBSERVATIONS ── -->
+          <div class="form-group">
+            <label class="form-label-gold">
+              Observations <span class="required-star">*</span>
+            </label>
+            <textarea
+              rows="4"
+              class="gold-textarea"
+              [class.input-error]="errors.observations"
+              [(ngModel)]="missionSelectionnee.observations"
+              (blur)="validateObservations()"
+              (ngModelChange)="errors.observations = ''"
+              placeholder="Décrivez le déroulement de la mission (min. 5 caractères)...">
+            </textarea>
+            <span class="error-msg" *ngIf="errors.observations">
+              <i class="bi bi-exclamation-circle-fill"></i> {{ errors.observations }}
+            </span>
+          </div>
+
+          <!-- ── ACTIONS ── -->
+          <div class="form-actions">
+            <button
+              class="btn-cancel"
+              (click)="missionSelectionnee = null">
+              Annuler
+            </button>
+            <button
+              class="btn-gold-submit"
+              [disabled]="loading || hasAnyError ||
+                !missionSelectionnee.kmDepart ||
+                !missionSelectionnee.kmArrivee ||
+                !missionSelectionnee.heureDepartReelle ||
+                !missionSelectionnee.heureArriveeReelle ||
+                !missionSelectionnee.observations?.trim()"
+              (click)="sauvegarder()">
+              <span *ngIf="loading">
+                <i class="bi bi-hourglass-split"></i> Enregistrement...
+              </span>
+              <span *ngIf="!loading">
+                <i class="bi bi-check2-all"></i> Valider Mission
+              </span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="page-footer">
+    <div class="footer-ornament">
+      <span class="footer-line"></span>
+      <span class="footer-text">✦ GESTION PARC AUTOMOBILE ✦</span>
+      <span class="footer-line"></span>
+    </div>
+  </footer>
 
 </div>
-
 </div>
-
-<!-- OBSERVATIONS -->
-
-<div class="form-group">
-
-<label class="form-label-gold">
-Observations
-</label>
-
-<textarea
-rows="4"
-class="gold-textarea"
-[(ngModel)]="missionSelectionnee.observations">
-
-</textarea>
-
-</div>
-
-<!-- ACTIONS -->
-
-<div class="form-actions">
-
-<button
-class="btn-cancel"
-(click)="missionSelectionnee = null">
-
-Annuler
-
-</button>
-
-<button
-class="btn-gold-submit"
-(click)="sauvegarder()">
-
-Valider Mission
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-</main>
-
-<!-- FOOTER -->
-
-<footer class="page-footer">
-
-<div class="footer-ornament">
-
-<span class="footer-line"></span>
-
-<span class="footer-text">
-✦ GESTION PARC AUTOMOBILE ✦
-</span>
-
-<span class="footer-line"></span>
-
-</div>
-
-</footer>
-
-</div></div>

@@ -56,3 +56,21 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #ffcc00;
 }
+/* styles.scss — fichier global Angular */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Le composant root Angular */
+app-root {
+    display: block;
+    height: 100%;
+}
+
+/* Ton composant layout (ex: app-chef-parc-layout) */
+app-chef-parc-layout {
+    display: block;
+    height: 100%;
+}
