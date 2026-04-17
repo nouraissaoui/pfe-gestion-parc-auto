@@ -1,55 +1,95 @@
-    <!-- =============================================
-        CHATBOT — AGIL SNDP
-        ============================================= -->
+<!-- ══════════════════════════════════════════════
+    PARCBOT — Interface Statique (sans bouton flottant)
+══════════════════════════════════════════════ -->
 
-    <div class="chatbot-page">
-    <div class="chat-container">
+<div class="chat-container-simple">
+  <div class="chat-window-static">
 
-        <!-- ===== HEADER ===== -->
-        <div class="chat-header">
-        <div class="bot-avatar">🤖</div>
-        <div class="header-info">
-            <div class="bot-name">Assistant AGIL</div>
-            <div class="bot-status">
-            <span class="status-dot"></span>
-            En ligne
+    <!-- Header -->
+    <div class="chat-header" [ngClass]="userRole === 'CHEF_PARC' ? 'chef' : 'chauffeur'">
+      <div class="header-info">
+        <div class="bot-avatar">
+          <svg viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="18" r="18" fill="rgba(255,255,255,0.15)"/>
+            <rect x="10" y="8" width="16" height="12" rx="3" fill="white" opacity=".9"/>
+            <circle cx="14" cy="13" r="2" fill="currentColor"/>
+            <circle cx="22" cy="13" r="2" fill="currentColor"/>
+            <path d="M14 18h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="7" y="12" width="3" height="6" rx="1.5" fill="white" opacity=".6"/>
+            <rect x="26" y="12" width="3" height="6" rx="1.5" fill="white" opacity=".6"/>
+            <rect x="13" y="20" width="10" height="8" rx="2" fill="white" opacity=".9"/>
+          </svg>
+        </div>
+        <div>
+          <div class="bot-name">ParcBot</div>
+<div class="bot-status">
+  <span class="role-badge">{{ roleLabel }}</span>
+  {{ userName }}
+</div>
+        </div>
+      </div>
+      <button class="btn-reset" (click)="resetChat()" title="Nouvelle conversation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 .49-5"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-area" #messagesArea>
+        <div class="date-divider"><span>Aujourd'hui</span></div>
+      <ng-container *ngFor="let msg of messages">
+
+        <!-- Message Bot -->
+        <div class="msg-row bot" *ngIf="msg.sender === 'bot'">
+          <div class="msg-avatar bot-av">🤖</div>
+          <div class="msg-bubble bot-bubble">
+            <div *ngIf="msg.isLoading" class="typing-dots">
+              <span></span><span></span><span></span>
             </div>
-        </div>
-        <div class="header-badge">AGIL</div>
-        </div>
-
-        <!-- ===== MESSAGES ===== -->
-        <div class="chat-messages">
-
-        <div *ngFor="let msg of messages"
-            [class]="'message ' + (msg.sender === 'user' ? 'message-user' : 'message-bot')">
-            <div class="bubble">
-            <div class="msg-text" [innerHTML]="msg.text.replace('\n', '<br>')"></div>
+            <span *ngIf="!msg.isLoading" [innerHTML]="formatMessage(msg.text)"></span>
             <div class="msg-time">{{ msg.time }}</div>
-            </div>
+          </div>
         </div>
 
-        <!-- Indicateur de frappe -->
-        <div *ngIf="isLoading" class="message message-bot">
-            <div class="bubble typing">
-            <span></span><span></span><span></span>
-            </div>
+        <!-- Message User -->
+        <div class="msg-row user" *ngIf="msg.sender === 'user'">
+          <div class="msg-bubble user-bubble">
+            <span>{{ msg.text }}</span>
+            <div class="msg-time user-time">{{ msg.time }}</div>
+          </div>
+          <div class="msg-avatar user-av">{{ userName[0] || 'U' }}</div>
         </div>
 
-        </div>
-
-        <!-- ===== INPUT ===== -->
-        <div class="chat-input">
-        <input
-            [(ngModel)]="userInput"
-            (keydown)="onEnter($event)"
-            placeholder="Tapez votre message..."
-            [disabled]="isLoading"
-        />
-        <button (click)="sendMessage()" [disabled]="isLoading">
-            ➤
-        </button>
-        </div>
-
+      </ng-container>
     </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <button class="quick-btn" *ngFor="let a of quickActions()" (click)="userMessage = a; sendMessage()">
+        {{ a }}
+      </button>
     </div>
+
+    <!-- Input Bar -->
+    <div class="input-bar">
+      <textarea
+        #inputRef
+        class="chat-input"
+        [(ngModel)]="userMessage"
+        (keydown)="handleKeyPress($event)"
+        placeholder="Écrivez votre message..."
+        rows="1"
+        [disabled]="loading">
+      </textarea>
+      <button class="send-btn" (click)="sendMessage()" [disabled]="loading || !userMessage.trim()">
+        <svg *ngIf="!loading" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+        <div *ngIf="loading" class="spinner"></div>
+      </button>
+    </div>
+
+  </div>
+</div>

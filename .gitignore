@@ -9,3 +9,12 @@ dist
 
 # OS
 .DS_Store
+
+# Python
+venv/
+env/
+__pycache__/
+*.pyc
+
+# ML / cache
+chroma_db/

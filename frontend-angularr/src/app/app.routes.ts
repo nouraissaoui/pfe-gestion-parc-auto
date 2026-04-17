@@ -30,6 +30,8 @@ import { DriverLayoutComponent } from './driver-layout/driver-layout.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { authGuard } from './auth.guard';
 import { RapportStatistiquesComponent } from './rapport-statistiques/rapport-statistiques.component';
+import { PredictionComponent } from './prediction/prediction.component';
+import { ParcbotChatComponent } from './parcbot/parcbot.component';
 
 export const routes: Routes = [
   // 1. Point d'entrée (Login)
@@ -63,8 +65,8 @@ export const routes: Routes = [
       {path:'declarations',component:DeclarationsListeComponent},
       {path:'entretiens',component:EntretiensComponent},
       { path: 'chatbot', component:ChatbotComponent },
-            {path:'rapports',component:StatsDashboardComponent}
-
+      {path:'rapports',component:StatsDashboardComponent},
+      {path: 'predire', component:PredictionComponent }
     ]
   },
   {
@@ -76,7 +78,7 @@ export const routes: Routes = [
       {path:'declarations',component:FaireDeclarationComponent},
       {path:'feuille-route',component:FeuilleRoutechauffeurComponent},
       { path: 'missions', component: MissionsComponent },
-      { path: 'chatbot', component:ChatbotComponent },
+      { path: 'chatbot', component:ParcbotChatComponent},
     ]
   }
 ,

@@ -1,0 +1,20 @@
+[
+  "nombre_cylindres",
+  "taille_moteur",
+  "age_vehicule",
+  "volume_gaz",
+  "weight",
+  "type_SUV",
+  "type_familiale",
+  "type_grande",
+  "type_moyenne",
+  "type_petite",
+  "type_sport",
+  "type_utilitaire",
+  "transmission_4x4",
+  "transmission_integrale",
+  "transmission_propulsion",
+  "transmission_traction",
+  "boite_automatique",
+  "boite_manuelle"
+]

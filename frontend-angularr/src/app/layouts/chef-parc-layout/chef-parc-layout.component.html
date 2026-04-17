@@ -92,6 +92,20 @@
         <span class="menu-icon">⛽</span>
         <span>Gérer Cartes Carburants</span>
     </div>
+        <div class="menu-item" 
+        [routerLink]="['/chef-parc/chatbot']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <span class="menu-icon">⛽</span>
+        <span>Interroger un ParcBot</span>
+    </div>
+           <div class="menu-item" 
+        [routerLink]="['/chef-parc/predire']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <span class="menu-icon">⛽</span>
+        <span>Predire Consommation carburants</span>
+    </div>
 
     <div class="menu-item"         
         [routerLink]="['/chef-parc/rapports']"
