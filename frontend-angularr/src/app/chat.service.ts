@@ -14,13 +14,11 @@ export interface ChatPayload {
   sessionId: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ChatService {
 
-  private apiUrl    = 'http://localhost:5000/chat';
-  private resetUrl  = 'http://localhost:5000/chat/reset';
+  private apiUrl   = 'http://localhost:8080/api/chatbot/chat';
+  private resetUrl = 'http://localhost:8080/api/chatbot/reset';
 
   constructor(private http: HttpClient) {}
 

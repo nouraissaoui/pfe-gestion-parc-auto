@@ -78,7 +78,7 @@ export const routes: Routes = [
       {path:'declarations',component:FaireDeclarationComponent},
       {path:'feuille-route',component:FeuilleRoutechauffeurComponent},
       { path: 'missions', component: MissionsComponent },
-      { path: 'chatbot', component:ParcbotChatComponent},
+      { path: 'chatbot', component:ChatbotComponent},
     ]
   }
 ,
