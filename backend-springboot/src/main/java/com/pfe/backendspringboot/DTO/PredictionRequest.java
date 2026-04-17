@@ -11,38 +11,38 @@ import lombok.NoArgsConstructor;
 public class PredictionRequest {
 
     @JsonProperty("type_vehicule")
-    private String  typeVehicule;
+    private String typeVehicule;
 
     @JsonProperty("nombre_cylindres")
     private Integer nombreCylindres;
 
     @JsonProperty("taille_moteur")
-    private Double  tailleMoteur;
+    private Double tailleMoteur;
 
     @JsonProperty("transmission")
-    private String  transmission;
+    private String transmission;
 
     @JsonProperty("boite")
-    private String  boite;
+    private String boite;
 
     @JsonProperty("annee")
     private Integer annee;
 
     @JsonProperty("trafic")
-    private String  trafic;
+    private String trafic;
 
     @JsonProperty("type_charge")
-    private String  typeCharge;
+    private String typeCharge;
 
     @JsonProperty("poids_charge_kg")
-    private Double  poidsChargeKg;
+    private Double poidsChargeKg;
 
     @JsonProperty("kilometrage")
-    private Double  kilometrage;
+    private Double kilometrage;
 
     @JsonProperty("trajet_km")
-    private Double  trajetKm;
+    private Double trajetKm;
 
     @JsonProperty("prix_carburant")
-    private Double  prixCarburant;
+    private Double prixCarburant;
 }
