@@ -2778,4 +2778,48 @@ tr:hover .avatar {
 .btn-consulter.active {
   border: 2px solid gold;
   box-shadow: 0 0 15px gold;
+}/* 1. Conteneur de la table : Activation du scroll horizontal */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Active le glissement horizontal */
+    overflow-y: auto; /* Garde votre scroll vertical */
+    border-radius: 0 0 20px 20px;
+    background: rgba(255, 255, 255, 0.5); /* Effet glass */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+/* 2. Forcer la table à ne pas se comprimer pour permettre le scroll */
+table {
+    width: 100%;
+    min-width: 900px; /* Force l'apparition du scroll sur les petits écrans */
+    border-collapse: collapse;
+}
+
+/* ════════════════════════════════════════════════
+   SCROLLBAR PERSONNALISÉE (LOOK LUXE)
+   ════════════════════════════════════════════════ */
+
+/* Taille de la barre */
+.table-container::-webkit-scrollbar {
+    height: 8px; /* Hauteur de la barre horizontale */
+    width: 8px;  /* Largeur de la barre verticale */
+}
+
+/* Fond de la barre (Track) */
+.table-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+/* Partie coulissante (Thumb) */
+.table-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(to right, #d4af37, #b8860b); /* Dégradé Or */
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.8); /* Espacement pour effet flottant */
+}
+
+/* Effet au survol */
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #000000; /* Devient noir au survol pour le contraste */
 }

@@ -5757,4 +5757,15 @@ footer::before {
   .form-row { grid-template-columns: 1fr; }
   .modal-actions { flex-direction: column-reverse; }
   .modal-actions .btn { width: 100%; }
+}.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;        /* ← changer center en flex-start */
+  padding-top: 40px;              /* ← ajouter cette ligne */
+  justify-content: center;
+  animation: modalFade 0.3s ease;
 }

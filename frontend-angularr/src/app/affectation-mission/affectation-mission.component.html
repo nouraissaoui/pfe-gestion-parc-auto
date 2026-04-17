@@ -1,163 +1,228 @@
 <div class="hero-header">
 
-    <div class="hero-ornament">✦ GM ✦</div>
+  <div class="hero-ornament">✦ GM ✦</div>
 
-    <!-- Contenu gauche -->
-    <div class="hero-content-left">
-
-        <div class="hero-badge">
-            <i class="bi bi-stars"></i>
-            Mission Control Center
-        </div>
-
-        <div class="hero-title">
-            Affectation Missions aux<span>  chauffeurs</span>
-        </div>
-        <div class="hero-subtitle">
-            Planification intelligente des affectations chauffeurs &amp; véhicules
-        </div>
-
-        <div class="hero-stats">
-            <div class="stat-pill">
-                <div class="stat-icon"><i class="bi bi-person-badge"></i></div>
-                <div>
-                    <div class="stat-val">{{ chauffeursDispo.length }}</div>
-                    <div class="stat-lbl">Chauffeurs</div>
-                </div>
-            </div>
-            <div class="stat-pill">
-                <div class="stat-icon"><i class="bi bi-truck"></i></div>
-                <div>
-                    <div class="stat-val">{{ vehiculesDispo.length }}</div>
-                    <div class="stat-lbl">Véhicules dispo</div>
-                </div>
-            </div>
-            <div class="stat-pill">
-                <div class="stat-icon"><i class="bi bi-journal-check"></i></div>
-                <div>
-                    <div class="stat-val">{{ feuillesDeRoute.length }}</div>
-                    <div class="stat-lbl">Feuilles actives</div>
-                </div>
-            </div>
-        </div>
-
+  <div class="hero-content-left">
+    <div class="hero-badge">
+      <i class="bi bi-stars"></i>
+      Mission Control Center
     </div>
-
-    <!-- ══════ PUBLICITÉ VIDÉO ══════ -->
-    <div class="promo-video-box">
-        <div class="promo-label">
-            <i class="bi bi-broadcast"></i> AGIL LIVE
-        </div>
-        <video class="promo-video" autoplay muted loop playsinline>
-            <source src="assets/pub.mp4" type="video/mp4">
-        </video>
-        <div class="promo-overlay">
-            <div class="promo-text">
-                <span class="promo-title">AGIL</span>
-                <span class="promo-sub">Énergie · Mobilité · Excellence</span>
-            </div>
-        </div>
+    <div class="hero-title">
+      Gestion des <span>Missions</span>
     </div>
+    <div class="hero-subtitle">
+      Planification intelligente des affectations chauffeurs &amp; véhicules
+    </div>
+    <div class="hero-stats">
+      <div class="stat-pill">
+        <div class="stat-icon"><i class="bi bi-person-badge"></i></div>
+        <div>
+          <div class="stat-val">{{ chauffeursDispo.length }}</div>
+          <div class="stat-lbl">Chauffeurs</div>
+        </div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-icon"><i class="bi bi-truck"></i></div>
+        <div>
+          <div class="stat-val">{{ vehiculesDispo.length }}</div>
+          <div class="stat-lbl">Véhicules dispo</div>
+        </div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-icon"><i class="bi bi-journal-check"></i></div>
+        <div>
+          <div class="stat-val">{{ feuillesDeRoute.length }}</div>
+          <div class="stat-lbl">Feuilles actives</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="promo-video-box">
+    <div class="promo-label">
+      <i class="bi bi-broadcast"></i> AGIL LIVE
+    </div>
+    <video class="promo-video" autoplay muted loop playsinline>
+      <source src="assets/pub.mp4" type="video/mp4">
+    </video>
+    <div class="promo-overlay">
+      <div class="promo-text">
+        <span class="promo-title">AGIL</span>
+        <span class="promo-sub">Énergie · Mobilité · Excellence</span>
+      </div>
+    </div>
+  </div>
 
 </div>
-<div class="main-content-centered">
-    <div class="gold-card-premium">
-        <div class="gold-card-header">
-            <div class="header-main-info">
-                <div class="header-icon-wrap">
-                    <i class="bi bi- megaphone-fill"></i>
-                </div>
-                <div>
-                    <h5>Nouvelle Affectation</h5>
-                    <p>Configuration de la mission et déploiement logistique</p>
-                </div>
-            </div>
-            <div class="header-status-pill">En attente</div>
-        </div>
 
-        <div class="gold-card-body">
-            <form #missionForm="ngForm" (ngSubmit)="validerAffectation()">
-                
-                <div class="form-section-grid">
-                    <div class="form-group-custom">
-                        <label class="label-premium"><i class="bi bi-person-badge"></i> Chauffeur</label>
-                        <div class="select-premium-wrap">
-                            <select class="select-premium" [(ngModel)]="selectedChauffeur" name="chauffeur" required>
-                                <option [ngValue]="undefined" disabled selected>Sélectionner un agent...</option>
-                                <option *ngFor="let c of chauffeursDispo" [value]="c.idChauffeur">
-                                    {{ c.nom }} {{ c.prenom }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
+<!-- ══════ MAIN CONTENT ══════ -->
+<div class="main-content">
 
-                    <div class="form-group-custom">
-                        <label class="label-premium"><i class="bi bi-truck"></i> Véhicule</label>
-                        <div class="select-premium-wrap" [class.locked]="vehiculeVerrouille">
-                            <select class="select-premium" [(ngModel)]="selectedVehicule" name="vehicule" [disabled]="vehiculeVerrouille" required>
-                                <option [ngValue]="undefined" disabled selected>Affecter un véhicule...</option>
-                                <option *ngFor="let v of vehiculesDispo" [value]="v.idVehicule">
-                                    {{ v.matricule }} — {{ v.marque }}
-                                </option>
-                            </select>
-                            <i class="bi bi-lock-fill lock-status" *ngIf="vehiculeVerrouille"></i>
-                        </div>
-                    </div>
-                </div>
+  <div class="gold-card">
 
-                <div class="divider-gold-elegant">
-                    <span>Nature du Transport</span>
-                </div>
-
-                <div class="transport-toggle-premium">
-                    <label class="toggle-card">
-                        <input type="radio" name="typeMission" [(ngModel)]="typeMission" value="EMPLOYE">
-                        <div class="toggle-content">
-                            <i class="bi bi-people"></i>
-                            <span>Personnel</span>
-                        </div>
-                    </label>
-                    <label class="toggle-card">
-                        <input type="radio" name="typeMission" [(ngModel)]="typeMission" value="MATERIEL">
-                        <div class="toggle-content">
-                            <i class="bi bi-box-seam"></i>
-                            <span>Matériel</span>
-                        </div>
-                    </label>
-                </div>
-
-                <div class="form-section-grid mt-4">
-                    <div class="form-group-custom">
-                        <label class="label-premium"><i class="bi bi-geo"></i> Départ</label>
-                        <input type="text" class="input-premium" [(ngModel)]="missionData.pointDepart" name="pointDepart" placeholder="Lieu d'origine">
-                    </div>
-                    <div class="form-group-custom">
-                        <label class="label-premium"><i class="bi bi-geo-alt"></i> Destination</label>
-                        <input type="text" class="input-premium" [(ngModel)]="missionData.destination" name="dest" placeholder="Lieu d'arrivée">
-                    </div>
-                </div>
-
-                <div class="form-group-custom full-width">
-                    <label class="label-premium"><i class="bi bi-clock"></i> Heure de Départ Prévue</label>
-                    <input type="time" class="input-premium time-input" [(ngModel)]="missionData.heureDepartPrevue" name="heure">
-                </div>
-
-                <div class="form-group-custom full-width" *ngIf="typeMission === 'MATERIEL'">
-                    <label class="label-premium red-accent"><i class="bi bi-exclamation-circle"></i> Bande de Prélèvement</label>
-                    <textarea class="textarea-premium alert-border" [(ngModel)]="missionData.bandePrelevement" name="bande" rows="3" placeholder="Inventaire des articles..."></textarea>
-                </div>
-
-                <div class="form-group-custom full-width">
-                    <label class="label-premium"><i class="bi bi-chat-dots"></i> Observations</label>
-                    <textarea class="textarea-premium" [(ngModel)]="missionData.description" name="desc" rows="2" placeholder="Notes complémentaires..."></textarea>
-                </div>
-
-                <button type="submit" class="btn-launch-mission">
-                    <span>GÉNÉRER LA MISSION</span>
-                    <i class="bi bi-arrow-right-short"></i>
-                </button>
-
-            </form>
-        </div>
+    <div class="gold-card-header">
+      <div class="header-icon-wrap">
+        <i class="bi bi-clipboard-plus"></i>
+      </div>
+      <div>
+        <h5>Nouvelle Affectation</h5>
+        <small>Remplissez les champs ci-dessous</small>
+      </div>
     </div>
+
+    <div class="gold-card-body">
+      <form #missionForm="ngForm" (ngSubmit)="validerAffectation()">
+
+        <!-- ── Ligne 1 : Chauffeur + Véhicule ── -->
+        <div class="form-row-2">
+
+          <div class="form-group">
+            <label class="form-label-gold">
+              <i class="bi bi-person-badge"></i>Chauffeur
+            </label>
+            <div class="gold-select-wrap">
+              <select class="gold-select"
+                [(ngModel)]="selectedChauffeur"
+                name="chauffeur"
+                (change)="onChauffeurChange(+$any($event.target).value)"
+                required>
+                <option [ngValue]="undefined" disabled selected>Choisir un chauffeur…</option>
+                <option *ngFor="let c of chauffeursDispo" [value]="c.idChauffeur">
+                  {{ c.nom }} {{ c.prenom }}
+                  <ng-container *ngIf="c.etatChauffeur === 'EN_MISSION'"> — (Occupé 🚚)</ng-container>
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label-gold">
+              <i class="bi bi-truck"></i>Véhicule
+            </label>
+            <div class="lock-wrap">
+              <div class="gold-select-wrap" style="width:100%">
+                <select class="gold-select" style="width:100%"
+                  [(ngModel)]="selectedVehicule"
+                  name="vehicule"
+                  [disabled]="vehiculeVerrouille"
+                  required>
+                  <option [ngValue]="undefined" disabled selected>Choisir un véhicule…</option>
+                  <option *ngFor="let v of vehiculesDispo" [value]="v.idVehicule">
+                    {{ v.matricule }} ({{ v.marque }} {{ v.modele }})
+                  </option>
+                </select>
+              </div>
+              <i class="bi bi-lock-fill lock-icon" *ngIf="vehiculeVerrouille"></i>
+            </div>
+            <div class="locked-hint" *ngIf="vehiculeVerrouille">
+              <i class="bi bi-info-circle"></i> Véhicule actuel du chauffeur conservé.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── Divider ── -->
+        <div class="gold-divider">
+          <span class="gold-divider-text">Nature du transport</span>
+        </div>
+
+        <!-- ── Ligne 2 : Toggle + Description ── -->
+        <div class="form-row-2">
+
+          <div class="form-group">
+            <div class="transport-toggle">
+              <label class="toggle-option">
+                <input type="radio" name="typeMission"
+                  [(ngModel)]="typeMission" value="EMPLOYE"
+                  (change)="onTypeChange()">
+                <div class="toggle-label">
+                  <i class="bi bi-people-fill"></i>
+                  <span>Employés</span>
+                </div>
+              </label>
+              <label class="toggle-option">
+                <input type="radio" name="typeMission"
+                  [(ngModel)]="typeMission" value="MATERIEL"
+                  (change)="onTypeChange()">
+                <div class="toggle-label">
+                  <i class="bi bi-box-seam-fill"></i>
+                  <span>Matériel</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label-gold">
+              <i class="bi bi-chat-left-text"></i>Description / Observations
+            </label>
+            <textarea class="gold-textarea"
+              [(ngModel)]="missionData.description"
+              name="desc" rows="2"
+              placeholder="Détails de la mission…">
+            </textarea>
+          </div>
+
+        </div>
+
+        <!-- ── Bande de Prélèvement (conditionnelle) ── -->
+        <div class="form-group bande-reveal" *ngIf="typeMission === 'MATERIEL'">
+          <label class="form-label-gold" style="color:#dc2626">
+            <i class="bi bi-exclamation-triangle" style="color:#dc2626"></i>
+            Bande de Prélèvement *
+          </label>
+          <textarea class="gold-textarea"
+            [(ngModel)]="missionData.bandePrelevement"
+            name="bande" rows="3"
+            placeholder="Liste des articles à exporter…"
+            [required]="typeMission === 'MATERIEL'"
+            style="border-color:rgba(220,38,38,0.4)">
+          </textarea>
+        </div>
+
+        <!-- ── Ligne 3 : Départ + Destination + Heure ── -->
+        <div class="form-row-3">
+
+          <div class="form-group">
+            <label class="form-label-gold">
+              <i class="bi bi-geo"></i>Point de Départ
+            </label>
+            <input type="text" class="gold-input"
+              [(ngModel)]="missionData.pointDepart"
+              name="pointDepart"
+              placeholder="Ex: Entrepôt Principal" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label-gold">
+              <i class="bi bi-geo-alt"></i>Destination
+            </label>
+            <input type="text" class="gold-input"
+              [(ngModel)]="missionData.destination"
+              name="dest"
+              placeholder="Ex: Alger Centre" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label-gold">
+              <i class="bi bi-clock"></i>Heure Départ Prévue
+            </label>
+            <input type="time" class="gold-input"
+              [(ngModel)]="missionData.heureDepartPrevue"
+              name="heure" required>
+          </div>
+
+        </div>
+
+        <!-- ── Submit ── -->
+        <button type="submit" class="btn-gold-submit" [disabled]="!missionForm.valid">
+          <i class="bi bi-check-circle-fill"></i>
+          Générer la Mission
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+
 </div>
