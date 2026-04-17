@@ -161,4 +161,7 @@ loadStats() {
   goToChatbot() {
   this.router.navigate(['chef-parc/chatbot']); // la route de ton composant chatbot
 }
+goToFuelPrediction() {
+  this.router.navigate(['chef-parc/predire']); // route vers l'interface correspondante
+}
 }

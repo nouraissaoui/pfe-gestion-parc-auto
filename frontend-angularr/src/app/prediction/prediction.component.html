@@ -1,0 +1,108 @@
+    <!-- prediction.component.html -->
+    <div class="prediction-container">
+    <h2>Prédiction de consommation</h2>
+
+    <form (ngSubmit)="onSubmit()">
+
+        <fieldset>
+        <legend>Véhicule</legend>
+
+        <label>Type
+            <select [(ngModel)]="form.typeVehicule" name="typeVehicule">
+            <option *ngFor="let t of typesVehicule" [value]="t">{{t}}</option>
+            </select>
+        </label>
+
+        <label>Cylindres
+            <input type="number" [(ngModel)]="form.nombreCylindres"
+                name="nombreCylindres" min="3" max="12"/>
+        </label>
+
+        <label>Taille moteur (L)
+            <input type="number" [(ngModel)]="form.tailleMoteur"
+                name="tailleMoteur" step="0.1" min="1" max="7"/>
+        </label>
+
+        <label>Transmission
+            <select [(ngModel)]="form.transmission" name="transmission">
+            <option *ngFor="let t of transmissions" [value]="t">{{t}}</option>
+            </select>
+        </label>
+
+        <label>Boîte
+            <select [(ngModel)]="form.boite" name="boite">
+            <option *ngFor="let b of boites" [value]="b">{{b}}</option>
+            </select>
+        </label>
+
+        <label>Année
+            <input type="number" [(ngModel)]="form.annee"
+                name="annee" min="2014" max="2024"/>
+        </label>
+
+        <label class="full-width">Kilométrage (km)
+            <input type="number" [(ngModel)]="form.kilometrage"
+                name="kilometrage" min="0"/>
+        </label>
+        </fieldset>
+
+        <fieldset>
+        <legend>Trajet</legend>
+
+        <label>Distance (km)
+            <input type="number" [(ngModel)]="form.trajetKm"
+                name="trajetKm" min="1"/>
+        </label>
+
+        <label>Trafic
+            <select [(ngModel)]="form.trafic" name="trafic">
+            <option *ngFor="let t of niveauxTrafic" [value]="t">{{t}}</option>
+            </select>
+        </label>
+
+        <label>Type de charge
+            <select [(ngModel)]="form.typeCharge" name="typeCharge">
+            <option *ngFor="let t of typesCharge" [value]="t">{{t}}</option>
+            </select>
+        </label>
+
+        <label>Poids de la charge (kg)
+            <input type="number" [(ngModel)]="form.poidsChargeKg"
+                name="poidsChargeKg" min="0"/>
+        </label>
+
+        <label class="full-width">Prix carburant (DT/L)
+            <input type="number" [(ngModel)]="form.prixCarburant"
+                name="prixCarburant" step="0.1" min="0"/>
+        </label>
+        </fieldset>
+
+        <button type="submit" [disabled]="loading">
+        {{ loading ? 'Calcul en cours...' : 'Calculer' }}
+        </button>
+
+    </form>
+
+    <!-- Résultat -->
+    <div class="result-card" *ngIf="result">
+        <h3>Résultats</h3>
+        <div class="result-row">
+        <span>Conso constructeur</span>
+        <strong>{{ result.consoConstructeur }} L/100km</strong>
+        </div>
+        <div class="result-row highlight">
+        <span>Conso réelle estimée</span>
+        <strong>{{ result.consoReelle }} L/100km</strong>
+        </div>
+        <div class="result-row">
+        <span>Litres consommés</span>
+        <strong>{{ result.litresTotal }} L</strong>
+        </div>
+        <div class="result-row" *ngIf="result.coutCarburant">
+        <span>Coût estimé</span>
+        <strong>{{ result.coutCarburant }} DT</strong>
+        </div>
+    </div>
+
+    <div class="error" *ngIf="error">{{ error }}</div>
+    </div>

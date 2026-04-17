@@ -1,94 +1,151 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component, ElementRef, ViewChild, AfterViewChecked, OnInit
+} from '@angular/core';
+import { ChatService, ChatResponse, ChatPayload } from '../chat.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 
 interface Message {
-  sender: 'user' | 'bot';
   text: string;
+  sender: 'user' | 'bot';
   time: string;
+  isLoading?: boolean;
 }
 
 @Component({
   selector: 'app-chatbot',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './chatbot.component.html',
-  styleUrl: './chatbot.component.css'
+  styleUrls: ['./chatbot.component.css']
 })
-export class ChatbotComponent implements OnInit {
+export class ChatbotComponent implements OnInit, AfterViewChecked {
 
+  userMessage = '';
   messages: Message[] = [];
-  userInput: string = '';
-  isLoading: boolean = false;
+  loading = false;
 
-  // ✅ Récupérer le profil depuis localStorage
-  userRole: string = '';
-  userId: number | null = null;
-  localId: number | null = null;
-  userName: string = '';
+  userRole: 'CHAUFFEUR' | 'CHEF_PARC' = 'CHAUFFEUR';
+  userId   = 1;
+  userName = 'Utilisateur';
+  sessionId = '';
 
-  constructor(private http: HttpClient) {}
+  @ViewChild('messagesArea') private messagesArea!: ElementRef;
+  @ViewChild('inputRef')     private inputRef!: ElementRef;
+
+  constructor(private chatService: ChatService) {}
 
   ngOnInit() {
-    // Lire le profil sauvegardé au moment du login
     const profile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+
     this.userRole  = profile.role  || 'CHAUFFEUR';
-    this.userId    = profile.id    || null;
-    this.localId   = profile.localId || null;
-    this.userName  = profile.prenom || 'utilisateur';
+    this.userId    = profile.id    || 1;
+    this.userName  = `${profile.prenom || ''} ${profile.nom || ''}`.trim() || 'Utilisateur';
+    this.sessionId = `${this.userRole}_${this.userId}`;
 
-    // Message de bienvenue selon le rôle
-    const welcome = this.userRole === 'CHAUFFEUR'
-      ? `Bonjour ${this.userName} 👋 Je suis votre assistant. Posez-moi vos questions sur vos missions ou votre véhicule !`
-      : `Bonjour ${this.userName} 👋 Je suis votre assistant de parc. Demandez-moi les stats, véhicules, chauffeurs ou missions.`;
+    this.messages.push({
+      text:   this.getWelcomeMessage(),
+      sender: 'bot',
+      time:   this.now()
+    });
 
-    this.messages.push({ sender: 'bot', text: welcome, time: this.getTime() });
+    // Focus automatique sur l'input au chargement
+    setTimeout(() => this.inputRef?.nativeElement?.focus(), 300);
+  }
+
+  private getWelcomeMessage(): string {
+    return this.userRole === 'CHEF_PARC'
+      ? `Bonjour **${this.userName}** 👋\n\nJe suis **ParcBot**, votre assistant de gestion de parc automobile.\n\nJe peux vous aider à consulter vos véhicules, chauffeurs, missions, déclarations et bien plus encore. Comment puis-je vous aider aujourd'hui ?`
+      : `Bonjour **${this.userName}** 👋\n\nJe suis **ParcBot**, votre assistant personnel.\n\nVous pouvez me demander vos missions, votre véhicule, faire une déclaration, ou poser toute question générale. Je suis là pour vous ! 🚗`;
   }
 
   sendMessage() {
-    if (!this.userInput.trim() || this.isLoading) return;
+    if (!this.userMessage.trim() || this.loading) return;
 
-    const userMsg = this.userInput.trim();
-    this.messages.push({ sender: 'user', text: userMsg, time: this.getTime() });
-    this.userInput = '';
-    this.isLoading = true;
+    const text = this.userMessage.trim();
+    this.messages.push({ text, sender: 'user', time: this.now() });
+    this.userMessage = '';
+    this.loading = true;
 
-    this.http.post<any>('http://localhost:8080/chat', {
-    message:  userMsg,
-    role:     this.userRole,
-    userId:   this.userId,
-    localId:  this.localId,
-    userName: this.userName
-    }).subscribe({
-      next: (res) => {
-        this.messages.push({ sender: 'bot', text: res.reply, time: this.getTime() });
-        this.isLoading = false;
-        this.scrollToBottom();
+    const loadingMsg: Message = { text: '...', sender: 'bot', time: this.now(), isLoading: true };
+    this.messages.push(loadingMsg);
+
+    const payload: ChatPayload = {
+      message:   text,
+      role:      this.userRole,
+      userId:    this.userId,
+      userName:  this.userName,
+      sessionId: this.sessionId
+    };
+
+    this.chatService.sendMessage(payload).subscribe({
+      next: (res: ChatResponse) => {
+        const idx = this.messages.lastIndexOf(loadingMsg);
+        if (idx !== -1) {
+          this.messages[idx] = { text: res.response, sender: 'bot', time: this.now() };
+        }
+        this.loading = false;
       },
       error: () => {
-        this.messages.push({
-          sender: 'bot',
-          text: '❌ Impossible de contacter le serveur. Vérifiez votre connexion.',
-          time: this.getTime()
-        });
-        this.isLoading = false;
+        const idx = this.messages.lastIndexOf(loadingMsg);
+        if (idx !== -1) {
+          this.messages[idx] = {
+            text: '⚠️ Impossible de contacter le serveur. Veuillez réessayer.',
+            sender: 'bot',
+            time: this.now()
+          };
+        }
+        this.loading = false;
       }
     });
   }
 
-  onEnter(event: KeyboardEvent) {
-    if (event.key === 'Enter') this.sendMessage();
+  resetChat() {
+    this.chatService.resetConversation(this.sessionId).subscribe();
+    this.messages = [];
+    this.messages.push({ text: this.getWelcomeMessage(), sender: 'bot', time: this.now() });
   }
 
-  getTime(): string {
+  handleKeyPress(event: KeyboardEvent) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
+  }
+
+  formatMessage(text: string): string {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+      .replace(/\n/g, '<br>');
+  }
+
+  private now(): string {
     return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   }
 
-  scrollToBottom() {
-    setTimeout(() => {
-      const el = document.querySelector('.chat-messages');
-      if (el) el.scrollTop = el.scrollHeight;
-    }, 100);
+  ngAfterViewChecked() {
+    try {
+      if (this.messagesArea) {
+        const el = this.messagesArea.nativeElement;
+        el.scrollTop = el.scrollHeight;
+      }
+    } catch {}
+  }
+
+  get roleLabel(): string {
+    return this.userRole === 'CHEF_PARC' ? 'Chef du Parc' : 'Chauffeur';
+  }
+
+  get roleColor(): string {
+    return this.userRole === 'CHEF_PARC' ? '#e67e22' : '#2980b9';
+  }
+
+  quickActions(): string[] {
+    if (this.userRole === 'CHEF_PARC') {
+      return ['Véhicules disponibles', 'Liste des chauffeurs', 'Déclarations en attente', 'Missions du jour'];
+    }
+    return ['Mon véhicule', 'Mes missions', 'Mes déclarations', 'Terminer ma mission'];
   }
 }

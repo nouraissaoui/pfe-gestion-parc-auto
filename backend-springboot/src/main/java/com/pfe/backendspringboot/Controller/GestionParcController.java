@@ -48,6 +48,7 @@ public class GestionParcController {
             return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
     @Value("${admin.email}")
     private String adminEmail;
 
@@ -149,12 +150,12 @@ public class GestionParcController {
     // ==================== GESTION DES VÉHICULES ====================
 
     @GetMapping("/{idLocal}/vehicules")
-    public List<Vehicule> getVehicules(@PathVariable Long idLocal){
+    public List<Vehicule> getVehicules(@PathVariable Long idLocal) {
         return gestionParcService.getVehiculesByLocal(idLocal);
     }
 
     @PutMapping("/vehicule/{idVehicule}/etat")
-    public ResponseEntity<Vehicule> updateEtat(@PathVariable Long idVehicule, @RequestParam EtatVehicule etat){
+    public ResponseEntity<Vehicule> updateEtat(@PathVariable Long idVehicule, @RequestParam EtatVehicule etat) {
         try {
             return ResponseEntity.ok(gestionParcService.updateEtatVehicule(idVehicule, etat));
         } catch (Exception e) {
@@ -218,6 +219,7 @@ public class GestionParcController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'affectation");
         }
     }
+
     // Mettre à jour l'état de disponibilité d'un chauffeur
     @PutMapping("/chauffeur/{idChauffeur}/etat")
     public ResponseEntity<Chauffeur> updateEtatChauffeur(
@@ -230,6 +232,7 @@ public class GestionParcController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PostMapping("/mission/affecter/{idChauffeur}/{idVehicule}/{idChef}")
     public ResponseEntity<?> creerMissionManuelle(
             @RequestBody Mission mission,
@@ -243,6 +246,7 @@ public class GestionParcController {
             return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
     // Récupérer toutes les missions d'une feuille de route spécifique
     @GetMapping("/feuille-de-route/{idFeuille}/missions")
     public ResponseEntity<List<Mission>> getMissionsDeLaFeuille(@PathVariable Long idFeuille) {
@@ -293,6 +297,7 @@ public class GestionParcController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
     // ===== GET ALL CHEFS =====
     @GetMapping("/chefparc")
     public List<ChefParc> getAllChefs() {
@@ -306,6 +311,7 @@ public class GestionParcController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
     @PostMapping("/chefparc")
     public ResponseEntity<?> createChefParc(@RequestBody Map<String, Object> payload) {
         try {
@@ -327,6 +333,7 @@ public class GestionParcController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @PutMapping("/chefparc/{id}")
     public ResponseEntity<?> updateChefParc(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
         try {
@@ -404,7 +411,7 @@ public class GestionParcController {
             gestionParcService.deleteVehicule(id);
             // Utilisation d'une Map pour garantir un JSON valide
             return ResponseEntity.ok(Collections.singletonMap("message", "Véhicule supprimé"));
-        } catch (EmptyResultDataAccessException  e) {
+        } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("error", "Véhicule introuvable ID: " + id));
         } catch (Exception e) {
@@ -467,6 +474,7 @@ public class GestionParcController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
     // Récupérer tous les entretiens d'un local
     @GetMapping("/local/{idLocal}/entretiens")
     public ResponseEntity<List<Entretien>> getEntretiensByLocal(@PathVariable Long idLocal) {
@@ -501,6 +509,7 @@ public class GestionParcController {
     public ResponseEntity<List<GarageMaintenance>> getGarages() {
         return ResponseEntity.ok(gestionParcService.getAllGarages());
     }
+
     //traitement des declarations
     // Liste des déclarations à traiter pour le local
     @GetMapping("/local/{idLocal}/declarations-en-attente")
@@ -550,6 +559,7 @@ public class GestionParcController {
             return ResponseEntity.badRequest().body("{\"message\": \"" + e.getMessage() + "\"}");
         }
     }
+
     @GetMapping("/chauffeur/{idChauffeur}/missions")
     public ResponseEntity<List<Mission>> getMissionsChauffeur(@PathVariable Long idChauffeur) {
         System.out.println("Requête des missions pour le chauffeur ID : " + idChauffeur);
@@ -586,8 +596,10 @@ public class GestionParcController {
                     .orElseThrow(() -> new RuntimeException("Mission introuvable"));
 
             // On met à jour seulement les champs de fin de mission
-            if (updates.containsKey("kmDepart")) mission.setKmDepart(Double.valueOf(updates.get("kmDepart").toString()));
-            if (updates.containsKey("kmArrivee")) mission.setKmArrivee(Double.valueOf(updates.get("kmArrivee").toString()));
+            if (updates.containsKey("kmDepart"))
+                mission.setKmDepart(Double.valueOf(updates.get("kmDepart").toString()));
+            if (updates.containsKey("kmArrivee"))
+                mission.setKmArrivee(Double.valueOf(updates.get("kmArrivee").toString()));
             if (updates.containsKey("observations")) mission.setObservations((String) updates.get("observations"));
 
             // Gestion des heures (conversion String -> LocalTime)
@@ -656,6 +668,7 @@ public class GestionParcController {
             return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
     @DeleteMapping("/declarations/{id}")
     public ResponseEntity<?> supprimerDeclaration(@PathVariable Long id, @RequestParam Long idChauffeur) {
         try {
@@ -665,6 +678,7 @@ public class GestionParcController {
             return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
     @DeleteMapping("/chauffeur/{id}")
     public ResponseEntity<?> deleteChauffeur(@PathVariable Long id) {
         try {

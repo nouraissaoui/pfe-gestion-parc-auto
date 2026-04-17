@@ -569,3 +569,30 @@
     -webkit-text-fill-color: transparent;
     text-shadow: 2px 2px 12px rgba(0,0,0,0.5);
 }
+
+.header-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.prediction-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #ff9800;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.prediction-button:hover {
+  background-color: #e68900;
+}
+
+.prediction-button img {
+  width: 24px;
+  height: 24px;
+}

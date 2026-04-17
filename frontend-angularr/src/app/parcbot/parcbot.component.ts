@@ -1,0 +1,175 @@
+// parcbot.component.ts
+import {
+  Component, OnInit, AfterViewChecked,
+  ViewChild, ElementRef
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { ParcbotService } from '../parcbot.service';
+
+interface ChatMsg {
+  sender: 'user' | 'bot';
+  text: string;
+  time: string;
+  isLoading?: boolean;
+  sources?: string[];
+}
+
+@Component({
+  selector: 'app-parcbot',
+  standalone: true,
+  imports: [CommonModule, FormsModule, HttpClientModule],
+  templateUrl: './parcbot.component.html',
+  styleUrls: ['./parcbot.component.css']
+})
+export class ParcbotChatComponent implements OnInit, AfterViewChecked {
+
+  // ── Profil utilisateur (depuis localStorage après auth) ──────────────────
+  userId!: number;
+  userRole!: string;   // "CHEF_PARC" | "CHAUFFEUR"  (tel que stocké par auth)
+  userName!: string;
+
+  @ViewChild('messagesArea') messagesArea!: ElementRef;
+
+  messages: ChatMsg[] = [];
+  userMessage = '';
+  loading = false;
+  private shouldScroll = false;
+
+  // ── RAG role : CHEF_PARC → CHEF_DU_PARC pour le backend RAG ─────────────
+  private get ragRole(): string {
+    return this.userRole === 'CHEF_PARC' ? 'CHEF_DU_PARC' : 'CHAUFFEUR';
+  }
+
+  get roleLabel(): string {
+    return this.userRole === 'CHEF_PARC' ? 'Chef du Parc' : 'Chauffeur';
+  }
+
+  quickActions(): string[] {
+    if (this.userRole === 'CHAUFFEUR') {
+      return [
+        "Mes missions aujourd'hui ?",
+        "État de mon véhicule",
+        "Ma feuille de route",
+        "Mes déclarations en attente",
+      ];
+    }
+    return [
+      "Véhicules en mission",
+      "Chauffeurs disponibles",
+      "Déclarations en attente",
+      "Entretiens cette semaine",
+    ];
+  }
+
+  private now(): string {
+    return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  constructor(private parcbotService: ParcbotService) {}
+
+  ngOnInit(): void {
+    const raw = localStorage.getItem('userProfile') || '{}';
+    const user = JSON.parse(raw);
+
+    this.userId   = user.id;
+    this.userRole = user.role ?? 'CHAUFFEUR';
+    this.userName = `${user.prenom ?? ''} ${user.nom ?? ''}`.trim() || 'Utilisateur';
+
+    this.addWelcomeMessage();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.shouldScroll) {
+      this.scrollToBottom();
+      this.shouldScroll = false;
+    }
+  }
+
+  private addWelcomeMessage(): void {
+    this.messages.push({
+      sender: 'bot',
+      text: `Bonjour **${this.userName}** ! Je suis **ParcBot**, votre assistant intelligent de gestion de parc automobile.\n\nComment puis-je vous aider ?`,
+      time: this.now(),
+    });
+  }
+
+  sendMessage(): void {
+    const text = this.userMessage.trim();
+    if (!text || this.loading) return;
+
+    // Message utilisateur
+    this.messages.push({ sender: 'user', text, time: this.now() });
+    this.userMessage = '';
+    this.loading = true;
+    this.shouldScroll = true;
+
+    // Placeholder "typing"
+    const loadingIndex = this.messages.length;
+    this.messages.push({ sender: 'bot', text: '', time: this.now(), isLoading: true });
+    this.shouldScroll = true;
+
+    // Historique (6 derniers échanges)
+    const history = this.messages
+      .slice(0, loadingIndex)
+      .slice(-12)
+      .map(m => ({ role: m.sender === 'bot' ? 'assistant' : 'user', content: m.text }));
+
+    this.parcbotService.sendMessage({
+      question: text,
+      user_id: this.userId,
+      role: this.ragRole,   // CHEF_DU_PARC ou CHAUFFEUR
+      history,
+    }).subscribe({
+      next: (res) => {
+        this.messages[loadingIndex] = {
+          sender: 'bot',
+          text: res.answer,
+          time: this.now(),
+          sources: res.sources,
+          isLoading: false,
+        };
+        this.loading = false;
+        this.shouldScroll = true;
+      },
+      error: () => {
+        this.messages[loadingIndex] = {
+          sender: 'bot',
+          text: 'Désolé, une erreur est survenue. Veuillez réessayer.',
+          time: this.now(),
+          isLoading: false,
+        };
+        this.loading = false;
+        this.shouldScroll = true;
+      },
+    });
+  }
+
+  handleKeyPress(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
+  }
+
+  resetChat(): void {
+    this.messages = [];
+    this.addWelcomeMessage();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      const el = this.messagesArea.nativeElement;
+      el.scrollTop = el.scrollHeight;
+    } catch {}
+  }
+
+  formatMessage(content: string): string {
+    return content
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br>')
+      .replace(/^- (.*)/gm, '• $1');
+  }
+}

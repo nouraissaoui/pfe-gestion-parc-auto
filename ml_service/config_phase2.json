@@ -1,0 +1,29 @@
+{
+  "facteurs_trafic": {
+    "fluide": 1.0,
+    "modere": 1.18,
+    "dense": 1.4,
+    "embouteillage": 1.65
+  },
+  "facteurs_type_charge": {
+    "personne": 1.0,
+    "mixte": 1.05,
+    "materiel": 1.1
+  },
+  "poids_mapping": {
+    "petite": 1200,
+    "moyenne": 1400,
+    "grande": 1700,
+    "SUV": 2000,
+    "utilitaire": 2500,
+    "familiale": 1600,
+    "sport": 1350
+  },
+  "correcteur_poids_par_100kg": 0.5,
+  "correcteur_km": {
+    "0_50000": 1.0,
+    "50000_150000": 1.05,
+    "150000_250000": 1.12,
+    "250000_plus": 1.2
+  }
+}
