@@ -1,15 +1,21 @@
 """
-Moteur RAG principal de ParcBot.
+Ragengine.py — Moteur RAG de ParcBot
+LangChain + ChromaDB + Ollama (DeepSeek / nomic-embed-text)
 
-Pipeline :
-  question  →  embedding (nomic-embed-text via Ollama)
-            →  ChromaDB : 3 recherches séparées (ALL + rôle + user_id)
-            →  fusion + dédoublonnage des chunks
-            →  prompt augmenté (contexte + rôle + historique)
-            →  DeepSeek LLM (Ollama)  →  réponse
+Pipeline complet :
+  question
+    → embedding (nomic-embed-text via Ollama)
+    → ChromaDB : 3 recherches séparées (ALL + rôle + user_id personnel)
+    → fusion + dédoublonnage des chunks
+    → prompt strict (contexte + rôle + historique)
+    → DeepSeek via Ollama  →  réponse finale
 
-Correction clé : le filtre $or de ChromaDB est instable selon les versions.
-On remplace par 3 appels similarity_search indépendants + fusion manuelle.
+Stratégie anti-hallucination :
+  1. temperature=0.1 (quasi-déterministe)
+  2. Prompt système strict : "base-toi UNIQUEMENT sur le CONTEXTE"
+  3. Fallback explicite si contexte vide
+  4. 3 recherches séparées au lieu d'un filtre $or instable
+  5. Dédoublonnage par clé de contenu (120 premiers caractères)
 """
 
 import logging
@@ -23,78 +29,103 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 logger = logging.getLogger(__name__)
 
-OLLAMA_URL   = "http://localhost:11434"
-LLM_MODEL    = "deepseek-v3.1:671b-cloud"
-EMBED_MODEL  = "nomic-embed-text"
-CHROMA_DIR   = "./chroma_db"
-COLLECTION   = "parcbot_docs"
-TOP_K        = 6   # chunks par recherche (3 recherches × 6 = 18 max avant dédoublonnage)
+# ─── Configuration ────────────────────────────────────────────────────────────
+OLLAMA_URL  = "http://localhost:11434"
+LLM_MODEL   = "deepseek-r1:7b"       # Remplacer par votre modèle Ollama disponible
+EMBED_MODEL = "nomic-embed-text"
+CHROMA_DIR  = "./chroma_db"
+COLLECTION  = "parcbot_docs"
+TOP_K       = 6  # chunks par recherche (max 3×6=18 avant dédup)
 
+# ─── Prompts système (un par rôle) ───────────────────────────────────────────
+_SYS_CHEF = """Tu es ParcBot, assistant intelligent de gestion de parc automobile.
+Tu réponds au Chef du Parc qui a accès à TOUTES les données de son parc.
+Il peut consulter : véhicules, chauffeurs, missions, feuilles de route,
+déclarations, entretiens, cartes carburant, garages, locaux.
 
-# ─── Prompts système par rôle ─────────────────────────────────────────────────
+RÈGLES STRICTES :
+- Si la question porte sur les données du parc (véhicule, chauffeur, mission, etc.),
+  réponds UNIQUEMENT à partir du CONTEXTE fourni ci-dessous.
+- Si le contexte ne contient pas l'information demandée, réponds EXACTEMENT :
+  "Je ne trouve pas cette information dans la base de données du parc."
+- Si la question est générale (définition, conseil, explication), réponds librement.
+- Ne révèle jamais les données d'un autre parc ou d'un autre utilisateur.
+- Réponds toujours en français, de façon professionnelle et concise."""
+
+_SYS_CHAUFFEUR = """Tu es ParcBot, assistant intelligent de gestion de parc automobile.
+Tu réponds au Chauffeur qui ne peut consulter QUE ses propres informations personnelles.
+Il peut voir : ses missions, sa feuille de route, son véhicule assigné,
+ses déclarations, et les informations générales du parc (locaux, véhicules).
+
+RÈGLES STRICTES :
+- Si la question porte sur ses données personnelles (missions, déclarations, véhicule),
+  réponds UNIQUEMENT à partir du CONTEXTE fourni ci-dessous.
+- Si le contexte ne contient pas l'information demandée, réponds EXACTEMENT :
+  "Je ne trouve pas cette information dans vos données."
+- Ne révèle JAMAIS les données d'autres chauffeurs.
+- Si la question est générale (définition, conseil, explication), réponds librement.
+- Réponds toujours en français, de façon simple et claire."""
+
 SYSTEM_PROMPTS = {
-    "CHEF_DU_PARC": """Tu es ParcBot, assistant intelligent spécialisé dans la gestion de parc automobile.
-Tu réponds au Chef du Parc qui a accès à toutes les informations de son parc.
-Il peut consulter : véhicules, chauffeurs, missions, feuilles de route, déclarations,
-entretiens, cartes carburant, garages, locaux.
-Réponds en français, de façon professionnelle et précise.
-Si une question ne concerne pas le parc automobile, réponds normalement comme un assistant général.
-Utilise le CONTEXTE fourni pour répondre aux questions spécifiques.
-Ne révèle jamais les données d'un autre parc ou d'un autre utilisateur.""",
-
-    "CHAUFFEUR": """Tu es ParcBot, assistant intelligent spécialisé dans la gestion de parc automobile.
-Tu réponds au Chauffeur qui peut uniquement consulter ses propres informations.
-Il peut consulter : ses missions du jour/semaine, sa feuille de route, son véhicule assigné,
-ses déclarations, et les informations générales du parc.
-Réponds en français, de façon simple et claire.
-Si une question ne concerne pas le parc automobile, réponds normalement comme un assistant général.
-Utilise le CONTEXTE fourni pour répondre aux questions personnelles.
-Ne révèle JAMAIS les informations des autres chauffeurs.""",
+    "CHEF_DU_PARC": _SYS_CHEF,
+    "CHAUFFEUR": _SYS_CHAUFFEUR,
 }
 
-GENERAL_INSTRUCTION = """
-CONTEXTE RÉCUPÉRÉ (base de données) :
+# ─── Template de prompt utilisateur ──────────────────────────────────────────
+USER_PROMPT_TEMPLATE = """
+=== CONTEXTE (données de la base du parc) ===
 {context}
+==============================================
 
-HISTORIQUE DE CONVERSATION :
+=== HISTORIQUE DE CONVERSATION ===
 {history}
+==================================
 
 QUESTION : {question}
 
-INSTRUCTIONS :
-- Si le contexte contient des informations pertinentes, base ta réponse dessus.
-- Si le contexte est vide ou non pertinent, réponds comme un assistant général compétent.
-- Réponds toujours en français.
-- Sois concis mais complet.
-- Ne dis jamais "je ne dispose pas de la liste" si le contexte contient des données.
+Réponds maintenant en respectant strictement tes instructions.
 """
 
 
 class ParcBotRAG:
+    """
+    Moteur RAG principal de ParcBot.
+    Instancier une seule fois au démarrage de l'application (singleton).
+    """
 
     def __init__(self):
+        logger.info("[RAG] Initialisation des embeddings (nomic-embed-text)...")
         self.embeddings = OllamaEmbeddings(
             base_url=OLLAMA_URL,
             model=EMBED_MODEL,
         )
         self.vectorstore: Optional[Chroma] = None
         self.splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500,       # réduit (était 800) pour des chunks plus précis
+            chunk_size=500,
             chunk_overlap=80,
             separators=["\n\n", "\n", ".", " "],
         )
+        logger.info("[RAG] ParcBotRAG initialisé")
 
-    # ── Indexation ──────────────────────────────────────────────────────────
+    # ── INDEXATION ────────────────────────────────────────────────────────────
     def index_documents(self, docs: list[Document], reset: bool = False) -> None:
+        """
+        Découpe les documents en chunks et les indexe dans ChromaDB.
+        Si reset=True, supprime la collection existante avant de réindexer.
+        """
         if not docs:
-            logger.warning("Aucun document à indexer")
+            logger.warning("[RAG] Aucun document à indexer")
             return
 
         chunks = self.splitter.split_documents(docs)
-        logger.info(f"Indexation : {len(docs)} docs → {len(chunks)} chunks")
+        logger.info(f"[RAG] Indexation : {len(docs)} docs → {len(chunks)} chunks")
 
         if reset and self.vectorstore:
-            self.vectorstore.delete_collection()
+            try:
+                self.vectorstore.delete_collection()
+                logger.info("[RAG] Ancienne collection supprimée")
+            except Exception as e:
+                logger.warning(f"[RAG] Impossible de supprimer la collection : {e}")
 
         self.vectorstore = Chroma.from_documents(
             documents=chunks,
@@ -103,9 +134,9 @@ class ParcBotRAG:
             collection_name=COLLECTION,
         )
         self.vectorstore.persist()
-        logger.info("ChromaDB persisté")
+        logger.info(f"[RAG] ChromaDB persisté — {len(chunks)} chunks indexés")
 
-    # ── Recherche vectorielle corrigée ───────────────────────────────────────
+    # ── RECHERCHE VECTORIELLE (3 appels séparés, anti-bug $or) ────────────────
     def retrieve(
         self,
         question: str,
@@ -114,22 +145,22 @@ class ParcBotRAG:
         k: int = TOP_K,
     ) -> list[Document]:
         """
-        3 recherches séparées pour contourner le bug du filtre $or de ChromaDB.
+        Effectue 3 recherches séparées pour éviter le bug du filtre $or ChromaDB :
 
-        Recherche 1 : documents publics (accessible_by = "ALL")
-        Recherche 2 : documents du rôle (accessible_by = "CHEF_DU_PARC")
-        Recherche 3 : documents personnels (accessible_by = str(user_id))
+        1. Documents publics    : accessible_by = "ALL"
+        2. Documents du rôle    : accessible_by = "CHEF_DU_PARC" ou "CHAUFFEUR"
+        3. Documents personnels : accessible_by = str(user_id)
 
-        Les résultats sont fusionnés et dédoublonnés par contenu.
+        Résultats fusionnés et dédoublonnés par contenu (120 premiers chars).
         """
         if not self.vectorstore:
-            logger.warning("vectorstore non initialisé")
+            logger.warning("[RAG] vectorstore non initialisé — retrieve ignoré")
             return []
 
         results: list[Document] = []
         seen: set[str] = set()
 
-        def _search_with_filter(filter_expr: dict) -> None:
+        def _search(filter_expr: dict) -> None:
             try:
                 docs = self.vectorstore.similarity_search(
                     query=question,
@@ -137,50 +168,67 @@ class ParcBotRAG:
                     filter=filter_expr,
                 )
                 for doc in docs:
-                    # Clé de dédoublonnage : 120 premiers caractères du contenu
                     key = doc.page_content[:120].strip()
                     if key not in seen:
                         seen.add(key)
                         results.append(doc)
             except Exception as e:
-                logger.warning(f"Recherche filtrée échouée {filter_expr}: {e}")
+                logger.warning(f"[RAG] Recherche filtrée échouée {filter_expr}: {e}")
 
-        # 1. Documents publics (véhicules, garages, locaux — visible par tous)
-        _search_with_filter({"accessible_by": {"$eq": "ALL"}})
+        # Recherche 1 : documents publics (véhicules, locaux — visibles par tous)
+        _search({"accessible_by": {"$eq": "ALL"}})
 
-        # 2. Documents réservés au rôle (CHEF_DU_PARC voit tout le parc)
-        _search_with_filter({"accessible_by": {"$eq": role}})
+        # Recherche 2 : documents réservés au rôle (chef voit les chauffeurs, missions, etc.)
+        _search({"accessible_by": {"$eq": role}})
 
-        # 3. Documents personnels (le chauffeur ne voit que les siens)
-        _search_with_filter({"accessible_by": {"$eq": str(user_id)}})
+        # Recherche 3 : documents personnels du chauffeur (ses missions, déclarations)
+        _search({"accessible_by": {"$eq": str(user_id)}})
 
-        logger.info(f"Retrieve → {len(results)} chunks pour '{question[:60]}' (rôle={role}, uid={user_id})")
-        return results[:k * 2]  # garder au max 2×k chunks fusionnés
+        logger.info(
+            f"[RAG] Retrieve → {len(results)} chunks "
+            f"pour '{question[:50]}' (rôle={role}, uid={user_id})"
+        )
+        # Limiter à 2×k pour ne pas surcharger le contexte LLM
+        return results[: k * 2]
 
-    # ── Génération LLM via Ollama ────────────────────────────────────────────
-    def _call_llm(self, prompt: str) -> str:
+    # ── APPEL LLM VIA OLLAMA ──────────────────────────────────────────────────
+    def _call_llm(self, system_prompt: str, user_prompt: str) -> str:
+        """
+        Appelle le LLM Ollama avec un prompt système et un prompt utilisateur séparés.
+        Utilise /api/chat (format messages) plutôt que /api/generate
+        pour un meilleur respect du system prompt.
+        """
         payload = {
             "model": LLM_MODEL,
-            "prompt": prompt,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user",   "content": user_prompt},
+            ],
             "stream": False,
             "options": {
-                "temperature": 0.3,
+                "temperature": 0.1,   # Quasi-déterministe → anti-hallucination
                 "num_predict": 1024,
+                "top_p": 0.9,
             },
         }
         try:
             resp = requests.post(
-                f"{OLLAMA_URL}/api/generate",
+                f"{OLLAMA_URL}/api/chat",
                 json=payload,
                 timeout=120,
             )
             resp.raise_for_status()
-            return resp.json().get("response", "").strip()
+            data = resp.json()
+            # Format réponse /api/chat
+            return data.get("message", {}).get("content", "").strip()
+        except requests.exceptions.Timeout:
+            logger.error("[RAG] Timeout LLM (>120s)")
+            return "Désolé, le délai de réponse a été dépassé. Veuillez réessayer."
         except Exception as e:
-            logger.error(f"Erreur LLM : {e}")
+            logger.error(f"[RAG] Erreur LLM : {e}")
             return "Désolé, une erreur est survenue lors de la génération de la réponse."
 
-    # ── Pipeline RAG complet ─────────────────────────────────────────────────
+    # ── PIPELINE RAG COMPLET ──────────────────────────────────────────────────
     def answer(
         self,
         question: str,
@@ -190,48 +238,54 @@ class ParcBotRAG:
     ) -> dict:
         """
         Pipeline RAG complet :
-        1. Récupérer les chunks pertinents (3 recherches fusionnées)
-        2. Construire le contexte textuel
-        3. Formater l'historique
-        4. Construire le prompt final
-        5. Appeler le LLM
-        6. Retourner réponse + sources
+          1. Retrieve  → chunks pertinents depuis ChromaDB (3 recherches)
+          2. Context   → assemblage du contexte textuel
+          3. History   → formatage des 6 derniers échanges
+          4. Prompt    → construction du prompt final
+          5. LLM       → appel Ollama DeepSeek
+          6. Return    → {answer, sources, context_used}
         """
-        # 1. Récupération
-        relevant_docs = self.retrieve(question, role, user_id)
-        context_used = len(relevant_docs) > 0
 
-        # 2. Contexte textuel
-        context_parts = []
-        sources = []
+        # ── Étape 1 : Récupération ────────────────────────────────────────────
+        relevant_docs = self.retrieve(question, role, user_id)
+        context_used  = len(relevant_docs) > 0
+
+        # ── Étape 2 : Construction du contexte ───────────────────────────────
+        sources: list[str] = []
+        context_parts: list[str] = []
+
         for doc in relevant_docs:
             context_parts.append(doc.page_content)
             src = doc.metadata.get("source", "")
             if src and src not in sources:
                 sources.append(src)
 
-        context = "\n---\n".join(context_parts) if context_parts else "Aucune donnée spécifique trouvée."
+        if context_parts:
+            context = "\n---\n".join(context_parts)
+        else:
+            context = "Aucune donnée spécifique trouvée dans la base du parc."
 
-        # 3. Historique (6 derniers échanges)
-        history_text = ""
-        for msg in history[-6:]:
-            role_label = "Utilisateur" if msg["role"] == "user" else "ParcBot"
-            history_text += f"{role_label} : {msg['content']}\n"
+        # ── Étape 3 : Historique (6 derniers échanges = 12 messages max) ─────
+        history_lines: list[str] = []
+        for msg in history[-12:]:
+            label = "Utilisateur" if msg.get("role") == "user" else "ParcBot"
+            history_lines.append(f"{label} : {msg.get('content', '')}")
+        history_text = "\n".join(history_lines) if history_lines else "Pas d'historique."
 
-        # 4. Prompt final
-        system = SYSTEM_PROMPTS.get(role, SYSTEM_PROMPTS["CHAUFFEUR"])
-        user_block = GENERAL_INSTRUCTION.format(
+        # ── Étape 4 : Construction du prompt ─────────────────────────────────
+        system_prompt = SYSTEM_PROMPTS.get(role, SYSTEM_PROMPTS["CHAUFFEUR"])
+        user_prompt = USER_PROMPT_TEMPLATE.format(
             context=context,
-            history=history_text or "Pas d'historique.",
+            history=history_text,
             question=question,
         )
-        full_prompt = f"{system}\n\n{user_block}"
 
-        # 5. Appel LLM
-        answer_text = self._call_llm(full_prompt)
+        # ── Étape 5 : Appel LLM ──────────────────────────────────────────────
+        answer_text = self._call_llm(system_prompt, user_prompt)
 
+        # ── Étape 6 : Retour ─────────────────────────────────────────────────
         return {
-            "answer": answer_text,
-            "sources": sources,
+            "answer":       answer_text,
+            "sources":      sources,
             "context_used": context_used,
         }

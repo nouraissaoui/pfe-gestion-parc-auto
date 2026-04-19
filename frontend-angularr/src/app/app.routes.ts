@@ -32,6 +32,7 @@ import { authGuard } from './auth.guard';
 import { RapportStatistiquesComponent } from './rapport-statistiques/rapport-statistiques.component';
 import { ConsultationFeuillesComponent } from './consultation-feuilles/consultation-feuilles.component';
 import { PredictionComponent } from './prediction/prediction.component';
+import { ParcbotChatComponent } from './parcbot/parcbot.component';
 
 
 export const routes: Routes = [
@@ -65,7 +66,7 @@ export const routes: Routes = [
       { path: 'carburants', component: CarteCarburantComponent },
       {path:'declarations',component:DeclarationsListeComponent},
       {path:'entretiens',component:EntretiensComponent},
-      { path: 'chatbot', component:ChatbotComponent },
+      { path: 'chatbot', component:ParcbotChatComponent },
       {path:'rapports',component:StatsDashboardComponent},
       { path: 'consultation-feuilles', component: ConsultationFeuillesComponent },
       {path: 'predire', component:PredictionComponent }
@@ -80,7 +81,7 @@ export const routes: Routes = [
       {path:'declarations',component:FaireDeclarationComponent},
       {path:'feuille-route',component:FeuilleRoutechauffeurComponent},
       { path: 'missions', component: MissionsComponent },
-      { path: 'chatbot', component:ChatbotComponent},
+      { path: 'chatbot', component:ParcbotChatComponent},
     ]
   }
 ,

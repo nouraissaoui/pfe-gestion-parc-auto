@@ -14,6 +14,7 @@ interface ChatMsg {
   time: string;
   isLoading?: boolean;
   sources?: string[];
+  contextUsed?: boolean;
 }
 
 @Component({
@@ -21,7 +22,7 @@ interface ChatMsg {
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './parcbot.component.html',
-  styleUrls: ['./parcbot.component.css']
+  styleUrls: ['./parcbot.component.css'],
 })
 export class ParcbotChatComponent implements OnInit, AfterViewChecked {
 
@@ -37,7 +38,7 @@ export class ParcbotChatComponent implements OnInit, AfterViewChecked {
   loading = false;
   private shouldScroll = false;
 
-  // ── RAG role : CHEF_PARC → CHEF_DU_PARC pour le backend RAG ─────────────
+  // ── Mapping rôle auth → rôle RAG backend ─────────────────────────────────
   private get ragRole(): string {
     return this.userRole === 'CHEF_PARC' ? 'CHEF_DU_PARC' : 'CHAUFFEUR';
   }
@@ -46,6 +47,7 @@ export class ParcbotChatComponent implements OnInit, AfterViewChecked {
     return this.userRole === 'CHEF_PARC' ? 'Chef du Parc' : 'Chauffeur';
   }
 
+  /** Actions rapides selon le rôle */
   quickActions(): string[] {
     if (this.userRole === 'CHAUFFEUR') {
       return [
@@ -64,17 +66,21 @@ export class ParcbotChatComponent implements OnInit, AfterViewChecked {
   }
 
   private now(): string {
-    return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    return new Date().toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 
   constructor(private parcbotService: ParcbotService) {}
 
   ngOnInit(): void {
-    const raw = localStorage.getItem('userProfile') || '{}';
+    // Lecture du profil depuis localStorage (stocké par le service d'auth)
+    const raw  = localStorage.getItem('userProfile') || '{}';
     const user = JSON.parse(raw);
 
-    this.userId   = user.id;
-    this.userRole = user.role ?? 'CHAUFFEUR';
+    this.userId   = user.id        ?? 0;
+    this.userRole = user.role      ?? 'CHAUFFEUR';
     this.userName = `${user.prenom ?? ''} ${user.nom ?? ''}`.trim() || 'Utilisateur';
 
     this.addWelcomeMessage();
@@ -87,65 +93,82 @@ export class ParcbotChatComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  // ── Message de bienvenue ──────────────────────────────────────────────────
   private addWelcomeMessage(): void {
     this.messages.push({
       sender: 'bot',
-      text: `Bonjour **${this.userName}** ! Je suis **ParcBot**, votre assistant intelligent de gestion de parc automobile.\n\nComment puis-je vous aider ?`,
+      text:
+        `Bonjour **${this.userName}** ! Je suis **ParcBot**, ` +
+        `votre assistant intelligent de gestion de parc automobile.\n\n` +
+        `Comment puis-je vous aider aujourd'hui ?`,
       time: this.now(),
     });
   }
 
+  // ── Envoi d'un message ────────────────────────────────────────────────────
   sendMessage(): void {
     const text = this.userMessage.trim();
     if (!text || this.loading) return;
 
-    // Message utilisateur
+    // Ajout message utilisateur
     this.messages.push({ sender: 'user', text, time: this.now() });
-    this.userMessage = '';
-    this.loading = true;
+    this.userMessage  = '';
+    this.loading      = true;
     this.shouldScroll = true;
 
-    // Placeholder "typing"
+    // Placeholder "en cours de frappe..."
     const loadingIndex = this.messages.length;
-    this.messages.push({ sender: 'bot', text: '', time: this.now(), isLoading: true });
+    this.messages.push({
+      sender: 'bot',
+      text: '',
+      time: this.now(),
+      isLoading: true,
+    });
     this.shouldScroll = true;
 
-    // Historique (6 derniers échanges)
+    // Construction de l'historique (12 derniers messages = 6 échanges)
     const history = this.messages
       .slice(0, loadingIndex)
       .slice(-12)
-      .map(m => ({ role: m.sender === 'bot' ? 'assistant' : 'user', content: m.text }));
+      .map(m => ({
+        role:    m.sender === 'bot' ? 'assistant' : 'user',
+        content: m.text,
+      }));
 
-    this.parcbotService.sendMessage({
-      question: text,
-      user_id: this.userId,
-      role: this.ragRole,   // CHEF_DU_PARC ou CHAUFFEUR
-      history,
-    }).subscribe({
-      next: (res) => {
-        this.messages[loadingIndex] = {
-          sender: 'bot',
-          text: res.answer,
-          time: this.now(),
-          sources: res.sources,
-          isLoading: false,
-        };
-        this.loading = false;
-        this.shouldScroll = true;
-      },
-      error: () => {
-        this.messages[loadingIndex] = {
-          sender: 'bot',
-          text: 'Désolé, une erreur est survenue. Veuillez réessayer.',
-          time: this.now(),
-          isLoading: false,
-        };
-        this.loading = false;
-        this.shouldScroll = true;
-      },
-    });
+    this.parcbotService
+      .sendMessage({
+        question: text,
+        user_id:  this.userId,
+        role:     this.ragRole,
+        history,
+      })
+      .subscribe({
+        next: (res) => {
+          this.messages[loadingIndex] = {
+            sender:      'bot',
+            text:        res.answer,
+            time:        this.now(),
+            sources:     res.sources,
+            contextUsed: res.context_used,
+            isLoading:   false,
+          };
+          this.loading      = false;
+          this.shouldScroll = true;
+        },
+        error: () => {
+          this.messages[loadingIndex] = {
+            sender:    'bot',
+            text:      'Désolé, une erreur est survenue. Veuillez réessayer.',
+            time:      this.now(),
+            isLoading: false,
+          };
+          this.loading      = false;
+          this.shouldScroll = true;
+        },
+      });
   }
 
+  // ── Raccourci clavier : Entrée pour envoyer ───────────────────────────────
   handleKeyPress(event: KeyboardEvent): void {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -153,11 +176,13 @@ export class ParcbotChatComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  // ── Réinitialisation ──────────────────────────────────────────────────────
   resetChat(): void {
     this.messages = [];
     this.addWelcomeMessage();
   }
 
+  // ── Scroll bas automatique ────────────────────────────────────────────────
   private scrollToBottom(): void {
     try {
       const el = this.messagesArea.nativeElement;
@@ -165,6 +190,7 @@ export class ParcbotChatComponent implements OnInit, AfterViewChecked {
     } catch {}
   }
 
+  // ── Formatage Markdown basique → HTML ────────────────────────────────────
   formatMessage(content: string): string {
     return content
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')

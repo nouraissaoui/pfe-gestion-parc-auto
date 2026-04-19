@@ -1,128 +1,176 @@
 """
-ParcBot - Chatbot RAG pour Gestion de Parc Automobile
-FastAPI + LangChain + ChromaDB + Ollama (DeepSeek)
+main.py — Serveur Flask ParcBot
+Endpoints :
+  POST /chat           → réponse RAG
+  POST /reindex        → réindexation manuelle
+  POST /debug-retrieve → voir les chunks avant LLM (diagnostic)
+  GET  /health         → état du serveur
 """
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import Optional
+
 import logging
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 from Ragengine import ParcBotRAG
 from BDloader import ParcDBLoader
 
-logging.basicConfig(level=logging.INFO)
+# ─── Logging ──────────────────────────────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s — %(message)s",
+)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="ParcBot API", version="1.1.0")
+# ─── App Flask ────────────────────────────────────────────────────────────────
+app = Flask(__name__)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+CORS(app, resources={r"/*": {"origins": "http://localhost:4200"}})
 
-# ── Singleton RAG engine ──────────────────────────────────────────────────────
-rag_engine: Optional[ParcBotRAG] = None
-
+# ─── Rôles valides ───────────────────────────────────────────────────────────
 VALID_ROLES = {"CHEF_DU_PARC", "CHAUFFEUR"}
 
+# ─── Singleton RAG (initialisé au démarrage) ─────────────────────────────────
+rag_engine: ParcBotRAG = None
 
-@app.on_event("startup")
-async def startup():
+
+def init_rag():
+    """Initialise le moteur RAG et indexe la BD au démarrage."""
     global rag_engine
-    logger.info("Initialisation ParcBot RAG...")
+    logger.info("═══ Initialisation ParcBot RAG ═══")
     rag_engine = ParcBotRAG()
+
     loader = ParcDBLoader()
     docs = loader.load_all_documents()
-    rag_engine.index_documents(docs)
-    logger.info(f"ParcBot prêt — {len(docs)} documents indexés dans ChromaDB")
+
+    if docs:
+        rag_engine.index_documents(docs)
+        logger.info(f"═══ ParcBot prêt — {len(docs)} documents indexés ═══")
+    else:
+        logger.warning("═══ Aucun document chargé (API Spring Boot inaccessible ?) ═══")
 
 
-# ── Schémas ───────────────────────────────────────────────────────────────────
-class ChatRequest(BaseModel):
-    question: str
-    user_id: int
-    role: str           # "CHEF_DU_PARC" ou "CHAUFFEUR"
-    history: list[dict] = []
+# ─── Initialisation au démarrage ─────────────────────────────────────────────
+with app.app_context():
+    init_rag()
 
 
-class ChatResponse(BaseModel):
-    answer: str
-    sources: list[str] = []
-    context_used: bool = False
+# ─── ENDPOINT : Chat principal ───────────────────────────────────────────────
+@app.route("/chat", methods=["POST"])
+def chat():
+    """
+    Body JSON attendu :
+    {
+        "question": "Combien de véhicules disponibles ?",
+        "user_id": 42,
+        "role": "CHEF_DU_PARC",
+        "history": [{"role": "user", "content": "..."}, ...]
+    }
+    """
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"error": "Corps JSON manquant"}), 400
 
+    question = (data.get("question") or "").strip()
+    user_id  = data.get("user_id")
+    role     = (data.get("role") or "").strip()
+    history  = data.get("history") or []
 
-# ── Endpoint principal ────────────────────────────────────────────────────────
-@app.post("/chat", response_model=ChatResponse)
-async def chat(req: ChatRequest):
-    if req.role not in VALID_ROLES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Rôle invalide '{req.role}'. Valeurs acceptées : {VALID_ROLES}"
+    # Validation
+    if not question:
+        return jsonify({"error": "Le champ 'question' est requis"}), 400
+    if role not in VALID_ROLES:
+        return jsonify({
+            "error": f"Rôle invalide '{role}'. Valeurs acceptées : {sorted(VALID_ROLES)}"
+        }), 400
+    if rag_engine is None:
+        return jsonify({"error": "RAG engine non initialisé"}), 503
+
+    try:
+        result = rag_engine.answer(
+            question=question,
+            user_id=int(user_id) if user_id else 0,
+            role=role,
+            history=history,
         )
-    if not rag_engine:
-        raise HTTPException(503, "RAG engine non initialisé")
+        return jsonify(result), 200
 
-    result = rag_engine.answer(
-        question=req.question,
-        user_id=req.user_id,
-        role=req.role,
-        history=req.history,
-    )
-    return result
+    except Exception as e:
+        logger.error(f"[/chat] Erreur inattendue : {e}", exc_info=True)
+        return jsonify({"error": "Erreur interne du serveur"}), 500
 
 
-# ── Endpoint de debug : voir les chunks récupérés AVANT le LLM ───────────────
-@app.post("/debug-retrieve")
-async def debug_retrieve(req: ChatRequest):
+# ─── ENDPOINT : Réindexation manuelle ────────────────────────────────────────
+@app.route("/reindex", methods=["POST"])
+def reindex():
+    """Recharge les données de l'API Spring Boot et réindexe ChromaDB."""
+    if rag_engine is None:
+        return jsonify({"error": "RAG engine non initialisé"}), 503
+    try:
+        loader = ParcDBLoader()
+        docs = loader.load_all_documents()
+        rag_engine.index_documents(docs, reset=True)
+        return jsonify({"message": f"{len(docs)} documents réindexés avec succès"}), 200
+    except Exception as e:
+        logger.error(f"[/reindex] Erreur : {e}", exc_info=True)
+        return jsonify({"error": str(e)}), 500
+
+
+# ─── ENDPOINT : Debug (voir les chunks avant LLM) ────────────────────────────
+@app.route("/debug-retrieve", methods=["POST"])
+def debug_retrieve():
     """
     Outil de diagnostic : montre exactement quels chunks ChromaDB retourne
-    pour une question donnée, avant d'appeler le LLM.
+    AVANT d'appeler le LLM. Utile pour tracer les hallucinations.
 
-    Utilisation avec curl ou Postman :
-      POST /debug-retrieve
-      { "question": "Chauffeurs disponibles", "user_id": 1, "role": "CHEF_DU_PARC", "history": [] }
+    Exemple curl :
+      curl -X POST http://localhost:8000/debug-retrieve \\
+        -H "Content-Type: application/json" \\
+        -d '{"question":"chauffeurs disponibles","user_id":1,"role":"CHEF_DU_PARC","history":[]}'
     """
-    if not rag_engine:
-        raise HTTPException(503, "RAG engine non initialisé")
-    if req.role not in VALID_ROLES:
-        raise HTTPException(400, f"Rôle invalide '{req.role}'")
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"error": "Corps JSON manquant"}), 400
 
-    docs = rag_engine.retrieve(req.question, req.role, req.user_id, k=8)
-    return {
-        "question": req.question,
-        "role": req.role,
-        "user_id": req.user_id,
-        "nb_chunks_recuperes": len(docs),
+    question = (data.get("question") or "").strip()
+    user_id  = data.get("user_id", 0)
+    role     = (data.get("role") or "CHEF_DU_PARC").strip()
+    history  = data.get("history") or []
+
+    if not question:
+        return jsonify({"error": "Le champ 'question' est requis"}), 400
+    if role not in VALID_ROLES:
+        return jsonify({"error": f"Rôle invalide '{role}'"}), 400
+    if rag_engine is None:
+        return jsonify({"error": "RAG engine non initialisé"}), 503
+
+    docs = rag_engine.retrieve(question, role, int(user_id), k=8)
+    return jsonify({
+        "question":             question,
+        "role":                 role,
+        "user_id":              user_id,
+        "nb_chunks_recuperes":  len(docs),
         "chunks": [
             {
-                "rank": i + 1,
-                "source": d.metadata.get("source", "—"),
-                "entity": d.metadata.get("entity", "—"),
-                "accessible_by": d.metadata.get("accessible_by", "—"),
-                "apercu": d.page_content[:300],
+                "rank":         i + 1,
+                "source":       d.metadata.get("source", "—"),
+                "doc_type":     d.metadata.get("doc_type", "—"),
+                "accessible_by":d.metadata.get("accessible_by", "—"),
+                "apercu":       d.page_content[:300],
             }
             for i, d in enumerate(docs)
         ],
-    }
+    }), 200
 
 
-# ── Réindexation manuelle ─────────────────────────────────────────────────────
-@app.post("/reindex")
-async def reindex():
-    """Recharger les données de la BD et réindexer ChromaDB."""
-    if not rag_engine:
-        raise HTTPException(503, "RAG engine non initialisé")
-    loader = ParcDBLoader()
-    docs = loader.load_all_documents()
-    rag_engine.index_documents(docs, reset=True)
-    return {"message": f"{len(docs)} documents réindexés avec succès"}
-
-
-# ── Santé ─────────────────────────────────────────────────────────────────────
+# ─── ENDPOINT : Santé ─────────────────────────────────────────────────────────
 @app.get("/health")
-async def health():
-    return {"status": "ok", "engine_ready": rag_engine is not None}
+def health():
+    return jsonify({
+        "status":       "ok",
+        "engine_ready": rag_engine is not None,
+    }), 200
+
+
+# ─── Lancement ────────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=False)
