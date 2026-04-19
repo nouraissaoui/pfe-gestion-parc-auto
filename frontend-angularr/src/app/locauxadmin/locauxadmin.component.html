@@ -68,8 +68,9 @@
           <div class="local-detail"><i class="fas fa-city"></i> {{ l.ville }}</div>
           <div class="local-detail"><i class="fas fa-globe"></i> {{ l.region }}</div>
           <div class="local-actions">
-            <button class="btn-edit" (click)="startEdit(l)"><i class="fas fa-edit"></i> Modifier</button>
-            <button class="btn-delete" (click)="delete(l.idLocal)"><i class="fas fa-trash"></i> Supprimer</button>
+<button class="btn-edit" (click)="startEdit(l, $event)">
+  <i class="fas fa-edit"></i> Modifier
+</button>            <button class="btn-delete" (click)="delete(l.idLocal)"><i class="fas fa-trash"></i> Supprimer</button>
           </div>
         </div>
       </div>
@@ -113,68 +114,55 @@
     </div>
   </section>
 
-  <!-- MODAL DE MODIFICATION -->
-  <div class="modal" *ngIf="editLocal" (click)="editLocal=null">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <!-- Logo en haut à gauche -->
-      <div class="modal-logo">
-        <img src="https://www.agilenergy.com.tn/fr/images/logoagilenergy.jpg" alt="Logo Agil Energy" class="modal-logo-img">
-      </div>
-      <h2><i class="fas fa-edit"></i> Modifier le local</h2>
-      <div class="form-group">
-        <label><i class="fas fa-tag"></i> Nom</label>
-        <input type="text" [(ngModel)]="editLocal.nomLocal">
-      </div>
-      <div class="form-group">
-        <label><i class="fas fa-map-pin"></i> Adresse</label>
-        <input type="text" [(ngModel)]="editLocal.adresse">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label><i class="fas fa-city"></i> Ville</label>
-          <input type="text" [(ngModel)]="editLocal.ville">
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-globe"></i> Région</label>
-          <input type="text" [(ngModel)]="editLocal.region">
-        </div>
-      </div>
-      <div class="form-group">
-        <label><i class="fas fa-images"></i> Images (séparées par espace)</label>
-        <input type="text" [(ngModel)]="editLocal.images">
-      </div>
-      <div class="modal-actions">
-        <button class="btn" (click)="saveEdit()">Sauvegarder</button>
-        <button class="btn btn-outline" (click)="editLocal=null">Annuler</button>
-      </div>
+  <!-- Overlay -->
+<div class="modal-overlay" *ngIf="editLocal" (click)="editLocal=null"></div>
+
+<!-- Panneau centré -->
+<div class="modal-panel"
+     *ngIf="editLocal"
+     [style.top.px]="modalTop"
+     [style.left.px]="modalLeft"
+     (click)="$event.stopPropagation()">
+
+  <div class="modal-panel-header">
+    <img src="https://www.agilenergy.com.tn/fr/images/logoagilenergy.jpg"
+         alt="Logo" class="modal-logo-img">
+    <button class="modal-close-btn" (click)="editLocal=null">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <h2><i class="fas fa-edit"></i> Modifier le local</h2>
+
+  <div class="form-group">
+    <label><i class="fas fa-tag"></i> Nom</label>
+    <input type="text" [(ngModel)]="editLocal.nomLocal">
+  </div>
+  <div class="form-group">
+    <label><i class="fas fa-map-pin"></i> Adresse</label>
+    <input type="text" [(ngModel)]="editLocal.adresse">
+  </div>
+  <div class="modal-form-row">
+    <div class="form-group">
+      <label><i class="fas fa-city"></i> Ville</label>
+      <input type="text" [(ngModel)]="editLocal.ville">
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-globe"></i> Région</label>
+      <input type="text" [(ngModel)]="editLocal.region">
     </div>
   </div>
+  <div class="form-group">
+    <label><i class="fas fa-images"></i> Images</label>
+    <input type="text" [(ngModel)]="editLocal.images">
+  </div>
+
+  <div class="modal-panel-actions">
+    <button class="btn" (click)="saveEdit()">
+      <i class="fas fa-save"></i> Sauvegarder
+    </button>
+    <button class="btn btn-outline" (click)="editLocal=null">Annuler</button>
+  </div>
+</div>
 </main>
 
-<!-- FOOTER -->
-<footer id="contact">
-  <div class="footer-content container">
-    <div class="footer-col">
-      <h3>SNDP Agil Energy</h3>
-      <p>Leader dans la distribution de produits pétroliers et la gestion de sites énergétiques. Innovation, sécurité et performance.</p>
-      <div class="social-links">
-        <a href="#"><i class="fab fa-facebook"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="https://www.agilenergy.com.tn/fr/"><i class="fas fa-envelope"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-      </div>
-    </div>
-    <div class="footer-col">
-      <h3>Coordonnées</h3>
-      <ul>
-        <li><i class="fas fa-map-marker-alt"></i> Av. Mohamed Ali Akid, Cité Olympique, 1003 El Khadra-Tunis</li>
-        <li><i class="fas fa-phone-alt"></i> +216 70 284 500</li>
-        <li><i class="fas fa-envelope"></i> bocagil.com.tn</li>
-        <li><i class="fas fa-globe"></i> www.agilenergy.com.tn</li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p> 2026 SNDP Agil Energy. Tous droits réservés.</p>
-  </div>
-</footer>

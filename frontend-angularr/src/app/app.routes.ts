@@ -32,8 +32,6 @@ import { authGuard } from './auth.guard';
 import { RapportStatistiquesComponent } from './rapport-statistiques/rapport-statistiques.component';
 import { ConsultationFeuillesComponent } from './consultation-feuilles/consultation-feuilles.component';
 import { PredictionComponent } from './prediction/prediction.component';
-import { ParcbotChatComponent } from './parcbot/parcbot.component';
-
 
 
 export const routes: Routes = [

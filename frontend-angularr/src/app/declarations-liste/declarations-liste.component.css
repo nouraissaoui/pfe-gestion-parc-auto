@@ -905,3 +905,7 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+.input-error { border-color: #dc2626 !important; background: #fff5f5; }
+.error-msg { display: block; color: #dc2626; font-size: 12px; margin-top: 4px; }
+.error-msg i { margin-right: 4px; }
+.required-star { color: #dc2626; margin-left: 2px; }

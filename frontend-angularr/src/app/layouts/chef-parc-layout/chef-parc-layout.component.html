@@ -81,10 +81,11 @@
         <span class="menu-icon">📄</span>
         <span>Consulter Déclarations</span>
     </div>
-        <div class="menu-item"        
+    <!-- Gérer les Entretiens — supprimer le > en double -->
+    <div class="menu-item"        
         [routerLink]="['/chef-parc/entretiens']"
         routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }">>
+        [routerLinkActiveOptions]="{ exact: true }">   <!-- ← supprimer le > en trop -->
         <span class="menu-icon">🔧</span>
         <span>Gérer les Entretiens</span>
     </div>
@@ -100,21 +101,21 @@
         [routerLink]="['/chef-parc/chatbot']"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }">
-        <span class="menu-icon">⛽</span>
+        <span class="menu-icon">🤖</span>
         <span>Interroger un ParcBot</span>
     </div>
            <div class="menu-item" 
         [routerLink]="['/chef-parc/predire']"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }">
-        <span class="menu-icon">⛽</span>
-        <span>Predire Consommation carburants</span>
+        <span class="menu-icon">📊</span>
+        <span>Prédire Consommation carburants</span>
     </div>
-
+    <!-- Même correction pour Consulter Statistiques -->
     <div class="menu-item"         
         [routerLink]="['/chef-parc/rapports']"
         routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }">>
+        [routerLinkActiveOptions]="{ exact: true }">   <!-- ← idem -->
         <span class="menu-icon">📊</span>
         <span>Consulter Statistiques</span>
     </div>

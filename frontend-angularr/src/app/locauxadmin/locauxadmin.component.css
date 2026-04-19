@@ -5757,15 +5757,176 @@ footer::before {
   .form-row { grid-template-columns: 1fr; }
   .modal-actions { flex-direction: column-reverse; }
   .modal-actions .btn { width: 100%; }
-}.modal {
+}/* Overlay semi-transparent */
+.modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  display: flex;
-  align-items: flex-start;        /* ← changer center en flex-start */
-  padding-top: 40px;              /* ← ajouter cette ligne */
-  justify-content: center;
-  animation: modalFade 0.3s ease;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  animation: modalFade 0.25s ease;
 }
+
+/* Panneau flottant positionné */
+.modal-panel {
+  position: absolute;
+  z-index: 1000;
+  width: 520px;
+  max-width: calc(100vw - 40px);
+  background: #fffcf8;
+  border-radius: 24px;
+  border: 1.5px solid var(--gold-deep);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(212, 160, 23, 0.15) inset;
+  padding: 0 28px 28px;
+  animation: panelSlideIn 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+@keyframes panelSlideIn {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Barre dorée en haut */
+.modal-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent);
+  border-radius: 24px 24px 0 0;
+}
+
+/* Header avec logo + bouton fermer */
+.modal-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 14px;
+  border-bottom: 1px solid var(--border-gold);
+  margin-bottom: 16px;
+}
+
+.modal-panel-logo img {
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 5px rgba(212, 160, 23, 0.3));
+}
+
+.modal-close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-gold);
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+.modal-close-btn:hover {
+  background: var(--bordeaux);
+  border-color: var(--bordeaux);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* Titre */
+.modal-panel h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--bordeaux);
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0d6c5;
+}
+.modal-panel h2 i {
+  color: var(--gold-deep);
+}
+
+/* Form row dans la modal */
+.modal-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Actions */
+.modal-panel-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-gold);
+}
+.modal-panel-actions .btn {
+  min-width: 130px;
+  justify-content: center;
+}
+
+/* Scrollbar discrète */
+.modal-panel::-webkit-scrollbar { width: 5px; }
+.modal-panel::-webkit-scrollbar-track { background: #f5ede2; border-radius: 10px; }
+.modal-panel::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--bordeaux), var(--anthracite));
+  border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+  .modal-panel {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 95vw;
+  }
+  .modal-form-row { grid-template-columns: 1fr; }
+  .modal-panel-actions { flex-direction: column-reverse; }
+  .modal-panel-actions .btn { width: 100%; }
+}/* =============================================
+   MODAL — VERSION FINALE UNIQUE
+   ============================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(5px);
+  z-index: 999;
+  animation: modalFade 0.25s ease;
+}
+
+.modal-panel {
+  position: absolute;
+  z-index: 1000;
+  width: 520px;
+  max-width: calc(100vw - 40px);
+  background: #fffcf8;
+  border-radius: 24px;
+  border: 1.5px solid var(--gold-deep);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.3);
+  padding: 0 28px 28px;
+  animation: panelSlideIn 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow-y: auto;
+  max-height: 85vh;
+}
+
+@keyframes panelSlideIn {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Supprime toute ancienne règle .modal et .modal-content */
+.modal { display: none !important; }
+.modal-content { display: none !important; }

@@ -98,9 +98,7 @@ showPreloader= true;
   }
 
     /******** EDIT ********/
-    startEdit(l: any) {
-      this.editLocal = { ...l };
-    }
+   
 
     saveEdit() {
       const payload = { ...this.editLocal };
@@ -133,6 +131,24 @@ showPreloader= true;
     return new Set(regions).size;
   }
 
+modalTop: number = 0;
+modalLeft: number = 0;
 
 
-  }
+startEdit(local: any, event: MouseEvent): void {
+  this.editLocal = { ...local };
+
+  setTimeout(() => {
+    const panelWidth = 520;
+    const panelHeight = 580;
+    const scrollY = window.scrollY;
+    const scrollX = window.scrollX;
+
+    // Toujours centré dans la fenêtre
+    this.modalLeft = scrollX + (window.innerWidth / 2) - (panelWidth / 2);
+    this.modalTop  = scrollY + (window.innerHeight / 2) - (panelHeight / 2);
+
+    // Ne pas dépasser en haut
+    if (this.modalTop < scrollY + 20) this.modalTop = scrollY + 20;
+  }, 0);
+}}

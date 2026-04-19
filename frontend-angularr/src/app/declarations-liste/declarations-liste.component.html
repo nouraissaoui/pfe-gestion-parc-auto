@@ -97,7 +97,9 @@
     <div class="section-header">
         <div class="section-dot"></div>
         <span class="section-title">{{ sectionLabel }}</span>
-        <span class="section-count">{{ filteredDeclarations.length }} résultat{{ filteredDeclarations.length > 1 ? 's' : '' }}</span>
+        <span class="section-count">
+        {{ filteredDeclarations.length }} résultat{{ filteredDeclarations.length > 1 ? 's' : '' }}
+        </span>
     </div>
 
     <!-- Grid -->
@@ -200,97 +202,137 @@
     <div class="modal-card maintenance-sheet">
 
         <div class="sheet-header">
-            <div class="brand-section">
-                <img src="assets/agil.png" alt="Logo Agil" class="agil-logo">
-                <div class="brand-text">
-                    <h4>AGIL ENERGIE</h4>
-                    <span>Département Logistique & Maintenance</span>
-                </div>
+        <div class="brand-section">
+            <img src="assets/agil.png" alt="Logo Agil" class="agil-logo">
+            <div class="brand-text">
+            <h4>AGIL ENERGIE</h4>
+            <span>Département Logistique & Maintenance</span>
             </div>
-            <div class="sheet-title">
-                <h3>ORDRE DE MAINTENANCE N° {{ selectedDec?.idDeclaration }}</h3>
-                <p>Catégorie: <strong>ENTRETIEN SUITE DECLARATION</strong></p>
-            </div>
-            <button class="close-btn-sheet" (click)="fermerModale()">&times;</button>
+        </div>
+        <div class="sheet-title">
+            <h3>ORDRE DE MAINTENANCE N° {{ selectedDec?.idDeclaration }}</h3>
+            <p>Catégorie: <strong>ENTRETIEN SUITE DECLARATION</strong></p>
+        </div>
+        <button class="close-btn-sheet" (click)="fermerModale()">&times;</button>
         </div>
 
         <div class="modal-body sheet-content">
-            <div class="info-grid">
-                <div class="info-item">
-                    <label>Véhicule</label>
-                    <div class="val">{{ selectedDec?.vehicule?.matricule }} ({{ selectedDec?.vehicule?.marque }})</div>
-                </div>
-                <div class="info-item">
-                    <label>Chauffeur</label>
-                    <div class="val">{{ selectedDec?.chauffeur?.nom }} {{ selectedDec?.chauffeur?.prenom }}</div>
-                </div>
-                <div class="info-item full">
-                    <label>Incident signalé</label>
-                    <div class="val italic">"{{ selectedDec?.description }}"</div>
-                </div>
-             </div>
-
-             <hr class="sheet-divider">
-             <!-- CAS AMENDE -->
-<div *ngIf="selectedDec?.type === 'AMENDE'" class="info-amende">
-
-<i class="fas fa-file-invoice-dollar"></i>
-Cette déclaration concerne une <b>amende</b>.  
-Aucune planification de maintenance n'est nécessaire.
-
-</div>
-
-            <div class="maintenance-form" *ngIf="selectedDec?.type !== 'AMENDE'">
-                <div class="form-row">
-                    <div class="form-field flex-2">
-                        <label><i class="fas fa-wrench"></i> Type d'intervention précise</label>
-                        <input type="text" [(ngModel)]="typeEntretien" placeholder="Ex: Réparation moteur, Système freinage, Électricité...">
-                    </div>
-                    <div class="form-field flex-1">
-                        <label><i class="fas fa-calendar-day"></i> Date prévue</label>
-                        <input type="date" [(ngModel)]="datePrevue" />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-field flex-2">
-                        <label><i class="fas fa-warehouse"></i> Garage de maintenance</label>
-                        <select [(ngModel)]="idGarage">
-                            <option [value]="null" disabled>Choisir un garage...</option>
-                            <option *ngFor="let g of listeGarages" [value]="g.idGarage">
-                                {{ g.nomGarage }} - {{ g.adresse }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-field flex-1">
-                        <label>Statut initial</label>
-                        <input type="text" value="PROGRAMMÉ" disabled class="disabled-input">
-                    </div>
-                </div>
-
-                <div class="form-field">
-                    <label><i class="fas fa-clipboard-list"></i> Instructions techniques & Observations</label>
-                    <textarea
-                        [(ngModel)]="observations"
-                        rows="3"
-                        placeholder="Précisez les pièces à commander ou les points de contrôle particuliers..."
-                    ></textarea>
-                </div>
+        <div class="info-grid">
+            <div class="info-item">
+            <label>Véhicule</label>
+            <div class="val">{{ selectedDec?.vehicule?.matricule }} ({{ selectedDec?.vehicule?.marque }})</div>
+            </div>
+            <div class="info-item">
+            <label>Chauffeur</label>
+            <div class="val">{{ selectedDec?.chauffeur?.nom }} {{ selectedDec?.chauffeur?.prenom }}</div>
+            </div>
+            <div class="info-item full">
+            <label>Incident signalé</label>
+            <div class="val italic">"{{ selectedDec?.description }}"</div>
             </div>
         </div>
 
-        <div class="modal-footer sheet-footer">
-            <button class="btn-cancel-light" (click)="fermerModale()">
-                <i class="fas fa-times"></i> Abandonner
-            </button>
-            <button
-                class="btn-confirm-agil"
-                [disabled]="selectedDec?.type !== 'AMENDE' && (!datePrevue || !idGarage || !typeEntretien)"
-                (click)="confirmerTraitement()"
-            >
-                <i class="fas fa-file-signature"></i>
-                {{ selectedDec?.type === 'AMENDE' ? 'Confirmer le traitement' : "Générer l'Ordre de Maintenance" }}
-            </button>
+        <hr class="sheet-divider">
+
+        <!-- CAS AMENDE -->
+        <div *ngIf="selectedDec?.type === 'AMENDE'" class="info-amende">
+            <i class="fas fa-file-invoice-dollar"></i>
+            Cette déclaration concerne une <b>amende</b>.
+            Aucune planification de maintenance n'est nécessaire.
         </div>
+
+        <!-- CAS MAINTENANCE -->
+        <div class="maintenance-form" *ngIf="selectedDec?.type !== 'AMENDE'">
+
+            <div class="form-row">
+
+            <!-- Type d'intervention -->
+            <div class="form-field flex-2">
+                <label><i class="fas fa-wrench"></i> Type d'intervention précise <span class="required-star">*</span></label>
+                <input
+                type="text"
+                [(ngModel)]="typeEntretien"
+                (blur)="validateTypeEntretien()"
+                (ngModelChange)="typeEntretienError = ''"
+                placeholder="Ex: Réparation moteur, Système freinage, Électricité..."
+                [class.input-error]="typeEntretienError"
+                />
+                <span class="error-msg" *ngIf="typeEntretienError">
+                <i class="fas fa-exclamation-circle"></i> {{ typeEntretienError }}
+                </span>
+            </div>
+
+            <!-- Date prévue -->
+            <div class="form-field flex-1">
+                <label><i class="fas fa-calendar-day"></i> Date prévue <span class="required-star">*</span></label>
+                <input
+                type="date"
+                [(ngModel)]="datePrevue"
+                (blur)="validateDatePrevue()"
+                (ngModelChange)="datePrevueError = ''"
+                [min]="getTomorrowDate()"
+                [class.input-error]="datePrevueError"
+                />
+                <span class="error-msg" *ngIf="datePrevueError">
+                <i class="fas fa-exclamation-circle"></i> {{ datePrevueError }}
+                </span>
+            </div>
+
+            </div>
+
+            <div class="form-row">
+
+            <!-- Garage -->
+            <div class="form-field flex-2">
+                <label><i class="fas fa-warehouse"></i> Garage de maintenance <span class="required-star">*</span></label>
+                <select [(ngModel)]="idGarage" [class.input-error]="!idGarage && typeEntretienError">
+                <option [value]="null" disabled>Choisir un garage...</option>
+                <option *ngFor="let g of listeGarages" [value]="g.idGarage">
+                    {{ g.nomGarage }} - {{ g.adresse }}
+                </option>
+                </select>
+            </div>
+
+            <!-- Statut initial -->
+            <div class="form-field flex-1">
+                <label>Statut initial</label>
+                <input type="text" value="PROGRAMMÉ" disabled class="disabled-input">
+            </div>
+
+            </div>
+
+            <!-- Observations -->
+            <div class="form-field">
+            <label><i class="fas fa-clipboard-list"></i> Instructions techniques & Observations <span class="required-star">*</span></label>
+            <textarea
+                [(ngModel)]="observations"
+                (blur)="validateObservations()"
+                (ngModelChange)="observationsError = ''"
+                rows="3"
+                placeholder="Précisez les pièces à commander ou les points de contrôle particuliers... (min. 10 caractères)"
+                [class.input-error]="observationsError"
+            ></textarea>
+            <span class="error-msg" *ngIf="observationsError">
+                <i class="fas fa-exclamation-circle"></i> {{ observationsError }}
+            </span>
+            </div>
+
+        </div>
+        </div>
+
+        <div class="modal-footer sheet-footer">
+        <button class="btn-cancel-light" (click)="fermerModale()">
+            <i class="fas fa-times"></i> Abandonner
+        </button>
+        <button
+            class="btn-confirm-agil"
+            [disabled]="selectedDec?.type !== 'AMENDE' && (!datePrevue || !idGarage || !typeEntretien || !observations || !!typeEntretienError || !!observationsError || !!datePrevueError)"
+            (click)="confirmerTraitement()"
+        >
+            <i class="fas fa-file-signature"></i>
+            {{ selectedDec?.type === 'AMENDE' ? 'Confirmer le traitement' : "Générer l'Ordre de Maintenance" }}
+        </button>
+        </div>
+
     </div>
-</div>
+    </div>

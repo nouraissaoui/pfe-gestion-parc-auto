@@ -4073,3 +4073,73 @@ body {
     font-size: 2rem;
   }
 }
+/* Conteneur principal en pleine largeur */
+.container,
+.dashboard-wrapper,
+.registry-panel {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Supprimer les marges qui limitent */
+.container {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+/* Table responsive prend toute la largeur */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Table plus large */
+.custom-agil-table {
+  width: 100%;
+  min-width: 1400px; /* augmente largeur globale */
+}
+
+/* Colonnes plus espacées */
+.custom-agil-table th,
+.custom-agil-table td {
+  padding: 16px 20px;
+  white-space: nowrap;
+}
+
+/* Ajustement spécifique des colonnes */
+.custom-agil-table th:nth-child(1),
+.custom-agil-table td:nth-child(1) {
+  min-width: 280px;
+}
+
+.custom-agil-table th:nth-child(2),
+.custom-agil-table td:nth-child(2) {
+  min-width: 180px;
+}
+
+.custom-agil-table th:nth-child(3),
+.custom-agil-table td:nth-child(3) {
+  min-width: 140px;
+}
+
+.custom-agil-table th:nth-child(4),
+.custom-agil-table td:nth-child(4) {
+  min-width: 140px;
+}
+
+.custom-agil-table th:nth-child(5),
+.custom-agil-table td:nth-child(5),
+.custom-agil-table th:nth-child(6),
+.custom-agil-table td:nth-child(6) {
+  min-width: 160px;
+}
+
+.custom-agil-table th:nth-child(7),
+.custom-agil-table td:nth-child(7) {
+  min-width: 160px;
+}
+
+.custom-agil-table th:nth-child(8),
+.custom-agil-table td:nth-child(8) {
+  min-width: 160px;
+}

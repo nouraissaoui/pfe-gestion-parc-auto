@@ -44,10 +44,15 @@ export class DeclarationsListeComponent implements OnInit, AfterViewInit, OnDest
   datePrevue: string = '';
   observations: string = '';
   showModal: boolean = false;
-  
+
   idGarage: number | null = null;
   typeEntretien: string = '';
   listeGarages: any[] = [];
+
+  // ── Validation errors ──
+  typeEntretienError: string = '';
+  observationsError: string = '';
+  datePrevueError: string = '';
 
   // ── UI feedback ──
   showToast: boolean = false;
@@ -134,65 +139,144 @@ export class DeclarationsListeComponent implements OnInit, AfterViewInit, OnDest
     });
   }
 
-confirmerTraitement(): void {
-  if (!this.selectedDec) {
-    this.showNotification("Aucune déclaration sélectionnée.");
-    return;
+  /* ════════════════════════════════
+      Validation
+  ════════════════════════════════ */
+
+  getTomorrowDate(): string {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().split('T')[0];
   }
 
-  const userStr = localStorage.getItem('user');
-  if (!userStr) {
-    this.showNotification("Erreur : session utilisateur introuvable.");
-    return;
-  }
-
-  const user = JSON.parse(userStr);
-  const userId = user.id || user.idChefParc;
-  if (!userId) {
-    this.showNotification("Erreur : ID utilisateur introuvable.");
-    return;
-  }
-
-  const isAmende = this.selectedDec.type === 'AMENDE';
-
-  // Vérification des champs obligatoires
-  if (!isAmende && (!this.idGarage || !this.datePrevue)) {
-    this.showNotification("Veuillez sélectionner un garage et une date prévue.");
-    return;
-  }
-  
-
-  // Appel du service
-  this.service.validerTraitementDeclaration(
-    this.selectedDec.idDeclaration!,
-    userId,
-    isAmende ? 0 : this.idGarage!,      // Garage = 0 si AMENDE (ou null si backend accepte)
-    this.typeEntretien || this.selectedDec.type, // Si AMENDE, type = 'AMENDE'
-    isAmende ? '' : this.datePrevue!,
-    this.observations || ''
-  ).subscribe({
-    next: () => {
-      this.fermerModale();
-      this.chargerDeclarations();
-     
-      this.showNotification(isAmende
-        ? "Amende confirmée avec succès !"
-        : "Ordre de maintenance généré avec succès !"
-      );
-      
-      // Réinitialisation des champs
-      this.idGarage = null;
-      this.datePrevue = '';
-      this.typeEntretien = '';
-      this.observations = '';
-      this.selectedDec = null;
-    },
-    error: (err) => {
-      console.error("Erreur traitement:", err);
-      this.showNotification("Erreur lors du traitement : " + (err.error?.message || 'Échec'));
+  validateTypeEntretien(): boolean {
+    const val = this.typeEntretien?.trim();
+    if (!val) {
+      this.typeEntretienError = 'Ce champ est obligatoire.';
+      return false;
     }
-  });
-}
+    if (/^\d+$/.test(val)) {
+      this.typeEntretienError = 'Veuillez saisir un type valide (pas uniquement des chiffres).';
+      return false;
+    }
+    if (val.length < 3) {
+      this.typeEntretienError = 'Minimum 3 caractères requis.';
+      return false;
+    }
+    if (!/^[a-zA-ZÀ-ÿ0-9\s\-',./()+]+$/.test(val)) {
+      this.typeEntretienError = 'Caractères spéciaux non autorisés.';
+      return false;
+    }
+    this.typeEntretienError = '';
+    return true;
+  }
+
+  validateObservations(): boolean {
+    const val = this.observations?.trim();
+    if (!val) {
+      this.observationsError = 'Ce champ est obligatoire.';
+      return false;
+    }
+    if (/^\d+$/.test(val)) {
+      this.observationsError = 'Veuillez saisir une observation valide (pas uniquement des chiffres).';
+      return false;
+    }
+    if (val.length < 10) {
+      this.observationsError = 'Minimum 10 caractères requis.';
+      return false;
+    }
+    this.observationsError = '';
+    return true;
+  }
+
+  validateDatePrevue(): boolean {
+    if (!this.datePrevue) {
+      this.datePrevueError = 'La date est obligatoire.';
+      return false;
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selected = new Date(this.datePrevue);
+    if (selected <= today) {
+      this.datePrevueError = 'La date doit être strictement dans le futur.';
+      return false;
+    }
+    this.datePrevueError = '';
+    return true;
+  }
+
+  isFormValid(): boolean {
+    if (this.selectedDec?.type === 'AMENDE') return true;
+    const t = this.validateTypeEntretien();
+    const o = this.validateObservations();
+    const d = this.validateDatePrevue();
+    return t && o && d && !!this.idGarage;
+  }
+
+  /* ════════════════════════════════
+      Traitement
+  ════════════════════════════════ */
+
+  confirmerTraitement(): void {
+    if (!this.selectedDec) {
+      this.showNotification('Aucune déclaration sélectionnée.');
+      return;
+    }
+
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      this.showNotification('Erreur : session utilisateur introuvable.');
+      return;
+    }
+
+    const user = JSON.parse(userStr);
+    const userId = user.id || user.idChefParc;
+    if (!userId) {
+      this.showNotification('Erreur : ID utilisateur introuvable.');
+      return;
+    }
+
+    const isAmende = this.selectedDec.type === 'AMENDE';
+
+    if (!isAmende && !this.isFormValid()) {
+      this.showNotification('Veuillez corriger les erreurs avant de continuer.');
+      return;
+    }
+
+    this.service.validerTraitementDeclaration(
+      this.selectedDec.idDeclaration!,
+      userId,
+      isAmende ? 0 : this.idGarage!,
+      this.typeEntretien || this.selectedDec.type,
+      isAmende ? '' : this.datePrevue!,
+      this.observations || ''
+    ).subscribe({
+      next: () => {
+        this.fermerModale();
+        this.chargerDeclarations();
+        this.showNotification(isAmende
+          ? 'Amende confirmée avec succès !'
+          : "Ordre de maintenance généré avec succès !"
+        );
+        this.resetForm();
+      },
+      error: (err) => {
+        console.error('Erreur traitement:', err);
+        this.showNotification('Erreur lors du traitement : ' + (err.error?.message || 'Échec'));
+      }
+    });
+  }
+
+  private resetForm(): void {
+    this.idGarage = null;
+    this.datePrevue = '';
+    this.typeEntretien = '';
+    this.observations = '';
+    this.selectedDec = null;
+    this.typeEntretienError = '';
+    this.observationsError = '';
+    this.datePrevueError = '';
+  }
 
   /* ════════════════════════════════
       Filtres & Recherche
@@ -214,17 +298,14 @@ confirmerTraitement(): void {
       : this.allDeclarations.filter(d => d.status === this.filtreActuel);
 
     const query = this.searchQuery.trim().toLowerCase();
-    
     if (query) {
-      base = base.filter(dec => {
-        return (
-          dec.vehicule?.matricule?.toLowerCase().includes(query) ||
-          dec.vehicule?.marque?.toLowerCase().includes(query) ||
-          dec.chauffeur?.nom?.toLowerCase().includes(query) ||
-          dec.description?.toLowerCase().includes(query) ||
-          dec.type?.toLowerCase().includes(query)
-        );
-      });
+      base = base.filter(dec =>
+        dec.vehicule?.matricule?.toLowerCase().includes(query) ||
+        dec.vehicule?.marque?.toLowerCase().includes(query) ||
+        dec.chauffeur?.nom?.toLowerCase().includes(query) ||
+        dec.description?.toLowerCase().includes(query) ||
+        dec.type?.toLowerCase().includes(query)
+      );
     }
     this.filteredDeclarations = base;
   }
@@ -239,16 +320,15 @@ confirmerTraitement(): void {
 
   ouvrirModale(dec: Declaration): void {
     this.selectedDec = dec;
-    this.datePrevue = '';
-    this.observations = '';
-    this.idGarage = null;
-    this.typeEntretien = '';
+    this.resetForm();
+    this.selectedDec = dec; // re-assign après reset
     this.showModal = true;
   }
 
   fermerModale(): void {
     this.showModal = false;
     this.selectedDec = null;
+    this.resetForm();
   }
 
   onBackdropClick(event: MouseEvent): void {
@@ -284,7 +364,7 @@ confirmerTraitement(): void {
   }
 
   /* ════════════════════════════════
-      Particle System logic (Canvas)
+      Particle System (Canvas)
   ════════════════════════════════ */
 
   private initParticles(): void {
@@ -340,12 +420,18 @@ confirmerTraitement(): void {
       this.ctx.translate(p.x, p.y);
       this.ctx.rotate(p.rotation);
       this.ctx.fillStyle = p.color + p.opacity + ')';
-      
+
       if (p.shape === 'circle') {
-        this.ctx.beginPath(); this.ctx.arc(0, 0, p.size, 0, Math.PI * 2); this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+        this.ctx.fill();
       } else if (p.shape === 'diamond') {
-        this.ctx.beginPath(); this.ctx.moveTo(0, -p.size * 1.5); this.ctx.lineTo(p.size, 0);
-        this.ctx.lineTo(0, p.size * 1.5); this.ctx.lineTo(-p.size, 0); this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -p.size * 1.5);
+        this.ctx.lineTo(p.size, 0);
+        this.ctx.lineTo(0, p.size * 1.5);
+        this.ctx.lineTo(-p.size, 0);
+        this.ctx.fill();
       }
       this.ctx.restore();
 

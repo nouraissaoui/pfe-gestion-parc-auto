@@ -2822,4 +2822,77 @@ table {
 /* Effet au survol */
 .table-container::-webkit-scrollbar-thumb:hover {
     background: #000000; /* Devient noir au survol pour le contraste */
+}/* Conteneur principal élargi */
+.card-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Table prend toute la largeur */
+.table-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Table full width */
+.table-container table {
+  width: 100%;
+  min-width: 1200px; /* augmente la largeur minimale */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Colonnes plus espacées */
+.table-container th,
+.table-container td {
+  padding: 14px 18px;
+  white-space: nowrap;
+}
+
+/* Ajustement des colonnes importantes */
+.table-container th:nth-child(1),
+.table-container td:nth-child(1) {
+  min-width: 250px; /* Collaborateur */
+}
+
+.table-container th:nth-child(2),
+.table-container td:nth-child(2) {
+  min-width: 180px; /* Local */
+}
+
+.table-container th:nth-child(3),
+.table-container td:nth-child(3) {
+  min-width: 160px; /* Niveau */
+}
+
+.table-container th:nth-child(4),
+.table-container td:nth-child(4) {
+  min-width: 140px; /* Date */
+}
+
+.table-container th:nth-child(5),
+.table-container td:nth-child(5) {
+  min-width: 140px; /* Ancienneté */
+}
+
+.table-container th:nth-child(6),
+.table-container td:nth-child(6) {
+  min-width: 140px; /* Actions */
+}
+
+/* Scroll horizontal plus propre */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+/* Responsive : garde lisible */
+@media (max-width: 1200px) {
+  .table-container table {
+    min-width: 1000px;
+  }
 }
