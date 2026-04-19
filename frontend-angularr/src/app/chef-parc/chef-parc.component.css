@@ -2778,4 +2778,121 @@ tr:hover .avatar {
 .btn-consulter.active {
   border: 2px solid gold;
   box-shadow: 0 0 15px gold;
+}/* 1. Conteneur de la table : Activation du scroll horizontal */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Active le glissement horizontal */
+    overflow-y: auto; /* Garde votre scroll vertical */
+    border-radius: 0 0 20px 20px;
+    background: rgba(255, 255, 255, 0.5); /* Effet glass */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+/* 2. Forcer la table à ne pas se comprimer pour permettre le scroll */
+table {
+    width: 100%;
+    min-width: 900px; /* Force l'apparition du scroll sur les petits écrans */
+    border-collapse: collapse;
+}
+
+/* ════════════════════════════════════════════════
+   SCROLLBAR PERSONNALISÉE (LOOK LUXE)
+   ════════════════════════════════════════════════ */
+
+/* Taille de la barre */
+.table-container::-webkit-scrollbar {
+    height: 8px; /* Hauteur de la barre horizontale */
+    width: 8px;  /* Largeur de la barre verticale */
+}
+
+/* Fond de la barre (Track) */
+.table-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+/* Partie coulissante (Thumb) */
+.table-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(to right, #d4af37, #b8860b); /* Dégradé Or */
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.8); /* Espacement pour effet flottant */
+}
+
+/* Effet au survol */
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #000000; /* Devient noir au survol pour le contraste */
+}/* Conteneur principal élargi */
+.card-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Table prend toute la largeur */
+.table-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Table full width */
+.table-container table {
+  width: 100%;
+  min-width: 1200px; /* augmente la largeur minimale */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Colonnes plus espacées */
+.table-container th,
+.table-container td {
+  padding: 14px 18px;
+  white-space: nowrap;
+}
+
+/* Ajustement des colonnes importantes */
+.table-container th:nth-child(1),
+.table-container td:nth-child(1) {
+  min-width: 250px; /* Collaborateur */
+}
+
+.table-container th:nth-child(2),
+.table-container td:nth-child(2) {
+  min-width: 180px; /* Local */
+}
+
+.table-container th:nth-child(3),
+.table-container td:nth-child(3) {
+  min-width: 160px; /* Niveau */
+}
+
+.table-container th:nth-child(4),
+.table-container td:nth-child(4) {
+  min-width: 140px; /* Date */
+}
+
+.table-container th:nth-child(5),
+.table-container td:nth-child(5) {
+  min-width: 140px; /* Ancienneté */
+}
+
+.table-container th:nth-child(6),
+.table-container td:nth-child(6) {
+  min-width: 140px; /* Actions */
+}
+
+/* Scroll horizontal plus propre */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+/* Responsive : garde lisible */
+@media (max-width: 1200px) {
+  .table-container table {
+    min-width: 1000px;
+  }
 }

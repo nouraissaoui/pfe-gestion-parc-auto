@@ -1191,289 +1191,213 @@
   .form-row-2 { grid-template-columns: 1fr; }
   .transport-toggle { grid-template-columns: 1fr; }
   .hero-stats { flex-direction: column; gap: 10px; }
-}
-/* CONTENEUR GLOBAL */
-.form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-}
-
-/* SECTIONS */
-.section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-/* TITRES */
-.section-title {
-    text-align: center;
-    font-weight: 600;
-    letter-spacing: 2px;
-    color: #b58b1a;
-    margin-bottom: 10px;
-}
-
-/* TOGGLE (Employé / Matériel) */
-.transport-toggle {
-    display: flex;
-    gap: 20px;
-}
-
-.toggle-option {
-    flex: 1;
-    cursor: pointer;
-}
-
-.toggle-label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    border-radius: 16px;
-    border: 2px solid #e0c37a;
-    background: #f7f1df;
-    transition: 0.3s;
-}
-
-/* effet hover */
-.toggle-label:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-}
-
-/* sélection active */
-input[type="radio"]:checked + .toggle-label {
-    border-color: #c89b2c;
-    background: linear-gradient(135deg, #f5e6b3, #e8c76a);
-}
-
-/* INPUTS */
-.gold-input, .gold-textarea {
+}/* ════════════════════════════════════════════════
+   MISE EN PAGE GÉNÉRALE (CENTRAGE ET LARGEUR)
+   ════════════════════════════════════════════════ */
+.main-content {
     width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #e0c37a;
-    background: #f7f1df;
-    transition: 0.2s;
-}
-
-/* focus */
-.gold-input:focus, .gold-textarea:focus {
-    outline: none;
-    border-color: #c89b2c;
-    box-shadow: 0 0 5px rgba(200,155,44,0.4);
-}
-
-/* 2 colonnes */
-.form-row-2 {
     display: flex;
-    gap: 15px;
+    justify-content: center; /* Centre la carte horizontalement */
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #fdfdfd; /* Fond très clair pour faire ressortir l'or */
 }
 
-.form-row-2 input {
-    flex: 1;
-}
-
-/* BOUTON */
-.btn-gold-submit {
-    margin-top: 10px;
-    padding: 15px;
-    border-radius: 14px;
-    border: none;
-    background: linear-gradient(135deg, #b8890b, #e0b84c);
-    color: black;
-    font-weight: bold;
-    letter-spacing: 1px;
-    transition: 0.3s;
-}
-
-/* hover bouton */
-.btn-gold-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-}/* Container de centrage */
-.main-content-centered {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 50px 20px;
-    background: radial-gradient(circle at top right, #fdfbf5 0%, #f7f3e9 100%);
-    min-height: 80vh;
-}
-
-/* La Carte Premium */
-.gold-card-premium {
-    width: 100%;
-    max-width: 850px;
+.gold-card {
+    width: 90%;             /* Utilise toute la largeur */
+    max-width: 1400px;       /* Largeur maximale pour les très grands écrans */
+    margin: 0 auto;
     background: #ffffff;
-    border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(184, 134, 11, 0.08);
-    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 15px;
+    border: 1px solid #e3c16f; /* Bordure or fine */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
     overflow: hidden;
-    animation: slideUp 0.6s ease-out;
+    font-family: 'Inter', sans-serif;
 }
 
-/* Header de la carte */
+/* ════════════════════════════════════════════════
+   HEADER (NOIR ET OR)
+   ════════════════════════════════════════════════ */
 .gold-card-header {
-    background: #1a1a1a;
+    background: #000000; /* Noir pur */
     padding: 30px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 3px solid #d4af37;
-}
-
-.header-main-info {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
 .header-icon-wrap {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #d4af37, #b8860b);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.5rem;
+    font-size: 24px;
+    color: #d4af37; /* Or */
+    background: rgba(212, 175, 55, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #d4af37;
 }
 
-.header-main-info h5 {
-    color: #fff;
+.gold-card-header h5 {
+    color: #ffffff;
     margin: 0;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-.header-main-info p {
-    color: rgba(255,255,255,0.6);
-    margin: 0;
-    font-size: 0.85rem;
-}
-
-/* Grille de formulaire */
-.gold-card-body {
-    padding: 40px;
-}
-
-.form-section-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-    margin-bottom: 25px;
-}
-
-.full-width {
-    grid-column: span 2;
-    margin-bottom: 20px;
-}
-
-/* Éléments de formulaire */
-.label-premium {
-    display: block;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     font-weight: 600;
+}
+
+.gold-card-header small {
+    color: #d4af37; /* Or */
+    font-weight: 300;
+}
+
+/* ════════════════════════════════════════════════
+   CORPS DU FORMULAIRE (GRILLE LARGE)
+   ════════════════════════════════════════════════ */
+.gold-card-body {
+    padding: 50px; /* Beaucoup d'espace intérieur */
+}
+
+/* Configuration des colonnes pour la largeur */
+.form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 colonnes égales */
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.form-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 colonnes égales */
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+/* ════════════════════════════════════════════════
+   STYLISATION DES ÉLÉMENTS (OR & BLANC)
+   ════════════════════════════════════════════════ */
+.form-label-gold {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #1a1a1a;
     font-size: 0.85rem;
-    color: #4a4a4a;
-    margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-.label-premium i {
-    color: #d4af37;
-    margin-right: 8px;
-}
-
-.input-premium, .select-premium, .textarea-premium {
+.gold-input, .gold-select, .gold-textarea {
     width: 100%;
-    padding: 12px 18px;
-    border: 1.5px solid #eee;
-    border-radius: 12px;
-    font-size: 0.95rem;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #ffffff;
     transition: all 0.3s ease;
-    background: #fcfcfc;
 }
 
-.input-premium:focus, .select-premium:focus {
+.gold-input:focus, .gold-select:focus, .gold-textarea:focus {
     border-color: #d4af37;
-    background: #fff;
-    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
     outline: none;
 }
 
-/* Toggle de transport */
-.transport-toggle-premium {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.toggle-card {
-    cursor: pointer;
-}
-
-.toggle-card input {
-    display: none;
-}
-
-.toggle-content {
-    padding: 15px;
+/* Divider Or Elégant */
+.gold-divider {
+    position: relative;
     text-align: center;
-    border: 1.5px solid #eee;
-    border-radius: 15px;
-    transition: all 0.3s;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    margin: 50px 0;
 }
 
-.toggle-card input:checked + .toggle-content {
-    background: rgba(212, 175, 55, 0.05);
-    border-color: #d4af37;
-    color: #b8860b;
-}
-
-/* Bouton de déploiement */
-.btn-launch-mission {
+.gold-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
     width: 100%;
-    margin-top: 30px;
-    background: #1a1a1a;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #d4af37, transparent);
+}
+
+.gold-divider-text {
+    position: relative;
+    background: #ffffff;
+    padding: 0 20px;
     color: #d4af37;
-    border: 1px solid #d4af37;
-    padding: 16px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 1rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* ════════════════════════════════════════════════
+   TOGGLES ET BOUTONS
+   ════════════════════════════════════════════════ */
+.transport-toggle {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    border: 1px solid #d4af37;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.toggle-option {
+    flex: 1;
+    cursor: pointer;
+    text-align: center;
+}
+
+.toggle-option input { display: none; }
+
+.toggle-label {
+    padding: 20px;
+    background: #ffffff;
+    color: #1a1a1a;
     transition: all 0.3s;
 }
 
-.btn-launch-mission:hover {
-    background: #d4af37;
-    color: #1a1a1a;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+.toggle-option input:checked + .toggle-label {
+    background: #000000;
+    color: #d4af37;
 }
 
-/* Animations */
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Bouton de validation massif et luxueux */
+.btn-gold-submit {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: 50px auto 0 auto;
+    padding: 20px;
+    background: #000000;
+    color: #d4af37;
+    border: 2px solid #d4af37;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+.btn-gold-submit:hover:not(:disabled) {
+    background: #d4af37;
+    color: #000000;
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+}
+
+/* Hints et icônes */
+.locked-hint {
+    color: #999;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+.lock-wrap { position: relative; }
+.lock-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d4af37;
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-    .form-section-grid { grid-template-columns: 1fr; }
-    .full-width { grid-column: span 1; }
+@media (max-width: 1024px) {
+    .form-row-2, .form-row-3 {
+        grid-template-columns: 1fr;
+    }
 }
