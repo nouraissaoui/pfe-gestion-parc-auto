@@ -130,7 +130,7 @@ export class VehiculesChefComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ouvrirModalAffectation(v: Vehicule) {
+  /*ouvrirModalAffectation(v: Vehicule) {
     this.selectedVehicule = v;
     this.service.getChauffeursParLocal(this.localId).subscribe({
       next: (data) => {
@@ -142,7 +142,20 @@ export class VehiculesChefComponent implements OnInit, AfterViewInit {
         Swal.fire('Erreur', 'Impossible de charger la liste des chauffeurs', 'error');
       }
     });
-  }
+  }*/
+  ouvrirModalAffectation(v: Vehicule) {
+  this.selectedVehicule = v;
+  this.service.getChauffeursParLocal(this.localId).subscribe({
+    next: (data) => {
+      console.log('Structure chauffeur[0] :', JSON.stringify(data[0], null, 2));
+      this.chauffeursFiltres = data;
+      this.showAffecterModal = true;
+    },
+    error: (err) => {
+      console.error("Erreur chargement chauffeurs", err);
+    }
+  });
+}
 
 confirmerAffectation() {
   if (this.selectedChauffeurId && this.selectedVehicule) {

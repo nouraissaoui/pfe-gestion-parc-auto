@@ -3,7 +3,7 @@ main.py — Serveur Flask ParcBot
 Endpoints :
   POST /chat           → réponse RAG
   POST /reindex        → réindexation manuelle
-  POST /debug-retrieve → voir les chunks avant LLM (diagnostic)
+  POST /debug-retrieve → voir les chunks avant LLM
   GET  /health         → état du serveur
 """
 
@@ -23,18 +23,16 @@ logger = logging.getLogger(__name__)
 
 # ─── App Flask ────────────────────────────────────────────────────────────────
 app = Flask(__name__)
-
 CORS(app, resources={r"/*": {"origins": "http://localhost:4200"}})
 
-# ─── Rôles valides ───────────────────────────────────────────────────────────
+# ─── Rôles valides ────────────────────────────────────────────────────────────
 VALID_ROLES = {"CHEF_DU_PARC", "CHAUFFEUR"}
 
-# ─── Singleton RAG (initialisé au démarrage) ─────────────────────────────────
+# ─── Singleton RAG ────────────────────────────────────────────────────────────
 rag_engine: ParcBotRAG = None
 
 
 def init_rag():
-    """Initialise le moteur RAG et indexe la BD au démarrage."""
     global rag_engine
     logger.info("═══ Initialisation ParcBot RAG ═══")
     rag_engine = ParcBotRAG()
@@ -49,23 +47,13 @@ def init_rag():
         logger.warning("═══ Aucun document chargé (API Spring Boot inaccessible ?) ═══")
 
 
-# ─── Initialisation au démarrage ─────────────────────────────────────────────
 with app.app_context():
     init_rag()
 
 
-# ─── ENDPOINT : Chat principal ───────────────────────────────────────────────
+# ─── /chat ────────────────────────────────────────────────────────────────────
 @app.route("/chat", methods=["POST"])
 def chat():
-    """
-    Body JSON attendu :
-    {
-        "question": "Combien de véhicules disponibles ?",
-        "user_id": 42,
-        "role": "CHEF_DU_PARC",
-        "history": [{"role": "user", "content": "..."}, ...]
-    }
-    """
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Corps JSON manquant"}), 400
@@ -75,7 +63,6 @@ def chat():
     role     = (data.get("role") or "").strip()
     history  = data.get("history") or []
 
-    # Validation
     if not question:
         return jsonify({"error": "Le champ 'question' est requis"}), 400
     if role not in VALID_ROLES:
@@ -93,16 +80,14 @@ def chat():
             history=history,
         )
         return jsonify(result), 200
-
     except Exception as e:
         logger.error(f"[/chat] Erreur inattendue : {e}", exc_info=True)
         return jsonify({"error": "Erreur interne du serveur"}), 500
 
 
-# ─── ENDPOINT : Réindexation manuelle ────────────────────────────────────────
+# ─── /reindex ─────────────────────────────────────────────────────────────────
 @app.route("/reindex", methods=["POST"])
 def reindex():
-    """Recharge les données de l'API Spring Boot et réindexe ChromaDB."""
     if rag_engine is None:
         return jsonify({"error": "RAG engine non initialisé"}), 503
     try:
@@ -115,18 +100,9 @@ def reindex():
         return jsonify({"error": str(e)}), 500
 
 
-# ─── ENDPOINT : Debug (voir les chunks avant LLM) ────────────────────────────
+# ─── /debug-retrieve ──────────────────────────────────────────────────────────
 @app.route("/debug-retrieve", methods=["POST"])
 def debug_retrieve():
-    """
-    Outil de diagnostic : montre exactement quels chunks ChromaDB retourne
-    AVANT d'appeler le LLM. Utile pour tracer les hallucinations.
-
-    Exemple curl :
-      curl -X POST http://localhost:8000/debug-retrieve \\
-        -H "Content-Type: application/json" \\
-        -d '{"question":"chauffeurs disponibles","user_id":1,"role":"CHEF_DU_PARC","history":[]}'
-    """
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Corps JSON manquant"}), 400
@@ -145,10 +121,10 @@ def debug_retrieve():
 
     docs = rag_engine.retrieve(question, role, int(user_id), k=8)
     return jsonify({
-        "question":             question,
-        "role":                 role,
-        "user_id":              user_id,
-        "nb_chunks_recuperes":  len(docs),
+        "question":            question,
+        "role":                role,
+        "user_id":             user_id,
+        "nb_chunks_recuperes": len(docs),
         "chunks": [
             {
                 "rank":         i + 1,
@@ -162,7 +138,7 @@ def debug_retrieve():
     }), 200
 
 
-# ─── ENDPOINT : Santé ─────────────────────────────────────────────────────────
+# ─── /health ──────────────────────────────────────────────────────────────────
 @app.get("/health")
 def health():
     return jsonify({

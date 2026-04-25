@@ -9,7 +9,7 @@
     <div class="btn-group mb-4 shadow-sm">
         <button class="btn btn-outline-primary" [class.active]="categorieFiltre === 'TOUT'" (click)="filtrer('TOUT')">Tout</button>
         <button class="btn btn-outline-primary" [class.active]="categorieFiltre === 'ENTRETIEN_PERIODIQUE'" (click)="filtrer('ENTRETIEN_PERIODIQUE')">périodique</button>
-        <button class="btn btn-outline-primary" [class.active]="categorieFiltre === 'ENTRETIEN_SUITE_DECLARATION'" (click)="filtrer('ENTRETIEN_SUITE_DECLARATION')">suite a une declaration</button>
+        <button class="btn btn-outline-primary" [class.active]="categorieFiltre === 'ENTRETIEN_SUITE_DECLARATION'" (click)="filtrer('ENTRETIEN_SUITE_DECLARATION')">suite à une déclaration</button>
     </div>
 
     <div class="card shadow border-0">
@@ -31,21 +31,25 @@
                 <small class="text-muted">{{ ent.vehicule?.marque }}</small>
                 </td>
                 <td>
-                <span class="badge" [ngClass]="ent.categorie === 'ENTRETIEN_PERIODIQUE' ? 'badge-info' : 'badge-warning'">{{ent.typeEntretien}}</span>
+                <span class="badge" [ngClass]="ent.categorie === 'ENTRETIEN_PERIODIQUE' ? 'badge-info' : 'badge-warning'">
+                    {{ent.typeEntretien}}
+                </span>
                 </td>
                 <td>{{ ent.garage?.nomGarage || '---' }}</td>
                 <td>{{ ent.datePrevue | date:'dd/MM/yyyy' }}</td>
-                <td class="text-center">
-                <button class="btn btn-sm btn-outline-info mr-2" (click)="ouvrirConsultation(ent)" title="Consulter/Imprimer">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-primary mr-2" (click)="ouvrirModification(ent)" title="Modifier">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger" (click)="supprimer(ent.idEntretien!)" title="Annuler">
-                    <i class="fas fa-trash"></i>
-                </button>
-                </td>
+<td class="text-center">
+  <button class="btn btn-sm btn-outline-info mr-2" (click)="ouvrirConsultation(ent)" title="Consulter">
+    <i class="fas fa-eye"></i>
+  </button>
+  <button class="btn btn-sm btn-outline-primary mr-2" 
+          *ngIf="ent.declaration?.type !== 'AMENDE'"
+          (click)="ouvrirModification(ent)" title="Modifier">
+    <i class="fas fa-edit"></i>
+  </button>
+  <button class="btn btn-sm btn-outline-danger" (click)="supprimer(ent.idEntretien!)" title="Annuler">
+    <i class="fas fa-trash"></i>
+  </button>
+</td>
             </tr>
             </tbody>
         </table>
@@ -53,6 +57,9 @@
     </div>
     </div>
 
+    <!-- ══════════════════════════════════════════════════════════
+        MODAL — FORMULAIRE (Créer / Modifier)
+    ══════════════════════════════════════════════════════════ -->
     <div class="modal d-block" *ngIf="showModal" style="background: rgba(0,0,0,0.5);">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -68,12 +75,9 @@
             </div>
             <div class="form-group mb-3">
             <label>Garage</label>
- 
             <select class="form-control" [(ngModel)]="nouveauEntretien.idGarage">
-  <option *ngFor="let g of garages" [ngValue]="g.idGarage">
-    {{ g.nomGarage }}
-  </option>
-</select>
+                <option *ngFor="let g of garages" [ngValue]="g.idGarage">{{ g.nomGarage }}</option>
+            </select>
             </div>
             <div class="form-group mb-3">
             <label>Type de travaux</label>
@@ -84,19 +88,27 @@
             <input type="date" class="form-control" [(ngModel)]="nouveauEntretien.datePrevue">
             </div>
             <div class="form-group mb-3">
-                <label>Observations</label>
-                <textarea class="form-control" [(ngModel)]="nouveauEntretien.observations"></textarea>
+            <label>Observations</label>
+            <textarea class="form-control" [(ngModel)]="nouveauEntretien.observations"></textarea>
             </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" (click)="showModal = false">Annuler</button>
-            <button class="btn btn-primary" (click)="enregistrerEntretien()">{{ isEditMode ? 'Enregistrer les modifications' : 'Créer l\'entretien' }}</button>
+            <button class="btn btn-primary" (click)="enregistrerEntretien()">
+            {{ isEditMode ? 'Enregistrer les modifications' : 'Créer l\'entretien' }}
+            </button>
         </div>
         </div>
     </div>
     </div>
 
-    <div class="modal d-block" *ngIf="showConsultModal && selectedEntretien" style="background: rgba(0,0,0,0.6);">
+    <!-- ══════════════════════════════════════════════════════════
+        MODAL CONSULTATION — ENTRETIEN / PANNE / ACCIDENT
+        Affiché quand : pas d'amende (declaration absente OU type != AMENDE)
+    ══════════════════════════════════════════════════════════ -->
+    <div class="modal d-block"
+        *ngIf="showConsultModal && selectedEntretien && selectedEntretien.declaration?.type !== 'AMENDE'"
+        style="background: rgba(0,0,0,0.6);">
     <div class="modal-dialog modal-lg">
         <div class="modal-content shadow-lg">
         <div class="modal-header bg-primary text-white">
@@ -105,25 +117,95 @@
         </div>
         <div class="modal-body p-5" id="printZone">
             <div style="text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px;">
-                <h3>ORDRE DE RÉPARATION</h3>
-                <p>Date d'émission : {{ today | date:'dd/MM/yyyy' }}</p>
+            <h3>ORDRE DE RÉPARATION</h3>
+            <p>Date d'émission : {{ today | date:'dd/MM/yyyy' }}</p>
             </div>
             <p><strong>Véhicule :</strong> {{selectedEntretien?.vehicule?.matricule}} ({{selectedEntretien?.vehicule?.marque}})</p>
             <p><strong>Garage :</strong> {{selectedEntretien?.garage?.nomGarage}}</p>
             <p><strong>Date de l'intervention :</strong> {{selectedEntretien?.datePrevue | date:'dd/MM/yyyy'}}</p>
             <p><strong>Travaux à effectuer :</strong> {{selectedEntretien?.typeEntretien}}</p>
             <div style="border: 1px solid #ccc; padding: 10px; margin-top: 20px; min-height: 100px;">
-                <strong>Consignes :</strong><br>{{selectedEntretien?.observations}}
+            <strong>Consignes :</strong><br>{{selectedEntretien?.observations}}
             </div>
             <div style="margin-top: 50px; display: flex; justify-content: space-between;">
-                <p>Signature Chef de Parc</p>
-                <p>Signature Chauffeur</p>
+            <p>Signature Chef de Parc</p>
+            <p>Signature Chauffeur</p>
             </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" (click)="fermerConsultation()">Fermer</button>
-            <button class="btn btn-primary" (click)="imprimerFiche()"><i class="fas fa-print mr-2"></i>Imprimer</button>
+            <button class="btn btn-primary" (click)="imprimerFiche()">
+            <i class="fas fa-print mr-2"></i>Imprimer
+            </button>
         </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+        MODAL CONSULTATION — AMENDE UNIQUEMENT
+        Affiché quand : declaration existe ET type === 'AMENDE'
+    ══════════════════════════════════════════════════════════ -->
+    <div class="modal d-block amende-overlay"
+        *ngIf="showConsultModal && selectedEntretien && selectedEntretien.declaration?.type === 'AMENDE'"
+        (click)="fermerConsultation()">
+    <div class="amende-dialog" (click)="$event.stopPropagation()">
+        <div class="amende-card">
+
+        <!-- Header -->
+        <div class="amende-header">
+            <div class="amende-header-left">
+            <div class="amende-icon-wrap">⚠️</div>
+            <div>
+                <div class="amende-label">AVIS D'INFRACTION</div>
+                <div class="amende-ref">Réf. #{{selectedEntretien?.idEntretien}}</div>
+            </div>
+            </div>
+            <button class="amende-close" (click)="fermerConsultation()">&times;</button>
+        </div>
+
+        <!-- Body -->
+        <div class="amende-body">
+
+            <div class="amende-section-title">Informations du véhicule</div>
+            <div class="amende-grid">
+            <div class="amende-row">
+                <span class="amende-key">🚗 Matricule</span>
+                <span class="amende-val">{{selectedEntretien?.vehicule?.matricule}}</span>
+            </div>
+            <div class="amende-row">
+                <span class="amende-key">🏷️ Marque</span>
+                <span class="amende-val">{{selectedEntretien?.vehicule?.marque}}</span>
+            </div>
+            </div>
+
+            <div class="amende-section-title" style="margin-top: 22px;">Détails de l'infraction</div>
+            <div class="amende-grid">
+            <div class="amende-row">
+                <span class="amende-key">📋 Motif</span>
+                <span class="amende-val amende-highlight">
+                {{selectedEntretien?.declaration?.description || selectedEntretien?.typeEntretien}}
+                </span>
+            </div>
+            <div class="amende-row">
+                <span class="amende-key">👤 Chauffeur</span>
+                <span class="amende-val">
+                {{selectedEntretien?.declaration?.chauffeur?.nom}}
+                {{selectedEntretien?.declaration?.chauffeur?.prenom}}
+                </span>
+            </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="amende-footer">
+            <div class="amende-footer-note">
+            Dossier consulté le {{ today | date:'dd/MM/yyyy' }}
+            </div>
+            <button class="amende-btn-close" (click)="fermerConsultation()">Fermer</button>
+        </div>
+
         </div>
     </div>
     </div>

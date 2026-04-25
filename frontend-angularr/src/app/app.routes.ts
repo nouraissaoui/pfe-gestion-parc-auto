@@ -66,7 +66,7 @@ export const routes: Routes = [
       { path: 'carburants', component: CarteCarburantComponent },
       {path:'declarations',component:DeclarationsListeComponent},
       {path:'entretiens',component:EntretiensComponent},
-      { path: 'chatbot', component:ParcbotChatComponent },
+      { path: 'chatbot', component:ChatbotComponent },
       {path:'rapports',component:StatsDashboardComponent},
       { path: 'consultation-feuilles', component: ConsultationFeuillesComponent },
       {path: 'predire', component:PredictionComponent }
@@ -81,7 +81,7 @@ export const routes: Routes = [
       {path:'declarations',component:FaireDeclarationComponent},
       {path:'feuille-route',component:FeuilleRoutechauffeurComponent},
       { path: 'missions', component: MissionsComponent },
-      { path: 'chatbot', component:ParcbotChatComponent},
+      { path: 'chatbot', component:ChatbotComponent},
     ]
   }
 ,

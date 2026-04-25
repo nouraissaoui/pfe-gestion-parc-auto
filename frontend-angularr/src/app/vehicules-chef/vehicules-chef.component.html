@@ -316,25 +316,32 @@
         <p class="afx-hint">Sélectionnez un conducteur disponible :</p>
         
         <div class="afx-list">
-            <div *ngFor="let c of chauffeursFiltres" 
-                class="afx-item"
-                [class.is-selected]="selectedChauffeurId === c.idChauffeur"
-                [class.is-disabled]="c.vehicule"
-                (click)="!c.vehicule ? (selectedChauffeurId = c.idChauffeur) : null">
-            
-            <div class="afx-avatar">{{c.user?.prenom?.[0]}}{{c.user?.nom?.[0]}}</div>
-            
-            <div class="afx-details">
-                <span class="afx-name">{{c.user?.nom}} {{c.user?.prenom}}</span>
-                <span class="afx-license">Permis: {{c.typeVehiculePermis}}</span>
-            </div>
+ <div *ngFor="let c of chauffeursFiltres" 
+    class="afx-item"
+    [class.is-selected]="selectedChauffeurId === c.idChauffeur"
+    [class.is-disabled]="c.vehicule"
+    (click)="!c.vehicule ? (selectedChauffeurId = c.idChauffeur) : null">
 
-            <div class="afx-status-box">
-                <span [class]="c.vehicule ? 'afx-badge is-busy' : 'afx-badge is-free'">
-                {{ c.vehicule ? 'Déjà assigné' : 'Disponible' }}
-                </span>
-            </div>
-            </div>
+  <!-- Avatar avec initiales -->
+  <div class="afx-avatar">
+    {{ (c.user?.prenom || c.prenom || '?')[0] | uppercase }}{{ (c.user?.nom || c.nom || '')[0] | uppercase }}
+  </div>
+
+  <div class="afx-details">
+    <!-- Nom complet : essaie c.user.nom, sinon c.nom directement -->
+    <span class="afx-name">
+      {{ c.user?.nom || c.nom || c.nomChauffeur || 'Chauffeur inconnu' }}
+      {{ c.user?.prenom || c.prenom || c.prenomChauffeur || '' }}
+    </span>
+    <span class="afx-license">Permis : {{ c.typeVehiculePermis }}</span>
+  </div>
+
+  <div class="afx-status-box">
+    <span [class]="c.vehicule ? 'afx-badge is-busy' : 'afx-badge is-free'">
+      {{ c.vehicule ? 'Déjà assigné' : 'Disponible' }}
+    </span>
+  </div>
+</div>
         </div>
         </div>
 

@@ -1,11 +1,22 @@
-<div class="hero-header">
+<!-- ══════════════════════════════════════════════════════════
+     AFFECTATION MISSION — avec contrôles de saisie complets
+══════════════════════════════════════════════════════════ -->
 
+<!-- ── Toast de feedback (remplace alert()) ─────────────────────────────── -->
+<div class="toast-container" *ngIf="toast">
+  <div class="toast" [ngClass]="toast.type">
+    <i class="bi" [ngClass]="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+    {{ toast.msg }}
+  </div>
+</div>
+
+<!-- ── Hero Header ───────────────────────────────────────────────────────── -->
+<div class="hero-header">
   <div class="hero-ornament">✦ GM ✦</div>
 
   <div class="hero-content-left">
     <div class="hero-badge">
-      <i class="bi bi-stars"></i>
-      Mission Control Center
+      <i class="bi bi-stars"></i> Mission Control Center
     </div>
     <div class="hero-title">
       Gestion des <span>Missions</span>
@@ -42,7 +53,7 @@
     <div class="promo-label">
       <i class="bi bi-broadcast"></i> AGIL LIVE
     </div>
-    <video class="promo-video" autoplay muted loop playsinline>
+    <video class="promo-video" autoplay muted [muted]="true" loop playsinline>
       <source src="assets/pub.mp4" type="video/mp4">
     </video>
     <div class="promo-overlay">
@@ -52,12 +63,10 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- ══════ MAIN CONTENT ══════ -->
 <div class="main-content">
-
   <div class="gold-card">
 
     <div class="gold-card-header">
@@ -71,21 +80,29 @@
     </div>
 
     <div class="gold-card-body">
-      <form #missionForm="ngForm" (ngSubmit)="validerAffectation()">
 
-        <!-- ── Ligne 1 : Chauffeur + Véhicule ── -->
+      <!-- Bannière d'erreur globale (apparaît à la soumission si erreurs) -->
+      <div class="alert-banner" *ngIf="formSubmitted && (errors | keyvalue).length > 0">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span>Veuillez corriger les <strong>{{ (errors | keyvalue).length }}</strong> erreur(s) avant de soumettre.</span>
+      </div>
+
+      <form #missionForm="ngForm" (ngSubmit)="validerAffectation()" novalidate>
+
+        <!-- ── Ligne 1 : Chauffeur + Véhicule ─────────────────────────────── -->
         <div class="form-row-2">
 
-          <div class="form-group">
+          <!-- Chauffeur -->
+          <div class="form-group" [class.has-error]="hasError('chauffeur')">
             <label class="form-label-gold">
               <i class="bi bi-person-badge"></i>Chauffeur
+              <span class="required-star">*</span>
             </label>
             <div class="gold-select-wrap">
               <select class="gold-select"
                 [(ngModel)]="selectedChauffeur"
                 name="chauffeur"
-                (change)="onChauffeurChange(+$any($event.target).value)"
-                required>
+                (change)="onChauffeurChange(+$any($event.target).value)">
                 <option [ngValue]="undefined" disabled selected>Choisir un chauffeur…</option>
                 <option *ngFor="let c of chauffeursDispo" [value]="c.idChauffeur">
                   {{ c.nom }} {{ c.prenom }}
@@ -93,11 +110,16 @@
                 </option>
               </select>
             </div>
+            <div class="field-error" *ngIf="hasError('chauffeur')">
+              <i class="bi bi-exclamation-circle"></i> {{ errors['chauffeur'] }}
+            </div>
           </div>
 
-          <div class="form-group">
+          <!-- Véhicule -->
+          <div class="form-group" [class.has-error]="hasError('vehicule')">
             <label class="form-label-gold">
               <i class="bi bi-truck"></i>Véhicule
+              <span class="required-star">*</span>
             </label>
             <div class="lock-wrap">
               <div class="gold-select-wrap" style="width:100%">
@@ -105,7 +127,7 @@
                   [(ngModel)]="selectedVehicule"
                   name="vehicule"
                   [disabled]="vehiculeVerrouille"
-                  required>
+                  (change)="validateField('vehicule')">
                   <option [ngValue]="undefined" disabled selected>Choisir un véhicule…</option>
                   <option *ngFor="let v of vehiculesDispo" [value]="v.idVehicule">
                     {{ v.matricule }} ({{ v.marque }} {{ v.modele }})
@@ -117,21 +139,29 @@
             <div class="locked-hint" *ngIf="vehiculeVerrouille">
               <i class="bi bi-info-circle"></i> Véhicule actuel du chauffeur conservé.
             </div>
+            <div class="field-error" *ngIf="hasError('vehicule')">
+              <i class="bi bi-exclamation-circle"></i> {{ errors['vehicule'] }}
+            </div>
           </div>
 
         </div>
 
-        <!-- ── Divider ── -->
+        <!-- ── Divider ─────────────────────────────────────────────────────── -->
         <div class="gold-divider">
           <span class="gold-divider-text">Nature du transport</span>
         </div>
 
-        <!-- ── Ligne 2 : Toggle + Description ── -->
+        <!-- ── Ligne 2 : Toggle + Description ────────────────────────────── -->
         <div class="form-row-2">
 
+          <!-- Type mission -->
           <div class="form-group">
+            <label class="form-label-gold">
+              <i class="bi bi-arrow-left-right"></i>Type de transport
+              <span class="required-star">*</span>
+            </label>
             <div class="transport-toggle">
-              <label class="toggle-option">
+              <label class="toggle-option" [class.active]="typeMission === 'EMPLOYE'">
                 <input type="radio" name="typeMission"
                   [(ngModel)]="typeMission" value="EMPLOYE"
                   (change)="onTypeChange()">
@@ -140,7 +170,7 @@
                   <span>Employés</span>
                 </div>
               </label>
-              <label class="toggle-option">
+              <label class="toggle-option" [class.active]="typeMission === 'MATERIEL'">
                 <input type="radio" name="typeMission"
                   [(ngModel)]="typeMission" value="MATERIEL"
                   (change)="onTypeChange()">
@@ -152,9 +182,11 @@
             </div>
           </div>
 
+          <!-- Description -->
           <div class="form-group">
             <label class="form-label-gold">
               <i class="bi bi-chat-left-text"></i>Description / Observations
+              <span class="optional-tag">optionnel</span>
             </label>
             <textarea class="gold-textarea"
               [(ngModel)]="missionData.description"
@@ -165,64 +197,102 @@
 
         </div>
 
-        <!-- ── Bande de Prélèvement (conditionnelle) ── -->
-        <div class="form-group bande-reveal" *ngIf="typeMission === 'MATERIEL'">
-          <label class="form-label-gold" style="color:#dc2626">
-            <i class="bi bi-exclamation-triangle" style="color:#dc2626"></i>
-            Bande de Prélèvement *
+        <!-- ── Bande de Prélèvement (conditionnelle MATERIEL) ─────────────── -->
+        <div class="form-group bande-reveal" *ngIf="typeMission === 'MATERIEL'"
+             [class.has-error]="hasError('bande')">
+          <label class="form-label-gold danger">
+            <i class="bi bi-exclamation-triangle"></i>
+            Bande de Prélèvement
+            <span class="required-star">*</span>
           </label>
           <textarea class="gold-textarea"
             [(ngModel)]="missionData.bandePrelevement"
             name="bande" rows="3"
-            placeholder="Liste des articles à exporter…"
-            [required]="typeMission === 'MATERIEL'"
-            style="border-color:rgba(220,38,38,0.4)">
+            placeholder="Liste des articles à exporter… (min. 5 caractères)"
+            (input)="validateField('bande')"
+            [class.input-error]="hasError('bande')">
           </textarea>
+          <div class="field-char-hint">
+            {{ missionData.bandePrelevement.length }} caractère(s) saisi(s)
+          </div>
+          <div class="field-error" *ngIf="hasError('bande')">
+            <i class="bi bi-exclamation-circle"></i> {{ errors['bande'] }}
+          </div>
         </div>
 
-        <!-- ── Ligne 3 : Départ + Destination + Heure ── -->
+        <!-- ── Ligne 3 : Départ + Destination + Heure ────────────────────── -->
         <div class="form-row-3">
 
-          <div class="form-group">
+          <!-- Point de départ -->
+          <div class="form-group" [class.has-error]="hasError('pointDepart')">
             <label class="form-label-gold">
               <i class="bi bi-geo"></i>Point de Départ
+              <span class="required-star">*</span>
             </label>
             <input type="text" class="gold-input"
               [(ngModel)]="missionData.pointDepart"
               name="pointDepart"
-              placeholder="Ex: Entrepôt Principal" required>
+              placeholder="Ex: Entrepôt Principal"
+              maxlength="100"
+              (input)="validateField('pointDepart')"
+              [class.input-error]="hasError('pointDepart')">
+            <div class="field-error" *ngIf="hasError('pointDepart')">
+              <i class="bi bi-exclamation-circle"></i> {{ errors['pointDepart'] }}
+            </div>
           </div>
 
-          <div class="form-group">
+          <!-- Destination -->
+          <div class="form-group" [class.has-error]="hasError('destination')">
             <label class="form-label-gold">
               <i class="bi bi-geo-alt"></i>Destination
+              <span class="required-star">*</span>
             </label>
             <input type="text" class="gold-input"
               [(ngModel)]="missionData.destination"
               name="dest"
-              placeholder="Ex: Alger Centre" required>
+              placeholder="Ex: Alger Centre"
+              maxlength="100"
+              (input)="validateField('destination')"
+              [class.input-error]="hasError('destination')">
+            <div class="field-error" *ngIf="hasError('destination')">
+              <i class="bi bi-exclamation-circle"></i> {{ errors['destination'] }}
+            </div>
           </div>
 
-          <div class="form-group">
+          <!-- Heure départ -->
+          <div class="form-group" [class.has-error]="hasError('heure')">
             <label class="form-label-gold">
               <i class="bi bi-clock"></i>Heure Départ Prévue
+              <span class="required-star">*</span>
             </label>
             <input type="time" class="gold-input"
               [(ngModel)]="missionData.heureDepartPrevue"
-              name="heure" required>
+              name="heure"
+              (change)="validateField('heure')"
+              [class.input-error]="hasError('heure')">
+            <div class="field-error" *ngIf="hasError('heure')">
+              <i class="bi bi-exclamation-circle"></i> {{ errors['heure'] }}
+            </div>
           </div>
 
         </div>
 
-        <!-- ── Submit ── -->
-        <button type="submit" class="btn-gold-submit" [disabled]="!missionForm.valid">
-          <i class="bi bi-check-circle-fill"></i>
-          Générer la Mission
-        </button>
+        <!-- ── Légende obligatoire ─────────────────────────────────────────── -->
+        <div class="required-legend">
+          <span class="required-star">*</span> Champs obligatoires
+        </div>
+
+        <!-- ── Boutons ─────────────────────────────────────────────────────── -->
+        <div class="form-actions">
+          <button type="button" class="btn-gold-reset" (click)="resetForm()">
+            <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser
+          </button>
+          <button type="submit" class="btn-gold-submit">
+            <i class="bi bi-check-circle-fill"></i> Générer la Mission
+          </button>
+        </div>
 
       </form>
     </div>
-
   </div>
-
 </div>

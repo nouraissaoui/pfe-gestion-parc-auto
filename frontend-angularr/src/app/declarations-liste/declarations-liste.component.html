@@ -177,7 +177,7 @@
         <div class="card-actions" *ngIf="dec.status === 'EN_ATTENTE'">
             <button class="btn-plan" (click)="ouvrirModale(dec)">
             <i class="fas" [ngClass]="dec.type === 'AMENDE' ? 'fa-file-invoice-dollar' : 'fa-calendar-plus'"></i>
-            {{ dec.type === 'AMENDE' ? 'Traiter Déclaration' : "Planifier l'entretien" }}
+            {{ dec.type === 'AMENDE' ? 'Valider Amende' : "Planifier l'entretien" }}
             </button>
             <button class="btn-reject" title="Rejeter">
             <i class="fas fa-times"></i>
