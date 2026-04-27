@@ -54,7 +54,7 @@ type: any;
 
 }
 // 1. Interface à ajouter en haut du fichier
-export interface Entretien {
+/*export interface Entretien {
   idEntretien?: number;
   typeEntretien: string;
   categorie: 'ENTRETIEN_PERIODIQUE' | 'ENTRETIEN_SUITE_DECLARATION';
@@ -62,6 +62,19 @@ export interface Entretien {
   // dateEffectuee supprimée
   observations: string;
   // status supprimé (car la création vaut ordre de mission)
+  declaration?: Declaration;
+  garage: any;
+  vehicule: Vehicule;
+  chefDuParc: any;
+}*/
+export interface Entretien {
+  idEntretien?: number;
+  typeEntretien: string;
+  categorie: 'ENTRETIEN_PERIODIQUE' | 'ENTRETIEN_SUITE_DECLARATION';
+  datePrevue: string;
+  dateEffectuee?: string;          // ← était commenté "supprimée", à remettre
+  observations: string;
+  status?: 'EN_ATTENTE' | 'TRAITE' | 'REJETE';  // ← manquait
   declaration?: Declaration;
   garage: any;
   vehicule: Vehicule;
@@ -323,7 +336,7 @@ getDeclarationsEnAttenteLocal(idLocal: number): Observable<Declaration[]> {
 }
 
 // Envoyer le formulaire de traitement
-validerTraitementDeclaration(idDec: number, idChef: number, idGarage: number, type: string, date: string, obs: string): Observable<any> {
+/*validerTraitementDeclaration(idDec: number, idChef: number, idGarage: number, type: string, date: string, obs: string): Observable<any> {
   const params = new HttpParams()
     .set('idChef', idChef.toString())
     .set('idGarage', idGarage.toString()) // Ajouté
@@ -332,6 +345,35 @@ validerTraitementDeclaration(idDec: number, idChef: number, idGarage: number, ty
     .set('obs', obs);
 
   return this.http.post(`${this.baseUrl}/declaration/${idDec}/traiter`, null, { params });
+}*/
+validerTraitementDeclaration(
+  idDec: number,
+  idChef: number,
+  idGarage: number | null,
+  type: string,
+  date: string,
+  obs: string
+): Observable<any> {
+  let params = new HttpParams().set('idChef', idChef.toString());
+
+  if (idGarage && idGarage > 0) {
+    params = params.set('idGarage', idGarage.toString());
+  }
+  if (type) {
+    params = params.set('typeEntretien', type);
+  }
+  if (date) {
+    params = params.set('datePrevue', date);
+  }
+  if (obs) {
+    params = params.set('obs', obs);
+  }
+
+  return this.http.post(
+    `${this.baseUrl}/declaration/${idDec}/traiter`,
+    null,
+    { params }
+  );
 }
 
 getGarages(): Observable<any[]> {

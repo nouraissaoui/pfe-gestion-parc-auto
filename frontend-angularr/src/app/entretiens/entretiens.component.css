@@ -278,6 +278,10 @@ h2 {
 }
 
 /* ── Boutons action ─────────────────────────────────────────────── */
+td .btn-sm {
+  display: inline-flex !important;
+  vertical-align: middle !important;
+}
 .btn-sm {
   border-radius: 10px !important;
   width: 34px !important;

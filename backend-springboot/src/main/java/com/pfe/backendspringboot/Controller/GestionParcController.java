@@ -527,6 +527,29 @@ public class GestionParcController {
     public ResponseEntity<?> validerTraitement(
             @PathVariable Long idDec,
             @RequestParam Long idChef,
+            @RequestParam(required = false) Long idGarage,
+            @RequestParam(required = false) String typeEntretien,
+            @RequestParam(required = false) String datePrevue,
+            @RequestParam(required = false) String obs) {
+        try {
+            LocalDate date = null;
+            if (datePrevue != null && !datePrevue.trim().isEmpty()) {
+                date = LocalDate.parse(datePrevue);
+            }
+
+            Declaration result = gestionParcService.traiterDeclarationEtCreerEntretien(
+                    idDec, idChef, idGarage, date, typeEntretien, obs
+            );
+
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + e.getMessage() + "\"}");
+        }
+    }
+    /*@PostMapping("/declaration/{idDec}/traiter")
+    public ResponseEntity<?> validerTraitement(
+            @PathVariable Long idDec,
+            @RequestParam Long idChef,
             @RequestParam(required = false) Long idGarage, // Optionnel pour les amendes
             @RequestParam(required = false) String typeEntretien,
             @RequestParam(required = false) String datePrevue, // Optionnel pour les amendes
@@ -558,7 +581,7 @@ public class GestionParcController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("{\"message\": \"" + e.getMessage() + "\"}");
         }
-    }
+    }*/
 
     @GetMapping("/chauffeur/{idChauffeur}/missions")
     public ResponseEntity<List<Mission>> getMissionsChauffeur(@PathVariable Long idChauffeur) {

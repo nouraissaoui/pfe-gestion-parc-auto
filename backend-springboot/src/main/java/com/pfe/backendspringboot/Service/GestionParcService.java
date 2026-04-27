@@ -542,7 +542,7 @@ public class GestionParcService {
         return declarationRepository.findByVehicule_Local_IdLocalAndStatus(idLocal, DeclarationStatus.EN_ATTENTE);
     }
 
-    @Transactional
+    /*@Transactional
     public Entretien traiterDeclarationEtCreerEntretien(
             Long idDeclaration,
             Long idChef,
@@ -593,6 +593,53 @@ public class GestionParcService {
         }
 
         return entretienRepository.save(entretien);
+    }*/
+    @Transactional
+    public Declaration traiterDeclarationEtCreerEntretien(
+            Long idDeclaration,
+            Long idChef,
+            Long idGarage,
+            LocalDate datePrevue,
+            String typeEntretien,
+            String obs
+    ) {
+        Declaration dec = declarationRepository.findById(idDeclaration)
+                .orElseThrow(() -> new RuntimeException("Déclaration introuvable"));
+
+        ChefParc chef = chefParcRepository.findById(idChef)
+                .orElseThrow(() -> new RuntimeException("Chef de parc introuvable"));
+
+        // Mise à jour du statut de la déclaration
+        dec.setStatus(DeclarationStatus.TRAITE);
+        declarationRepository.save(dec);
+
+        // ─── CAS AMENDE : on ne crée PAS d'entretien ───
+        if (dec.getType() == DeclarationType.AMENDE) {
+            return dec;
+        }
+
+        // ─── CAS NORMAL : création de l'ordre de maintenance ───
+        GarageMaintenance garage = garageMaintenanceRepository.findById(idGarage)
+                .orElseThrow(() -> new RuntimeException("Garage introuvable"));
+
+        Entretien entretien = new Entretien();
+        entretien.setDeclaration(dec);
+        entretien.setVehicule(dec.getVehicule());
+        entretien.setChefDuParc(chef);
+        entretien.setGarage(garage);
+        entretien.setDatePrevue(datePrevue);
+        entretien.setTypeEntretien(typeEntretien);
+        entretien.setObservations(obs);
+        entretien.setCategorie(Entretien.Categorie.ENTRETIEN_SUITE_DECLARATION);
+        entretien.setStatus(Entretien.Status.EN_ATTENTE);
+
+        if (dec.getVehicule() != null) {
+            dec.getVehicule().setEtat(EtatVehicule.EN_ENTRETIEN);
+            vehiculeRepository.save(dec.getVehicule());
+        }
+
+        entretienRepository.save(entretien);
+        return dec;
     }
     // Ajouter aussi la méthode pour l'UI du Frontend
     public List<GarageMaintenance> getAllGarages() {

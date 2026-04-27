@@ -37,19 +37,20 @@
                 </td>
                 <td>{{ ent.garage?.nomGarage || '---' }}</td>
                 <td>{{ ent.datePrevue | date:'dd/MM/yyyy' }}</td>
-<td class="text-center">
-  <button class="btn btn-sm btn-outline-info mr-2" (click)="ouvrirConsultation(ent)" title="Consulter">
-    <i class="fas fa-eye"></i>
-  </button>
-  <button class="btn btn-sm btn-outline-primary mr-2" 
-          *ngIf="ent.declaration?.type !== 'AMENDE'"
-          (click)="ouvrirModification(ent)" title="Modifier">
-    <i class="fas fa-edit"></i>
-  </button>
-  <button class="btn btn-sm btn-outline-danger" (click)="supprimer(ent.idEntretien!)" title="Annuler">
-    <i class="fas fa-trash"></i>
-  </button>
-</td>
+                <td class="text-center" style="white-space: nowrap;">
+                <button class="btn btn-sm btn-outline-info mr-1" (click)="ouvrirConsultation(ent)" title="Consulter">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-primary mr-1"
+                        *ngIf="ent.categorie === 'ENTRETIEN_PERIODIQUE'"
+                        (click)="ouvrirModification(ent)" title="Modifier">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger"
+                        (click)="supprimer(ent.idEntretien!)" title="Supprimer">
+                    <i class="fas fa-trash"></i>
+                </button>
+                </td>
             </tr>
             </tbody>
         </table>

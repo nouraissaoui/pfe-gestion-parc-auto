@@ -46,19 +46,36 @@ export class EntretiensComponent implements OnInit {
     this.chargerDonnees();
   }
 
-  chargerDonnees() {
+ /* chargerDonnees() {
     this.service.getEntretiensByLocal(this.idLocal).subscribe(data => {
       this.entretiens = data;
       this.filtrer(this.categorieFiltre);
     });
     this.service.getVehiculesByLocal(this.idLocal).subscribe(v => this.listeVehicules = v);
     this.service.getGarages().subscribe(g => this.garages = g);
-  }
+  }*/
+chargerDonnees() {
+  this.service.getEntretiensByLocal(this.idLocal).subscribe(data => {
+    // Tri par idEntretien croissant → le plus récent en dernier
+    this.entretiens = data.sort((a, b) => (a.idEntretien ?? 0) - (b.idEntretien ?? 0));
+    this.filtrer(this.categorieFiltre);
+  });
+  this.service.getVehiculesByLocal(this.idLocal).subscribe(v => this.listeVehicules = v);
+  this.service.getGarages().subscribe(g => this.garages = g);
+}
 
-  filtrer(cat: string) {
+ /* filtrer(cat: string) {
     this.categorieFiltre = cat;
     this.filteredEntretiens = cat === 'TOUT' ? this.entretiens : this.entretiens.filter(e => e.categorie === cat);
-  }
+  }*/
+filtrer(cat: string) {
+  this.categorieFiltre = cat;
+  const base = cat === 'TOUT' 
+    ? this.entretiens 
+    : this.entretiens.filter(e => e.categorie === cat);
+  
+  this.filteredEntretiens = base.sort((a, b) => (a.idEntretien ?? 0) - (b.idEntretien ?? 0));
+}
 
   ouvrirModale() {
     this.isEditMode = false;
@@ -97,7 +114,7 @@ enregistrerEntretien() {
     const garageComplet = this.garages.find(g => g.idGarage == this.nouveauEntretien.idGarage);
 
     // 2. On construit l'objet Entretien tel que défini dans votre entité Java
-    const entretienMaj = {
+    /*const entretienMaj = {
       idEntretien: this.nouveauEntretien.idEntretien,
       typeEntretien: this.nouveauEntretien.typeEntretien,
       datePrevue: this.nouveauEntretien.datePrevue,
@@ -113,7 +130,18 @@ enregistrerEntretien() {
       
       // On garde le lien avec le chef (Vérifiez si l'ID dans l'entité est idChefParc)
       chefDuParc: { idChefParc: this.idChef } 
-    };
+    };*/
+    const entretienMaj: Partial<Entretien> = {
+  idEntretien: this.nouveauEntretien.idEntretien,
+  typeEntretien: this.nouveauEntretien.typeEntretien,
+  datePrevue: this.nouveauEntretien.datePrevue,
+  observations: this.nouveauEntretien.observations,
+  categorie: this.nouveauEntretien.categorie as 'ENTRETIEN_PERIODIQUE' | 'ENTRETIEN_SUITE_DECLARATION',
+  status: 'EN_ATTENTE' as 'EN_ATTENTE' | 'TRAITE' | 'REJETE',  // ← cast explicite
+  vehicule: vehiculeComplet as Vehicule,
+  garage: garageComplet,
+  chefDuParc: { idChefParc: this.idChef }
+};
 
     this.service.updateEntretien(this.nouveauEntretien.idEntretien, entretienMaj).subscribe({
       next: () => {

@@ -5,15 +5,17 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-carte-carburant',
-  imports:[FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './carte-carburant.component.html',
   styleUrls: ['./carte-carburant.component.css']
 })
 export class CarteCarburantComponent implements OnInit {
   isFlipped = false;
-  nouveauMontant: number = 0;
-  
-  // Cette variable contiendra l'objet venant de la BDD
+  nouveauMontant: number | null = null;
+
+  erreurNumero: string = '';
+  erreurMontant: string = '';
+
   carte: any = {
     numeroCarte: '',
     titulaire: '',
@@ -24,35 +26,77 @@ export class CarteCarburantComponent implements OnInit {
 
   constructor(private service: GestionParcService) {}
 
-  ngOnInit() {
-    // On peut charger une carte par défaut au démarrage si besoin
-    // this.chargerDonneesCarte('7083000001234567');
+  ngOnInit() {}
+
+  onNumeroCarte() {
+    this.erreurNumero = '';
   }
 
-  // Action pour charger les infos depuis la BDD
-  chargerDonneesCarte() {
-    if (!this.carte.numeroCarte) return;
+  onMontantChange() {
+    this.erreurMontant = '';
+  }
 
-    this.service.getCarte(this.carte.numeroCarte).subscribe({
+  chargerDonneesCarte() {
+    this.erreurNumero = '';
+    const num = this.carte.numeroCarte?.replace(/\s/g, '');
+
+    if (!num) {
+      this.erreurNumero = 'Le numéro de carte est obligatoire.';
+      return;
+    }
+    if (!/^\d{16}$/.test(num)) {
+      this.erreurNumero = 'Numéro invalide — il doit contenir exactement 16 chiffres.';
+      return;
+    }
+
+    this.service.getCarte(num).subscribe({
       next: (data) => {
-        this.carte = data; // On mappe directement l'objet de la BDD
+        this.carte = data;
+        this.erreurNumero = '';
       },
-      error: (err) => console.error("Carte non trouvée", err)
+      error: (err) => {
+        if (err.status === 404) {
+          this.erreurNumero = 'Carte introuvable. Vérifiez le numéro et réessayez.';
+        } else {
+          this.erreurNumero = 'Une erreur est survenue lors de la recherche.';
+        }
+      }
     });
   }
 
-  // Action pour recharger en BDD
   modifierSolde() {
-    if (this.nouveauMontant <= 0 || !this.carte.numeroCarte) return;
+    this.erreurMontant = '';
+
+    if (this.nouveauMontant === null || this.nouveauMontant === undefined || String(this.nouveauMontant).trim() === '') {
+      this.erreurMontant = 'Veuillez saisir un montant.';
+      return;
+    }
+    if (isNaN(Number(this.nouveauMontant))) {
+      this.erreurMontant = 'Le montant saisi n\'est pas valide.';
+      return;
+    }
+    if (this.nouveauMontant <= 0) {
+      this.erreurMontant = 'Le montant doit être un nombre positif supérieur à 0.';
+      return;
+    }
+    if (this.nouveauMontant > 1000) {
+  this.erreurMontant = 'Le montant de recharge ne peut pas dépasser 1 000 TND.';
+  return;
+}
+    if (!this.carte.numeroCarte) {
+      this.erreurNumero = 'Veuillez d\'abord rechercher une carte valide.';
+      return;
+    }
 
     this.service.recharger(this.carte.numeroCarte, this.nouveauMontant).subscribe({
-      next: (res) => {
-        // Après recharge, on rafraîchit les données pour voir le nouveau solde
-        this.carte.montantReel += this.nouveauMontant;
-        this.nouveauMontant = 0;
-        alert("Solde mis à jour en base de données !");
+      next: () => {
+        this.carte.montantReel += this.nouveauMontant!;
+        this.nouveauMontant = null;
+        alert('Solde mis à jour avec succès !');
       },
-      error: (err) => alert("Erreur lors de la recharge")
+      error: () => {
+        this.erreurMontant = 'Erreur lors de la mise à jour. Veuillez réessayer.';
+      }
     });
   }
 
