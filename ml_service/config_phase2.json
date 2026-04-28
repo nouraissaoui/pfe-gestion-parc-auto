@@ -1,29 +1,35 @@
 {
   "facteurs_trafic": {
-    "fluide": 1.0,
-    "modere": 1.18,
-    "dense": 1.4,
-    "embouteillage": 1.65
+    "fluide": 1.00,
+    "modere": 1.12,
+    "dense": 1.25,
+    "embouteillage": 1.45
   },
   "facteurs_type_charge": {
-    "personne": 1.0,
-    "mixte": 1.05,
-    "materiel": 1.1
+    "personne": 1.00,
+    "mixte": 1.03,
+    "materiel": 1.06
   },
   "poids_mapping": {
-    "petite": 1200,
-    "moyenne": 1400,
-    "grande": 1700,
-    "SUV": 2000,
-    "utilitaire": 2500,
-    "familiale": 1600,
-    "sport": 1350
+    "voiture_minicompacte": 1100,
+    "voiture_sous_compacte": 1200,
+    "voiture_compacte": 1300,
+    "voiture_moyenne": 1400,
+    "voiture_grande": 1700,
+    "voiture_deux_places": 1350,
+    "VUS_petit": 1800,
+    "VUS_standard": 2000,
+    "camionnette_petit": 2200,
+    "camionnette_standard": 2500,
+    "break_petit": 1500,
+    "break_moyen": 1600,
+    "monospace": 1600
   },
-  "correcteur_poids_par_100kg": 0.5,
+  "correcteur_poids_par_100kg": 0.15,
   "correcteur_km": {
-    "0_50000": 1.0,
-    "50000_150000": 1.05,
-    "150000_250000": 1.12,
-    "250000_plus": 1.2
+    "0_50000"       : 1.00,
+    "50000_150000"  : 1.03,
+    "150000_250000" : 1.07,
+    "250000_plus"   : 1.12
   }
 }

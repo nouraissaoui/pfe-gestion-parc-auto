@@ -1,42 +1,60 @@
 // prediction.component.ts
 import { Component } from '@angular/core';
-import { PredictionRequest, PredictionResponse, PredictionService } from '../prediction.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { HttpClientModule } from '@angular/common/http';
+import { PredictionService, PredictionRequest,PredictionResult } from '../prediction.service';
 
 @Component({
   selector: 'app-prediction',
   templateUrl: './prediction.component.html',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,HttpClientModule],
   styleUrl: './prediction.component.css', 
 })
 export class PredictionComponent {
 
-  form: PredictionRequest = {
-    typeVehicule    : 'SUV',
+  // ── Listes des options ────────────────────────────────────────
+  typesVehicule = [
+    'voiture_minicompacte',
+    'voiture_sous_compacte',
+    'voiture_compacte',
+    'voiture_moyenne',
+    'voiture_grande',
+    'voiture_deux_places',
+    'VUS_petit',
+    'VUS_standard',
+    'camionnette_petit',
+    'camionnette_standard',
+    'break_petit',
+    'break_moyen',
+    'monospace'
+  ];
+
+  transmissions  = ['integrale', 'propulsion', 'traction', '4x4'];
+  boites         = ['automatique', 'manuelle'];
+  niveauxTrafic  = ['fluide', 'modere', 'dense', 'embouteillage'];
+  typesCharge    = ['personne', 'mixte', 'materiel'];
+
+  // ── Formulaire ────────────────────────────────────────────────
+  form = {
+    typeVehicule    : 'voiture_moyenne',
     nombreCylindres : 4,
     tailleMoteur    : 2.0,
-    transmission    : 'integrale',
+    transmission    : 'traction',
     boite           : 'automatique',
-    annee           : 2022,
+    annee           : 2020,
+    kilometrage     : 50000,
+    trajetKm        : 100,
     trafic          : 'fluide',
     typeCharge      : 'personne',
     poidsChargeKg   : 0,
-    kilometrage     : 50000,
-    trajetKm        : 100,
     prixCarburant   : 2.3
   };
 
-  result    : PredictionResponse | null = null;
-  loading   : boolean = false;
-  error     : string  = '';
-
-  typesVehicule  = ['petite','moyenne','grande','SUV','sport','utilitaire','familiale'];
-  transmissions  = ['traction','propulsion','integrale','4x4'];
-  boites         = ['automatique','manuelle'];
-  niveauxTrafic  = ['fluide','modere','dense','embouteillage'];
-  typesCharge    = ['personne','materiel','mixte'];
+  // ── État ──────────────────────────────────────────────────────
+  result  : PredictionResult | null = null;
+  loading  = false;
+  error    = '';
 
   constructor(private predictionService: PredictionService) {}
 
@@ -45,10 +63,36 @@ export class PredictionComponent {
     this.error   = '';
     this.result  = null;
 
-    this.predictionService.predict(this.form).subscribe({
-      next : (res) => { this.result = res;  this.loading = false; },
-      error: (err) => { this.error  = 'Erreur de connexion au serveur';
-                        this.loading = false; }
-    });
+    // Mapping camelCase → snake_case pour l'API Flask
+    const payload: PredictionRequest = {
+      type_vehicule    : this.form.typeVehicule,
+      nombre_cylindres : this.form.nombreCylindres,
+      taille_moteur    : this.form.tailleMoteur,
+      transmission     : this.form.transmission,
+      boite            : this.form.boite,
+      annee            : this.form.annee,
+      trafic           : this.form.trafic,
+      type_charge      : this.form.typeCharge,
+      poids_charge_kg  : this.form.poidsChargeKg,
+      kilometrage      : this.form.kilometrage,
+      trajet_km        : this.form.trajetKm,
+      prix_carburant   : this.form.prixCarburant
+    };
+
+this.predictionService.predict(payload).subscribe({
+  next: (res: PredictionResult) => {
+    this.result = {
+      conso_constructeur : res.conso_constructeur,
+      conso_reelle       : res.conso_reelle,
+      litres_total       : res.litres_total,
+      cout_carburant     : res.cout_carburant
+    };
+    this.loading = false;
+  },
+  error: () => {
+    this.error   = 'Erreur lors de la prédiction. Vérifiez que le serveur Flask est lancé.';
+    this.loading = false;
+  }
+});
   }
 }

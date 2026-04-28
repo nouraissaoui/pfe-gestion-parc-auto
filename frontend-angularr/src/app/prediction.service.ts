@@ -1,45 +1,35 @@
-// src/app/prediction/prediction.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-
 export interface PredictionRequest {
-  typeVehicule     : string;
-  nombreCylindres  : number;
-  tailleMoteur     : number;
+  type_vehicule    : string;
+  nombre_cylindres : number;
+  taille_moteur    : number;
   transmission     : string;
   boite            : string;
   annee            : number;
   trafic           : string;
-  typeCharge       : string;
-  poidsChargeKg    : number;
+  type_charge      : string;
+  poids_charge_kg  : number;
   kilometrage      : number;
-  trajetKm         : number;
-  prixCarburant   ?: number;
+  trajet_km        : number;
+  prix_carburant   : number;
 }
 
-export interface PredictionResponse {
-  consoConstructeur : number;
-  consoReelle       : number;
-  litresTotal       : number;
-  coutCarburant    ?: number;
-  detailCorrecteurs : {
-    trafic      : number;
-    type_charge : number;
-    poids_L100  : number;
-    kilometrage : number;
-  };
+// ✅ snake_case pour matcher exactement la réponse Flask
+export interface PredictionResult {
+  conso_constructeur : number;
+  conso_reelle       : number;
+  litres_total       : number;
+  cout_carburant     : number | null;
 }
 
 @Injectable({ providedIn: 'root' })
 export class PredictionService {
-
-  private apiUrl = 'http://localhost:8080/api/predict';
-
+  private apiUrl = 'http://localhost:5001/api/predict';
   constructor(private http: HttpClient) {}
-
-  predict(data: PredictionRequest): Observable<PredictionResponse> {
-    return this.http.post<PredictionResponse>(this.apiUrl, data);
+  predict(data: PredictionRequest): Observable<PredictionResult> {
+    return this.http.post<PredictionResult>(this.apiUrl, data);
   }
 }

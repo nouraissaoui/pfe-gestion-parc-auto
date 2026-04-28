@@ -86,25 +86,25 @@
     </form>
 
     <!-- Résultat -->
-    <div class="result-card" *ngIf="result">
+        <div class="result-card" *ngIf="result">
         <h3>Résultats</h3>
         <div class="result-row">
-        <span>Conso constructeur</span>
-        <strong>{{ result.consoConstructeur }} L/100km</strong>
+            <span>Conso constructeur</span>
+            <strong>{{ result.conso_constructeur }} L/100km</strong>
         </div>
         <div class="result-row highlight">
-        <span>Conso réelle estimée</span>
-        <strong>{{ result.consoReelle }} L/100km</strong>
+            <span>Conso réelle estimée</span>
+            <strong>{{ result.conso_reelle }} L/100km</strong>
         </div>
         <div class="result-row">
-        <span>Litres consommés</span>
-        <strong>{{ result.litresTotal }} L</strong>
+            <span>Litres consommés</span>
+            <strong>{{ result.litres_total }} L</strong>
         </div>
-        <div class="result-row" *ngIf="result.coutCarburant">
-        <span>Coût estimé</span>
-        <strong>{{ result.coutCarburant }} DT</strong>
+        <div class="result-row" *ngIf="result.cout_carburant">
+            <span>Coût estimé</span>
+            <strong>{{ result.cout_carburant }} DT</strong>
         </div>
-    </div>
+        </div>
 
     <div class="error" *ngIf="error">{{ error }}</div>
     </div>
