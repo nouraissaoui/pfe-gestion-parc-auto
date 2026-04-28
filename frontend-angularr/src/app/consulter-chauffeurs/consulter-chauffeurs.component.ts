@@ -21,7 +21,7 @@ export class ConsulterChauffeursComponent implements OnInit {
   constructor(private chauffeurService: GestionParcService) {}
 
   ngOnInit(): void {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     this.idLocal = user.idLocal;
     if (this.idLocal) {
       this.fetchDrivers();

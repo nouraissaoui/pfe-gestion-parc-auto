@@ -42,7 +42,7 @@ export class ChefParcDashboardComponent implements OnInit {
   }
 
   loadSession() {
-    const userJson = localStorage.getItem('user');
+    const userJson = sessionStorage.getItem('user');
     if(userJson) {
       const user = JSON.parse(userJson);
       this.chefNom = user.nom;
@@ -146,7 +146,7 @@ loadStats() {
 
   logout() {
     if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-      localStorage.clear();
+      sessionStorage.clear();
       this.router.navigate(['/']);
     }
   }

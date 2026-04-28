@@ -36,22 +36,23 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
   constructor(private chatService: ChatService) {}
 
   ngOnInit() {
-    const profile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+  // ✅ Lire depuis 'user' — clé correcte
+  const raw  = sessionStorage.getItem('user');
+  const user = raw ? JSON.parse(raw) : {};
 
-    this.userRole  = profile.role  || 'CHAUFFEUR';
-    this.userId    = profile.id    || 1;
-    this.userName  = `${profile.prenom || ''} ${profile.nom || ''}`.trim() || 'Utilisateur';
-    this.sessionId = `${this.userRole}_${this.userId}`;
+  this.userRole  = user.typeUtilisateur ?? 'CHAUFFEUR'; // ← clé correcte
+  this.userId    = user.id              ?? 1;
+  this.userName  = `${user.prenom ?? ''} ${user.nom ?? ''}`.trim() || 'Utilisateur';
+  this.sessionId = `${this.userRole}_${this.userId}`;
 
-    this.messages.push({
-      text:   this.getWelcomeMessage(),
-      sender: 'bot',
-      time:   this.now()
-    });
+  this.messages.push({
+    text:   this.getWelcomeMessage(),
+    sender: 'bot',
+    time:   this.now()
+  });
 
-    // Focus automatique sur l'input au chargement
-    setTimeout(() => this.inputRef?.nativeElement?.focus(), 300);
-  }
+  setTimeout(() => this.inputRef?.nativeElement?.focus(), 300);
+}
 
   private getWelcomeMessage(): string {
     return this.userRole === 'CHEF_PARC'

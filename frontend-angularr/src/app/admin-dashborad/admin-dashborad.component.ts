@@ -31,7 +31,7 @@ export class AdminDashboradComponent implements OnInit {
   }
 
   loadSession() {
-    const userJson = localStorage.getItem('user');
+    const userJson = sessionStorage.getItem('user');
     if(userJson) {
       const user = JSON.parse(userJson);
       this.chefId = user.idChefParc;

@@ -66,7 +66,7 @@ export class VehiculesChefComponent implements OnInit, AfterViewInit {
   // ================= LOAD DATA =================
 
   loadSession() {
-    const userJson = localStorage.getItem('user');
+    const userJson = sessionStorage.getItem('user');
     if (userJson) {
       const user = JSON.parse(userJson);
       // On s'assure de récupérer l'idLocal correctement

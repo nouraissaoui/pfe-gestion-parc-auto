@@ -126,7 +126,7 @@ export class DeclarationsListeComponent implements OnInit, AfterViewInit, OnDest
   }
 
   chargerDeclarations(): void {
-    const idLocalStr = localStorage.getItem('idLocal');
+    const idLocalStr = sessionStorage.getItem('idLocal');
     if (!idLocalStr) return;
 
     const idLocal = Number(idLocalStr);
@@ -223,7 +223,7 @@ export class DeclarationsListeComponent implements OnInit, AfterViewInit, OnDest
       return;
     }
 
-    const userStr = localStorage.getItem('user');
+    const userStr = sessionStorage.getItem('user');
     if (!userStr) {
       this.showNotification('Erreur : session utilisateur introuvable.');
       return;

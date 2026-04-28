@@ -13,11 +13,11 @@
     <h1>Access Your Professional<br>Fleet Management Space</h1>
     <p>Authenticate to manage SNDP vehicles, track missions, and access operational data in a secure environment.</p>
 
-    <div class="login-form">
-      <input type="email" placeholder="Professional email address" [(ngModel)]="email" >
-      <input type="password" placeholder="Password" [(ngModel)]="password">
-      <button (click)="login()">SECURE LOGIN</button>
-    </div>
+    <form (submit)="login(); $event.preventDefault()" class="login-form">
+  <input type="email" placeholder="Professional email address" [(ngModel)]="email" name="email">
+  <input type="password" placeholder="Password" [(ngModel)]="password" name="password">
+  <button type="submit">SECURE LOGIN</button>
+</form>
   </div>
 
   <div class="hero-right">

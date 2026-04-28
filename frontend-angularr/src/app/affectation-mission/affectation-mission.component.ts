@@ -50,7 +50,7 @@ export class AffectationMissionComponent implements OnInit {
 
   // ── Chargement ─────────────────────────────────────────────────────────────
   chargerDonnees(): void {
-    const idLocalStr = localStorage.getItem('idLocal');
+    const idLocalStr = sessionStorage.getItem('idLocal');
     if (!idLocalStr) { console.error('Aucun idLocal trouvé'); return; }
     const idLocal = Number(idLocalStr);
 
@@ -140,7 +140,7 @@ export class AffectationMissionComponent implements OnInit {
 
     if (!this.validate()) return; // stoppe si erreurs
 
-    const idChef = Number(localStorage.getItem('id'));
+    const idChef = Number(sessionStorage.getItem('id'));
 
     this.service.affecterMission(
       this.missionData,

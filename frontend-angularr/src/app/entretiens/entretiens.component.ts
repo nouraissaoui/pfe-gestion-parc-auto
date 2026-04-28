@@ -40,7 +40,7 @@ export class EntretiensComponent implements OnInit {
   constructor(private service: GestionParcService) {}
 
   ngOnInit(): void {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     this.idLocal = user.idLocal;
     this.idChef = user.id;
     this.chargerDonnees();

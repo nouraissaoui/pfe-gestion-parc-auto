@@ -1,23 +1,26 @@
 import { inject } from '@angular/core';
-import { Router, CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  
-  // On récupère l'objet utilisateur stocké lors du login
-  const userData = localStorage.getItem('user');
 
-  if (userData) {
-    const user = JSON.parse(userData);
-    
-    // On vérifie si c'est bien un ADMIN
-    if (user.typeUtilisateur === 'ADMIN') {
-      return true; // Accès autorisé
-    }
+  // 🔍 On vérifie sessionStorage
+  const userStr = sessionStorage.getItem('user');
+
+  // ❌ Si vide (nouvel onglet ou non connecté) -> Direction Login
+  if (!userStr) {
+    router.navigate(['']);
+    return false;
   }
 
-  // Si pas de user ou pas ADMIN, redirection vers login
-  console.warn("Accès refusé : Utilisateur non connecté ou non Administrateur");
-  router.navigate(['/']); 
-  return false;
+  const user = JSON.parse(userStr);
+  const role = user.typeUtilisateur;
+  const url  = state.url;
+
+  // Vérification des rôles
+  if (url.startsWith('/admin')     && role !== 'ADMIN')     { router.navigate(['']); return false; }
+  if (url.startsWith('/chef-parc') && role !== 'CHEF_PARC') { router.navigate(['']); return false; }
+  if (url.startsWith('/chauffeur') && role !== 'CHAUFFEUR') { router.navigate(['']); return false; }
+
+  return true; 
 };

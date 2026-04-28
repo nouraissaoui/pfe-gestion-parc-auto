@@ -31,7 +31,7 @@ export class Adminlayoutcomponent implements OnInit {
   }
 
   loadSession() {
-    const userJson = localStorage.getItem('user');
+    const userJson = sessionStorage.getItem('user');
     if (userJson) {
       const user = JSON.parse(userJson);
       this.Nom = user.nom;
@@ -49,7 +49,7 @@ export class Adminlayoutcomponent implements OnInit {
 
   logout() {
     if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-      localStorage.clear();
+      sessionStorage.clear();
       this.router.navigate(['/']);
     }
   }

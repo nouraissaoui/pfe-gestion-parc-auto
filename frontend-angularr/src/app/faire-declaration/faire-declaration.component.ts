@@ -31,7 +31,7 @@ chauffeurPrenom: string = '';
 
   ngOnInit(): void {
     setTimeout(() => this.showPreloader = false, 2000);
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       const user = JSON.parse(storedUser);
       this.idChauffeur = user.id;

@@ -45,8 +45,9 @@ export class RapportStatistiquesComponent implements OnInit, OnDestroy {
 
   constructor(private sanitizer: DomSanitizer, private ngZone: NgZone) {}
 
-  ngOnInit(): void {
-    // Charger l'historique sauvegardé
+  // rapport-statistiques.component.ts — Admin
+ngOnInit(): void {
+    // ✅ localStorage pour l'historique des notifications (persistant)
     const saved = localStorage.getItem('notificationsAdmin');
     if (saved) {
       const parsed = JSON.parse(saved);
@@ -63,6 +64,7 @@ export class RapportStatistiquesComponent implements OnInit, OnDestroy {
       this.ngZone.run(() => this.verifierRapport());
     }, 2000);
 
+    // ✅ storage event fonctionne UNIQUEMENT avec localStorage
     this.storageListener = (event: StorageEvent) => {
       if (event.key === 'rapportPret') {
         this.ngZone.run(() => this.verifierRapport());
@@ -71,12 +73,8 @@ export class RapportStatistiquesComponent implements OnInit, OnDestroy {
     window.addEventListener('storage', this.storageListener);
   }
 
-  ngOnDestroy(): void {
-    clearInterval(this.pollInterval);
-    window.removeEventListener('storage', this.storageListener);
-  }
-
   private verifierRapport(): void {
+    // ✅ localStorage
     const raw = localStorage.getItem('rapportPret');
     if (!raw) return;
 
@@ -85,7 +83,6 @@ export class RapportStatistiquesComponent implements OnInit, OnDestroy {
       if (payload?.pret === true && payload.id !== this.dernierId) {
         this.dernierId = payload.id;
 
-        // Ajouter la nouvelle notification à l'historique
         const nouvelleNotif: Notification = {
           id: payload.id,
           timestamp: payload.timestamp,
@@ -94,13 +91,11 @@ export class RapportStatistiquesComponent implements OnInit, OnDestroy {
           urlSecurisee: this.sanitizer.bypassSecurityTrustResourceUrl(this.EMBED_URL)
         };
 
-        this.notifications.unshift(nouvelleNotif); // Ajoute en tête de liste
+        this.notifications.unshift(nouvelleNotif);
         this.etat = 'liste';
-
-        // Sauvegarder l'historique (sans urlSecurisee qui n'est pas sérialisable)
         this.sauvegarderHistorique();
 
-        // Supprimer le signal pour que le chef puisse renvoyer
+        // ✅ localStorage
         localStorage.removeItem('rapportPret');
       }
     } catch {}
@@ -113,9 +108,16 @@ export class RapportStatistiquesComponent implements OnInit, OnDestroy {
       message: n.message,
       lu: n.lu
     }));
+    // ✅ localStorage pour que l'historique persiste
     localStorage.setItem('notificationsAdmin', JSON.stringify(toSave));
   }
 
+  ngOnDestroy(): void {
+    clearInterval(this.pollInterval);
+    window.removeEventListener('storage', this.storageListener);
+  }
+
+  
   ouvrirRapport(notif: Notification): void {
     notif.lu = true;
     this.rapportOuvert = notif;

@@ -39,7 +39,7 @@ export class FeuilleRoutechauffeurComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => this.showPreloader = false, 2500);
 
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       const user = JSON.parse(storedUser);
       this.idChauffeur = user.id;
