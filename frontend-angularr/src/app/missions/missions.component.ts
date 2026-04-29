@@ -35,8 +35,8 @@ export class MissionsComponent implements OnInit {
 ngOnInit(): void {
   setTimeout(() => this.showPreloader = false, 2500);
   console.log("1. Initialisation du composant Missions...");
-  const userData = localStorage.getItem('user');
-  console.log("2. Données localStorage :", userData);
+  const userData = sessionStorage.getItem('user');
+  console.log("2. Données sessionStorage.getItem :", userData);
 
   if (userData) {
     const user = JSON.parse(userData);
@@ -51,7 +51,7 @@ ngOnInit(): void {
       this.loading = false;
     }
   } else {
-    console.error("ERREUR : Aucun utilisateur dans le localStorage");
+    console.error("ERREUR : Aucun utilisateur dans le sessionStorage.getItem");
     this.loading = false;
   }
 }

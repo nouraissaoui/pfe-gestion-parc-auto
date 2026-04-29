@@ -58,7 +58,7 @@ export class DriverMenuComponent implements OnInit {
   }
 
   loadDriverSession(): void {
-    const userJson = localStorage.getItem('user');
+    const userJson = sessionStorage.getItem('user');
     if (userJson) {
       const user       = JSON.parse(userJson);
       this.Nom         = user.nom    ?? '';

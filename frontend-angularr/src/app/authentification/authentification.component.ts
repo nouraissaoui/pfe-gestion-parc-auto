@@ -26,7 +26,7 @@ export class AuthentificationComponent {
   this.service.login(this.email, this.password).subscribe({
     next: (response: LoginResponse) => {
       // 🔐 Sauvegarde session
-      localStorage.setItem('user', JSON.stringify(response));
+      sessionStorage.setItem('user', JSON.stringify(response));
       console.log("User connecté :", response);
 
       // 🔹 Redirection selon typeUtilisateur (et non plus role)
@@ -55,38 +55,45 @@ export class AuthentificationComponent {
   });
 }*/
 login(): void {
+  // 1. Vérification de sécurité locale
+  if (!this.email || !this.password) {
+    alert("Veuillez saisir votre email et mot de passe.");
+    return;
+  }
+
   this.service.login(this.email, this.password).subscribe({
     next: (response: LoginResponse) => {
-      // 🔐 Sauvegarde l'objet complet
-      localStorage.setItem('user', JSON.stringify(response));
-            localStorage.setItem('userProfile', JSON.stringify({
-        id:      response.id,
-        nom:     response.nom,
-        prenom:  response.prenom,
-        mail:    response.mail,
-        role:    response.typeUtilisateur,   // "CHAUFFEUR", "CHEF_PARC", "ADMIN"
-        localId: response.idLocal ?? null
-      }));
+      console.log("Connexion réussie :", response);
+
+      // 2. Nettoyage de toute trace ancienne
+      sessionStorage.clear(); 
+
+      // 3. Stockage en sessionStorage (Isolation par onglet)
+      sessionStorage.setItem('user', JSON.stringify(response));
       
-      // 📍 SAUVEGARDE INDIVIDUELLE (Crucial pour votre composant Affectation)
+      // Stockage des IDs pour vos futurs composants
       if (response.idLocal) {
-        localStorage.setItem('idLocal', response.idLocal.toString());
+        sessionStorage.setItem('idLocal', response.idLocal.toString());
       }
-      localStorage.setItem('id', response.id.toString()); // Utile pour idChef
+      sessionStorage.setItem('userId', response.id.toString());
 
-      console.log("User connecté et idLocal stocké :", response.idLocal);
+      // 4. Redirection avec logs pour debugger
+      const role = response.typeUtilisateur;
+      console.log("Redirection vers l'espace :", role);
 
-      // Redirection...
-      switch(response.typeUtilisateur) {
-        case 'ADMIN': this.router.navigate(['/admin/dashboard']); break;
-        case 'CHAUFFEUR': this.router.navigate(['/chauffeur/menu']); break;
-        case 'CHEF_PARC': this.router.navigate(['/chef-parc/dashboard']); break;
+      if (role === 'ADMIN') {
+        this.router.navigate(['/admin/dashboard']);
+      } else if (role === 'CHEF_PARC') {
+        this.router.navigate(['/chef-parc/dashboard']);
+      } else if (role === 'CHAUFFEUR') {
+        this.router.navigate(['/chauffeur/menu']);
+      } else {
+        alert("Rôle non reconnu : " + role);
       }
     },
-    error: (err) => {       
-      console.error("Erreur login :", err);
-      alert("Email ou mot de passe incorrect !"); }
+    error: (err) => {
+      console.error("Erreur d'authentification :", err);
+      alert("Email ou mot de passe incorrect !");
+    }
   });
-}
-  
-}
+}}

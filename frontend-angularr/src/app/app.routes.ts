@@ -1,16 +1,9 @@
 import { Routes } from '@angular/router';
-// Layouts
 import { ChefParcLayoutComponent } from './layouts/chef-parc-layout/chef-parc-layout.component';
-
-// Composants Communs
 import { AuthentificationComponent } from './authentification/authentification.component';
-
 import { CarteCarburantComponent } from './carte-carburant/carte-carburant.component';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
-import { ChauffeurLayoutComponent } from './chauffeur-layout/chauffeur-layout.component';
-import { ChauffeurDashboardComponent } from './chauffeur-dashboard/chauffeur-dashboard.component';
 import { FaireDeclarationComponent } from './faire-declaration/faire-declaration.component';
-import { MissionListComponent } from './mission-list/mission-list.component';
 import { FeuilleRoutechauffeurComponent } from './feuille-routechauffeur/feuille-routechauffeur.component';
 import { AdminDashboradComponent } from './admin-dashborad/admin-dashborad.component';
 import { LocauxadminComponent } from './locauxadmin/locauxadmin.component';
@@ -32,16 +25,17 @@ import { authGuard } from './auth.guard';
 import { RapportStatistiquesComponent } from './rapport-statistiques/rapport-statistiques.component';
 import { ConsultationFeuillesComponent } from './consultation-feuilles/consultation-feuilles.component';
 import { PredictionComponent } from './prediction/prediction.component';
-import { ParcbotChatComponent } from './parcbot/parcbot.component';
-
 
 export const routes: Routes = [
-  // 1. Point d'entrée (Login)
- { path: '', component: AuthentificationComponent },
 
+  // ✅ Login — seule route publique
+  { path: '', component: AuthentificationComponent },
+
+  // ✅ ADMIN — protégé
   {
     path: 'admin',
     component: AdminLayoutComponent,
+    canActivate: [authGuard],        // 👈 AJOUTÉ
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: AdminDashboradComponent },
@@ -49,14 +43,15 @@ export const routes: Routes = [
       { path: 'chefsparc', component: ChefParcComponent },
       { path: 'vehicules', component: VehiculeComponent },
       { path: 'chauffeurs', component: ChauffeurGestionComponent },
-      { path: 'rapports', component:RapportStatistiquesComponent } 
+      { path: 'rapports', component: RapportStatistiquesComponent }
     ]
   },
 
-  // 3. Espace CHEF DE PARC
+  // ✅ CHEF DE PARC — protégé
   {
     path: 'chef-parc',
-    component: ChefParcLayoutComponent, // Le "cadre" avec le menu Chef de Parc
+    component: ChefParcLayoutComponent,
+    canActivate: [authGuard],        // 👈 AJOUTÉ
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: ChefParcDashboardComponent },
@@ -64,27 +59,30 @@ export const routes: Routes = [
       { path: 'chauffeurs', component: ConsulterChauffeursComponent },
       { path: 'missions', component: AffectationMissionComponent },
       { path: 'carburants', component: CarteCarburantComponent },
-      {path:'declarations',component:DeclarationsListeComponent},
-      {path:'entretiens',component:EntretiensComponent},
-      { path: 'chatbot', component:ChatbotComponent },
-      {path:'rapports',component:StatsDashboardComponent},
+      { path: 'declarations', component: DeclarationsListeComponent },
+      { path: 'entretiens', component: EntretiensComponent },
+      { path: 'chatbot', component: ChatbotComponent },
+      { path: 'rapports', component: StatsDashboardComponent },
       { path: 'consultation-feuilles', component: ConsultationFeuillesComponent },
-      {path: 'predire', component:PredictionComponent }
+      { path: 'predire', component: PredictionComponent }
     ]
   },
+
+  // ✅ CHAUFFEUR — protégé
   {
     path: 'chauffeur',
-    component: DriverLayoutComponent, 
+    component: DriverLayoutComponent,
+    canActivate: [authGuard],        // 👈 AJOUTÉ
     children: [
       { path: '', redirectTo: 'menu', pathMatch: 'full' },
       { path: 'menu', component: DriverMenuComponent },
-      {path:'declarations',component:FaireDeclarationComponent},
-      {path:'feuille-route',component:FeuilleRoutechauffeurComponent},
+      { path: 'declarations', component: FaireDeclarationComponent },
+      { path: 'feuille-route', component: FeuilleRoutechauffeurComponent },
       { path: 'missions', component: MissionsComponent },
-      { path: 'chatbot', component:ChatbotComponent},
+      { path: 'chatbot', component: ChatbotComponent }
     ]
-  }
-,
-  // 4. Redirection de sécurité (si la route n'existe pas)
+  },
+
+  // Sécurité — route inconnue → login
   { path: '**', redirectTo: '' }
 ];

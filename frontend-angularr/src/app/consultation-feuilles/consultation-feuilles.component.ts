@@ -29,7 +29,7 @@ export class ConsultationFeuillesComponent implements OnInit {
   }
 
   chargerDonnees(): void {
-    const idLocalStr = localStorage.getItem('idLocal');
+    const idLocalStr = sessionStorage.getItem('idLocal');
     if (!idLocalStr) {
       console.error("Aucun idLocal trouvé");
       return;

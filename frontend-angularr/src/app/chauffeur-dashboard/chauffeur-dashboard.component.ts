@@ -18,7 +18,7 @@ export class ChauffeurDashboardComponent implements OnInit {
   constructor(private service: GestionParcService) {}
 
   ngOnInit(): void {
-    const userJson = localStorage.getItem('user');
+    const userJson = sessionStorage.getItem('user');
     if (userJson) {
       this.userId = JSON.parse(userJson).id; // Assurez-vous du nom du champ ID
     }

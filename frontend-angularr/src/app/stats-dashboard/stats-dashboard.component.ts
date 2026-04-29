@@ -22,21 +22,18 @@ export class StatsDashboardComponent implements OnInit {
     this.reportUrl = this.sanitizer.bypassSecurityTrustResourceUrl(finalLink);
   }
 
-  envoyerRapportAdmin(): void {
-    // ✅ Chaque envoi crée un nouveau signal avec timestamp unique
-    // L'admin peut recevoir plusieurs notifications à la suite
+ envoyerRapportAdmin(): void {
     const payload = {
       pret: true,
-      id: Date.now(), // identifiant unique pour chaque envoi
+      id: Date.now(),
       timestamp: new Date().toISOString(),
       message: "Le rapport d'audit IA AGIL est prêt. Envoyé par le Chef de Parc."
     };
+    // ✅ localStorage pour communication inter-onglets
     localStorage.setItem('rapportPret', JSON.stringify(payload));
     this.rapportEnvoye = true;
 
-    // Reset du bouton après 3 secondes → chef peut renvoyer
     setTimeout(() => {
       this.rapportEnvoye = false;
     }, 3000);
-  }
-}
+  }}

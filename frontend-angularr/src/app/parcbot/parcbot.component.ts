@@ -26,7 +26,7 @@ interface ChatMsg {
 })
 export class ParcbotChatComponent implements OnInit, AfterViewChecked {
 
-  // ── Profil utilisateur (depuis localStorage après auth) ──────────────────
+  // ── Profil utilisateur (depuis sessionStorage.getItem après auth) ──────────────────
   userId!: number;
   userRole!: string;   // "CHEF_PARC" | "CHAUFFEUR"  (tel que stocké par auth)
   userName!: string;
@@ -74,17 +74,17 @@ export class ParcbotChatComponent implements OnInit, AfterViewChecked {
 
   constructor(private parcbotService: ParcbotService) {}
 
-  ngOnInit(): void {
-    // Lecture du profil depuis localStorage (stocké par le service d'auth)
-    const raw  = localStorage.getItem('userProfile') || '{}';
-    const user = JSON.parse(raw);
+ ngOnInit(): void {
+  // ✅ Lire depuis 'user' — c'est ce que ton login sauvegarde
+  const raw  = sessionStorage.getItem('user');
+  const user = raw ? JSON.parse(raw) : {};
 
-    this.userId   = user.id        ?? 0;
-    this.userRole = user.role      ?? 'CHAUFFEUR';
-    this.userName = `${user.prenom ?? ''} ${user.nom ?? ''}`.trim() || 'Utilisateur';
+  this.userId   = user.id              ?? 0;
+  this.userRole = user.typeUtilisateur ?? 'CHAUFFEUR'; // ← clé correcte
+  this.userName = `${user.prenom ?? ''} ${user.nom ?? ''}`.trim() || 'Utilisateur';
 
-    this.addWelcomeMessage();
-  }
+  this.addWelcomeMessage();
+}
 
   ngAfterViewChecked(): void {
     if (this.shouldScroll) {
