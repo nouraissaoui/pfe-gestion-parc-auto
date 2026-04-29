@@ -1,12 +1,12 @@
 {
   "facteurs_trafic": {
-    "fluide": 1.00,
+    "fluide": 1.0,
     "modere": 1.12,
     "dense": 1.25,
     "embouteillage": 1.45
   },
   "facteurs_type_charge": {
-    "personne": 1.00,
+    "personne": 1.0,
     "mixte": 1.03,
     "materiel": 1.06
   },
@@ -27,9 +27,9 @@
   },
   "correcteur_poids_par_100kg": 0.15,
   "correcteur_km": {
-    "0_50000"       : 1.00,
-    "50000_150000"  : 1.03,
-    "150000_250000" : 1.07,
-    "250000_plus"   : 1.12
+    "0_50000": 1.0,
+    "50000_150000": 1.03,
+    "150000_250000": 1.07,
+    "250000_plus": 1.12
   }
 }
