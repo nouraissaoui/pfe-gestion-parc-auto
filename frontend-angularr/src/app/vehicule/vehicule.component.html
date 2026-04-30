@@ -135,50 +135,76 @@
               </div>
               <h3 class="ms-3 fw-bold m-0">{{ isEdit ? 'Modification' : 'Nouvelle Unité' }}</h3>
             </div>
-            
             <div class="row g-4">
-              <div class="col-md-6 input-group-fancy">
-                <label>Matricule Officiel</label>
-                <input type="text" [(ngModel)]="currentVehicule.matricule" placeholder="200-TUN-1234">
-              </div>
-              <div class="col-md-6 input-group-fancy">
-                <label>Affectation Site</label>
-                <select [(ngModel)]="selectedLocalId">
-                  <option [value]="0">Parc Central</option>
-                  <option *ngFor="let l of locaux" [value]="l.idLocal">{{ l.nomLocal }}</option>
-                </select>
-              </div>
-              <div class="col-md-6 input-group-fancy">
-                <label>Marque & Modèle</label>
-                <div class="d-flex gap-2">
-                  <input type="text" [(ngModel)]="currentVehicule.marque" placeholder="Marque" class="w-50">
-                  <input type="text" [(ngModel)]="currentVehicule.modele" placeholder="Modèle" class="w-50">
-                </div>
-              </div>
-              <div class="col-md-6 input-group-fancy">
-                <label>Spécifications</label>
-                <div class="d-flex gap-2">
-                  <select [(ngModel)]="currentVehicule.carburant" class="w-50">
-                    <option value="Diesel">Diesel</option>
-                    <option value="Essence">Essence</option>
-                  </select>
-                  <input type="number" [(ngModel)]="currentVehicule.annee" placeholder="Année" class="w-50">
-                </div>
-              </div>
-              <div class="col-md-12 input-group-fancy">
-                <label>Statut de l'unité</label>
-                <select [(ngModel)]="currentVehicule.etat">
-                  <option value="DISPONIBLE">DISPONIBLE</option>
-                  <option value="INDISPONIBLE">INDISPONIBLE</option>
-                  <option value="EN_ENTRETIEN">EN ENTRETIEN</option>
-                  <option value="EN_MISSION">EN MISSION</option>
-                </select>
-              </div>
-              <div class="col-12 input-group-fancy">
-                <label>URL Image (HD)</label>
-                <input type="text" [(ngModel)]="currentVehicule.image" placeholder="Lien image...">
-              </div>
-            </div>
+
+  <div class="col-md-6 input-group-fancy">
+    <label>Matricule Officiel</label>
+    <input type="text" [(ngModel)]="currentVehicule.matricule"
+      placeholder="200-TN-1234"
+      [class.input-error]="formErrors.matricule"
+      (input)="formErrors.matricule = null">
+    <small class="error-msg" *ngIf="formErrors.matricule">{{ formErrors.matricule }}</small>
+  </div>
+
+  <div class="col-md-6 input-group-fancy">
+    <label>Affectation Site</label>
+    <select [(ngModel)]="selectedLocalId">
+      <option [value]="0">Parc Central</option>
+      <option *ngFor="let l of locaux" [value]="l.idLocal">{{ l.nomLocal }}</option>
+    </select>
+  </div>
+
+  <div class="col-md-6 input-group-fancy">
+    <label>Marque</label>
+    <input type="text" [(ngModel)]="currentVehicule.marque"
+      placeholder="Marque"
+      [class.input-error]="formErrors.marque"
+      (input)="formErrors.marque = null">
+    <small class="error-msg" *ngIf="formErrors.marque">{{ formErrors.marque }}</small>
+  </div>
+
+  <div class="col-md-6 input-group-fancy">
+    <label>Modèle</label>
+    <input type="text" [(ngModel)]="currentVehicule.modele"
+      placeholder="Modèle"
+      [class.input-error]="formErrors.modele"
+      (input)="formErrors.modele = null">
+    <small class="error-msg" *ngIf="formErrors.modele">{{ formErrors.modele }}</small>
+  </div>
+
+  <div class="col-md-6 input-group-fancy">
+    <label>Carburant</label>
+    <select [(ngModel)]="currentVehicule.carburant">
+      <option value="Diesel">Diesel</option>
+      <option value="Essence">Essence</option>
+    </select>
+  </div>
+
+  <div class="col-md-6 input-group-fancy">
+    <label>Année</label>
+    <input type="number" [(ngModel)]="currentVehicule.annee"
+      placeholder="Année"
+      [class.input-error]="formErrors.annee"
+      (input)="formErrors.annee = null">
+    <small class="error-msg" *ngIf="formErrors.annee">{{ formErrors.annee }}</small>
+  </div>
+
+  <div class="col-md-12 input-group-fancy">
+    <label>Statut de l'unité</label>
+    <select [(ngModel)]="currentVehicule.etat">
+      <option value="DISPONIBLE">DISPONIBLE</option>
+      <option value="INDISPONIBLE">INDISPONIBLE</option>
+      <option value="EN_ENTRETIEN">EN ENTRETIEN</option>
+      <option value="EN_MISSION">EN MISSION</option>
+    </select>
+  </div>
+
+  <div class="col-12 input-group-fancy">
+    <label>URL Image (HD)</label>
+    <input type="text" [(ngModel)]="currentVehicule.image" placeholder="Lien image...">
+  </div>
+
+</div>
 
             <div class="mt-5 d-flex gap-3">
               <button class="btn-agil-main px-5" (click)="enregistrer()">

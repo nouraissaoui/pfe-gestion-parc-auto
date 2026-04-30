@@ -195,75 +195,97 @@
       </div>
     </div>
 
-    <form (ngSubmit)="soumettreFormulaire()" class="elegant-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label><i class="fas fa-user"></i> Prénom</label>
-          <input type="text" [(ngModel)]="chefForm.prenom" name="prenom" required placeholder="ex: Jean">
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-user"></i> Nom</label>
-          <input type="text" [(ngModel)]="chefForm.nom" name="nom" required placeholder="ex: Dupont">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label><i class="fas fa-envelope"></i> Email Professionnel</label>
-        <input type="email" [(ngModel)]="chefForm.mail" name="mail" required placeholder="jean.dupont@sndp.tn">
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label><i class="fas fa-map-marker-alt"></i> Local Affecté</label>
-          <select [(ngModel)]="chefForm.idLocal" name="idLocal" class="custom-select">
-            <option [ngValue]="null">
-              {{ isEditMode ? '❌ Retirer du local actuel (Libérer)' : '--- Aucun local assigné ---' }}
-            </option>
-            <option *ngFor="let loc of locaux" [value]="loc.idLocal" [disabled]="isLocalOccupe(loc.idLocal)">
-              {{ loc.nomLocal }} {{ isLocalOccupe(loc.idLocal) ? '(Occupé)' : '' }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group prestige-group">
-          <label><i class="fas fa-star gold-star"></i> Responsabilité du Chef</label>
-          <div class="select-wrapper">
-            <select [(ngModel)]="chefForm.niveauResponsabilite" name="niveauResponsabilite" class="prestige-select">
-              <option [ngValue]="null">⚪ Non assigné (Libérer le poste)</option>
-              <option value="LOCAL_PRINCIPAL">🏢 Local Principal</option>
-              <option value="REGIONAL">🗺️ Régional</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label><i class="fas fa-calendar-alt"></i> Date de nomination</label>
-          <input type="date" [(ngModel)]="chefForm.dateNomination" name="dateNomination" required>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-clock"></i> Ancienneté (années)</label>
-          <input type="number" [(ngModel)]="chefForm.ancienneteChef" name="ancienneteChef" required min="0">
-        </div>
-      </div>
-
-      <div class="form-group full-width" *ngIf="!isEditMode">
-        <label><i class="fas fa-lock"></i> Mot de passe sécurisé</label>
-        <input type="password" [(ngModel)]="chefForm.motDePasse" name="password" required placeholder="••••••••">
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn-modal-cancel" (click)="closeModal()" *ngIf="!showSuccessState">
-          <i class="fas fa-times"></i> Annuler
-        </button>
-        <button type="submit" class="btn-modal-primary" [class.btn-success-active]="showSuccessState" [disabled]="isSubmitting || showSuccessState">
-          <i [class]="showSuccessState ? 'fas fa-check' : (isSubmitting ? 'fas fa-spinner fa-spin' : 'fas fa-save')"></i>
-          <span *ngIf="!showSuccessState">{{ isEditMode ? 'Enregistrer' : 'Créer' }}</span>
-        </button>
-      </div>
-    </form>
+<form (ngSubmit)="soumettreFormulaire()" class="elegant-form">
+  <div class="form-row">
+    <div class="form-group">
+      <label><i class="fas fa-user"></i> Prénom</label>
+      <input type="text" [(ngModel)]="chefForm.prenom" name="prenom"
+        [class.input-error]="formErrors.prenom"
+        (input)="formErrors.prenom = null"
+        placeholder="ex: Jean">
+      <small class="error-msg" *ngIf="formErrors.prenom">{{ formErrors.prenom }}</small>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-user"></i> Nom</label>
+      <input type="text" [(ngModel)]="chefForm.nom" name="nom"
+        [class.input-error]="formErrors.nom"
+        (input)="formErrors.nom = null"
+        placeholder="ex: Dupont">
+      <small class="error-msg" *ngIf="formErrors.nom">{{ formErrors.nom }}</small>
+    </div>
   </div>
+
+  <div class="form-group">
+    <label><i class="fas fa-envelope"></i> Email Professionnel</label>
+    <input type="email" [(ngModel)]="chefForm.mail" name="mail"
+      [class.input-error]="formErrors.mail"
+      (input)="formErrors.mail = null"
+      placeholder="jean.dupont@agil.com.tn">
+    <small class="error-msg" *ngIf="formErrors.mail">{{ formErrors.mail }}</small>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label><i class="fas fa-map-marker-alt"></i> Local Affecté</label>
+      <select [(ngModel)]="chefForm.idLocal" name="idLocal" class="custom-select">
+        <option [ngValue]="null">
+          {{ isEditMode ? '❌ Retirer du local actuel (Libérer)' : '--- Aucun local assigné ---' }}
+        </option>
+        <option *ngFor="let loc of locaux" [value]="loc.idLocal" [disabled]="isLocalOccupe(loc.idLocal)">
+          {{ loc.nomLocal }} {{ isLocalOccupe(loc.idLocal) ? '(Occupé)' : '' }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group prestige-group">
+      <label><i class="fas fa-star gold-star"></i> Responsabilité du Chef</label>
+      <div class="select-wrapper">
+        <select [(ngModel)]="chefForm.niveauResponsabilite" name="niveauResponsabilite" class="prestige-select">
+          <option [ngValue]="null">⚪ Non assigné (Libérer le poste)</option>
+          <option value="LOCAL_PRINCIPAL">🏢 Local Principal</option>
+          <option value="REGIONAL">🗺️ Régional</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label><i class="fas fa-calendar-alt"></i> Date de nomination</label>
+      <input type="date" [(ngModel)]="chefForm.dateNomination" name="dateNomination"
+        [class.input-error]="formErrors.dateNomination"
+        (input)="formErrors.dateNomination = null">
+      <small class="error-msg" *ngIf="formErrors.dateNomination">{{ formErrors.dateNomination }}</small>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-clock"></i> Ancienneté (années)</label>
+      <input type="number" [(ngModel)]="chefForm.ancienneteChef" name="ancienneteChef"
+        [class.input-error]="formErrors.ancienneteChef"
+        (input)="formErrors.ancienneteChef = null"
+        min="0">
+      <small class="error-msg" *ngIf="formErrors.ancienneteChef">{{ formErrors.ancienneteChef }}</small>
+    </div>
+  </div>
+
+  <div class="form-group full-width" *ngIf="!isEditMode">
+    <label><i class="fas fa-lock"></i> Mot de passe sécurisé</label>
+    <input type="password" [(ngModel)]="chefForm.motDePasse" name="password"
+      [class.input-error]="formErrors.motDePasse"
+      (input)="formErrors.motDePasse = null"
+      placeholder="••••••••">
+    <small class="error-msg" *ngIf="formErrors.motDePasse">{{ formErrors.motDePasse }}</small>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn-modal-cancel" (click)="closeModal()" *ngIf="!showSuccessState">
+      <i class="fas fa-times"></i> Annuler
+    </button>
+    <button type="submit" class="btn-modal-primary" [class.btn-success-active]="showSuccessState" [disabled]="isSubmitting || showSuccessState">
+      <i [class]="showSuccessState ? 'fas fa-check' : (isSubmitting ? 'fas fa-spinner fa-spin' : 'fas fa-save')"></i>
+      <span *ngIf="!showSuccessState">{{ isEditMode ? 'Enregistrer' : 'Créer' }}</span>
+    </button>
+  </div>
+</form>  </div>
 </div>
 
 <div class="hologram-card" [style.top.px]="mouseY" [style.left.px]="mouseX" *ngIf="hoveredChef">

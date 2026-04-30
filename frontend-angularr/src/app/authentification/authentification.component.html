@@ -13,15 +13,45 @@
     <h1>Access Your Professional<br>Fleet Management Space</h1>
     <p>Authenticate to manage SNDP vehicles, track missions, and access operational data in a secure environment.</p>
 
+    <div *ngIf="showAlert" class="alert-box">
+      <span class="alert-icon">&#9888;</span>
+      <span>{{ alertMessage }}</span>
+      <button class="alert-close" (click)="showAlert = false">&#10005;</button>
+    </div>
+
     <form (submit)="login(); $event.preventDefault()" class="login-form">
-  <input type="email" placeholder="Professional email address" [(ngModel)]="email" name="email">
-  <input type="password" placeholder="Password" [(ngModel)]="password" name="password">
-  <button type="submit">SECURE LOGIN</button>
-</form>
+
+      <input
+        type="email"
+        placeholder="Professional email address"
+        [(ngModel)]="email"
+        name="email"
+        [class.input-error]="emailInvalid"
+        (input)="emailInvalid = false; emailErrorMessage = ''; showAlert = false">
+      <small *ngIf="emailInvalid && emailErrorMessage" class="error-msg">
+        {{ emailErrorMessage }}
+      </small>
+
+      <input
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="password"
+        name="password"
+        [class.input-error]="passwordInvalid"
+        (input)="passwordInvalid = false; passwordErrorMessage = ''; showAlert = false">
+      <small *ngIf="passwordInvalid && passwordErrorMessage" class="error-msg">
+        {{ passwordErrorMessage }}
+      </small>
+
+      <button type="submit" [disabled]="isLoading" [class.loading]="isLoading">
+        <span *ngIf="!isLoading">SECURE LOGIN</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+
+    </form>
   </div>
 
   <div class="hero-right">
-    <!-- ✅ chemin relatif correct -->
     <img src="assets/car.png" alt="Car">
   </div>
 </section>

@@ -2459,4 +2459,14 @@ body::before {
 .segment.maintenance {
     background: linear-gradient(135deg, #800000 0%, #6D071A 100%);
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}.input-error {
+  border: 1.5px solid rgb(207, 21, 21) !important;
+  outline: none;
+}
+
+.error-msg {
+  color: rgb(207, 21, 21);
+  font-size: 11px;
+  margin-top: 3px;
+  display: block;
 }

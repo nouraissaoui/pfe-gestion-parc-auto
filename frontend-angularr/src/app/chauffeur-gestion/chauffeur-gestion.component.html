@@ -95,92 +95,120 @@
             </div>
 
             <div class="p-5">
-              <form (ngSubmit)="enregistrer()" class="row g-4">
-                <div class="col-md-4">
-                  <div class="fancy-input-wrapper">
-                    <input type="text" required [(ngModel)]="chauffeurForm.nom" name="nom">
-                    <label>Nom</label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="fancy-input-wrapper">
-                    <input type="text" required [(ngModel)]="chauffeurForm.prenom" name="prenom">
-                    <label>Prénom</label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="fancy-input-wrapper">
-                    <input type="email" required [(ngModel)]="chauffeurForm.mail" name="mail">
-                    <label>Email Officiel</label>
-                  </div>
-                </div>
-                <div class="col-md-4" *ngIf="!isEditMode">
-                  <div class="fancy-input-wrapper">
-                    <input type="password" required [(ngModel)]="chauffeurForm.motDePasse" name="mdp">
-                    <label>Mot de passe</label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="fancy-input-wrapper">
-                    <input type="text" required [(ngModel)]="chauffeurForm.region" name="region">
-                    <label>Région</label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="fancy-input-wrapper">
-                    <input type="number" required [(ngModel)]="chauffeurForm.anciennete" name="anc">
-                    <label>Ancienneté (ans)</label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="fancy-input-wrapper">
-                    <input type="date" required [(ngModel)]="chauffeurForm.datePriseLicense" name="dpl">
-                    <label class="active">Obtention Permis</label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="fancy-input-wrapper">
-                    <input type="date" required [(ngModel)]="chauffeurForm.dateExpirationPermis" name="dep">
-                    <label class="active">Expiration Permis</label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="select-prestige-wrapper">
-                    <label class="select-label">Type de Permis</label>
-                    <select [(ngModel)]="chauffeurForm.typeVehiculePermis" name="tvp">
-                      <option value="B">Catégorie B</option>
-                      <option value="C">Catégorie C</option>
-                      <option value="D">Catégorie D</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="select-prestige-wrapper">
-                    <label class="select-label">Localisation</label>
-                    <select [(ngModel)]="chauffeurForm.local" name="loc">
-                      <option [ngValue]="null">Non assigné</option>
-                      <option *ngFor="let l of locaux" [ngValue]="l">{{ l.nomLocal }}</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="select-prestige-wrapper">
-                    <label class="select-label">Statut</label>
-                    <select [(ngModel)]="chauffeurForm.etatChauffeur" name="et">
-                      <option value="DISPONIBLE">🟢 DISPONIBLE</option>
-                      <option value="EN_MISSION">🟠 EN MISSION</option>
-                      <option value="EN_CONGE">⚪ EN CONGÉ</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-12 mt-4">
-                  <button type="submit" class="btn-ultra-luxe w-100">
-                    <span class="shimmer"></span>
-                    <span class="content"><i class="fas fa-check-circle me-2"></i> VALIDER LES DONNÉES</span>
-                  </button>
-                </div>
-              </form>
-            </div>
+             <form (ngSubmit)="enregistrer()" class="row g-4">
+
+  <div class="col-md-4">
+    <div class="fancy-input-wrapper" [class.input-error-wrapper]="formErrors.nom">
+      <input type="text" [(ngModel)]="chauffeurForm.nom" name="nom"
+        (input)="formErrors.nom = null">
+      <label>Nom</label>
+    </div>
+    <small class="error-msg" *ngIf="formErrors.nom">{{ formErrors.nom }}</small>
+  </div>
+
+  <div class="col-md-4">
+    <div class="fancy-input-wrapper" [class.input-error-wrapper]="formErrors.prenom">
+      <input type="text" [(ngModel)]="chauffeurForm.prenom" name="prenom"
+        (input)="formErrors.prenom = null">
+      <label>Prénom</label>
+    </div>
+    <small class="error-msg" *ngIf="formErrors.prenom">{{ formErrors.prenom }}</small>
+  </div>
+
+  <div class="col-md-4">
+    <div class="fancy-input-wrapper" [class.input-error-wrapper]="formErrors.mail">
+      <input type="email" [(ngModel)]="chauffeurForm.mail" name="mail"
+        (input)="formErrors.mail = null">
+      <label>Email Officiel</label>
+    </div>
+    <small class="error-msg" *ngIf="formErrors.mail">{{ formErrors.mail }}</small>
+  </div>
+
+  <div class="col-md-4" *ngIf="!isEditMode">
+    <div class="fancy-input-wrapper" [class.input-error-wrapper]="formErrors.motDePasse">
+      <input type="password" [(ngModel)]="chauffeurForm.motDePasse" name="mdp"
+        (input)="formErrors.motDePasse = null">
+      <label>Mot de passe</label>
+    </div>
+    <small class="error-msg" *ngIf="formErrors.motDePasse">{{ formErrors.motDePasse }}</small>
+  </div>
+
+  <div class="col-md-4">
+    <div class="fancy-input-wrapper" [class.input-error-wrapper]="formErrors.region">
+      <input type="text" [(ngModel)]="chauffeurForm.region" name="region"
+        (input)="formErrors.region = null">
+      <label>Région</label>
+    </div>
+    <small class="error-msg" *ngIf="formErrors.region">{{ formErrors.region }}</small>
+  </div>
+
+  <div class="col-md-4">
+    <div class="fancy-input-wrapper" [class.input-error-wrapper]="formErrors.anciennete">
+      <input type="number" [(ngModel)]="chauffeurForm.anciennete" name="anc" min="0"
+        (input)="formErrors.anciennete = null">
+      <label>Ancienneté (ans)</label>
+    </div>
+    <small class="error-msg" *ngIf="formErrors.anciennete">{{ formErrors.anciennete }}</small>
+  </div>
+
+  <div class="col-md-4">
+    <div class="fancy-input-wrapper" [class.input-error-wrapper]="formErrors.datePriseLicense">
+      <input type="date" [(ngModel)]="chauffeurForm.datePriseLicense" name="dpl"
+        (input)="formErrors.datePriseLicense = null">
+      <label class="active">Obtention Permis</label>
+    </div>
+    <small class="error-msg" *ngIf="formErrors.datePriseLicense">{{ formErrors.datePriseLicense }}</small>
+  </div>
+
+  <div class="col-md-4">
+    <div class="fancy-input-wrapper" [class.input-error-wrapper]="formErrors.dateExpirationPermis">
+      <input type="date" [(ngModel)]="chauffeurForm.dateExpirationPermis" name="dep"
+        (input)="formErrors.dateExpirationPermis = null">
+      <label class="active">Expiration Permis</label>
+    </div>
+    <small class="error-msg" *ngIf="formErrors.dateExpirationPermis">{{ formErrors.dateExpirationPermis }}</small>
+  </div>
+
+  <div class="col-md-4">
+    <div class="select-prestige-wrapper">
+      <label class="select-label">Type de Permis</label>
+      <select [(ngModel)]="chauffeurForm.typeVehiculePermis" name="tvp">
+        <option value="B">Catégorie B</option>
+        <option value="C">Catégorie C</option>
+        <option value="D">Catégorie D</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="select-prestige-wrapper">
+      <label class="select-label">Localisation</label>
+      <select [(ngModel)]="chauffeurForm.local" name="loc">
+        <option [ngValue]="null">Non assigné</option>
+        <option *ngFor="let l of locaux" [ngValue]="l">{{ l.nomLocal }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="select-prestige-wrapper">
+      <label class="select-label">Statut</label>
+      <select [(ngModel)]="chauffeurForm.etatChauffeur" name="et">
+        <option value="DISPONIBLE">🟢 DISPONIBLE</option>
+        <option value="EN_MISSION">🟠 EN MISSION</option>
+        <option value="EN_CONGE">⚪ EN CONGÉ</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-12 mt-4">
+    <button type="submit" class="btn-ultra-luxe w-100">
+      <span class="shimmer"></span>
+      <span class="content"><i class="fas fa-check-circle me-2"></i> VALIDER LES DONNÉES</span>
+    </button>
+  </div>
+
+</form> </div>
           </div>
         </div>
       </div>

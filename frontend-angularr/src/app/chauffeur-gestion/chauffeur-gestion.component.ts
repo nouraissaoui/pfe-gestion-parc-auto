@@ -38,10 +38,11 @@ export class ChauffeurGestionComponent implements OnInit {
   }
 
   // --- Actions avec alertes de succès ---
+enregistrer() {
+  if (!this.validerFormulaire()) return;
 
-  enregistrer() {
-  console.log("Données envoyées au backend :", this.chauffeurForm); // <--- AJOUTEZ CECI
-  
+  console.log("Données envoyées au backend :", this.chauffeurForm);
+
   if (this.isEditMode && this.chauffeurForm.idChauffeur) {
     this.service.updateChauffeur(this.chauffeurForm.idChauffeur, this.chauffeurForm).subscribe({
       next: () => {
@@ -170,4 +171,68 @@ export class ChauffeurGestionComponent implements OnInit {
   openFormModal() { this.showFormModal = true; }
   closeFormModal() { this.showFormModal = false; this.isEditMode = false; }
   openFicheModal() { throw new Error('Method not implemented.'); }
+  formErrors: any = {};
+
+validerFormulaire(): boolean {
+  this.formErrors = {};
+  let valide = true;
+
+  const nomRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
+  const emailRegex = /^[a-zA-ZÀ-ÿ]+\.[a-zA-ZÀ-ÿ]+@agil\.com\.tn$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#^()\-_])[A-Za-z\d@$!%*?&.#^()\-_]{8,}$/;
+
+  if (!this.chauffeurForm.nom || !nomRegex.test(this.chauffeurForm.nom)) {
+    this.formErrors.nom = 'Le nom ne doit contenir que des lettres.';
+    valide = false;
+  }
+
+  if (!this.chauffeurForm.prenom || !nomRegex.test(this.chauffeurForm.prenom)) {
+    this.formErrors.prenom = 'Le prénom ne doit contenir que des lettres.';
+    valide = false;
+  }
+
+  if (!this.chauffeurForm.mail || !emailRegex.test(this.chauffeurForm.mail)) {
+    this.formErrors.mail = 'Format requis : prenom.nom@agil.com.tn';
+    valide = false;
+  }
+
+  if (!this.isEditMode) {
+    if (!this.chauffeurForm.motDePasse || !passwordRegex.test(this.chauffeurForm.motDePasse)) {
+      this.formErrors.motDePasse = 'Min. 8 caractères avec majuscule, minuscule, chiffre et caractère spécial.';
+      valide = false;
+    }
+  }
+
+  if (!this.chauffeurForm.region || !this.chauffeurForm.region.trim()) {
+    this.formErrors.region = 'La région est obligatoire.';
+    valide = false;
+  }
+
+  const anciennete = Number(this.chauffeurForm.anciennete);
+  if (!Number.isInteger(anciennete) || anciennete < 0) {
+    this.formErrors.anciennete = 'L\'ancienneté doit être un nombre entier positif ou zéro.';
+    valide = false;
+  }
+
+  if (!this.chauffeurForm.datePriseLicense) {
+    this.formErrors.datePriseLicense = 'La date d\'obtention du permis est obligatoire.';
+    valide = false;
+  }
+
+  if (!this.chauffeurForm.dateExpirationPermis) {
+    this.formErrors.dateExpirationPermis = 'La date d\'expiration du permis est obligatoire.';
+    valide = false;
+  }
+
+  if (
+    this.chauffeurForm.datePriseLicense &&
+    this.chauffeurForm.dateExpirationPermis &&
+    new Date(this.chauffeurForm.dateExpirationPermis) <= new Date(this.chauffeurForm.datePriseLicense)
+  ) {
+    this.formErrors.dateExpirationPermis = 'La date d\'expiration doit être après la date d\'obtention.';
+    valide = false;
+  }
+
+  return valide;
+}
 }

@@ -86,26 +86,71 @@ playSuccessSound() {
 }
   
  soumettreFormulaire() {
+  if (!this.validerFormulaire()) return; // Validation avant tout
   if (this.isSubmitting) return;
   this.isSubmitting = true;
 
   if (this.isEditMode && this.selectedChefId) {
     this.gestionService.updateChefParc(this.selectedChefId, this.chefForm).subscribe({
       next: () => {
-        // Message spécifique pour la modification
         this.terminerAvecSucces("Modification effectuée avec succès !");
         this.chargerDonnees();
       },
-      error: (err) => { 
-        this.isSubmitting = false; 
+      error: (err) => {
+        this.isSubmitting = false;
         console.error("Erreur lors de la mise à jour:", err);
       }
     });
   } else {
-    // Appel de la méthode ajouterChef qui gérera son propre message
     this.ajouterChef();
   }
 }
+formErrors: any = {};
+
+validerFormulaire(): boolean {
+  this.formErrors = {};
+  let valide = true;
+
+  const nomRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
+  const emailRegex = /^[a-zA-ZÀ-ÿ]+\.[a-zA-ZÀ-ÿ]+@agil\.com\.tn$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#^()\-_])[A-Za-z\d@$!%*?&.#^()\-_]{8,}$/;
+
+  if (!this.chefForm.prenom || !nomRegex.test(this.chefForm.prenom)) {
+    this.formErrors.prenom = 'Le prénom ne doit contenir que des lettres.';
+    valide = false;
+  }
+
+  if (!this.chefForm.nom || !nomRegex.test(this.chefForm.nom)) {
+    this.formErrors.nom = 'Le nom ne doit contenir que des lettres.';
+    valide = false;
+  }
+
+  if (!this.chefForm.mail || !emailRegex.test(this.chefForm.mail)) {
+    this.formErrors.mail = 'Format requis : prenom.nom@agil.com.tn';
+    valide = false;
+  }
+
+  if (!this.isEditMode) {
+    if (!this.chefForm.motDePasse || !passwordRegex.test(this.chefForm.motDePasse)) {
+      this.formErrors.motDePasse = 'Min. 8 caractères avec majuscule, minuscule, chiffre et caractère spécial.';
+      valide = false;
+    }
+  }
+
+  if (!this.chefForm.dateNomination) {
+    this.formErrors.dateNomination = 'La date de nomination est obligatoire.';
+    valide = false;
+  }
+
+  const anciennete = Number(this.chefForm.ancienneteChef);
+  if (!Number.isInteger(anciennete) || anciennete < 0) {
+    this.formErrors.ancienneteChef = 'L\'ancienneté doit être un nombre entier positif ou zéro.';
+    valide = false;
+  }
+
+  return valide;
+}
+
 terminerAvecSucces(message: string) {
   this.isSubmitting = false;
   this.showSuccessState = true;

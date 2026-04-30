@@ -5930,3 +5930,14 @@ footer::before {
 /* Supprime toute ancienne règle .modal et .modal-content */
 .modal { display: none !important; }
 .modal-content { display: none !important; }
+.input-error {
+  border: 1.5px solid rgb(207, 21, 21) !important;
+  outline: none;
+}
+
+.error-msg {
+  color: rgb(207, 21, 21);
+  font-size: 11px;
+  margin-top: 3px;
+  display: block;
+}

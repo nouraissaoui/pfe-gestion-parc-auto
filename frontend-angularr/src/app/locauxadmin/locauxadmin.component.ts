@@ -74,46 +74,39 @@ showPreloader= true;
     /******** ADD ********/
     /******** ADD ********/
   add() {
-    // Vérifier que tous les champs sont remplis
-    const { nomLocal, adresse, region, ville, images } = this.newLocal;
-    if (!nomLocal || !adresse || !region || !ville || !images) {
-      alert("Veuillez remplir tous les champs avant d'ajouter un local !");
-      return; // arrêter la fonction si un champ est vide
+  if (!this.validerAdd()) return;
+
+  const payload = { ...this.newLocal };
+  this.service.add(payload).subscribe({
+    next: () => {
+      alert("Ajout OK");
+      this.newLocal = { nomLocal: '', adresse: '', region: '', ville: '', images: '' };
+      setTimeout(() => this.load(), 100);
+      this.mode = 'list';
+    },
+    error: err => {
+      console.error("Erreur ajout:", err);
+      alert("Erreur lors de l'ajout !");
     }
+  });
+}
 
-    const payload = { ...this.newLocal };
-    this.service.add(payload).subscribe({
-      next: () => {
-        alert("Ajout OK");
-        // Réinitialiser le formulaire
-        this.newLocal = { nomLocal: '', adresse: '', region: '', ville: '', images: '' };
-        setTimeout(() => this.load(), 100);
-        this.mode = 'list';
-      },
-      error: err => {
-        console.error("Erreur ajout:", err);
-        alert("Erreur lors de l'ajout !");
-      }
-    });
-  }
+saveEdit() {
+  if (!this.validerEdit()) return;
 
-    /******** EDIT ********/
-   
-
-    saveEdit() {
-      const payload = { ...this.editLocal };
-      this.service.update(this.editLocal.idLocal, payload).subscribe({
-        next: () => {
-          alert("Modifié !");
-          this.editLocal = null;
-          setTimeout(() => this.load(), 100);
-        },
-        error: err => {
-          console.error("Erreur modification:", err);
-          alert("Erreur lors de la modification !");
-        }
-      });
+  const payload = { ...this.editLocal };
+  this.service.update(this.editLocal.idLocal, payload).subscribe({
+    next: () => {
+      alert("Modifié !");
+      this.editLocal = null;
+      setTimeout(() => this.load(), 100);
+    },
+    error: err => {
+      console.error("Erreur modification:", err);
+      alert("Erreur lors de la modification !");
     }
+  });
+}
 
     /******** DELETE ********/
     delete(id: number) {
@@ -151,4 +144,73 @@ startEdit(local: any, event: MouseEvent): void {
     // Ne pas dépasser en haut
     if (this.modalTop < scrollY + 20) this.modalTop = scrollY + 20;
   }, 0);
+}formErrors: any = {};
+editFormErrors: any = {};
+
+validerAdd(): boolean {
+  this.formErrors = {};
+  let valide = true;
+  const lettresRegex = /^[a-zA-ZÀ-ÿ\s\-'0-9]+$/;
+const lettresPuresRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
+
+ if (!this.newLocal.nomLocal || this.newLocal.nomLocal.trim() === '') {
+  this.formErrors.nomLocal = 'Le nom est obligatoire.';
+  valide = false;
+}
+
+if (!this.newLocal.adresse || this.newLocal.adresse.trim().length < 5) {
+  this.formErrors.adresse = 'L\'adresse doit contenir au moins 5 caractères.';
+  valide = false;
+}
+
+ if (!this.newLocal.ville || !lettresPuresRegex.test(this.newLocal.ville.trim())) {
+  this.formErrors.ville = 'La ville ne doit contenir que des lettres.';
+  valide = false;
+}
+
+if (!this.newLocal.region || !lettresPuresRegex.test(this.newLocal.region.trim())) {
+  this.formErrors.region = 'La région ne doit contenir que des lettres.';
+  valide = false;
+}
+
+  if (!this.newLocal.images || this.newLocal.images.trim() === '') {
+    this.formErrors.images = 'Au moins une image est obligatoire.';
+    valide = false;
+  }
+
+  return valide;
+}
+
+validerEdit(): boolean {
+  this.editFormErrors = {};
+  let valide = true;
+  const lettresRegex = /^[a-zA-ZÀ-ÿ\s\-'0-9]+$/;
+  const lettresPuresRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
+
+  if (!this.editLocal.nomLocal || !lettresRegex.test(this.editLocal.nomLocal)) {
+    this.editFormErrors.nomLocal = 'Le nom est obligatoire.';
+    valide = false;
+  }
+
+  if (!this.editLocal.adresse || this.editLocal.adresse.trim().length < 5) {
+    this.editFormErrors.adresse = 'L\'adresse doit contenir au moins 5 caractères.';
+    valide = false;
+  }
+
+ if (!this.editLocal.ville || !lettresPuresRegex.test(this.editLocal.ville.trim())) {
+  this.editFormErrors.ville = 'La ville ne doit contenir que des lettres.';
+  valide = false;
+}
+
+if (!this.editLocal.region || !lettresPuresRegex.test(this.editLocal.region.trim())) {
+  this.editFormErrors.region = 'La région ne doit contenir que des lettres.';
+  valide = false;
+}
+
+  if (!this.editLocal.images || this.editLocal.images.trim() === '') {
+    this.editFormErrors.images = 'Au moins une image est obligatoire.';
+    valide = false;
+  }
+
+  return valide;
 }}

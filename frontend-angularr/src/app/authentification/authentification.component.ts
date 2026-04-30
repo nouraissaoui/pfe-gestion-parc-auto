@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { GestionParcService, LoginResponse } from '../gestion-parc.service';
 import { Adminlayoutcomponent } from '../adminlayoutcomponent/adminlayoutcomponent.component';
@@ -9,91 +9,96 @@ import { Adminlayoutcomponent } from '../adminlayoutcomponent/adminlayoutcompone
 @Component({
   selector: 'app-authentification',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule,Adminlayoutcomponent],
+  imports: [CommonModule, FormsModule, HttpClientModule, Adminlayoutcomponent],
   templateUrl: './authentification.component.html',
-  styleUrls: ['./authentification.component.css']
+  styleUrls: ['./authentification.component.css'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class AuthentificationComponent {
   email: string = '';
   password: string = '';
+  emailInvalid: boolean = false;
+  passwordInvalid: boolean = false;
+  emailErrorMessage: string = '';
+  passwordErrorMessage: string = '';
+  showAlert: boolean = false;
+  alertMessage: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private service: GestionParcService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  /*login(): void {
-  this.service.login(this.email, this.password).subscribe({
-    next: (response: LoginResponse) => {
-      // 🔐 Sauvegarde session
-      sessionStorage.setItem('user', JSON.stringify(response));
-      console.log("User connecté :", response);
+  login(): void {
+    // Reset immédiat
+    this.emailInvalid = false;
+    this.passwordInvalid = false;
+    this.emailErrorMessage = '';
+    this.passwordErrorMessage = '';
+    this.showAlert = false;
+    this.alertMessage = '';
 
-      // 🔹 Redirection selon typeUtilisateur (et non plus role)
-      switch(response.typeUtilisateur) {
-        case 'ADMIN': // Si tu comptes ajouter un Admin plus tard
+const emailRegex = /^[a-zA-ZÀ-ÿ]+\.[a-zA-ZÀ-ÿ]+@agil\.com\.tn$|^admin@parc\.com$/;
+    let hasError = false;
+
+    if (!this.email || !emailRegex.test(this.email)) {
+      this.emailInvalid = true;
+      this.emailErrorMessage = 'Format requis : prenom.nom@agil.com.tn';
+      hasError = true;
+    }
+
+    if (!this.password || this.password.trim() === '') {
+      this.passwordInvalid = true;
+      this.passwordErrorMessage = 'Veuillez saisir votre mot de passe.';
+      hasError = true;
+    }
+
+    if (hasError) {
+      this.showAlert = true;
+      this.alertMessage = 'Veuillez remplir correctement tous les champs.';
+      this.cdr.detectChanges(); // Force l'affichage immédiat
+      return;
+    }
+
+    // Désactiver le bouton pendant l'appel
+    this.isLoading = true;
+    this.cdr.detectChanges();
+
+    this.service.login(this.email, this.password).subscribe({
+      next: (response: LoginResponse) => {
+        sessionStorage.clear();
+        sessionStorage.setItem('user', JSON.stringify(response));
+        if (response.idLocal) {
+          sessionStorage.setItem('idLocal', response.idLocal.toString());
+        }
+        sessionStorage.setItem('userId', response.id.toString());
+
+        const role = response.typeUtilisateur;
+        if (role === 'ADMIN') {
           this.router.navigate(['/admin/dashboard']);
-          break;
-
-        case 'CHAUFFEUR':
-          this.router.navigate(['/chauffeur/dashboard']);
-          break;
-
-        case 'CHEF_PARC': // Doit correspondre exactement à la String Java
+        } else if (role === 'CHEF_PARC') {
           this.router.navigate(['/chef-parc/dashboard']);
-          break;
-
-        default:
-          console.warn("Type utilisateur inconnu reçu :", response.typeUtilisateur);
-          alert("Rôle inconnu : " + response.typeUtilisateur);
+        } else if (role === 'CHAUFFEUR') {
+          this.router.navigate(['/chauffeur/menu']);
+        } else {
+          alert("Rôle non reconnu : " + role);
+        }
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Erreur d'authentification :", err);
+        this.isLoading = false;
+        this.emailInvalid = true;
+        this.passwordInvalid = true;
+        this.emailErrorMessage = 'Email ou mot de passe incorrect.';
+        this.passwordErrorMessage = 'Email ou mot de passe incorrect.';
+        this.showAlert = true;
+        this.alertMessage = "L'email ou le mot de passe que vous avez saisi est incorrect. Veuillez réessayer.";
+        this.cdr.detectChanges(); // Force l'affichage immédiat
       }
-    },
-    error: (err) => {
-      console.error("Erreur login :", err);
-      alert("Email ou mot de passe incorrect !");
-    }
-  });
-}*/
-login(): void {
-  // 1. Vérification de sécurité locale
-  if (!this.email || !this.password) {
-    alert("Veuillez saisir votre email et mot de passe.");
-    return;
+    });
   }
-
-  this.service.login(this.email, this.password).subscribe({
-    next: (response: LoginResponse) => {
-      console.log("Connexion réussie :", response);
-
-      // 2. Nettoyage de toute trace ancienne
-      sessionStorage.clear(); 
-
-      // 3. Stockage en sessionStorage (Isolation par onglet)
-      sessionStorage.setItem('user', JSON.stringify(response));
-      
-      // Stockage des IDs pour vos futurs composants
-      if (response.idLocal) {
-        sessionStorage.setItem('idLocal', response.idLocal.toString());
-      }
-      sessionStorage.setItem('userId', response.id.toString());
-
-      // 4. Redirection avec logs pour debugger
-      const role = response.typeUtilisateur;
-      console.log("Redirection vers l'espace :", role);
-
-      if (role === 'ADMIN') {
-        this.router.navigate(['/admin/dashboard']);
-      } else if (role === 'CHEF_PARC') {
-        this.router.navigate(['/chef-parc/dashboard']);
-      } else if (role === 'CHAUFFEUR') {
-        this.router.navigate(['/chauffeur/menu']);
-      } else {
-        alert("Rôle non reconnu : " + role);
-      }
-    },
-    error: (err) => {
-      console.error("Erreur d'authentification :", err);
-      alert("Email ou mot de passe incorrect !");
-    }
-  });
-}}
+}

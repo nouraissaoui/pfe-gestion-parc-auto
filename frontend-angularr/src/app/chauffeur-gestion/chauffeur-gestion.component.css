@@ -4142,4 +4142,13 @@ body {
 .custom-agil-table th:nth-child(8),
 .custom-agil-table td:nth-child(8) {
   min-width: 160px;
+}.input-error-wrapper input {
+  border-bottom: 2px solid rgb(207, 21, 21) !important;
+}
+
+.error-msg {
+  color: rgb(207, 21, 21);
+  font-size: 11px;
+  margin-top: 2px;
+  display: block;
 }

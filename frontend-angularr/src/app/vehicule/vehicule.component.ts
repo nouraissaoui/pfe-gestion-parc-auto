@@ -56,6 +56,8 @@ export class VehiculeComponent implements OnInit {
   }
 
   enregistrer() {
+      if (!this.validerFormulaire()) return;
+
     if (!this.currentVehicule.matricule) {
       alert("Le matricule est obligatoire.");
       return;
@@ -169,4 +171,37 @@ export class VehiculeComponent implements OnInit {
     if (!this.vehicules.length) return 0;
     return Math.round((this.vehicules.filter(v => v.etat === 'EN_ENTRETIEN').length / this.vehicules.length) * 100);
   }
+  formErrors: any = {};
+
+validerFormulaire(): boolean {
+  this.formErrors = {};
+  let valide = true;
+
+  const matriculeRegex = /^\d{3}-TN-\d{4}$/;
+  const lettresRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
+
+  if (!this.currentVehicule.matricule || !matriculeRegex.test(this.currentVehicule.matricule)) {
+    this.formErrors.matricule = 'Format requis : 200-TN-1234';
+    valide = false;
+  }
+
+  if (!this.currentVehicule.marque || !lettresRegex.test(this.currentVehicule.marque)) {
+    this.formErrors.marque = 'La marque ne doit contenir que des lettres.';
+    valide = false;
+  }
+
+  if (!this.currentVehicule.modele || !lettresRegex.test(this.currentVehicule.modele)) {
+    this.formErrors.modele = 'Le modèle ne doit contenir que des lettres.';
+    valide = false;
+  }
+
+  const annee = Number(this.currentVehicule.annee);
+  const anneeActuelle = new Date().getFullYear();
+  if (!annee || annee < 1900 || annee > anneeActuelle) {
+    this.formErrors.annee = `L'année doit être entre 1900 et ${anneeActuelle}.`;
+    valide = false;
+  }
+
+  return valide;
+}
 }
