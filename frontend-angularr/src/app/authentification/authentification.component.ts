@@ -89,16 +89,32 @@ const emailRegex = /^[a-zA-ZÀ-ÿ]+\.[a-zA-ZÀ-ÿ]+@agil\.com\.tn$|^admin@parc\.
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error("Erreur d'authentification :", err);
-        this.isLoading = false;
-        this.emailInvalid = true;
-        this.passwordInvalid = true;
-        this.emailErrorMessage = 'Email ou mot de passe incorrect.';
-        this.passwordErrorMessage = 'Email ou mot de passe incorrect.';
-        this.showAlert = true;
-        this.alertMessage = "L'email ou le mot de passe que vous avez saisi est incorrect. Veuillez réessayer.";
-        this.cdr.detectChanges(); // Force l'affichage immédiat
-      }
+  console.error("Erreur d'authentification :", err);
+  this.isLoading = false;
+
+  if (err.status === 0) {
+    this.showAlert = true;
+    this.alertMessage = "Impossible de contacter le serveur. Vérifiez que le backend est démarré.";
+
+  } else if (err.status === 404) {
+    // Email introuvable
+    this.emailInvalid = true;
+    this.emailErrorMessage = 'Aucun compte trouvé avec cet email.';
+    this.showAlert = true;
+    this.alertMessage = "Aucun compte trouvé avec cet email.";
+
+  } else {
+  // Les deux rouges avec messages distincts
+  this.emailInvalid = true;
+  this.passwordInvalid = true;
+  this.emailErrorMessage = 'Email incorrect ou introuvable.';
+  this.passwordErrorMessage = 'Mot de passe incorrect ou introuvable.';
+  this.showAlert = true;
+  this.alertMessage = "L'email et/ou le mot de passe que vous avez saisi est incorrect.";
+}
+
+  this.cdr.detectChanges();
+}
     });
   }
 }
