@@ -1070,4 +1070,5 @@ public class GestionParcService {
         // 5. Suppression finale du chauffeur
         chauffeurRepository.delete(chauffeur);
     }
+
 }
