@@ -41,6 +41,8 @@ export class AuthentificationComponent {
     this.alertMessage = '';
 
 const emailRegex = /^[a-zA-ZÀ-ÿ]+\.[a-zA-ZÀ-ÿ]+@agil\.com\.tn$|^admin@parc\.com$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
     let hasError = false;
 
     if (!this.email || !emailRegex.test(this.email)) {
@@ -48,12 +50,13 @@ const emailRegex = /^[a-zA-ZÀ-ÿ]+\.[a-zA-ZÀ-ÿ]+@agil\.com\.tn$|^admin@parc\.
       this.emailErrorMessage = 'Format requis : prenom.nom@agil.com.tn';
       hasError = true;
     }
+    if (!this.password || !passwordRegex.test(this.password)|| this.password.trim() === '') {
+  this.passwordInvalid = true;
+  this.passwordErrorMessage =
+    'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.';
+  hasError = true;
+}
 
-    if (!this.password || this.password.trim() === '') {
-      this.passwordInvalid = true;
-      this.passwordErrorMessage = 'Veuillez saisir votre mot de passe.';
-      hasError = true;
-    }
 
     if (hasError) {
       this.showAlert = true;
