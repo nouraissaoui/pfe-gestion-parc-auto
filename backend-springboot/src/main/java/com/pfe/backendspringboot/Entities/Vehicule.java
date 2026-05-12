@@ -1,6 +1,7 @@
 package com.pfe.backendspringboot.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -21,6 +22,32 @@ public class Vehicule {
     private String modele;
     private int annee;
     private String carburant;
+
+    //nouveau champs
+    @JsonProperty("type_vehicule")
+    @Column(name = "type_vehicule")
+    private String typeVehicule;
+
+    @JsonProperty("nombre_cylindres")
+    @Column(name = "nombre_cylindres")
+    private Integer nombreCylindres;
+
+    @JsonProperty("taille_moteur")
+    @Column(name = "taille_moteur")
+    private Double tailleMoteur;
+
+    @JsonProperty("transmission")
+    @Column(name = "transmission")
+    private String transmission;
+
+
+    @JsonProperty("boite")
+    @Column(name = "boite")
+    private String boite;
+
+    @JsonProperty("km_total")
+    @Column(name = "km_total")
+    private Integer kmTotal = 0;
 
     @Lob
     @Column(name = "image", columnDefinition = "LONGTEXT")
@@ -62,4 +89,22 @@ public class Vehicule {
 
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
+
+    public String getTypeVehicule() { return typeVehicule; }
+    public void setTypeVehicule(String typeVehicule) { this.typeVehicule = typeVehicule; }
+
+    public Integer getNombreCylindres() { return nombreCylindres; }
+    public void setNombreCylindres(Integer nombreCylindres) { this.nombreCylindres = nombreCylindres; }
+
+    public Double getTailleMoteur() { return tailleMoteur; }
+    public void setTailleMoteur(Double tailleMoteur) { this.tailleMoteur = tailleMoteur; }
+
+    public String getTransmission() { return transmission; }
+    public void setTransmission(String transmission) { this.transmission = transmission; }
+
+    public String getBoite() { return boite; }
+    public void setBoite(String boite) { this.boite = boite; }
+
+    public Integer getKmTotal() { return kmTotal; }
+    public void setKmTotal(Integer kmTotal) { this.kmTotal = kmTotal; }
 }

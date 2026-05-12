@@ -13,7 +13,7 @@ CORS(app)
 # CONFIG
 # ─────────────────────────────────────────────
 OLLAMA_URL = "http://localhost:11434/api/generate"
-LLM_MODEL  = "deepseek-v3.1:671b-cloud"
+LLM_MODEL  = "gemma4:31b-cloud"
 
 DB_CONFIG = {
     "host":     "localhost",

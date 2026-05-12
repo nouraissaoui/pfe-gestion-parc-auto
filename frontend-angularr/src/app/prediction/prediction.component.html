@@ -1,110 +1,185 @@
     <!-- prediction.component.html -->
     <div class="prediction-container">
 
-  <div class="ml-badge">Partie Machine Learning</div>
+    <div class="ml-badge">Partie Machine Learning</div>
     <h2>Prédiction de consommation</h2>
 
     <form (ngSubmit)="onSubmit()">
 
+        <!-- ═══════════════════════════════════════════════════════════
+            FIELDSET 1 — Sélection du véhicule + champs auto-remplis
+            ═══════════════════════════════════════════════════════════ -->
         <fieldset>
         <legend>Véhicule</legend>
 
-        <label>Type
-            <select [(ngModel)]="form.typeVehicule" name="typeVehicule">
-            <option *ngFor="let t of typesVehicule" [value]="t">{{t}}</option>
+        <!-- Chargement -->
+        <div class="loading-vehicles" *ngIf="loadingVehicules">
+            <span class="spinner"></span> Chargement des véhicules…
+        </div>
+        <div class="error-vehicles" *ngIf="erreurVehicules">{{ erreurVehicules }}</div>
+
+        <!-- Sélecteur principal -->
+        <label class="full-width" *ngIf="!loadingVehicules && !erreurVehicules">
+            Sélectionner un véhicule
+            <select [(ngModel)]="idVehiculeChoisi"
+                    name="idVehiculeChoisi"
+                    (ngModelChange)="onVehiculeChange()"
+                    [class.select-active]="idVehiculeChoisi">
+            <option [ngValue]="null" disabled selected>— Choisir marque / modèle / matricule —</option>
+            <option *ngFor="let v of vehicules" [ngValue]="v.idVehicule">
+                {{ v.marque }} {{ v.modele }} — {{ v.matricule }}
+                ({{ v.annee }}) · {{ v.carburant }}
+            </option>
             </select>
         </label>
 
-        <label>Cylindres
-            <input type="number" [(ngModel)]="form.nombreCylindres"
-                name="nombreCylindres" min="3" max="12"/>
-        </label>
+        <!-- Badge véhicule sélectionné -->
+        <div class="vehicle-badge" *ngIf="vehiculeSelectionne">
+            <div class="vb-image" *ngIf="vehiculeSelectionne.image">
+            <img [src]="vehiculeSelectionne.image" alt="véhicule" (error)="onImgError($event)"/>
+            </div>
+            <div class="vb-info">
+            <span class="vb-name">{{ vehiculeSelectionne.marque }} {{ vehiculeSelectionne.modele }}</span>
+            <span class="vb-mat">{{ vehiculeSelectionne.matricule }}</span>
+            <span class="vb-fuel" [attr.data-fuel]="vehiculeSelectionne.carburant">{{ badgeCarburant }}</span>
+            </div>
+        </div>
 
-        <label>Taille moteur (L)
-            <input type="number" [(ngModel)]="form.tailleMoteur"
-                name="tailleMoteur" step="0.1" min="1" max="7"/>
-        </label>
+        <!-- Champs auto-remplis (lecture seule) -->
+        <ng-container *ngIf="vehiculeSelectionne">
 
-        <label>Transmission
-            <select [(ngModel)]="form.transmission" name="transmission">
-            <option *ngFor="let t of transmissions" [value]="t">{{t}}</option>
-            </select>
-        </label>
+            <label>
+            Type de véhicule
+            <div class="readonly-field">
+                <span class="readonly-icon">🚗</span>
+                {{ form.typeVehicule || '—' }}
+            </div>
+            </label>
 
-        <label>Boîte
-            <select [(ngModel)]="form.boite" name="boite">
-            <option *ngFor="let b of boites" [value]="b">{{b}}</option>
-            </select>
-        </label>
+            <label>
+            Cylindres
+            <div class="readonly-field">
+                <span class="readonly-icon">⚙️</span>
+                {{ form.nombreCylindres }}
+            </div>
+            </label>
 
-        <label>Année
-            <input type="number" [(ngModel)]="form.annee"
-                name="annee" min="2014" max="2024"/>
-        </label>
+            <label>
+            Taille moteur (L)
+            <div class="readonly-field">
+                <span class="readonly-icon">🔧</span>
+                {{ form.tailleMoteur }} L
+            </div>
+            </label>
 
-        <label class="full-width">Kilométrage (km)
-            <input type="number" [(ngModel)]="form.kilometrage"
-                name="kilometrage" min="0"/>
-        </label>
+            <label>
+            Transmission
+            <div class="readonly-field">
+                <span class="readonly-icon">⚙️</span>
+                {{ form.transmission || '—' }}
+            </div>
+            </label>
+
+            <label>
+            Boîte
+            <div class="readonly-field">
+                <span class="readonly-icon">🔄</span>
+                {{ form.boite || '—' }}
+            </div>
+            </label>
+
+            <label>
+            Année
+            <div class="readonly-field">
+                <span class="readonly-icon">📅</span>
+                {{ form.annee }}
+            </div>
+            </label>
+
+            <label class="full-width">
+            Kilométrage actuel (km)
+            <div class="readonly-field">
+                <span class="readonly-icon">📍</span>
+                {{ form.kilometrage | number }} km
+            </div>
+            </label>
+
+        </ng-container>
+
+        <!-- Message invite si aucun véhicule sélectionné -->
+        <div class="invite-msg" *ngIf="!vehiculeSelectionne && !loadingVehicules && !erreurVehicules">
+            <span>👆 Sélectionnez un véhicule pour voir ses caractéristiques</span>
+        </div>
+
         </fieldset>
 
+        <!-- ═══════════════════════════════════════════════════════════
+            FIELDSET 2 — Trajet (inchangé)
+            ═══════════════════════════════════════════════════════════ -->
         <fieldset>
         <legend>Trajet</legend>
 
-        <label>Distance (km)
+        <label>
+            Distance (km)
             <input type="number" [(ngModel)]="form.trajetKm"
                 name="trajetKm" min="1"/>
         </label>
 
-        <label>Trafic
+        <label>
+            Trafic
             <select [(ngModel)]="form.trafic" name="trafic">
-            <option *ngFor="let t of niveauxTrafic" [value]="t">{{t}}</option>
+            <option *ngFor="let t of niveauxTrafic" [value]="t">{{ t }}</option>
             </select>
         </label>
 
-        <label>Type de charge
+        <label>
+            Type de charge
             <select [(ngModel)]="form.typeCharge" name="typeCharge">
-            <option *ngFor="let t of typesCharge" [value]="t">{{t}}</option>
+            <option *ngFor="let t of typesCharge" [value]="t">{{ t }}</option>
             </select>
         </label>
 
-        <label>Poids de la charge (kg)
+        <label>
+            Poids de la charge (kg)
             <input type="number" [(ngModel)]="form.poidsChargeKg"
                 name="poidsChargeKg" min="0"/>
         </label>
 
-        <label class="full-width">Prix carburant (DT/L)
+        <label class="full-width">
+            Prix carburant (DT/L)
             <input type="number" [(ngModel)]="form.prixCarburant"
                 name="prixCarburant" step="0.1" min="0"/>
         </label>
+
         </fieldset>
 
-        <button type="submit" [disabled]="loading">
+        <button type="submit" [disabled]="loading || !vehiculeSelectionne">
         {{ loading ? 'Calcul en cours...' : 'Calculer' }}
         </button>
 
     </form>
 
-    <!-- Résultat -->
-        <div class="result-card" *ngIf="result">
+    <!-- ── Résultat (inchangé) ──────────────────────────────────── -->
+    <div class="result-card" *ngIf="result">
         <h3>Résultats</h3>
         <div class="result-row">
-            <span>Conso constructeur</span>
-            <strong>{{ result.conso_constructeur }} L/100km</strong>
+        <span>Conso constructeur</span>
+        <strong>{{ result.conso_constructeur }} L/100km</strong>
         </div>
         <div class="result-row highlight">
-            <span>Conso réelle estimée</span>
-            <strong>{{ result.conso_reelle }} L/100km</strong>
+        <span>Conso réelle estimée</span>
+        <strong>{{ result.conso_reelle }} L/100km</strong>
         </div>
         <div class="result-row">
-            <span>Litres consommés</span>
-            <strong>{{ result.litres_total }} L</strong>
+        <span>Litres consommés</span>
+        <strong>{{ result.litres_total }} L</strong>
         </div>
         <div class="result-row" *ngIf="result.cout_carburant">
-            <span>Coût estimé</span>
-            <strong>{{ result.cout_carburant }} DT</strong>
+        <span>Coût estimé</span>
+        <strong>{{ result.cout_carburant }} DT</strong>
         </div>
-        </div>
+    </div>
 
     <div class="error" *ngIf="error">{{ error }}</div>
+
     </div>
