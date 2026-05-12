@@ -56,60 +56,50 @@ export class VehiculeComponent implements OnInit {
   }
 
   enregistrer() {
-      if (!this.validerFormulaire()) return;
+  if (this.isEdit) {
+    // --- MODE MODIFICATION ---
+    if (!this.validerFormulaire()) return;
 
-    if (!this.currentVehicule.matricule) {
-      alert("Le matricule est obligatoire.");
+    // On autorise le local 0 (Parc Central) uniquement en modification si besoin
+    const idLocalFinal = this.selectedLocalId == 0 ? null : this.selectedLocalId;
+
+    this.service.updateVehicule(this.currentVehicule.idVehicule, this.currentVehicule, idLocalFinal as any)
+      .subscribe({
+        next: () => {
+          alert("Modification effectuée avec succès !");
+          this.reinitialiser();
+        },
+        error: (err) => alert("Erreur lors de la modification : " + (err.error?.message || err.status))
+      });
+
+  } else {
+    // --- MODE AJOUT (Affectation simple) ---
+    
+    // Vérification : Un véhicule ET un local doivent être choisis
+    if (this.vehiculePourAjoutId == 0) {
+      alert("Veuillez sélectionner un véhicule.");
+      return;
+    }
+    if (this.selectedLocalId == 0) {
+      alert("Veuillez sélectionner un local de destination.");
       return;
     }
 
-    const idLocalFinal = this.selectedLocalId == 0 ? null : this.selectedLocalId;
-
-    if (this.isEdit) {
-      // --- MODIFICATION ---
-      if (idLocalFinal === null) {
-        (this.service as any).http.put(`http://localhost:8080/api/gestion-parc/vehicule/${this.currentVehicule.idVehicule}`, this.currentVehicule)
-          .subscribe({
-            next: () => {
-              alert("Modification effectuée avec succès !"); // Alerte Modif
-              this.reinitialiser();
-            },
-            error: (err: any) => alert("Erreur : " + (err.error?.message || err.error))
-          });
-      } else {
-        this.service.updateVehicule(this.currentVehicule.idVehicule, this.currentVehicule, idLocalFinal as any)
-          .subscribe({
-            next: () => {
-              alert("Modification effectuée avec succès !"); // Alerte Modif
-              this.reinitialiser();
-            },
-            error: (err) => alert("Erreur : " + (err.error?.message || err.error))
-          });
-      }
-    } else {
-      // --- AJOUT ---
-      if (idLocalFinal === null) {
-        (this.service as any).http.post(`http://localhost:8080/api/gestion-parc/vehicule`, this.currentVehicule)
-          .subscribe({
-            next: () => {
-              alert("Ajout effectué avec succès !"); // Alerte Ajout
-              this.reinitialiser();
-            },
-            error: (err: any) => alert("Erreur : " + (err.error?.message || err.error))
-          });
-      } else {
-        this.service.addVehicule(this.currentVehicule, idLocalFinal as any)
-          .subscribe({
-            next: () => {
-              alert("Ajout effectué avec succès !"); // Alerte Ajout
-              this.reinitialiser();
-            },
-            error: (err) => alert("Erreur : " + (err.error?.message || err.error))
-          });
-      }
+    const vehiculeSelectionne = this.vehicules.find(v => v.idVehicule == this.vehiculePourAjoutId);
+    
+    if (vehiculeSelectionne) {
+      // On envoie le véhicule avec l'ID du local sélectionné
+      this.service.addVehicule(vehiculeSelectionne, this.selectedLocalId as any)
+        .subscribe({
+          next: () => {
+            alert("Véhicule affecté avec succès au local !");
+            this.reinitialiser();
+          },
+          error: (err) => alert("Erreur d'affectation : " + (err.error?.message || "Conflit d'affectation"))
+        });
     }
   }
-
+}
   supprimer(id: number) {
     if (confirm("Êtes-vous sûr de vouloir supprimer définitivement ce véhicule ?")) {
       this.service.deleteVehicule(id).subscribe({
@@ -133,20 +123,32 @@ export class VehiculeComponent implements OnInit {
       document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   }
+vehiculePourAjoutId: number = 0;
+ reinitialiser() {
+  // Reset de l'objet technique
+  this.currentVehicule = { 
+    matricule: '', 
+    marque: '', 
+    modele: '', 
+    annee: new Date().getFullYear(), 
+    carburant: 'Diesel', 
+    image: '', 
+    etat: 'DISPONIBLE' 
+  };
 
-  reinitialiser() {
-    this.currentVehicule = { 
-      matricule: '', marque: '', modele: '', 
-      annee: new Date().getFullYear(), carburant: 'Diesel', 
-      image: '', etat: 'DISPONIBLE' 
-    };
-    this.selectedLocalId = 0;
-    this.isEdit = false;
-    this.showForm = false;
-    this.chargerVehicules();
-  }
+  // Reset des sélections de listes déroulantes
+  this.selectedLocalId = 0;
+  this.vehiculePourAjoutId = 0;
 
-  ouvrirDetails(v: any) { this.vehiculeSelectionne = v; }
+  // Reset de l'interface
+  this.formErrors = {};
+  this.isEdit = false;
+  this.showForm = false;
+
+  // Actualisation de la liste principale
+  this.chargerVehicules();
+}
+ ouvrirDetails(v: any) { this.vehiculeSelectionne = v; }
   fermerDetails() { this.vehiculeSelectionne = null; }
   ouvrirConsultation(v: any) { this.vehiculeEnConsultation = v; }
   fermerConsultation() { this.vehiculeEnConsultation = null; }
@@ -177,7 +179,7 @@ validerFormulaire(): boolean {
   this.formErrors = {};
   let valide = true;
 
-  const matriculeRegex = /^\d{3}-TN-\d{4}$/;
+  const matriculeRegex = /^\d{3} TN \d{4}$/;
   const lettresRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
 
   if (!this.currentVehicule.matricule || !matriculeRegex.test(this.currentVehicule.matricule)) {

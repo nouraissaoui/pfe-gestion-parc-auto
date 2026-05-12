@@ -483,32 +483,18 @@ public class GestionParcService {
     }
     @Transactional
     public Vehicule createVehicule(Vehicule v, Long idLocal) {
-        // 1. VÉRIFICATION DES CHAMPS OBLIGATOIRES
-        if (v.getMatricule() == null || v.getMatricule().trim().isEmpty() ||
-                v.getMarque() == null || v.getMarque().trim().isEmpty() ||
-                v.getModele() == null || v.getModele().trim().isEmpty() ||
-                v.getAnnee() == 0 ||
-                v.getCarburant() == null ||
-                idLocal == null) {
-            throw new RuntimeException("Erreur : Tous les champs (Matricule, Marque, Modèle, Année, Carburant, Local) sont obligatoires.");
+        // On garde uniquement les validations minimales pour le véhicule
+        if (v.getMatricule() == null || v.getMatricule().trim().isEmpty()) {
+            throw new RuntimeException("Le matricule est obligatoire.");
         }
 
-        // 2. VALIDATION DU FORMAT MATRICULE (123 TN 4567)
-        // Expression régulière : ^[0-9]{3} TN [0-9]{4}$
-        // ^ : début, [0-9]{3} : 3 chiffres, TN : texte fixe, [0-9]{4} : 4 chiffres, $ : fin
-        String matriculePattern = "^[0-9]{3} TN [0-9]{4}$";
-        if (!v.getMatricule().matches(matriculePattern)) {
-            throw new RuntimeException("Format matricule invalide. Le format doit être : 123 TN 4567");
-        }
-
-        // 3. AFFECTATION DU LOCAL
-        Local local = localRepository.findById(idLocal)
-                .orElseThrow(() -> new RuntimeException("Le local spécifié n'existe pas."));
-        v.setLocal(local);
-
-        // 4. ÉTAT PAR DÉFAUT
-        if (v.getEtat() == null) {
-            v.setEtat(EtatVehicule.DISPONIBLE);
+        // Gestion de l'affectation au local (Optionnel)
+        if (idLocal != null && idLocal > 0) {
+            Local local = localRepository.findById(idLocal)
+                    .orElseThrow(() -> new RuntimeException("Local introuvable"));
+            v.setLocal(local);
+        } else {
+            v.setLocal(null); // Permet d'avoir un véhicule sans local
         }
 
         return vehiculeRepository.save(v);
