@@ -184,7 +184,10 @@ public class GestionParcService {
                 .orElseThrow(() -> new RuntimeException("Véhicule introuvable"));
 
         // 1. Désaffecter le véhicule de son ancien chauffeur s'il en avait un
-        chauffeurRepository.findByVehicule(vehicule).ifPresent(ancien -> {
+        chauffeurRepository.findByVehicule(vehicule).ifPresent(ancien -> {//si un chauffeur existe,
+            // on le récupère dans la variable :
+
+           // ancien = chauffeur actuel du véhicule
             if (!ancien.getIdChauffeur().equals(idChauffeur)) {
                 ancien.setVehicule(null);
                 chauffeurRepository.save(ancien);
@@ -891,6 +894,12 @@ public class GestionParcService {
                 .vehicule(chauffeur.getVehicule())
                 .chefParc(localChauffeur.getChefParc()) // Envoi automatique au chef du parc local
                 .build();
+        //Le Builder, c’est juste une façon plus facile de créer un objet.
+        //
+        //Au lieu de créer l’objet d’un coup, tu le construis étape par étape.au lie de new declaration(....)
+        //Avec le Builder, tu fais 2 étapes :
+
+        // Tu prépares l’objet et .build tu cree le vraiment
 
         return declarationRepository.save(declaration);
     }
@@ -964,7 +973,11 @@ public class GestionParcService {
                     l.setChefParc(null);
                     localRepository.save(l);
                 });
-
+        //il parcourt tous les locaux ,il garde ceux d’un chef précis
+        // il enlève le chef de ces locaux  puis il sauvegarde les modificatio
+//Pourquoi on utilise .stream() ?
+//
+//Parce que Java veut transformer une liste classique en un flux de traitement pour pouvoir appliquer des
         // 8. Suppression finale du Chef
         chefParcRepository.delete(chef);
 
