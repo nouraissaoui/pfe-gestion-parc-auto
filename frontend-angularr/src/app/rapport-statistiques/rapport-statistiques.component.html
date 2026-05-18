@@ -31,9 +31,22 @@
         <div class="notif-item-left">
           <span class="notif-dot" *ngIf="!notif.lu"></span>
           <span class="notif-icon">📊</span>
+          
           <div class="notif-item-texte">
-            <span class="notif-item-titre">Rapport Exécutif AGIL</span>
-            <span class="notif-item-date">{{ formaterDate(notif.timestamp) }}</span>
+            <!-- TITRE : Rapport envoyé par Chef de Parc : [Nom Prénom] -->
+            <span class="notif-item-titre" style="font-weight: bold; display: block; color: #333;">
+              {{ notif.titre }}
+            </span>
+            
+            <!-- SOUS-TITRE : Local : [Nom du Local] -->
+            <span class="notif-item-local" style="color: #007bff; font-size: 0.85em; font-weight: 500;">
+              {{ notif.sousTitre }}
+            </span>
+
+            <!-- DATE -->
+            <span class="notif-item-date" style="color: #888; font-size: 0.75em; display: block; margin-top: 2px;">
+              {{ formaterDate(notif.timestamp) }}
+            </span>
           </div>
         </div>
 
@@ -60,7 +73,6 @@
       </span>
     </div>
 
-    <!-- L'iframe avec pageName forcé sur Rapport Exécutif + boutons cachés -->
     <div class="rapport-iframe-wrapper">
       <iframe
         *ngIf="rapportOuvert"

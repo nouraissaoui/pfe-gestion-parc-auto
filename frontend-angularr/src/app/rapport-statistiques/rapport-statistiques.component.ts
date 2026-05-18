@@ -2,12 +2,16 @@ import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 
-interface Notification {
+
+export interface Notification {
   id: number;
   timestamp: string;
-  message: string;
+  titre: string;      // Ajoutez ceci
+  sousTitre: string;  // Ajoutez ceci
   lu: boolean;
-  urlSecurisee: SafeResourceUrl;
+  message?: string;
+    urlSecurisee: SafeResourceUrl;
+
 }
 
 @Component({
@@ -47,16 +51,22 @@ export class RapportStatistiquesComponent implements OnInit, OnDestroy {
 
   // rapport-statistiques.component.ts — Admin
 ngOnInit(): void {
+  // rapport-statistiques.component.ts (Extrait du ngOnInit)
+
+const saved = localStorage.getItem('notificationsAdmin');
+if (saved) {
+  const parsed = JSON.parse(saved);
+  this.notifications = parsed.map((n: any) => ({
+    ...n,
+    // On s'assure que titre et sousTitre existent, sinon valeurs par défaut
+    titre: n.titre || "Rapport Inconnu",
+    sousTitre: n.sousTitre || "Local non défini",
+    urlSecurisee: this.sanitizer.bypassSecurityTrustResourceUrl(this.EMBED_URL)
+  }));
+  if (this.notifications.length > 0) this.etat = 'liste';
+}
     // ✅ localStorage pour l'historique des notifications (persistant)
-    const saved = localStorage.getItem('notificationsAdmin');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      this.notifications = parsed.map((n: any) => ({
-        ...n,
-        urlSecurisee: this.sanitizer.bypassSecurityTrustResourceUrl(this.EMBED_URL)
-      }));
-      if (this.notifications.length > 0) this.etat = 'liste';
-    }
+ 
 
     this.verifierRapport();
 
@@ -73,8 +83,7 @@ ngOnInit(): void {
     window.addEventListener('storage', this.storageListener);
   }
 
-  private verifierRapport(): void {
-    // ✅ localStorage
+ private verifierRapport(): void {
     const raw = localStorage.getItem('rapportPret');
     if (!raw) return;
 
@@ -86,6 +95,8 @@ ngOnInit(): void {
         const nouvelleNotif: Notification = {
           id: payload.id,
           timestamp: payload.timestamp,
+          titre: payload.titre,      // Contient "Rapport envoyé par Chef de Parc : ..."
+          sousTitre: payload.sousTitre, // Contient "Local : ..."
           message: payload.message,
           lu: false,
           urlSecurisee: this.sanitizer.bypassSecurityTrustResourceUrl(this.EMBED_URL)
@@ -94,23 +105,20 @@ ngOnInit(): void {
         this.notifications.unshift(nouvelleNotif);
         this.etat = 'liste';
         this.sauvegarderHistorique();
-
-        // ✅ localStorage
         localStorage.removeItem('rapportPret');
       }
     } catch {}
-  }
-
-  private sauvegarderHistorique(): void {
+} private sauvegarderHistorique(): void {
     const toSave = this.notifications.map(n => ({
       id: n.id,
       timestamp: n.timestamp,
       message: n.message,
+      titre: n.titre,       // Sauvegarde du titre formaté
+      sousTitre: n.sousTitre, // Sauvegarde du local formaté
       lu: n.lu
     }));
-    // ✅ localStorage pour que l'historique persiste
     localStorage.setItem('notificationsAdmin', JSON.stringify(toSave));
-  }
+}
 
   ngOnDestroy(): void {
     clearInterval(this.pollInterval);

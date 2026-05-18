@@ -83,7 +83,7 @@
         rows="1"
         [disabled]="loading">
       </textarea>
-      <button class="send-btn" (click)="sendMessage()" [disabled]="loading || !userMessage.trim()">
+      <button class="send-btn" (click)="sendMessage()" [disabled]="loading || !userMessage.trim()"><!--[disabled]="loading || !userMessage.trim() bputon desactive si message vide ouloading=true cad parcbpt en train de repondre -->
         <svg *ngIf="!loading" viewBox="0 0 24 24" fill="currentColor">
           <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
         </svg>

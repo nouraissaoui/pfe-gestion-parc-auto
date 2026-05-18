@@ -394,4 +394,28 @@
   border: 2px solid #D4AF37;
   border-radius: 10px 10px 0 0; /* ← coins arrondis seulement en haut */
   display: block;
+}.notif-item-texte {
+  display: flex;
+  flex-direction: column;
+}
+
+.notif-item-titre {
+  font-weight: bold;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.notif-details {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.notif-item-local {
+  font-style: italic;
+  color: #007bff; /* Bleu AGIL */
+}.notif-item-titre {
+    color: #ffffff !important; /* Force le texte en blanc pour le mode sombre */
+    font-weight: bold;
 }

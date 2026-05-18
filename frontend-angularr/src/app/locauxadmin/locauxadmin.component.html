@@ -1,208 +1,270 @@
-<!-- Preloader -->
 <div id="preloader-prestige" *ngIf="showPreloader">
   <div class="main-stage">
     <div class="orbit-container">
       <div class="ring gold"><div class="comet"></div></div>
       <div class="ring bordeaux"><div class="comet"></div></div>
       <div class="ring white"><div class="comet"></div></div>
+      
       <div class="glass-sphere big-sphere">
         <img src="assets/agil.png" alt="SNDP Agil Logo" class="big-logo">
       </div>
     </div>
+
     <div class="text-area">
       <h2 class="welcome-msg">Initialisation <span class="admin-name">Système AGIL</span></h2>
       <div class="progress-section">
         <div class="luxury-bar">
           <div class="fill-permanent"></div>
         </div>
-        <span class="loading-label">Chargement des infrastructures...</span>
+        <span class="loading-label">Sécurisation des accès en cours...</span>
       </div>
     </div>
   </div>
+</div> 
+
+<!-- Contenu Principal Agrandi à l'Échelle Épurée 80% -->
+<main *ngIf="!showPreloader" class="fade-in-content cyber-scaled-wrapper">
+  <!-- ==========================================================================
+     ZONE HERO BANNER PRESTIGE (BLANC, OR & ARGENT)
+     ========================================================================== -->
+<section class="hero-prestige-luxury container">
+  <!-- Reflets et formes en arrière-plan (Lumières Or et Argent) -->
+  <div class="luxury-glow-gold"></div>
+  <div class="luxury-glow-silver"></div>
+  <div class="luxury-fine-grid"></div>
+
+  <div class="hero-luxury-content">
+    <span class="hero-premium-tag">SNDP AGIL • Gestion de Parc</span>
+    <h2 class="hero-luxury-title">Gestion des locaux</h2>
+    <p class="hero-luxury-subtitle">Ajoutez, modifiez et pilotez l'ensemble de vos infrastructures à travers un tableau de bord de prestige.</p>
+    
+    <div class="hero-luxury-buttons">
+      <button class="btn-prestige-gold-solid" (click)="mode='add'">
+        <i class="fas fa-plus"></i> <span>Ajouter un local</span>
+      </button>
+      <button class="btn-prestige-silver-outline" (click)="mode='list'">
+        <i class="fas fa-eye"></i> <span>Consulter la liste</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     ZONE STATISTIQUES LOOK LUXE EXCLUSIF (Si mode liste actif)
+     ========================================================================== -->
+<div class="stats-luxury-grid container" *ngIf="mode==='list'">
+  
+  <!-- Carte 1 : Locaux Enregistrés -->
+  <div class="stat-luxury-card">
+    <div class="stat-luxury-inner">
+      <div class="stat-luxury-icon-container">
+        <i class="fas fa-building"></i>
+      </div>
+      <div class="stat-luxury-details">
+        <span class="stat-luxury-label">Locaux enregistrés</span>
+        <h3 class="stat-luxury-number">{{ locals.length }}</h3>
+      </div>
+    </div>
+    <!-- Ligne de finition Or poli -->
+    <div class="stat-luxury-border-finition"></div>
+  </div>
+
+  <!-- Carte 2 : Régions (Ajoutée pour l'équilibre visuel du bandeau) -->
+  <div class="stat-luxury-card">
+    <div class="stat-luxury-inner">
+      <div class="stat-luxury-icon-container">
+        <i class="fas fa-map-marked-alt"></i>
+      </div>
+      <div class="stat-luxury-details">
+        <span class="stat-luxury-label">Régions couvertes</span>
+        <h3 class="stat-luxury-number">{{ getRegionCount() }}</h3>
+      </div>
+    </div>
+    <div class="stat-luxury-border-finition"></div>
+  </div>
+
 </div>
 
-<!-- Contenu principal -->
-<main *ngIf="!showPreloader" class="fade-in-content">
-  <!-- HERO -->
-  <section class="hero container">
-    <h2 class="hero-title">Gestion des locaux nouvelle génération</h2>
-    <p class="hero-subtitle">Ajoutez, modifiez et gérez vos locaux facilement avec une interface premium.</p>
-    <div class="hero-buttons">
-      <button class="btn" (click)="mode='add'"><i class="fas fa-plus"></i> Ajouter un local</button>
-      <button class="btn btn-outline" (click)="mode='list'"><i class="fas fa-eye"></i> Consulter</button>
-    </div>
-  </section>
-
-  <!-- STATS (visible en mode liste) -->
-  <div class="stats-container container" *ngIf="mode==='list'">
-    <div class="stat-card">
-      <i class="fas fa-building"></i>
-      <div>
-        <h3>{{ locals.length }}</h3>
-        <p>Locaux actifs</p>
-      </div>
-    </div>
-    <div class="stat-card">
-      <i class="fas fa-map"></i>
-      <div>
-        <h3>{{ getRegionCount() }}</h3>
-        <p>Régions</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- LISTE DES LOCAUX -->
+ 
+  <!-- LISTE DES LOCAUX - COLLECTION HAUTE COUTURE -->
   <section class="locals-section container" *ngIf="mode==='list'">
     <div class="section-header">
-      <h2><i class="fas fa-city" style="color: var(--gold-deep);"></i> Liste des locaux</h2>
+      <h2><i class="fas fa-city icon-cyber-red"></i> Liste des locaux</h2>
     </div>
     <div class="local-grid">
       <div class="local-card" *ngFor="let l of locals">
         <div class="local-img">
           <img [src]="l.currentImage" alt="image local">
+          <div class="img-cyber-overlay"></div>
           <span class="local-badge">{{ l.region }}</span>
         </div>
         <div class="local-info">
           <h3>{{ l.nomLocal }}</h3>
-          <div class="local-detail"><i class="fas fa-map-marker-alt"></i> {{ l.adresse }}</div>
-          <div class="local-detail"><i class="fas fa-city"></i> {{ l.ville }}</div>
-          <div class="local-detail"><i class="fas fa-globe"></i> {{ l.region }}</div>
+          <div class="local-details-list">
+            <div class="local-detail"><i class="fas fa-map-marker-alt"></i> <span>{{ l.adresse }}</span></div>
+            <div class="local-detail"><i class="fas fa-city"></i> <span>{{ l.ville }}</span></div>
+            <div class="local-detail"><i class="fas fa-globe"></i> <span>{{ l.region }}</span></div>
+          </div>
           <div class="local-actions">
-<button class="btn-edit" (click)="startEdit(l, $event)">
-  <i class="fas fa-edit"></i> Modifier
-</button>            <button class="btn-delete" (click)="delete(l.idLocal)"><i class="fas fa-trash"></i> Supprimer</button>
+            <button class="btn-edit" (click)="startEdit(l, $event)">
+              <i class="fas fa-edit"></i> Modifier
+            </button>
+            <button class="btn-delete" (click)="delete(l.idLocal)">
+              <i class="fas fa-trash"></i> Supprimer
+            </button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FORMULAIRE D'AJOUT -->
+  <!-- FORMULAIRE MINIMALISTE CHASSIS COMPOSANT -->
   <section class="form-section container" *ngIf="mode==='add'">
-  <div class="form-card">
-    <div class="form-logo">
-      <img src="https://www.agilenergy.com.tn/fr/images/logoagilenergy.jpg" alt="Logo Agil Energy" class="form-logo-img">
-    </div>
-    <h2><i class="fas fa-plus-circle"></i> Ajouter un local</h2>
-
-    <div class="form-group">
-      <label><i class="fas fa-tag"></i> Nom</label>
-      <input type="text" [(ngModel)]="newLocal.nomLocal"
-        placeholder="Ex : Dépôt Nord"
-        [class.input-error]="formErrors.nomLocal"
-        (input)="formErrors.nomLocal = null">
-      <small class="error-msg" *ngIf="formErrors.nomLocal">{{ formErrors.nomLocal }}</small>
-    </div>
-
-    <div class="form-group">
-      <label><i class="fas fa-map-pin"></i> Adresse</label>
-      <input type="text" [(ngModel)]="newLocal.adresse"
-        placeholder="123 rue Exemple"
-        [class.input-error]="formErrors.adresse"
-        (input)="formErrors.adresse = null">
-      <small class="error-msg" *ngIf="formErrors.adresse">{{ formErrors.adresse }}</small>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label><i class="fas fa-city"></i> Ville</label>
-        <input type="text" [(ngModel)]="newLocal.ville"
-          placeholder="Tunis"
-          [class.input-error]="formErrors.ville"
-          (input)="formErrors.ville = null">
-        <small class="error-msg" *ngIf="formErrors.ville">{{ formErrors.ville }}</small>
+    <div class="form-card cyber-panel">
+      <div class="form-logo">
+        <img src="https://www.agilenergy.com.tn/fr/images/logoagilenergy.jpg" alt="Logo Agil Energy" class="form-logo-img">
       </div>
+      <h2 class="form-title"><i class="fas fa-plus-circle"></i> Ajouter un local</h2>
+
       <div class="form-group">
-        <label><i class="fas fa-globe"></i> Région</label>
-        <input type="text" [(ngModel)]="newLocal.region"
-          placeholder="Tunis"
-          [class.input-error]="formErrors.region"
-          (input)="formErrors.region = null">
-        <small class="error-msg" *ngIf="formErrors.region">{{ formErrors.region }}</small>
+        <label><i class="fas fa-tag"></i> Nom</label>
+        <div class="input-cyber-box">
+          <input type="text" [(ngModel)]="newLocal.nomLocal"
+            placeholder="Ex : Dépôt Nord"
+            [class.input-error]="formErrors.nomLocal"
+            (input)="formErrors.nomLocal = null">
+        </div>
+        <small class="error-msg" *ngIf="formErrors.nomLocal">{{ formErrors.nomLocal }}</small>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-map-pin"></i> Adresse</label>
+        <div class="input-cyber-box">
+          <input type="text" [(ngModel)]="newLocal.adresse"
+            placeholder="123 rue Exemple"
+            [class.input-error]="formErrors.adresse"
+            (input)="formErrors.adresse = null">
+        </div>
+        <small class="error-msg" *ngIf="formErrors.adresse">{{ formErrors.adresse }}</small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label><i class="fas fa-city"></i> Ville</label>
+          <div class="input-cyber-box">
+            <input type="text" [(ngModel)]="newLocal.ville"
+              placeholder="Tunis"
+              [class.input-error]="formErrors.ville"
+              (input)="formErrors.ville = null">
+          </div>
+          <small class="error-msg" *ngIf="formErrors.ville">{{ formErrors.ville }}</small>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-globe"></i> Région</label>
+          <div class="input-cyber-box">
+            <input type="text" [(ngModel)]="newLocal.region"
+              placeholder="Tunis"
+              [class.input-error]="formErrors.region"
+              (input)="formErrors.region = null">
+          </div>
+          <small class="error-msg" *ngIf="formErrors.region">{{ formErrors.region }}</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-images"></i> Images (séparées par espace)</label>
+        <div class="input-cyber-box">
+          <input type="text" [(ngModel)]="newLocal.images"
+            placeholder="url1.jpg url2.jpg"
+            [class.input-error]="formErrors.images"
+            (input)="formErrors.images = null">
+        </div>
+        <small class="error-msg" *ngIf="formErrors.images">{{ formErrors.images }}</small>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-cyber-primary" (click)="add()">Enregistrer</button>
+        <button class="btn btn-cyber-outline" (click)="mode='list'">Annuler</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- OVERLAY & BLOC DE MODIFICATION POPIUP POSITIONNÉ AU PIXEL PRÈS -->
+  <div class="modal-overlay" *ngIf="editLocal" (click)="editLocal=null"></div>
+
+  <div class="modal-panel contextual-cyber-popup"
+       *ngIf="editLocal"
+       [style.top.px]="modalTop"
+       [style.left.px]="modalLeft"
+       (click)="$event.stopPropagation()">
+
+    <div class="modal-panel-header">
+      <img src="https://www.agilenergy.com.tn/fr/images/logoagilenergy.jpg" alt="Logo" class="modal-logo-img">
+      <button class="modal-close-btn" (click)="editLocal=null">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <h2><i class="fas fa-edit"></i> Modifier le local</h2>
+
+    <div class="form-container-scroll">
+      <div class="form-group">
+        <label><i class="fas fa-tag"></i> Nom</label>
+        <div class="input-cyber-box">
+          <input type="text" [(ngModel)]="editLocal.nomLocal"
+            [class.input-error]="editFormErrors.nomLocal"
+            (input)="editFormErrors.nomLocal = null">
+        </div>
+        <small class="error-msg" *ngIf="editFormErrors.nomLocal">{{ editFormErrors.nomLocal }}</small>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-map-pin"></i> Adresse</label>
+        <div class="input-cyber-box">
+          <input type="text" [(ngModel)]="editLocal.adresse"
+            [class.input-error]="editFormErrors.adresse"
+            (input)="editFormErrors.adresse = null">
+        </div>
+        <small class="error-msg" *ngIf="editFormErrors.adresse">{{ editFormErrors.adresse }}</small>
+      </div>
+
+      <div class="modal-form-row">
+        <div class="form-group">
+          <label><i class="fas fa-city"></i> Ville</label>
+          <div class="input-cyber-box">
+            <input type="text" [(ngModel)]="editLocal.ville"
+              [class.input-error]="editFormErrors.ville"
+              (input)="editFormErrors.ville = null">
+          </div>
+          <small class="error-msg" *ngIf="editFormErrors.ville">{{ editFormErrors.ville }}</small>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-globe"></i> Région</label>
+          <div class="input-cyber-box">
+            <input type="text" [(ngModel)]="editLocal.region"
+              [class.input-error]="editFormErrors.region"
+              (input)="editFormErrors.region = null">
+          </div>
+          <small class="error-msg" *ngIf="editFormErrors.region">{{ editFormErrors.region }}</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-images"></i> Images</label>
+        <div class="input-cyber-box">
+          <input type="text" [(ngModel)]="editLocal.images"
+            [class.input-error]="editFormErrors.images"
+            (input)="editFormErrors.images = null">
+        </div>
+        <small class="error-msg" *ngIf="editFormErrors.images">{{ editFormErrors.images }}</small>
       </div>
     </div>
 
-    <div class="form-group">
-      <label><i class="fas fa-images"></i> Images (séparées par espace)</label>
-      <input type="text" [(ngModel)]="newLocal.images"
-        placeholder="url1.jpg url2.jpg"
-        [class.input-error]="formErrors.images"
-        (input)="formErrors.images = null">
-      <small class="error-msg" *ngIf="formErrors.images">{{ formErrors.images }}</small>
-    </div>
-
-    <div class="form-actions">
-      <button class="btn" (click)="add()">Enregistrer</button>
-      <button class="btn btn-outline" (click)="mode='list'">Annuler</button>
+    <div class="modal-panel-actions">
+      <button class="btn btn-cyber-primary" (click)="saveEdit()">
+        <i class="fas fa-save"></i> Sauvegarder
+      </button>
+      <button class="btn btn-cyber-outline" (click)="editLocal=null">Annuler</button>
     </div>
   </div>
-</section>
-  <!-- Overlay -->
-<div class="modal-overlay" *ngIf="editLocal" (click)="editLocal=null"></div>
-
-<!-- Panneau centré -->
-<div class="modal-panel"
-     *ngIf="editLocal"
-     [style.top.px]="modalTop"
-     [style.left.px]="modalLeft"
-     (click)="$event.stopPropagation()">
-
-  <div class="modal-panel-header">
-    <img src="https://www.agilenergy.com.tn/fr/images/logoagilenergy.jpg"
-         alt="Logo" class="modal-logo-img">
-    <button class="modal-close-btn" (click)="editLocal=null">
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-
-  <h2><i class="fas fa-edit"></i> Modifier le local</h2>
-
-  <div class="form-group">
-    <label><i class="fas fa-tag"></i> Nom</label>
-    <input type="text" [(ngModel)]="editLocal.nomLocal"
-      [class.input-error]="editFormErrors.nomLocal"
-      (input)="editFormErrors.nomLocal = null">
-    <small class="error-msg" *ngIf="editFormErrors.nomLocal">{{ editFormErrors.nomLocal }}</small>
-  </div>
-
-  <div class="form-group">
-    <label><i class="fas fa-map-pin"></i> Adresse</label>
-    <input type="text" [(ngModel)]="editLocal.adresse"
-      [class.input-error]="editFormErrors.adresse"
-      (input)="editFormErrors.adresse = null">
-    <small class="error-msg" *ngIf="editFormErrors.adresse">{{ editFormErrors.adresse }}</small>
-  </div>
-
-  <div class="modal-form-row">
-    <div class="form-group">
-      <label><i class="fas fa-city"></i> Ville</label>
-      <input type="text" [(ngModel)]="editLocal.ville"
-        [class.input-error]="editFormErrors.ville"
-        (input)="editFormErrors.ville = null">
-      <small class="error-msg" *ngIf="editFormErrors.ville">{{ editFormErrors.ville }}</small>
-    </div>
-    <div class="form-group">
-      <label><i class="fas fa-globe"></i> Région</label>
-      <input type="text" [(ngModel)]="editLocal.region"
-        [class.input-error]="editFormErrors.region"
-        (input)="editFormErrors.region = null">
-      <small class="error-msg" *ngIf="editFormErrors.region">{{ editFormErrors.region }}</small>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label><i class="fas fa-images"></i> Images</label>
-    <input type="text" [(ngModel)]="editLocal.images"
-      [class.input-error]="editFormErrors.images"
-      (input)="editFormErrors.images = null">
-    <small class="error-msg" *ngIf="editFormErrors.images">{{ editFormErrors.images }}</small>
-  </div>
-
-  <div class="modal-panel-actions">
-    <button class="btn" (click)="saveEdit()">
-      <i class="fas fa-save"></i> Sauvegarder
-    </button>
-    <button class="btn btn-outline" (click)="editLocal=null">Annuler</button>
-  </div>
-</div></main>
-
+</main>
