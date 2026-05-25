@@ -15,10 +15,10 @@ export class ChauffeurGestionComponent implements OnInit {
   // ... (vos propriétés existantes)
   chauffeurs: Chauffeur[] = [];
   locaux: Local[] = [];
-  showPreloader = true; 
+  showPreloader = true; //affecter un chauffeur a un lcoaml
   isEditMode = false;
-  showConsultModal = false;
-  showForm = false;
+  showConsultModal = false;//afficeh fconsult
+  showForm = false;//afficeh form de ajout ou modif
   selectedChauffeur: any = null;
   searchTerm: string = '';
   chauffeurForm: any = this.resetModel();
@@ -151,22 +151,10 @@ enregistrer() {
     const aujourdhui = new Date();
     const diffTime = exp.getTime() - aujourdhui.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    //consersion au jours
     return diffDays <= 30;
   }
 
-  exporterDonnees() {
-    const entetes = ["Nom", "Prenom", "Region", "Permis", "Expiration", "Statut"];
-    const lignes = this.chauffeursFiltres.map(c => [
-      c.nom, c.prenom, c.region, c.typeVehiculePermis, c.dateExpirationPermis, c.etatChauffeur
-    ]);
-    let csvContent = "data:text/csv;charset=utf-8," 
-      + entetes.join(",") + "\n" 
-      + lignes.map(e => e.join(",")).join("\n");
-    const link = document.createElement("a");
-    link.setAttribute("href", encodeURI(csvContent));
-    link.setAttribute("download", `flotte_agil.csv`);
-    link.click();
-  }
 
   openFormModal() { this.showFormModal = true; }
   closeFormModal() { this.showFormModal = false; this.isEditMode = false; }
