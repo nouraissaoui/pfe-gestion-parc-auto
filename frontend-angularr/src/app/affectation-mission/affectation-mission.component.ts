@@ -140,7 +140,7 @@ export class AffectationMissionComponent implements OnInit {
 
     if (!this.validate()) return; // stoppe si erreurs
 
-    const idChef = Number(sessionStorage.getItem('id'));
+    const idChef = Number(sessionStorage.getItem('userId'));
 
     this.service.affecterMission(
       this.missionData,

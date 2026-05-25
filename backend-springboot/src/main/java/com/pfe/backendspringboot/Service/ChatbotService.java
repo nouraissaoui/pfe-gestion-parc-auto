@@ -7,6 +7,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+//Spring Boot devient un intermédiaire vers Flask
 @Service
 public class ChatbotService {
 

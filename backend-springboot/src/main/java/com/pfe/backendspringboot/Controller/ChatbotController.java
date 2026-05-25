@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("/api/chatbot")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -17,6 +18,7 @@ public class ChatbotController {
     private final ChatbotService chatbotService;
 
     public ChatbotController(ChatbotService chatbotService) {
+
         this.chatbotService = chatbotService;
     }
 

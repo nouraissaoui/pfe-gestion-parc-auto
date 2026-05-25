@@ -63,8 +63,8 @@ export class PredictionComponent implements OnInit {
   chargerVehicules(): void {
     // Récupère l'idLocal depuis le sessionStorage (même logique que le reste de l'app)
     const idLocal = Number(sessionStorage.getItem('idLocal'));
-    console.log('idLocal from session:', idLocal); // ← check this
-  console.log('All sessionStorage:', { ...sessionStorage }); // ← check this
+      console.log('idLocal from session:', idLocal); // ← check this
+      console.log('All sessionStorage:', { ...sessionStorage }); // ← check this
     if (!idLocal) {
       this.erreurVehicules = 'Aucun local trouvé en session.';
       return;
@@ -75,7 +75,6 @@ export class PredictionComponent implements OnInit {
       next: (list) => {
         // On ne garde que les véhicules avec les champs ML renseignés
         this.vehicules = list.filter(v => v.idVehicule); 
-
         this.loadingVehicules = false;
       },
       error: () => {
