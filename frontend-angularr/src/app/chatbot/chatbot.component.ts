@@ -145,7 +145,7 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
 
   quickActions(): string[] {
     if (this.userRole === 'CHEF_PARC') {
-      return ['Véhicules disponibles', 'Liste des chauffeurs', 'Déclarations en attente', 'Missions du jour'];
+      return ['Véhicules disponibles', 'Liste des chauffeurs', 'Déclarations en attente'];
     }
     return ['Mon véhicule', 'Mes missions', 'Mes déclarations', 'Terminer ma mission'];
   }
