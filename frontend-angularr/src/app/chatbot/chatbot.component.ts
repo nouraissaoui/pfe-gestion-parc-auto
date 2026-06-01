@@ -23,7 +23,7 @@ interface Message {
 export class ChatbotComponent implements OnInit, AfterViewChecked {
 
   userMessage = '';//le message tapé par l'utilisateur
-  messages: Message[] = [];//tableau contenant l’historique des messages.
+  messages: Message[] = [];//tableau contenant l’historique des messages(c'est a dire toute la conversation ).
   loading = false;//indique si ParcBot est en train de générer une réponse
 
   //Ces variables stockent les informations de l’utilisateur connecté
@@ -120,10 +120,11 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
     this.messages.push({ text: this.getWelcomeMessage(), sender: 'bot', time: this.now() });
   }
 
+  //cette fonction est declenché lorsque l’utilisateur appuie sur Entrée
   handleKeyPress(event: KeyboardEvent) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();//le boutton devient disabled
-      this.sendMessage();
+    if (event.key === 'Enter' && !event.shiftKey) {//si il a tapé entrer
+      event.preventDefault();//empeche le retour a la ligne pour ecrire un nouveau msg
+      this.sendMessage();//Déclenche l’envoi du message vers le backend.
     }
   }
 
@@ -140,10 +141,11 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
     return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   }
 
+  //ert à faire un scroll automatique vers le bas
   ngAfterViewChecked() {
     try {
       if (this.messagesArea) {
-        const el = this.messagesArea.nativeElement;//nativeElement donne accès au véritable élément DOM HTML.
+        const el = this.messagesArea.nativeElement;//nativeElement donne accès au véritable élément DOM HTML plus precisement celle ci  <div class="messages-area">
         el.scrollTop = el.scrollHeight;
       }
     } catch {}

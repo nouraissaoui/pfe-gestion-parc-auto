@@ -21,7 +21,7 @@ public class ChatbotController {
 
         this.chatbotService = chatbotService;
     }
-
+    //Spring Boot reçoit automatiquement le JSON Angular(payload),puis Il le convertit en objet Java chatRequest:
     @PostMapping("/chat")
     public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request) {
         try {

@@ -53,20 +53,7 @@ type: any;
     local?: any; // On peut typer plus précisément si on a l'interface Local
 
 }
-// 1. Interface à ajouter en haut du fichier
-/*export interface Entretien {
-  idEntretien?: number;
-  typeEntretien: string;
-  categorie: 'ENTRETIEN_PERIODIQUE' | 'ENTRETIEN_SUITE_DECLARATION';
-  datePrevue: string;
-  // dateEffectuee supprimée
-  observations: string;
-  // status supprimé (car la création vaut ordre de mission)
-  declaration?: Declaration;
-  garage: any;
-  vehicule: Vehicule;
-  chefDuParc: any;
-}*/
+
 export interface Entretien {
   idEntretien?: number;
   typeEntretien: string;
@@ -334,18 +321,6 @@ getCarte(numero: string): Observable<any> {
 getDeclarationsEnAttenteLocal(idLocal: number): Observable<Declaration[]> {
   return this.http.get<Declaration[]>(`${this.baseUrl}/local/${idLocal}/declarations-en-attente`);
 }
-
-// Envoyer le formulaire de traitement
-/*validerTraitementDeclaration(idDec: number, idChef: number, idGarage: number, type: string, date: string, obs: string): Observable<any> {
-  const params = new HttpParams()
-    .set('idChef', idChef.toString())
-    .set('idGarage', idGarage.toString()) // Ajouté
-    .set('typeEntretien', type)          // Ajouté
-    .set('datePrevue', date)
-    .set('obs', obs);
-
-  return this.http.post(`${this.baseUrl}/declaration/${idDec}/traiter`, null, { params });
-}*/
 validerTraitementDeclaration(
   idDec: number,
   idChef: number,
@@ -493,9 +468,4 @@ deleteDeclaration(id: number, idChauffeur: number): Observable<any> {
   completerMission(idMission: number, data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/mission/${idMission}/completer`, data);
   }
-  /**
- * Récupère toutes les missions assignées à un chauffeur spécifique.
- * L'URL correspond au Mapping : /api/gestion-parc/chauffeur/{idChauffeur}/missions
- */
-
 }

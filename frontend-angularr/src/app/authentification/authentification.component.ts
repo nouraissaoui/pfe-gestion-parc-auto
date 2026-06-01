@@ -40,8 +40,8 @@ export class AuthentificationComponent {
     this.showAlert = false;
     this.alertMessage = '';
 
-const emailRegex = /^[a-zA-ZÀ-ÿ]+\.[a-zA-ZÀ-ÿ]+@agil\.com\.tn$|^admin@parc\.com$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+const emailRegex = /^[a-zA-ZÀ-ÿ]+\.[a-zA-ZÀ-ÿ]+@agil\.com\.tn$|^admin@parc\.com$/;//doit etre nour.issaoui@agil.com.tn
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;//une minuscule, un majuscule, un chiffre ,caractere special et minium 8 caractere
 
     let hasError = false;
 
@@ -70,13 +70,13 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
     this.cdr.detectChanges();
 
     this.service.login(this.email, this.password).subscribe({
-      next: (response: LoginResponse) => {
+      next: (response: LoginResponse) => {//// Connexion réussie
         sessionStorage.clear();
-        sessionStorage.setItem('user', JSON.stringify(response));
+        sessionStorage.setItem('user', JSON.stringify(response));// Sauvegarde des informations utilisateur
         if (response.idLocal) {
-          sessionStorage.setItem('idLocal', response.idLocal.toString());
+          sessionStorage.setItem('idLocal', response.idLocal.toString());//  // Sauvegarde de l'id du local si disponible
         }
-        sessionStorage.setItem('userId', response.id.toString());
+        sessionStorage.setItem('userId', response.id.toString());// // Sauvegarde de l'identifiant utilisateur
 
         const role = response.typeUtilisateur;
         if (role === 'ADMIN') {
@@ -95,6 +95,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
   console.error("Erreur d'authentification :", err);
   this.isLoading = false;
 
+  //// Serveur inaccessible
   if (err.status === 0) {
     this.showAlert = true;
     this.alertMessage = "Impossible de contacter le serveur. Vérifiez que le backend est démarré.";

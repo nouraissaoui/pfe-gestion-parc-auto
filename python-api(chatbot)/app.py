@@ -6,15 +6,16 @@ import json
 import re
 from datetime import date, datetime, time, timedelta
 
-app = Flask(__name__)
-CORS(app)
+app = Flask(__name__)#Crée l'application backend Flask
+CORS(app)#Autorise Angular à communiquer avec Flask
 
 # ─────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────
-OLLAMA_URL = "http://localhost:11434/api/generate"
-LLM_MODEL  = "gemma4:31b-cloud"
+OLLAMA_URL = "http://localhost:11434/api/generate"#on definit l'adresse du modèle IA local
+LLM_MODEL  = "gemma4:31b-cloud"#on definit le modele utilisée
 
+#configuration de la bd 
 DB_CONFIG = {
     "host":     "localhost",
     "port":     3306,
@@ -29,18 +30,22 @@ DB_CONFIG = {
 conversation_memory: dict[str, list[dict]] = {}
 MAX_HISTORY = 12
 
-def get_history(session_id: str) -> list[dict]:
-    return conversation_memory.setdefault(session_id, [])
+#Retourne l'historique associé à une session.
+def get_history(session_id: str) -> list[dict]:#cette fonction retourne une liste contenant des dictionnaire expl[{"role":"user","content":"jj",}]
+    return conversation_memory.setdefault(session_id, [])#si la session n'existe pas il la crée automatiquement
 
+
+#Ajoute un message dans l'historique
 def push_history(session_id: str, role: str, content: str):
     history = get_history(session_id)
     history.append({"role": role, "content": content})
     if len(history) > MAX_HISTORY * 2:
-        conversation_memory[session_id] = history[-(MAX_HISTORY * 2):]
+        conversation_memory[session_id] = history[-(MAX_HISTORY * 2):]#limite la mémoire pour éviter la surcharge RAM.
 
 # ─────────────────────────────────────────────
 # HELPERS DB
 # ─────────────────────────────────────────────
+#Vérifie si l'objet est de type : datetime, date ou time,timedelta(days=2, hours=5) puis  les convertit en chaine de caractere
 def serialize_obj(obj):
     if isinstance(obj, (datetime, date, time)):
         return obj.isoformat()
@@ -48,15 +53,17 @@ def serialize_obj(obj):
         return str(obj)
     raise TypeError(f"Type {type(obj)} non sérialisable")
 
+
+#fonction pour Exécuter les requêtes SELECT
 def db_query(sql: str, params: tuple = ()) -> list[dict]:
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute(sql, params)
-        rows = cursor.fetchall()
+        cursor = conn.cursor(dictionary=True)# Création du curseur SQL ou les résultats seront retournés sous forme de dictionnaires
+        cursor.execute(sql, params)#Exécution SQL
+        rows = cursor.fetchall()#Récupération résultats
         cursor.close()
         conn.close()
-        for row in rows:
+        for row in rows:#Sérialisation dates en texte JSON
             for k, v in row.items():
                 if isinstance(v, (date, datetime, time, timedelta)):
                     row[k] = serialize_obj(v)
@@ -64,6 +71,8 @@ def db_query(sql: str, params: tuple = ()) -> list[dict]:
     except Exception as e:
         return [{"error": str(e)}]
 
+
+#execute les requetes de type update ,insert, delete
 def db_execute(sql: str, params: tuple = ()) -> dict:
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
@@ -81,6 +90,7 @@ def db_execute(sql: str, params: tuple = ()) -> dict:
 # ─────────────────────────────────────────────
 # CORRECTION INTELLIGENTE VIA LLM
 # ─────────────────────────────────────────────
+#corrige automatiquement :fautes orthographiques,fautes phonétiques,erreurs de frappe
 def correct_message_with_llm(msg: str) -> tuple[str, str]:
     """
     Envoie le message brut au LLM pour correction orthographique/sémantique.
@@ -96,11 +106,14 @@ Message : {msg}
 Message corrigé :"""
 
     try:
+        #Le message est envoyé au LLM via :
         resp = requests.post(OLLAMA_URL, json={
             "model":   LLM_MODEL,
             "prompt":  prompt,
-            "stream":  False,
-            "options": {"temperature": 0.0, "num_ctx": 512}
+            "stream":  False,# la réponse est envoyée en une seule fois, au lieu d'être envoyée petit à petit.
+            "options": {"temperature": 0.0,# zéro créativité → correction stable
+                         "num_ctx": 512# taille du contexte
+                         }
         }, timeout=15)
         corrected = resp.json().get("response", "").strip()
 
@@ -121,6 +134,15 @@ Message corrigé :"""
 # ─────────────────────────────────────────────
 # INTENTS
 # ─────────────────────────────────────────────
+    """
+    Cette fonction analyse un message utilisateur
+    et retourne l'intention (intent) correspondante.
+
+    Exemple :
+    "je veux voir mes missions" → CHAUFFEUR_MES_MISSIONS
+    """
+    #cette fonction est le cœur du NLP basé Regex(expression reguliére),NLP=Natural Language Processing
+    #la compréhension du langage utilisateur est faite grâce à des expressions régulières (Regex)
 def detect_intent(msg: str) -> str:
     m = msg.lower().strip()
 
@@ -226,7 +248,6 @@ def fetch_chauffeur_missions(chauffeur_id: int) -> list:
 
 
 def fetch_chauffeur_declarations(chauffeur_id: int) -> list:
-    # declaration.chauffeur_id (FK réelle confirmée)
     return db_query("""
         SELECT d.id_declaration, d.type, d.description, d.date_creation, d.status
         FROM declaration d
@@ -269,7 +290,6 @@ def fetch_chef_chauffeurs(chef_id: int) -> list:
 
 
 def fetch_chef_missions(chef_id: int) -> list:
-    # missions.id_chefparc existe (confirmé dans le schéma)
     return db_query("""
         SELECT m.id_mission, m.date_mission, m.point_depart, m.destination,
                m.heure_depart_prevue, m.heure_arrivee_reelle,
@@ -285,7 +305,6 @@ def fetch_chef_missions(chef_id: int) -> list:
 
 
 def fetch_chef_feuilles(chef_id: int) -> list:
-    # feuille_de_route.id_chefparc existe (confirmé)
     return db_query("""
         SELECT f.id_feuille, f.date_generation, f.statut,
                c.nom  AS chauffeur_nom, c.prenom AS chauffeur_prenom,
@@ -299,8 +318,6 @@ def fetch_chef_feuilles(chef_id: int) -> list:
 
 
 def fetch_chef_declarations(chef_id: int, statut: str = None) -> list:
-    # declaration: chauffeur_id, vehicule_id (confirmés)
-    # jointure chef via chauffeur → local → chef_parc
     sql = """
         SELECT d.id_declaration, d.type, d.description, d.date_creation, d.status,
                c.nom  AS chauffeur_nom, c.prenom AS chauffeur_prenom,
@@ -321,7 +338,6 @@ def fetch_chef_declarations(chef_id: int, statut: str = None) -> list:
 
 
 def fetch_chef_entretiens(chef_id: int) -> list:
-    # entretien.id_chefparc existe (confirmé)
     return db_query("""
         SELECT e.id_entretien, e.type_entretien, e.categorie,
                e.date_prevue, e.date_effectuee, e.status, e.observations,
@@ -336,7 +352,6 @@ def fetch_chef_entretiens(chef_id: int) -> list:
 
 
 def fetch_chef_cartes(chef_id: int) -> list:
-    # carte_carburant.id_chefparc existe (confirmé)
     return db_query("""
         SELECT cc.id_carte, cc.numero_carte, cc.montant_reel,
                cc.montant_charge, cc.date_chargement, cc.type_carburant,
@@ -474,6 +489,7 @@ def parse_mission_data(msg: str) -> dict:
     hd = re.search(r"heure\s*d[ée]part\s+(\d{1,2}:\d{2})", m)
     ha = re.search(r"heure\s*arriv[ée]e\s+(\d{1,2}:\d{2})", m)
     ob = re.search(r"observations?\s+(.+)", m)
+
     if kd: data["kmDepart"]           = float(kd.group(1))
     if ka: data["kmArrivee"]          = float(ka.group(1))
     if hd: data["heureDepartReelle"]  = hd.group(1) + ":00"
@@ -685,7 +701,6 @@ def build_data_context(intent: str, msg: str, user_role: str, user_id: int) -> s
 
     elif intent == "CHEF_LISTE_ENTRETIENS":
         ent = fetch_chef_entretiens(user_id)
-        # Filtrage optionnel
         if "en attente" in m:
             ent = [e for e in ent if e.get("status") == "EN_ATTENTE"]
         elif "périodique" in m or "periodique" in m:
@@ -745,11 +760,12 @@ def try_direct_action(intent: str, msg: str, user_role: str, user_id: int, sessi
     if intent == "CHAUFFEUR_COMPLETER_MISSION":
         return handle_chauffeur_completer_mission(msg, user_id, session_id)
 
-    # ── MODIFIER ÉTAT VÉHICULE ──
+    # ══════════════════════════════════════════════════════════════
+    # ── MODIFIER ÉTAT VÉHICULE ── [CORRECTION : matricule + priorité]
+    # ══════════════════════════════════════════════════════════════
     if intent == "CHEF_MAJ_ETAT_VEHICULE" and user_role == "CHEF_PARC":
-        id_match  = re.search(r"(?:v[ée]hicule|id)\s+(?:id\s+)?(\d+)", msg, re.IGNORECASE)
-        mat_match = re.search(r"(\d{1,3}\s*tn\s*\d{4})", msg, re.IGNORECASE)
-        etat_map  = {
+
+        etat_map = {
             "disponible":   "DISPONIBLE",
             "en mission":   "EN_MISSION",
             "entretien":    "EN_ENTRETIEN",
@@ -759,15 +775,29 @@ def try_direct_action(intent: str, msg: str, user_role: str, user_id: int, sessi
         if not etat:
             return "❓ État non reconnu. Valeurs : disponible, en mission, entretien, indisponible."
 
-        vehicule_id = None
-        if id_match:
-            vehicule_id = int(id_match.group(1))
-        elif mat_match:
-            v = fetch_vehicule_by_matricule(mat_match.group(1).upper())
+        vehicule_id      = None
+        matricule_affiche = None
+
+        # ── PRIORITÉ 1 : matricule tunisien (ex: 193 TN 6670) ──
+        # On capture séparément les deux parties pour reconstruire proprement
+        mat_match = re.search(r"(\d{1,3})\s*tn\s*(\d{3,4})", msg, re.IGNORECASE)
+        if mat_match:
+            # Format exact stocké en base : "193 TN 6670" (avec espaces)
+            matricule_affiche = f"{mat_match.group(1)} TN {mat_match.group(2)}"
+            v = fetch_vehicule_by_matricule(matricule_affiche)
             vehicule_id = v.get("id_vehicule")
+            if not vehicule_id:
+                return f"❓ Véhicule **{matricule_affiche}** introuvable en base. Vérifiez le matricule."
+
+        # ── PRIORITÉ 2 : ID explicite (seulement si aucun matricule détecté) ──
+        if not vehicule_id:
+            # Regex strict "\bid\s+(\d+)\b" évite de capturer les chiffres du matricule
+            id_match = re.search(r"\bid\s+(\d+)\b", msg, re.IGNORECASE)
+            if id_match:
+                vehicule_id = int(id_match.group(1))
 
         if not vehicule_id:
-            return "❓ Véhicule non identifié. Précisez le matricule ou l'ID."
+            return "❓ Véhicule non identifié. Précisez le matricule (ex: 193 TN 6670) ou l'ID (ex: id 5)."
 
         try:
             resp = requests.put(
@@ -775,7 +805,8 @@ def try_direct_action(intent: str, msg: str, user_role: str, user_id: int, sessi
                 params={"etat": etat}, timeout=10
             )
             if resp.status_code == 200:
-                return f"✅ Véhicule **#{vehicule_id}** → **{etat}**"
+                label = f"**{matricule_affiche}**" if matricule_affiche else f"**#{vehicule_id}**"
+                return f"✅ Véhicule {label} → **{etat}**"
             return f"❌ Erreur ({resp.status_code}) : {resp.text}"
         except Exception as e:
             return f"❌ Serveur inaccessible : {e}"
@@ -818,17 +849,27 @@ def try_direct_action(intent: str, msg: str, user_role: str, user_id: int, sessi
         except Exception as e:
             return f"❌ Serveur inaccessible : {e}"
 
-    # ── AFFECTER VÉHICULE ──
+    # ══════════════════════════════════════════════════════════════
+    # ── AFFECTER VÉHICULE ── [CORRECTION : matricule reconstruit proprement]
+    # ══════════════════════════════════════════════════════════════
     if intent == "CHEF_AFFECTER_VEHICULE" and user_role == "CHEF_PARC":
-        mat_match    = re.search(r"(\d{1,3}\s*tn\s*\d{4})", msg, re.IGNORECASE)
-        ch_id_match  = re.search(r"chauffeur\s+(?:id\s+)?(\d+)", msg, re.IGNORECASE)
-        ch_name_match= re.search(r"chauffeur\s+([A-ZÀ-ÿa-z]+)\s+([A-ZÀ-ÿa-z]+)", msg, re.IGNORECASE)
 
         vehicule_id  = None
         chauffeur_id = None
+        matricule    = None
+
+        # Matricule tunisien : capture séparée des deux parties
+        mat_match = re.search(r"(\d{1,3})\s*tn\s*(\d{3,4})", msg, re.IGNORECASE)
         if mat_match:
-            v = fetch_vehicule_by_matricule(mat_match.group(1).upper())
+            matricule = f"{mat_match.group(1)} TN {mat_match.group(2)}"
+            v = fetch_vehicule_by_matricule(matricule)
             vehicule_id = v.get("id_vehicule")
+            if not vehicule_id:
+                return f"❓ Véhicule **{matricule}** introuvable en base. Vérifiez le matricule."
+
+        # Chauffeur
+        ch_id_match   = re.search(r"chauffeur\s+(?:id\s+)?(\d+)", msg, re.IGNORECASE)
+        ch_name_match = re.search(r"chauffeur\s+([A-ZÀ-ÿa-z]+)\s+([A-ZÀ-ÿa-z]+)", msg, re.IGNORECASE)
         if ch_id_match:
             chauffeur_id = int(ch_id_match.group(1))
         elif ch_name_match:
@@ -836,7 +877,7 @@ def try_direct_action(intent: str, msg: str, user_role: str, user_id: int, sessi
             chauffeur_id = c.get("id_chauffeur")
 
         if not vehicule_id or not chauffeur_id:
-            return "❓ Précisez le matricule et le chauffeur. Ex : `Affecter véhicule 229 TN 4410 chauffeur id 3`"
+            return "❓ Précisez le matricule et le chauffeur. Ex : `Affecter véhicule 193 TN 6670 chauffeur id 3`"
 
         try:
             resp = requests.put(
@@ -844,7 +885,7 @@ def try_direct_action(intent: str, msg: str, user_role: str, user_id: int, sessi
                 timeout=10
             )
             if resp.status_code == 200:
-                return f"✅ Véhicule affecté au chauffeur **#{chauffeur_id}** !"
+                return f"✅ Véhicule **{matricule}** affecté au chauffeur **#{chauffeur_id}** !"
             return f"❌ Erreur ({resp.status_code}) : {resp.text}"
         except Exception as e:
             return f"❌ Serveur inaccessible : {e}"
@@ -954,7 +995,6 @@ Rôle : {user_role} | ID : {user_id} | Nom : {user_name}
 
 ━━━ RÉPONSE (français, claire, émojis) ━━━"""
 
-
 def build_prompt(user_message, user_role, user_id, user_name, data_context, history):
     history_text = ""
     for turn in history[-6:]:
@@ -968,7 +1008,7 @@ def build_prompt(user_message, user_role, user_id, user_name, data_context, hist
     )
 
 # ─────────────────────────────────────────────
-# ENDPOINTS
+# ENDPOINT PRINCIPAL DU CHATBOT
 # ─────────────────────────────────────────────
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -1028,6 +1068,6 @@ def reset_chat():
         del pending_state[session_id]
     return jsonify({"message": "Conversation réinitialisée."})
 
-
+# LANCEMENT SERVEUR FLASK
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

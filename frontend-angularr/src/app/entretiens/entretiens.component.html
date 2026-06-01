@@ -64,48 +64,94 @@
     <div class="modal d-block" *ngIf="showModal" style="background: rgba(0,0,0,0.5);">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
+
         <div class="modal-header">
             <h5>{{ isEditMode ? 'Modifier l\'entretien' : 'Programmer un entretien' }}</h5>
         </div>
+
         <div class="modal-body">
+
+            <!-- Véhicule -->
             <div class="form-group mb-3">
-            <label>Véhicule</label>
-            <select class="form-control" [(ngModel)]="nouveauEntretien.idVehicule" [disabled]="isEditMode">
+            <label>Véhicule <span class="text-danger">*</span></label>
+            <select class="form-control" [class.is-invalid]="errVehicule"
+                    [(ngModel)]="nouveauEntretien.idVehicule" [disabled]="isEditMode">
+                <option [ngValue]="null" disabled selected>-- Sélectionner un véhicule --</option>
                 <option *ngFor="let v of listeVehicules" [value]="v.idVehicule">{{ v.matricule }}</option>
             </select>
+            <div class="invalid-feedback" *ngIf="errVehicule">
+                Veuillez sélectionner un véhicule.
             </div>
+            </div>
+
+            <!-- Garage -->
             <div class="form-group mb-3">
-            <label>Garage</label>
-            <select class="form-control" [(ngModel)]="nouveauEntretien.idGarage">
+            <label>Garage <span class="text-danger">*</span></label>
+            <select class="form-control" [class.is-invalid]="errGarage"
+                    [(ngModel)]="nouveauEntretien.idGarage">
+                <option [ngValue]="null" disabled selected>-- Sélectionner un garage --</option>
                 <option *ngFor="let g of garages" [ngValue]="g.idGarage">{{ g.nomGarage }}</option>
             </select>
+            <div class="invalid-feedback" *ngIf="errGarage">
+                Veuillez sélectionner un garage.
             </div>
+            </div>
+
+            <!-- Type de travaux -->
             <div class="form-group mb-3">
-            <label>Type de travaux</label>
-            <input type="text" class="form-control" [(ngModel)]="nouveauEntretien.typeEntretien">
+            <label>Type de travaux <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [class.is-invalid]="errTypeTravaux"
+                    [(ngModel)]="nouveauEntretien.typeEntretien"
+                    placeholder="Ex : Vidange, Révision générale...">
+            <div class="invalid-feedback" *ngIf="errTypeTravaux">
+                Le type de travaux doit contenir au moins 3 caractères.
             </div>
+            </div>
+
+            <!-- Date prévue -->
             <div class="form-group mb-3">
-            <label>Date prévue</label>
-            <input type="date" class="form-control" [(ngModel)]="nouveauEntretien.datePrevue">
+            <label>Date prévue <span class="text-danger">*</span></label>
+            <input type="date" class="form-control"
+                    [class.is-invalid]="errDateVide || errDatePassee"
+                    [(ngModel)]="nouveauEntretien.datePrevue"
+                    [min]="today | date:'yyyy-MM-dd'">
+            <div class="invalid-feedback" *ngIf="errDateVide">
+                Veuillez saisir une date prévue.
             </div>
+            <div class="invalid-feedback" *ngIf="errDatePassee">
+                La date prévue ne peut pas être dans le passé.
+            </div>
+            </div>
+
+            <!-- Observations -->
             <div class="form-group mb-3">
-            <label>Observations</label>
-            <textarea class="form-control" [(ngModel)]="nouveauEntretien.observations"></textarea>
+            <label>Observations <span class="text-danger">*</span></label>
+            <textarea class="form-control" [class.is-invalid]="errObservations"
+                        [(ngModel)]="nouveauEntretien.observations"
+                        placeholder="Décrivez les travaux à effectuer..."
+                        rows="3"></textarea>
+            <div class="invalid-feedback" *ngIf="errObservations">
+                Les observations doivent contenir au moins 5 caractères.
             </div>
+            </div>
+
+            <small class="text-muted"><span class="text-danger">*</span> Champs obligatoires</small>
+
         </div>
+
         <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="showModal = false">Annuler</button>
+            <button class="btn btn-secondary" (click)="fermerModal()">Annuler</button>
             <button class="btn btn-primary" (click)="enregistrerEntretien()">
             {{ isEditMode ? 'Enregistrer les modifications' : 'Créer l\'entretien' }}
             </button>
         </div>
+
         </div>
     </div>
     </div>
 
     <!-- ══════════════════════════════════════════════════════════
         MODAL CONSULTATION — ENTRETIEN / PANNE / ACCIDENT
-        Affiché quand : pas d'amende (declaration absente OU type != AMENDE)
     ══════════════════════════════════════════════════════════ -->
     <div class="modal d-block"
         *ngIf="showConsultModal && selectedEntretien && selectedEntretien.declaration?.type !== 'AMENDE'"
@@ -145,7 +191,6 @@
 
     <!-- ══════════════════════════════════════════════════════════
         MODAL CONSULTATION — AMENDE UNIQUEMENT
-        Affiché quand : declaration existe ET type === 'AMENDE'
     ══════════════════════════════════════════════════════════ -->
     <div class="modal d-block amende-overlay"
         *ngIf="showConsultModal && selectedEntretien && selectedEntretien.declaration?.type === 'AMENDE'"
@@ -153,7 +198,6 @@
     <div class="amende-dialog" (click)="$event.stopPropagation()">
         <div class="amende-card">
 
-        <!-- Header -->
         <div class="amende-header">
             <div class="amende-header-left">
             <div class="amende-icon-wrap">⚠️</div>
@@ -165,9 +209,7 @@
             <button class="amende-close" (click)="fermerConsultation()">&times;</button>
         </div>
 
-        <!-- Body -->
         <div class="amende-body">
-
             <div class="amende-section-title">Informations du véhicule</div>
             <div class="amende-grid">
             <div class="amende-row">
@@ -196,10 +238,8 @@
                 </span>
             </div>
             </div>
-
         </div>
 
-        <!-- Footer -->
         <div class="amende-footer">
             <div class="amende-footer-note">
             Dossier consulté le {{ today | date:'dd/MM/yyyy' }}

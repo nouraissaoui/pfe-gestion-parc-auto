@@ -38,15 +38,15 @@ export class RapportStatistiquesComponent implements OnInit, OnDestroy {
   // ✅ pageName = d201cd92aae14c7d1956 (page "Rapport Exécutif" détectée dans l'URL)
   // navContentPaneEnabled=false cache les boutons de navigation du bas
   // filterPaneEnabled=false cache les filtres
-  private readonly EMBED_URL =
-    'https://app.powerbi.com/reportEmbed' +
-    '?reportId=094d005a-d3a8-417f-bc41-231bd57a84e2' +
-    '&autoAuth=true' +
-    '&ctid=1ecd776d-d57f-4de0-a67a-eca9809e8d8d' +
-    '&pageName=d201cd92aae14c7d1956' +   // ← force la page Rapport Exécutif
-    '&navContentPaneEnabled=false' +      // ← cache les boutons du bas
-    '&filterPaneEnabled=false';           // ← cache les filtres
-
+ // Remplacer l'ancienne valeur par celle-ci contenant vos vrais identifiants de rapport
+private readonly EMBED_URL =
+  'https://app.powerbi.com/reportEmbed' +
+  '?reportId=892edf8f-dfbb-47a3-b728-044a09687af6' + // Votre ID de rapport correct
+  '&groupId=me' +                                    // Votre groupe (Mon espace de travail)
+  '&autoAuth=true' +
+  '&pageName=d201cd92aae14c7d1956' +                 // Conserve la page "Rapport Exécutif"
+  '&navContentPaneEnabled=false' + 
+  '&filterPaneEnabled=false';
   constructor(private sanitizer: DomSanitizer, private ngZone: NgZone) {}
 
   // rapport-statistiques.component.ts — Admin

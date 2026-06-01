@@ -16,12 +16,17 @@ export class StatsDashboardComponent implements OnInit {
 
   constructor(private sanitizer: DomSanitizer,private service: GestionParcService ) {}
 
-  ngOnInit(): void {
-    const baseUrl =
-      'https://app.powerbi.com/reportEmbed?reportId=094d005a-d3a8-417f-bc41-231bd57a84e2&autoAuth=true&ctid=1ecd776d-d57f-4de0-a67a-eca9809e8d8d';
-    const finalLink = `${baseUrl}&navContentPaneEnabled=false&filterPaneEnabled=false`;
-    this.reportUrl = this.sanitizer.bypassSecurityTrustResourceUrl(finalLink);
-  }
+ ngOnInit(): void {
+  // L'URL de base doit utiliser le point de terminaison 'reportEmbed' avec les bons IDs extraits de votre lien
+  const embedUrl = 'https://app.powerbi.com/reportEmbed' +
+    '?reportId=892edf8f-dfbb-47a3-b728-044a09687af6' + // Extrait de votre lien
+    '&groupId=me' +
+    '&autoAuth=true' +
+    '&navContentPaneEnabled=false' +
+    '&filterPaneEnabled=false';
+
+  this.reportUrl = this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+}
 
 // Dans stats-dashboard.component.ts
 
