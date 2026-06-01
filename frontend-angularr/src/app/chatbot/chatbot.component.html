@@ -34,6 +34,15 @@
           <path d="M3.51 15a9 9 0 1 0 .49-5"/>
         </svg>
       </button>
+      <!-- Bouton retour menu — visible seulement pour CHAUFFEUR -->
+<button 
+  class="btn-retour-menu" 
+  *ngIf="userRole === 'CHAUFFEUR'"
+  (click)="retourMenu()" 
+  title="Retour au menu">
+  <i class="bi bi-grid-3x3-gap-fill"></i>
+  Menu
+</button>
     </div>
 
     <!-- Messages -->

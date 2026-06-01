@@ -4199,3 +4199,20 @@ font-style:italic;
   background: rgba(255, 255, 255, 0.05);
   box-shadow: inset 0 0 15px rgba(191, 149, 63, 0.05);
 }
+.btn-retour-menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: #BA7517;
+  color: #412402;
+  border: none;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.12s;
+}
+.btn-retour-menu:hover { background: #EF9F27; }
+.btn-retour-menu:active { transform: scale(0.97); }
+.btn-retour-menu i { font-size: 16px; }

@@ -16,7 +16,7 @@ export class EntretiensComponent implements OnInit {
   listeVehicules: Vehicule[] = [];
   garages: any[] = [];
   
-  showModal = false;
+  showModal = false;//est une petite fenêtre qui s’ouvre au-dessus de la page principal
   showConsultModal = false;
   isEditMode = false;
   selectedEntretien: Entretien | null = null;

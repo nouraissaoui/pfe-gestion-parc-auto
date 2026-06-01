@@ -37,7 +37,7 @@ export class ConsulterChauffeursComponent implements OnInit {
   }
 
   changeEtat(id: number, event: any) {
-    const nextEtat = event.target.value;
+    const nextEtat = event.target.value;//etat qui est dans select
     this.chauffeurService.updateEtatChauffeur(id, nextEtat).subscribe(() => {
       this.fetchDrivers();
     });
