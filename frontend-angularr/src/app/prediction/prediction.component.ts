@@ -20,17 +20,17 @@ export class PredictionComponent implements OnInit {
 
   // ── Données véhicules depuis la BD ────────────────────────────
   vehicules       : VehiculeML[] = [];          // tous les véhicules du local
-  vehiculeSelectionne : VehiculeML | null = null;
-  idVehiculeChoisi : number | null = null;
-  loadingVehicules = false;
-  erreurVehicules  = '';
+  vehiculeSelectionne : VehiculeML | null = null;//Véhicule choisi par l’utilisateur.
+  idVehiculeChoisi : number | null = null;//Stocke l’id du véhicule sélectionné
+  loadingVehicules = false;//Affiche un spinner pendant le chargement.
+  erreurVehicules  = '';//Message d’erreur si chargement échoue.
 
   // ── Listes statiques (trajet) ─────────────────────────────────
   niveauxTrafic = ['fluide', 'modere', 'dense', 'embouteillage'];
   typesCharge   = ['personne', 'mixte', 'materiel'];
 
   // ── Formulaire ────────────────────────────────────────────────
-  form = {
+  form = {//Remplis automatiquement quand un véhicule est choisis
     // champs AUTO-REMPLIS depuis la BD (lecture seule après sélection)
     typeVehicule    : '',
     nombreCylindres : 0,
@@ -49,8 +49,8 @@ export class PredictionComponent implements OnInit {
   };
 
   // ── État résultat ─────────────────────────────────────────────
-  result  : PredictionResult | null = null;
-  loading  = false;
+  result  : PredictionResult | null = null;//Contient le résultat retourné par Flask
+  loading  = false;//indique si le calcul est en cours.
   error    = '';
 
   constructor(private predictionService: PredictionService) {}
@@ -63,18 +63,19 @@ export class PredictionComponent implements OnInit {
   chargerVehicules(): void {
     // Récupère l'idLocal depuis le sessionStorage (même logique que le reste de l'app)
     const idLocal = Number(sessionStorage.getItem('idLocal'));
-      console.log('idLocal from session:', idLocal); // ← check this
-      console.log('All sessionStorage:', { ...sessionStorage }); // ← check this
+    console.log('idLocal from session:', idLocal); // ← check this
+  console.log('All sessionStorage:', { ...sessionStorage }); // ← check this
     if (!idLocal) {
       this.erreurVehicules = 'Aucun local trouvé en session.';
       return;
     }
 
     this.loadingVehicules = true;
-    this.predictionService.getVehiculesByLocal(idLocal).subscribe({
+    this.predictionService.getVehiculesByLocal(idLocal).subscribe({//requête HTTP vers backend.
       next: (list) => {
         // On ne garde que les véhicules avec les champs ML renseignés
-        this.vehicules = list.filter(v => v.idVehicule); 
+        this.vehicules = list.filter(v => v.idVehicule); //On garde uniquement les véhicules valides.
+
         this.loadingVehicules = false;
       },
       error: () => {
@@ -132,8 +133,8 @@ export class PredictionComponent implements OnInit {
   }
 
   // ── Fallback image cassée ─────────────────────────────────────
-  onImgError(event: Event): void {
-    (event.target as HTMLImageElement).style.display = 'none';
+  onImgError(event: Event): void {//Si image cassée
+    (event.target as HTMLImageElement).style.display = 'none';//cache limage
   }
 
   // ── Soumission ────────────────────────────────────────────────

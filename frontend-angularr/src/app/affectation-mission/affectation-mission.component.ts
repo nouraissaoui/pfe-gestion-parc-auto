@@ -33,10 +33,11 @@ export class AffectationMissionComponent implements OnInit {
 
   // ── Validation ─────────────────────────────────────────────────────────────
   /** true si le formulaire a été soumis au moins une fois (active les messages d'erreur) */
-  formSubmitted = false;
+  formSubmitted = false;//Cette ligne sert à créer une variable qui indique si le formulaire a été envoyé ou non.
 
   /** Erreurs métier personnalisées (en plus des validateurs Angular) */
   errors: Record<string, string> = {};
+  //Record est un type générique qui sert à créer un objet structuré (clé → valeur).
 
   // ── Navigation feuilles ────────────────────────────────────────────────────
   currentViewDate = new Date();
@@ -57,7 +58,7 @@ export class AffectationMissionComponent implements OnInit {
     this.service.getChauffeursParLocal(idLocal).subscribe({
       next: (res) => {
         this.chauffeursDispo = res.filter(
-          c => c.etatChauffeur === 'DISPONIBLE' || c.etatChauffeur === 'EN_MISSION'
+          c => c.etatChauffeur === 'DISPONIBLE' || c.etatChauffeur === 'EN_MISSION'//on garde seulement les chauffeurs eteat dispo ou en mission
         );
       }
     });
@@ -121,7 +122,7 @@ export class AffectationMissionComponent implements OnInit {
       }
     }
 
-    return Object.keys(this.errors).length === 0;
+    return Object.keys(this.errors).length === 0;//Ça récupère toutes les clés et verifeir si ilya une erreur ou non
   }
 
   /** Appelé à chaque changement de champ pour mise à jour instantanée des erreurs */
@@ -177,11 +178,11 @@ export class AffectationMissionComponent implements OnInit {
   onChauffeurChange(idChauffeur: number): void {
     const chauffeur = this.chauffeursDispo.find(c => c.idChauffeur == idChauffeur);
     if (chauffeur?.etatChauffeur === 'EN_MISSION') {
-      const garder = confirm(
+      const garder = confirm(//c’est une boîte de dialogue native du navigateur.Elle affiche un message avec 2 boutons
         `${chauffeur.nom} est en mission avec ${chauffeur.vehicule.matricule}.\n` +
         `Conserver ce véhicule ? (OK = oui, Annuler = choisir un autre)`
       );
-      this.vehiculeVerrouille = garder;
+      this.vehiculeVerrouille = garder;//garder prend true ou false
       this.selectedVehicule   = garder ? chauffeur.vehicule.idVehicule : undefined!;
     } else {
       this.vehiculeVerrouille = false;

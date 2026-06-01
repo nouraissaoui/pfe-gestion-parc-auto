@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GestionParcService } from '../gestion-parc.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-feuille-routechauffeur',
@@ -30,24 +31,25 @@ export class FeuilleRoutechauffeurComponent implements OnInit {
     observations: string;
   } = this.emptyErrors();
 
-  constructor(private chauffeurService: GestionParcService) {}
+  constructor(private chauffeurService: GestionParcService,  private router: Router   
+) {}
 
   /* ════════════════════════════════
       Lifecycle
   ════════════════════════════════ */
+ngOnInit(): void {
+  setTimeout(() => this.showPreloader = false, 2500);
 
-  ngOnInit(): void {
-    setTimeout(() => this.showPreloader = false, 2500);
-
-    const storedUser = sessionStorage.getItem('user');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      this.idChauffeur = user.id;
-      this.chauffeurNom = user.nom || '';
-      this.chauffeurPrenom = user.prenom || '';
-      if (this.idChauffeur) this.chargerDonnees();
-    }
+  const storedUser = sessionStorage.getItem('user');
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+    console.log('User complet depuis session :', user); // ← vérifie ici
+    this.idChauffeur = user.id;  // doit être l'idChauffeur, pas idLocal
+    this.chauffeurNom = user.nom || '';
+    this.chauffeurPrenom = user.prenom || '';
+    if (this.idChauffeur) this.chargerDonnees();
   }
+}
 
   /* ════════════════════════════════
       Data
@@ -226,4 +228,6 @@ export class FeuilleRoutechauffeurComponent implements OnInit {
       }
     });
   }
-}
+retourMenu(): void {
+  this.router.navigate(['/chauffeur/menu']);
+}}

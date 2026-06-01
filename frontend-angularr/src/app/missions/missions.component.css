@@ -1188,3 +1188,20 @@
   .summary-chips { gap: 6px; }
   .page-top-section { flex-direction: column; align-items: flex-start; gap: 1rem; }
 }
+.btn-retour-menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: #BA7517;
+  color: #412402;
+  border: none;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.12s;
+}
+.btn-retour-menu:hover { background: #EF9F27; }
+.btn-retour-menu:active { transform: scale(0.97); }
+.btn-retour-menu i { font-size: 16px; }

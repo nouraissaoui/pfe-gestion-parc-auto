@@ -11,23 +11,26 @@ import { Adminlayoutcomponent } from "../adminlayoutcomponent/adminlayoutcompone
   styleUrls: ['./chef-parc.component.css']
 })
 export class ChefParcComponent implements OnInit {
-
-  chefs: ChefParc[] = [];
-  locaux: Local[] = [];
-  selectedChefId: number | null = null;// Fonction pour vérifier si un local est déjà pris
+  chefs: ChefParc[] = [];//liste les chefs
+  locaux: Local[] = [];//liste des locaux
+  selectedChefId: number | null = null;//stocke lid du chef  Fonction pour vérifier si un local est déjà pris
 
   isEditMode: boolean = false; // Pour savoir si on modifie ou on ajoute
 stats: any;
   isLocalOccupe(idLocal: number | undefined): boolean {
+    //c'est une fonction qui retourne true ou false verifie si un local 
+    //est occcupe par un autre chef ou non
   // 1. Sécurité si l'ID est manquant
   if (idLocal === undefined || idLocal === null) return false; 
   
   // 2. Vérification dans la liste des chefs
-  return this.chefs.some(chef => 
+  return this.chefs.some(chef => //.some est ce qu'au moins un chef correspond a la condition
     chef.local && 
     chef.local.idLocal === idLocal && 
-    chef.idChefParc !== this.selectedChefId
-  );
+    chef.idChefParc !== this.selectedChefId//est ce que elle st occupe par un autre chef
+    //  si oui cad il est si non cad elle est occupe ave cle meme chef
+  );//chef =>  est une fonton flechée veut pour chaque chef dans la liste
+  //verfie que le chef a un local et compare les id 
 }
   // Cet objet correspond au Map<String, Object> de ton contrôleur Java
   chefForm: any = {
@@ -45,13 +48,15 @@ stats: any;
 
   ngOnInit(): void {
     this.chargerDonnees();
-      setTimeout(() => this.showPreloader = false, 2500);
+      setTimeout(() => this.showPreloader = false, 2000);
 
   }
 
   chargerDonnees() {
     // 1. Charger les chefs
     this.gestionService.getAllChefs().subscribe(data => this.chefs = data);
+    //quand les données arrivent, je les mets dans la variable chefs
+    //quand data arrive 
     // 2. Charger les locaux pour le menu déroulant
     this.gestionService.getAllLocaux().subscribe(data => this.locaux = data);
   }
@@ -59,7 +64,7 @@ stats: any;
 preparerModification(chef: ChefParc) {
   this.isEditMode = true; 
   this.selectedChefId = chef.idChefParc ?? null;
-  this.isModalOpen = true; 
+  this.isModalOpen = true; //cad on ouvre le formulaire dde modificarion
   
   // On crée un nouvel objet propre
   this.chefForm = {
@@ -74,8 +79,8 @@ preparerModification(chef: ChefParc) {
     motDePasse: '' 
   };
 }
-showSuccessState: boolean = false;
-isSubmitting: boolean = false;
+showSuccessState: boolean = false;//afficher ou non un message de succès
+isSubmitting: boolean = false;//“est-ce que le formulaire est en cours d’envoi
 
 playSuccessSound() {
   const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'); 
@@ -141,8 +146,8 @@ validerFormulaire(): boolean {
   }
 
   const anciennete = Number(this.chefForm.ancienneteChef);
-  if (!Number.isInteger(anciennete) || anciennete < 0) {
-    this.formErrors.ancienneteChef = 'L\'ancienneté doit être un nombre entier positif ou zéro.';
+  if (!Number.isInteger(anciennete) || anciennete <= 0) {
+    this.formErrors.ancienneteChef = 'L\'ancienneté doit être un nombre entier positif.';
     valide = false;
   }
 
@@ -150,7 +155,7 @@ validerFormulaire(): boolean {
 }
 
 terminerAvecSucces(message: string) {
-  this.isSubmitting = false;
+  this.isSubmitting = false;//le chargement des donnees est terminé
   this.showSuccessState = true;
   this.playSuccessSound();
 
@@ -166,12 +171,12 @@ terminerAvecSucces(message: string) {
       this.resetForm();
       this.chargerDonnees();
     }, 400);
-  }, 1500);
+  }, 1500);//apres 1.5seconde on ferme la fenetre
 }
   annulerEdition() {
-    this.isEditMode = false;
+    this.isEditMode = false;//revenir au mode ajout
     this.selectedChefId = null;
-    this.resetForm();
+    this.resetForm();//vider le formualrie
   }
  ajouterChef() {
   this.gestionService.createChefParc(this.chefForm).subscribe({
@@ -195,7 +200,7 @@ libererLocal(chef: ChefParc | null) {
     next: () => {
       this.playDisengageSound(); // Un son différent pour la libération
       this.chargerDonnees();
-      this.showQuickAssign = false;
+      this.showQuickAssign = false;//fermer lajout
     },
     error: () => alert("Erreur lors de la libération du local")
   });
@@ -214,7 +219,7 @@ supprimerChef(id: number) {
       next: (response) => {
         // 1. Mise à jour de la liste locale pour l'interface
         this.chefs = this.chefs.filter(c => c.idChefParc !== id);
-        
+        //cette ligne sert à supprimer un chef de la liste affichée
         // 2. Jouer le son de "libération" (plus léger que le succès)
         this.playDisengageSound(); 
 
@@ -251,21 +256,19 @@ closeModal() {
 }
 filterTable() {
   const val = this.searchText.toLowerCase();
-  this.filteredChefs = this.chefs.filter(c =>
+  this.filteredChefs = this.chefs.filter(c =>//this.chef.filteron parcourt tous les chefs et on garde seulement ceux qui correspondent à la recherche
     (c.nom + ' ' + c.prenom).toLowerCase().includes(val) ||
     c.local?.nomLocal.toLowerCase().includes(val)
   );
 }
 
-
-
 // Pour les statistiques
 getUniqueLocaux() {
   const locauxAssignes = this.chefs
-    .map(c => c.local?.nomLocal)
+    .map(c => c.local?.nomLocal)//liste des noms locaux
     .filter(nom => nom !== undefined && nom !== null && nom !== '');
-    
-  return new Set(locauxAssignes).size;
+    //on enlève les valeurs vides ou null
+  return new Set(locauxAssignes).size;//donne combine de lacl nest pa slibrez
 }
 getLocauxLibres() {
   return this.locaux.length - this.getUniqueLocaux();
@@ -281,17 +284,20 @@ getUniqueRoles() {
 }
 
   // Variables pour le sélecteur rapide
-showQuickAssign: boolean = false;
+showQuickAssign: boolean = false;//c’est une variable qui contrôle l’affichage d’un petit menu les boutosn dde modifier art suppruemr
 activeChef: ChefParc | null = null;
 menuPosition = { x: 0, y: 0 };
-
+//postiotn de menu dans lecran
 toggleQuickMenu(event: MouseEvent, chef: ChefParc) {
+  //Cette fonction est appelée quand tu cliques sur un chef (ou un bouton du chef).
   event.stopPropagation(); // Empêche de déclencher d'autres clics
-  this.activeChef = chef;
+  //on bloque autres clics
+  this.activeChef = chef;//stocke le chef selrectionne
   this.showQuickAssign = !this.showQuickAssign;
   
   // Positionne le menu exactement sous la souris
   this.menuPosition = { x: event.clientX, y: event.clientY };
+//le menu apparaite xactmemnt la ou tu as clique
 }
 
 assignerLocalRapide(idLocal: number) {
@@ -309,13 +315,14 @@ assignerLocalRapide(idLocal: number) {
     error: () => alert("Erreur d'affectation rapide")
   });
 }
-hoveredChef: ChefParc | null = null;
+hoveredChef: ChefParc | null = null;//stocke me ched sur laquelle la souris est actuellement posée
 mouseX = 0;
 mouseY = 0;
-
+//ppstion de la souris dans lecran
 onMouseEnter(event: MouseEvent, chef: ChefParc) {
+  //delcelnche quand la souris entre sur un chef
   this.hoveredChef = chef;
-  this.updateMousePos(event);
+  this.updateMousePos(event);//on met a jour la position de al souris
 }
 
 onMouseLeave() {

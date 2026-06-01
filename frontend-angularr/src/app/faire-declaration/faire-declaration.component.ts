@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Declaration, GestionParcService } from '../gestion-parc.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-faire-declaration',
@@ -27,7 +28,8 @@ chauffeurPrenom: string = '';
   showPreloader = true;
   isUpdateMode = false;
 
-  constructor(private apiService: GestionParcService) {}
+  constructor(private apiService: GestionParcService,  private router: Router  
+) {}
 
   ngOnInit(): void {
     setTimeout(() => this.showPreloader = false, 2000);
@@ -148,5 +150,7 @@ if (storedUser) {
 getDeclarationsTraitees(): number {
   return this.mesDeclarations.filter(d => d.status === 'TRAITE').length;
 }
-  
+  retourMenu(): void {
+  this.router.navigate(['/chauffeur/menu']);
+}
 }

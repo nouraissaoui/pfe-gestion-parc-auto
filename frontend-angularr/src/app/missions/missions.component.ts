@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GestionParcService, Mission } from '../gestion-parc.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Route, Router } from '@angular/router';
 
 type FilterType = 'all' | 'live' | 'done';
 type SortType   = 'date-desc' | 'date-asc' | 'depart-asc';
@@ -30,7 +31,7 @@ export class MissionsComponent implements OnInit {
     'Jul','Aoû','Sep','Oct','Nov','Déc'
   ];
 
-  constructor(private missionService: GestionParcService) {}
+  constructor(private missionService: GestionParcService,private router:Router) {}
  showPreloader = true;
 ngOnInit(): void {
   setTimeout(() => this.showPreloader = false, 2500);
@@ -61,16 +62,12 @@ loadMissions(id: number): void {
   this.loading = true; // Déclenche le spinner si tu en as un
   
   this.missionService.getMissionsByChauffeur(id).subscribe({
-    next: (res: Mission[]) => {
-      console.log("7. Missions reçues du backend :", res);
-      
-      // Le backend renvoie maintenant directement le tableau [ {mission1}, ... ]
-      // Plus besoin de chercher dans res.missions ou res.feuilleDeRoute
-      this.missions = res;
-
-      this.applyFilters();
-      this.loading = false;
-    },
+   next: (res: Mission[]) => {
+  console.log("MISSIONS DETAIL:", JSON.stringify(res));  // ← ajouter
+  this.missions = res;
+  this.applyFilters();
+  this.loading = false;
+},
     error: (err) => {
       console.error("Erreur lors de la récupération :", err);
       this.missions = [];
@@ -162,4 +159,7 @@ loadMissions(id: number): void {
     this.sortOrder    = 'date-desc';
     this.applyFilters();
   }
+  retourMenu(): void {
+  this.router.navigate(['/chauffeur/menu']);
+}
 }

@@ -135,7 +135,7 @@ export class ConsultationFeuillesComponent implements OnInit {
         next: () => {
           if (this.selectedFeuille && this.selectedFeuille.missions) {
             this.selectedFeuille.missions = this.selectedFeuille.missions.filter(
-              (m: any) => m.idMission !== id
+              (m: any) => m.idMission !== id//on garde uniquement les missions dont l’ID est différent de id
             );
           }
           this.chargerDonnees();

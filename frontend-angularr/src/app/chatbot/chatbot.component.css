@@ -573,4 +573,21 @@
     border-radius: 4px;
     font-weight: bold;
     font-size: 12px;
+}.btn-retour-menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: #2C2C2A;        /* ← noir */
+  color: #F1EFE8;              /* ← texte clair */
+  border: none;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.12s;
+  white-space: nowrap;
 }
+.btn-retour-menu:hover  { background: #444441; }  /* ← noir légèrement plus clair au hover */
+.btn-retour-menu:active { transform: scale(0.97); }
+.btn-retour-menu i      { font-size: 14px; }

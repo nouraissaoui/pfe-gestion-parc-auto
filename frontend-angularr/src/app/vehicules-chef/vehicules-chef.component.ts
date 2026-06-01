@@ -39,11 +39,15 @@ export class VehiculesChefComponent implements OnInit, AfterViewInit {
 
   // --- Animation Particles ---
   @ViewChild('particlesCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+  //@ViewChild permet de récupérer un élément HTML du template directement dans le TypeScript.
+  //ElementRef= objet Angular qui représente un élément HTML réel du DOM.
+
+//canvas est une balise HTML utilisée pour dessiner des graphiques dynamiques avec JavaScript ou TypeScript.
   private ctx!: CanvasRenderingContext2D;
-  private particles: any[] = [];
+  private particles: any[] = [];//stocke toutes les particules
   private W = 0;
   private H = 0;
-
+//on faire tout ca pour creer une animation
   constructor(private service: GestionParcService) {}
 
   ngOnInit(): void {
@@ -53,7 +57,7 @@ export class VehiculesChefComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit(): void {//sert à initialiser complètement le canvas et démarrer l’animation après que le HTML soit chargé.
     if (this.canvasRef) {
       this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
       this.resizeCanvas();
@@ -67,8 +71,9 @@ export class VehiculesChefComponent implements OnInit, AfterViewInit {
 
   loadSession() {
     const userJson = sessionStorage.getItem('user');
+    //sessionstorage est une mémoire du navigateur.Elle permet de stocker temporairement des données côté client.
     if (userJson) {
-      const user = JSON.parse(userJson);
+      const user = JSON.parse(userJson);//avec .parse On transforme ce texte en vrai objet JavaScript.
       // On s'assure de récupérer l'idLocal correctement
       this.localId = user.idLocal || user.id_local; 
     }
@@ -90,7 +95,7 @@ export class VehiculesChefComponent implements OnInit, AfterViewInit {
   loadVehicules() {
     this.service.getVehiculesByLocal(this.localId).subscribe({
       next: (data) => {
-        this.vehicules = data;
+        this.vehicules = data;//pour data Quand j’aurai la réponse du serveur, je vais appeler cette fonction et je vais lui passer les données
         this.filterByEtat(this.currentFilter);
       },
       error: (err) => console.error("Erreur chargement véhicules", err)
@@ -264,7 +269,7 @@ confirmerAffectation() {
     this.H = this.canvasRef.nativeElement.height = this.canvasRef.nativeElement.offsetHeight;
   }
 
-  private initParticles() {
+private initParticles() {
     this.particles = [];
     for (let i = 0; i < 90; i++) {
       this.particles.push({

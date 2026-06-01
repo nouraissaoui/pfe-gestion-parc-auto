@@ -19,7 +19,7 @@
       <button class="alert-close" (click)="showAlert = false">&#10005;</button>
     </div>
 
-    <form (submit)="login();" class="login-form">
+    <form (submit)="login(); $event.preventDefault()" class="login-form">
 
       <input
         type="email"

@@ -4,6 +4,7 @@ import {
 import { ChatService, ChatResponse, ChatPayload } from '../chat.service';
 import { FormsModule } from '@angular/forms';//permet l’utilisation du [(ngModel)] pour la liaison bidirectionnelle des données.
 import { CommonModule } from '@angular/common';//fournit les directives Angular comme *ngIf et *ngFor
+import { Router } from '@angular/router';
 
 //Cette interface définit la structure d’un message dans la conversation
 interface Message {
@@ -35,7 +36,7 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
   @ViewChild('messagesArea') private messagesArea!: ElementRef;//référence vers la zone contenant les messages
   @ViewChild('inputRef')     private inputRef!: ElementRef;//référence vers la zone de saisie.
 
-  constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService,private router:Router) {}
 
   ngOnInit() {
   // ✅ Lire depuis 'user' — clé correcte
@@ -165,4 +166,7 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
     }
     return ['Mon véhicule', 'Mes missions', 'Mes déclarations', 'Terminer ma mission'];
   }
+  retourMenu(): void {
+  this.router.navigate(['/chauffeur/menu']);
+}
 }

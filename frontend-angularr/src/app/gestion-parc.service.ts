@@ -330,7 +330,7 @@ validerTraitementDeclaration(
   obs: string
 ): Observable<any> {
   let params = new HttpParams().set('idChef', idChef.toString());
-
+//httpparams envoyer des paramètres dans l’URL
   if (idGarage && idGarage > 0) {
     params = params.set('idGarage', idGarage.toString());
   }
@@ -346,8 +346,8 @@ validerTraitementDeclaration(
 
   return this.http.post(
     `${this.baseUrl}/declaration/${idDec}/traiter`,
-    null,
-    { params }
+    null,//body null
+    { params }//ce son tles httpparams
   );
 }
 
@@ -368,6 +368,7 @@ getEntretiensByLocal(idLocal: number): Observable<Entretien[]> {
 
 // Planifier un entretien périodique (Préventif)
 planifierEntretienPeriodique(entretien: Partial<Entretien>, idVehicule: number, idGarage: number, idChef: number): Observable<Entretien> {
+  //avec partial au leiu denvoyer tous les donnees tu peux envoyer un peu partiellement
   const params = new HttpParams()
     .set('idVehicule', idVehicule.toString())
     .set('idGarage', idGarage.toString())
@@ -461,9 +462,10 @@ deleteDeclaration(id: number, idChauffeur: number): Observable<any> {
   });
 }
 // Récupère les feuilles de route du chauffeur connecté
- getMesFeuilles(idChauffeur: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/chauffeur/${idChauffeur}/feuilles`);
-  }
+getMesFeuilles(idChauffeur: number): Observable<any[]> {
+  console.log('Chargement feuilles pour chauffeur ID :', idChauffeur); // ← log
+  return this.http.get<any[]>(`${this.baseUrl}/chauffeur/${idChauffeur}/feuilles`);
+}
 
   completerMission(idMission: number, data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/mission/${idMission}/completer`, data);

@@ -23,12 +23,13 @@ export class AuthentificationComponent {
   passwordErrorMessage: string = '';
   showAlert: boolean = false;
   alertMessage: string = '';
-  isLoading: boolean = false;
+  isLoading: boolean = false;//connexion en cours
 
   constructor(
     private service: GestionParcService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
+    private router: Router,//sert à naviguer entre pages :
+    private cdr: ChangeDetectorRef//forcer angular a rafraichir linterfcae
+
   ) {}
 
   login(): void {
@@ -67,7 +68,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;//u
 
     // Désactiver le bouton pendant l'appel
     this.isLoading = true;
-    this.cdr.detectChanges();
+    this.cdr.detectChanges();//forcer Angular à mettre à jour l’interface
 
     this.service.login(this.email, this.password).subscribe({
       next: (response: LoginResponse) => {//// Connexion réussie

@@ -16,7 +16,7 @@ import { GestionParcService } from '../gestion-parc.service';
   export class LocauxadminComponent implements OnInit {
 
     locals: any[] = [];
-    mode = 'list';
+    mode = 'list';//contrôle l’état de l’interface
     editLocal: any = null;
 
     newLocal = {
@@ -29,7 +29,7 @@ import { GestionParcService } from '../gestion-parc.service';
 
     // index pour le slider
     imageIndexes: number[] = [];
-showPreloader= true;
+showPreloader= true;//le loader (écran de chargement) est visible
 
     constructor(private service: GestionParcService) {}
 
@@ -41,10 +41,10 @@ showPreloader= true;
 
     load() {
       this.service.getAll().subscribe(res => {
-        this.locals = res.map(l => {
+        this.locals = res.map(l => {//on parcourt chaque local
           const imgs: string[] = (l.images || '').split(' ').map(x => x.trim()).filter(x => x);
           return {
-            ...l,
+            ...l,//copie tou sles donnees de local
             imagesArray: imgs,
             currentImage: imgs[0] || 'https://via.placeholder.com/300x200',
             
@@ -53,19 +53,19 @@ showPreloader= true;
 
         // Initialiser les index pour le slider
         this.imageIndexes = this.locals.map(_ => 0);
-
+//pour chaque local, on démarre avec l’image 0
         // Lancer le slider automatique
         this.startImageSlider();
       });
     }
 
     /******** SLIDER AUTOMATIQUE ********/
-    startImageSlider() {
+    startImageSlider() {//changer automatiquement les images des locaux toutes les 3 secondes
       setInterval(() => {
         this.locals.forEach((l, i) => {
           if (l.imagesArray.length > 1) {
-            this.imageIndexes[i] = (this.imageIndexes[i] + 1) % l.imagesArray.length;
-            l.currentImage = l.imagesArray[this.imageIndexes[i]] + '?t=' + new Date().getTime();
+            this.imageIndexes[i] = (this.imageIndexes[i] + 1) % l.imagesArray.length;//passe a limage suivante
+            l.currentImage = l.imagesArray[this.imageIndexes[i]] + '?t=' + new Date().getTime();//on me ajour limage afficeh
           }
         });
       }, 3000); // changer toutes les 3 secondes

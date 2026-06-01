@@ -1,11 +1,11 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
-  AfterViewInit,
+  OnDestroy,//supprimer listeners éviter memory leaks
+  AfterViewInit,//exécuté après chargement du HTML
   ViewChild,
   ElementRef,
-  HostListener
+  HostListener//écoute les événements du navigateur
 } from '@angular/core';
 import { Declaration, GestionParcService } from '../gestion-parc.service';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 /* ─────────────────────────────────────────
     Particle System Interface
 ───────────────────────────────────────── */
-interface Particle {
+interface Particle {//Elle décrit une particule dans ton canvas animation particule petit élément graphique très simple qu’on dessine et qu’on anime à l’écran
   x: number; y: number;
   size: number; speedX: number; speedY: number;
   opacity: number; maxOpacity: number;
@@ -58,6 +58,7 @@ export class DeclarationsListeComponent implements OnInit, AfterViewInit, OnDest
   showToast: boolean = false;
   toastMessage: string = '';
   private toastTimer: any;
+  //Ces 3 lignes servent à gérer un toast (petite notification qui apparaît et disparaît) dans ton application Angular.
 
   // ── Section labels ──
   sectionLabel: string = 'Déclarations en attente de traitement';
@@ -109,7 +110,8 @@ export class DeclarationsListeComponent implements OnInit, AfterViewInit, OnDest
     clearTimeout(this.toastTimer);
   }
 
-  @HostListener('window:resize')
+  @HostListener('window:resize')//écoute un événement du navigateur :
+//quand l’utilisateur redimensionne la fenêtre
   onResize(): void {
     this.resizeCanvas();
   }
@@ -332,7 +334,7 @@ export class DeclarationsListeComponent implements OnInit, AfterViewInit, OnDest
   }
 
   onBackdropClick(event: MouseEvent): void {
-    if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
+    if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {//Cette ligne sert à détecter si l’utilisateur a cliqué sur le fond sombre d’une modal (popup).
       this.fermerModale();
     }
   }
